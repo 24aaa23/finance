@@ -1,0 +1,1348 @@
+{
+  "schema_triples": 2028,
+  "data_triples": 752067,
+  "merged_triples": 754095,
+  "metadata": {
+    "metadata_files": 15,
+    "primitives": [
+      "ATOM_CONTEXT_ASSET_CLASS_001",
+      "ATOM_CONTEXT_INVESTMENT_GOAL_001",
+      "ATOM_CONTEXT_INVESTMENT_TYPE_001",
+      "ATOM_CONTEXT_RISK_TOLERANCE_001",
+      "ATOM_CONTEXT_SECTOR_001",
+      "ATOM_CONTEXT_SEGMENT_001",
+      "ATOM_CONTEXT_TIME_HORIZON_001",
+      "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+      "ATOM_EVENT_CASH_FLOW_001",
+      "ATOM_EVENT_REBALANCING_ACTION_001",
+      "ATOM_EVENT_SCENARIO_REBALANCING_001"
+    ],
+    "attributes_by_primitive": {
+      "ATOM_CONTEXT_ASSET_CLASS_001": [
+        {
+          "name": "asset_class_id",
+          "type": "string"
+        },
+        {
+          "name": "category",
+          "type": "string"
+        },
+        {
+          "name": "investment_type",
+          "type": "string"
+        }
+      ],
+      "ATOM_CONTEXT_INVESTMENT_GOAL_001": [
+        {
+          "name": "goal_type_id",
+          "type": "string"
+        },
+        {
+          "name": "investment_goal",
+          "type": "string"
+        }
+      ],
+      "ATOM_CONTEXT_INVESTMENT_TYPE_001": [
+        {
+          "name": "invtype_id",
+          "type": "string"
+        },
+        {
+          "name": "investment_type",
+          "type": "string"
+        }
+      ],
+      "ATOM_CONTEXT_RISK_TOLERANCE_001": [
+        {
+          "name": "risk_tolerance_id",
+          "type": "string"
+        },
+        {
+          "name": "risk_tolerance",
+          "type": "string"
+        }
+      ],
+      "ATOM_CONTEXT_SECTOR_001": [
+        {
+          "name": "sector_id",
+          "type": "string"
+        },
+        {
+          "name": "sector",
+          "type": "string"
+        }
+      ],
+      "ATOM_CONTEXT_SEGMENT_001": [
+        {
+          "name": "segment_id",
+          "type": "string"
+        },
+        {
+          "name": "segment",
+          "type": "string"
+        }
+      ],
+      "ATOM_CONTEXT_TIME_HORIZON_001": [
+        {
+          "name": "horizon_id",
+          "type": "string"
+        },
+        {
+          "name": "time_horizon",
+          "type": "string"
+        }
+      ],
+      "ATOM_ENTITY_INVESTMENT_GOAL_001": [
+        {
+          "name": "goal_id",
+          "type": "string"
+        },
+        {
+          "name": "investor_id",
+          "type": "string"
+        },
+        {
+          "name": "investment_goal",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "target_amount",
+          "type": "decimal"
+        },
+        {
+          "name": "current_value",
+          "type": "decimal"
+        },
+        {
+          "name": "progress_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "shortfall",
+          "type": "decimal"
+        },
+        {
+          "name": "time_to_goal_months",
+          "type": "integer"
+        },
+        {
+          "name": "avg_annual_return_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "avg_post_tax_return_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "avg_sharpe_ratio",
+          "type": "decimal"
+        },
+        {
+          "name": "avg_volatility_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "std_dev_annual_return_pct",
+          "type": "decimal"
+        }
+      ],
+      "ATOM_ENTITY_INVESTOR_PROFILE_001": [
+        {
+          "name": "investor_id",
+          "type": "string"
+        },
+        {
+          "name": "investor_name",
+          "type": "string"
+        },
+        {
+          "name": "risk_tolerance",
+          "type": "string"
+        },
+        {
+          "name": "time_horizon",
+          "type": "string"
+        },
+        {
+          "name": "segment",
+          "type": "string"
+        },
+        {
+          "name": "investment_goal",
+          "type": "string"
+        },
+        {
+          "name": "sector_focus",
+          "type": "string"
+        },
+        {
+          "name": "category",
+          "type": "string"
+        },
+        {
+          "name": "notes",
+          "type": "string"
+        }
+      ],
+      "ATOM_ENTITY_PORTFOLIO_HEALTH_001": [
+        {
+          "name": "portfolio_health_id",
+          "type": "string"
+        },
+        {
+          "name": "investor_id",
+          "type": "string"
+        },
+        {
+          "name": "goal_match_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "risk_score",
+          "type": "decimal"
+        },
+        {
+          "name": "liquidity_score",
+          "type": "decimal"
+        },
+        {
+          "name": "diversification_score",
+          "type": "decimal"
+        }
+      ],
+      "ATOM_ENTITY_PORTFOLIO_HOLDING_001": [
+        {
+          "name": "holding_id",
+          "type": "string"
+        },
+        {
+          "name": "investor_id",
+          "type": "string"
+        },
+        {
+          "name": "investment_name",
+          "type": "string"
+        },
+        {
+          "name": "investment_type",
+          "type": "string"
+        },
+        {
+          "name": "sector",
+          "type": "string"
+        },
+        {
+          "name": "segment",
+          "type": "string"
+        },
+        {
+          "name": "category",
+          "type": "string"
+        },
+        {
+          "name": "purchase_date",
+          "type": "date"
+        },
+        {
+          "name": "cost",
+          "type": "decimal"
+        },
+        {
+          "name": "current_value",
+          "type": "decimal"
+        },
+        {
+          "name": "returns_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "dividends",
+          "type": "decimal"
+        },
+        {
+          "name": "taxes_paid",
+          "type": "decimal"
+        }
+      ],
+      "ATOM_ENTITY_SECTOR_ALLOCATION_001": [
+        {
+          "name": "sector_id",
+          "type": "string"
+        },
+        {
+          "name": "investor_id",
+          "type": "string"
+        },
+        {
+          "name": "sector",
+          "type": "string"
+        },
+        {
+          "name": "allocation_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "total_investment",
+          "type": "decimal"
+        }
+      ],
+      "ATOM_EVENT_CASH_FLOW_001": [
+        {
+          "name": "cash_flow_id",
+          "type": "string"
+        },
+        {
+          "name": "investor_id",
+          "type": "string"
+        },
+        {
+          "name": "date",
+          "type": "date"
+        },
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "amount",
+          "type": "decimal"
+        },
+        {
+          "name": "source",
+          "type": "string"
+        },
+        {
+          "name": "notes",
+          "type": "string"
+        }
+      ],
+      "ATOM_EVENT_REBALANCING_ACTION_001": [
+        {
+          "name": "rebalance_id",
+          "type": "string"
+        },
+        {
+          "name": "investor_id",
+          "type": "string"
+        },
+        {
+          "name": "logic",
+          "type": "string"
+        },
+        {
+          "name": "action",
+          "type": "string"
+        },
+        {
+          "name": "current_allocation_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "target_allocation_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "amount",
+          "type": "decimal"
+        },
+        {
+          "name": "notes",
+          "type": "string"
+        }
+      ],
+      "ATOM_EVENT_SCENARIO_REBALANCING_001": [
+        {
+          "name": "scenario_rebalance_id",
+          "type": "string"
+        },
+        {
+          "name": "investor_id",
+          "type": "string"
+        },
+        {
+          "name": "scenario",
+          "type": "string"
+        },
+        {
+          "name": "triggered_action",
+          "type": "string"
+        },
+        {
+          "name": "affected_assets_sectors",
+          "type": "string"
+        },
+        {
+          "name": "current_allocation_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "new_allocation_pct",
+          "type": "decimal"
+        },
+        {
+          "name": "rationale",
+          "type": "string"
+        }
+      ]
+    },
+    "context_values_by_primitive": {
+      "ATOM_CONTEXT_ASSET_CLASS_001": [
+        "Alternative",
+        "Bonds",
+        "Cash Equivalent",
+        "Commodities",
+        "Crypto",
+        "Debt",
+        "ETF",
+        "Equity",
+        "Fixed Income",
+        "Gold",
+        "Hybrid",
+        "International",
+        "MF",
+        "PPF",
+        "REIT",
+        "Real Estate",
+        "SGB",
+        "Corporate Bond",
+        "Government Bond",
+        "Global Equity",
+        "Hedge Fund",
+        "InVIT",
+        "Index Fund",
+        "Mutual Fund",
+        "Private Equity",
+        "Venture Capital"
+      ],
+      "ATOM_CONTEXT_INVESTMENT_GOAL_001": [
+        "Retirement Planning",
+        "Wealth Preservation",
+        "Child Education",
+        "Emergency Fund",
+        "Income Generation",
+        "Growth"
+      ],
+      "ATOM_CONTEXT_INVESTMENT_TYPE_001": [
+        "Corporate Bond",
+        "ETF",
+        "Equity",
+        "Global Equity",
+        "Gold",
+        "Government Bond",
+        "Hedge Fund",
+        "InVIT",
+        "Index Fund",
+        "Mutual Fund",
+        "Private Equity",
+        "REIT",
+        "Real Estate",
+        "Venture Capital"
+      ],
+      "ATOM_CONTEXT_RISK_TOLERANCE_001": [
+        "Conservative",
+        "Moderate",
+        "Aggressive"
+      ],
+      "ATOM_CONTEXT_SECTOR_001": [
+        "Automobile",
+        "Banking",
+        "Consumer Goods",
+        "Corporate",
+        "Financial Services",
+        "Government",
+        "Healthcare",
+        "Infrastructure",
+        "Pharma",
+        "Private Equity",
+        "Real Estate",
+        "Technology"
+      ],
+      "ATOM_CONTEXT_SEGMENT_001": [
+        "Large Cap",
+        "Mid Cap",
+        "Small Cap",
+        "Diversified"
+      ],
+      "ATOM_CONTEXT_TIME_HORIZON_001": [
+        "Short-term",
+        "Medium-term",
+        "Long-term"
+      ],
+      "ATOM_ENTITY_INVESTMENT_GOAL_001": [],
+      "ATOM_ENTITY_INVESTOR_PROFILE_001": [],
+      "ATOM_ENTITY_PORTFOLIO_HEALTH_001": [],
+      "ATOM_ENTITY_PORTFOLIO_HOLDING_001": [],
+      "ATOM_ENTITY_SECTOR_ALLOCATION_001": [],
+      "ATOM_EVENT_CASH_FLOW_001": [],
+      "ATOM_EVENT_REBALANCING_ACTION_001": [],
+      "ATOM_EVENT_SCENARIO_REBALANCING_001": []
+    },
+    "derived_context_by_primitive": {
+      "ATOM_CONTEXT_ASSET_CLASS_001": [
+        "has_lock_in",
+        "is_tax_saving",
+        "is_suitable_for_risk"
+      ],
+      "ATOM_CONTEXT_INVESTMENT_GOAL_001": [
+        "is_long_term_goal",
+        "recommended_equity_allocation",
+        "is_tax_advantaged",
+        "requires_liquidity"
+      ],
+      "ATOM_CONTEXT_INVESTMENT_TYPE_001": [
+        "has_lock_in",
+        "is_80c_eligible",
+        "ltcg_rate",
+        "is_equity_taxed",
+        "requires_demat"
+      ],
+      "ATOM_CONTEXT_RISK_TOLERANCE_001": [
+        "is_equity_heavy_allowed",
+        "max_equity_allocation",
+        "is_high_risk_products_allowed",
+        "get_suitable_products"
+      ],
+      "ATOM_CONTEXT_SECTOR_001": [
+        "is_suitable_for_conservative",
+        "is_defensive",
+        "max_allocation_for_risk_tolerance"
+      ],
+      "ATOM_CONTEXT_SEGMENT_001": [
+        "is_suitable_for_risk_tolerance",
+        "allocation_limit_for_risk"
+      ],
+      "ATOM_CONTEXT_TIME_HORIZON_001": [
+        "allows_equity",
+        "max_equity_allowed",
+        "requires_liquidity",
+        "can_use_lock_in_products",
+        "is_wealth_creation_suitable"
+      ],
+      "ATOM_ENTITY_INVESTMENT_GOAL_001": [],
+      "ATOM_ENTITY_INVESTOR_PROFILE_001": [],
+      "ATOM_ENTITY_PORTFOLIO_HEALTH_001": [],
+      "ATOM_ENTITY_PORTFOLIO_HOLDING_001": [],
+      "ATOM_ENTITY_SECTOR_ALLOCATION_001": [],
+      "ATOM_EVENT_CASH_FLOW_001": [],
+      "ATOM_EVENT_REBALANCING_ACTION_001": [],
+      "ATOM_EVENT_SCENARIO_REBALANCING_001": []
+    },
+    "derived_attributes_by_primitive": {
+      "ATOM_CONTEXT_ASSET_CLASS_001": [],
+      "ATOM_CONTEXT_INVESTMENT_GOAL_001": [],
+      "ATOM_CONTEXT_INVESTMENT_TYPE_001": [],
+      "ATOM_CONTEXT_RISK_TOLERANCE_001": [],
+      "ATOM_CONTEXT_SECTOR_001": [],
+      "ATOM_CONTEXT_SEGMENT_001": [],
+      "ATOM_CONTEXT_TIME_HORIZON_001": [],
+      "ATOM_ENTITY_INVESTMENT_GOAL_001": [
+        "is_on_track",
+        "risk_return_ratio"
+      ],
+      "ATOM_ENTITY_INVESTOR_PROFILE_001": [],
+      "ATOM_ENTITY_PORTFOLIO_HEALTH_001": [
+        "overall_health_score",
+        "health_status"
+      ],
+      "ATOM_ENTITY_PORTFOLIO_HOLDING_001": [
+        "absolute_return",
+        "holding_period_days",
+        "is_profitable"
+      ],
+      "ATOM_ENTITY_SECTOR_ALLOCATION_001": [],
+      "ATOM_EVENT_CASH_FLOW_001": [
+        "is_inflow",
+        "absolute_amount",
+        "transaction_month"
+      ],
+      "ATOM_EVENT_REBALANCING_ACTION_001": [
+        "allocation_drift",
+        "drift_direction"
+      ],
+      "ATOM_EVENT_SCENARIO_REBALANCING_001": [
+        "allocation_change",
+        "change_direction"
+      ]
+    },
+    "warnings": []
+  },
+  "data": {
+    "db_path": "wealthmanagement_tables-main\\raw_data_sample\\wealth_management_diverse.db",
+    "tables": {
+      "ATOM_ENTITY_INVESTMENT_GOAL_001": {
+        "rows": 4865,
+        "class": "InvestmentGoal",
+        "pk": "goal_id",
+        "columns": [
+          "goal_id",
+          "investor_id",
+          "investment_goal",
+          "description",
+          "target_amount",
+          "current_value",
+          "progress_pct",
+          "shortfall",
+          "time_to_goal_months",
+          "avg_annual_return_pct",
+          "avg_post_tax_return_pct",
+          "avg_sharpe_ratio",
+          "avg_volatility_pct",
+          "std_dev_annual_return_pct"
+        ],
+        "column_info": [
+          [
+            0,
+            "goal_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            1,
+            "investor_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            2,
+            "investment_goal",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            3,
+            "description",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            4,
+            "target_amount",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            5,
+            "current_value",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            6,
+            "progress_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            7,
+            "shortfall",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            8,
+            "time_to_goal_months",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            9,
+            "avg_annual_return_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            10,
+            "avg_post_tax_return_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            11,
+            "avg_sharpe_ratio",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            12,
+            "avg_volatility_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            13,
+            "std_dev_annual_return_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ]
+        ]
+      },
+      "ATOM_ENTITY_INVESTOR_PROFILE_001": {
+        "rows": 1550,
+        "class": "Investor",
+        "pk": "investor_id",
+        "columns": [
+          "investor_id",
+          "investor_name",
+          "investment_goal",
+          "risk_tolerance",
+          "time_horizon",
+          "sector_focus",
+          "segment",
+          "category",
+          "notes"
+        ],
+        "column_info": [
+          [
+            0,
+            "investor_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            1,
+            "investor_name",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            2,
+            "investment_goal",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            3,
+            "risk_tolerance",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            4,
+            "time_horizon",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            5,
+            "sector_focus",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            6,
+            "segment",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            7,
+            "category",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            8,
+            "notes",
+            "TEXT",
+            0,
+            null,
+            0
+          ]
+        ]
+      },
+      "ATOM_ENTITY_PORTFOLIO_HEALTH_001": {
+        "rows": 1550,
+        "class": "PortfolioHealth",
+        "pk": "portfolio_health_id",
+        "columns": [
+          "portfolio_health_id",
+          "investor_id",
+          "goal_match_pct",
+          "risk_score",
+          "liquidity_score",
+          "diversification_score"
+        ],
+        "column_info": [
+          [
+            0,
+            "portfolio_health_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            1,
+            "investor_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            2,
+            "goal_match_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            3,
+            "risk_score",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            4,
+            "liquidity_score",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            5,
+            "diversification_score",
+            "REAL",
+            0,
+            null,
+            0
+          ]
+        ]
+      },
+      "ATOM_ENTITY_PORTFOLIO_HOLDING_001": {
+        "rows": 15102,
+        "class": "PortfolioHolding",
+        "pk": "holding_id",
+        "columns": [
+          "holding_id",
+          "investor_id",
+          "investment_type",
+          "investment_name",
+          "sector",
+          "segment",
+          "category",
+          "purchase_date",
+          "cost",
+          "current_value",
+          "returns_pct",
+          "dividends",
+          "taxes_paid"
+        ],
+        "column_info": [
+          [
+            0,
+            "holding_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            1,
+            "investor_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            2,
+            "investment_type",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            3,
+            "investment_name",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            4,
+            "sector",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            5,
+            "segment",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            6,
+            "category",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            7,
+            "purchase_date",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            8,
+            "cost",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            9,
+            "current_value",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            10,
+            "returns_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            11,
+            "dividends",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            12,
+            "taxes_paid",
+            "REAL",
+            0,
+            null,
+            0
+          ]
+        ]
+      },
+      "ATOM_ENTITY_SECTOR_ALLOCATION_001": {
+        "rows": 3038,
+        "class": "SectorAllocation",
+        "pk": "sector_id",
+        "columns": [
+          "sector_id",
+          "investor_id",
+          "sector",
+          "total_investment",
+          "allocation_pct"
+        ],
+        "column_info": [
+          [
+            0,
+            "sector_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            1,
+            "investor_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            2,
+            "sector",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            3,
+            "total_investment",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            4,
+            "allocation_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ]
+        ]
+      },
+      "ATOM_EVENT_CASH_FLOW_001": {
+        "rows": 7828,
+        "class": "CashFlow",
+        "pk": "cash_flow_id",
+        "columns": [
+          "cash_flow_id",
+          "investor_id",
+          "date",
+          "type",
+          "amount",
+          "source",
+          "notes"
+        ],
+        "column_info": [
+          [
+            0,
+            "cash_flow_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            1,
+            "investor_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            2,
+            "date",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            3,
+            "type",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            4,
+            "amount",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            5,
+            "source",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            6,
+            "notes",
+            "TEXT",
+            0,
+            null,
+            0
+          ]
+        ]
+      },
+      "ATOM_EVENT_REBALANCING_ACTION_001": {
+        "rows": 6192,
+        "class": "RebalancingAction",
+        "pk": "rebalance_id",
+        "columns": [
+          "rebalance_id",
+          "investor_id",
+          "logic",
+          "action",
+          "current_allocation_pct",
+          "target_allocation_pct",
+          "amount",
+          "notes"
+        ],
+        "column_info": [
+          [
+            0,
+            "rebalance_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            1,
+            "investor_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            2,
+            "logic",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            3,
+            "action",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            4,
+            "current_allocation_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            5,
+            "target_allocation_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            6,
+            "amount",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            7,
+            "notes",
+            "TEXT",
+            0,
+            null,
+            0
+          ]
+        ]
+      },
+      "ATOM_EVENT_SCENARIO_REBALANCING_001": {
+        "rows": 1549,
+        "class": "ScenarioRebalancing",
+        "pk": "scenario_rebalance_id",
+        "columns": [
+          "scenario_rebalance_id",
+          "investor_id",
+          "scenario",
+          "triggered_action",
+          "affected_assets_sectors",
+          "rationale",
+          "current_allocation_pct",
+          "new_allocation_pct"
+        ],
+        "column_info": [
+          [
+            0,
+            "scenario_rebalance_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            1,
+            "investor_id",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            2,
+            "scenario",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            3,
+            "triggered_action",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            4,
+            "affected_assets_sectors",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            5,
+            "rationale",
+            "TEXT",
+            0,
+            null,
+            0
+          ],
+          [
+            6,
+            "current_allocation_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ],
+          [
+            7,
+            "new_allocation_pct",
+            "REAL",
+            0,
+            null,
+            0
+          ]
+        ]
+      }
+    },
+    "inferred_edges": [
+      {
+        "from": "Investor",
+        "edge": "hasInvestmentGoal",
+        "to": "InvestmentGoal",
+        "via": "investor_id"
+      },
+      {
+        "from": "Investor",
+        "edge": "hasPortfolioHealth",
+        "to": "PortfolioHealth",
+        "via": "investor_id"
+      },
+      {
+        "from": "Investor",
+        "edge": "hasHolding",
+        "to": "PortfolioHolding",
+        "via": "investor_id"
+      },
+      {
+        "from": "Investor",
+        "edge": "hasSectorAllocation",
+        "to": "SectorAllocation",
+        "via": "investor_id"
+      },
+      {
+        "from": "Investor",
+        "edge": "hasCashFlow",
+        "to": "CashFlow",
+        "via": "investor_id"
+      },
+      {
+        "from": "Investor",
+        "edge": "hasRebalancingAction",
+        "to": "RebalancingAction",
+        "via": "investor_id"
+      },
+      {
+        "from": "Investor",
+        "edge": "hasScenarioRebalancing",
+        "to": "ScenarioRebalancing",
+        "via": "investor_id"
+      }
+    ],
+    "skipped_tables": [],
+    "configured_tables_missing": [],
+    "missing_config_columns": [],
+    "warnings": [],
+    "triples": 752067
+  },
+  "validation": {
+    "metadata_without_table": [],
+    "table_without_metadata": [],
+    "metadata_attributes_missing_in_db": [],
+    "db_columns_missing_in_metadata": [],
+    "datatype_mismatches": [],
+    "warnings": []
+  },
+  "warning_count": 0,
+  "warnings": [],
+  "outputs": {
+    "schema_ttl": "kg_output_fixed_1\\wealth_management_diverse_schema.ttl",
+    "data_ttl": "kg_output_fixed_1\\wealth_management_diverse_data.ttl",
+    "merged_ttl": "kg_output_fixed_1\\wealth_management_diverse_kg.ttl"
+  }
+}

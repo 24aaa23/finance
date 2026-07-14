@@ -1,0 +1,904 @@
+@prefix ex:      <http://example.org/kg#> .
+@prefix schema1: <http://example.org/schema-linkage#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+
+
+# ============================================================
+# ONTOLOGY HEADER
+# ============================================================
+<http://example.org/kg#> a owl:Ontology ;
+    rdfs:label "Investment Portfolio Knowledge Graph – Corrected v2" ;
+    rdfs:comment """Rebuilt from raw CSVs + schema linkage.
+    Fixes applied:
+      1. Single InvestmentType hierarchy (20 nodes from investment_types.csv only).
+      2. Single AssetClass hierarchy (10 nodes from categories.csv only). No mixing.
+      3. All 10 holdings now carry ex:hasInvestmentType object-property links.
+      4. SectorAllocation: UUID stored as sectorAllocationId; hasSector links Sector by name.
+      5. goal_tracking.csv source-data bug (all rows pointed to G001) corrected;
+         INV002 tracking linked to G002, INV003 to G003.
+      6. Hallucinated risk-tolerance labels removed. RISK001-RISK011 describe
+         investment-product risk only (from investment_risk_categories.csv).
+      7. Orphan GOALTYPE / TimeHorizon phantom instances removed entirely.
+      8. 'Private Equity' category in holding 3 has no match in categories.csv;
+         stored as literal only, no fabricated AssetClass node.
+      9. 'Debt' segment in several holdings has no match in segments.csv;
+         stored as literal only, no fabricated Segment node.
+     10. Source typos (Coporate Bond, Soverign Government Bond) kept verbatim in
+         InvestmentType nodes with rdfs:comment noting the typo – holdings link
+         to those nodes without hallucinating a parallel 'corrected' node.
+    """ .
+
+# ============================================================
+# PROPERTY ALIGNMENT BRIDGE
+# Maps the KG's human-readable ex: property names to the
+# canonical names defined in schema_linkage_graph_v2.rdf.
+# This lets SPARQL queries use EITHER name and lets Protégé
+# understand that they are the same property.
+# ============================================================
+
+# ── PortfolioHolding ──────────────────────────────────────
+ex:sectorLiteral         owl:equivalentProperty schema1:portfolio_holding__sector .
+ex:segmentLiteral        owl:equivalentProperty schema1:portfolio_holding__segment .
+ex:categoryLiteral       owl:equivalentProperty schema1:portfolio_holding__category .
+ex:investmentTypeLiteral owl:equivalentProperty schema1:portfolio_holding__investment_type .
+ex:investmentName        owl:equivalentProperty schema1:portfolio_holding__investment_name .
+ex:returnsPct            owl:equivalentProperty schema1:portfolio_holding__returns_pct .
+ex:hasSector             owl:equivalentProperty schema1:portfolio_holding__sector__context .
+ex:hasSegment            owl:equivalentProperty schema1:portfolio_holding__segment__context .
+ex:hasAssetClass         owl:equivalentProperty schema1:portfolio_holding__category__context .
+ex:hasInvestmentType     owl:equivalentProperty schema1:portfolio_holding__investment_type__context .
+
+# ── InvestmentGoal ────────────────────────────────────────
+ex:targetAmount          owl:equivalentProperty schema1:investment_goal__target_amount .
+ex:currentValue          owl:equivalentProperty schema1:investment_goal__current_value .
+ex:progressPct           owl:equivalentProperty schema1:investment_goal__progress_pct .
+ex:shortfall             owl:equivalentProperty schema1:investment_goal__shortfall .
+ex:timeToGoalMonths      owl:equivalentProperty schema1:investment_goal__time_to_goal_months .
+ex:avgAnnualReturnPct    owl:equivalentProperty schema1:investment_goal__avg_annual_return_pct .
+ex:avgPostTaxReturnPct   owl:equivalentProperty schema1:investment_goal__avg_post_tax_return_pct .
+ex:avgSharpeRatio        owl:equivalentProperty schema1:investment_goal__avg_sharpe_ratio .
+ex:avgVolatilityPct      owl:equivalentProperty schema1:investment_goal__avg_volatility_pct .
+ex:stdDevAnnualReturnPct owl:equivalentProperty schema1:investment_goal__std_dev_annual_return_pct .
+
+# ── InvestorProfile ───────────────────────────────────────
+ex:investmentGoalLabel   owl:equivalentProperty schema1:investor_profile__investment_goal .
+ex:riskTolerance         owl:equivalentProperty schema1:investor_profile__risk_tolerance .
+ex:timeHorizon           owl:equivalentProperty schema1:investor_profile__time_horizon .
+ex:sectorFocus           owl:equivalentProperty schema1:investor_profile__sector_focus .
+ex:preferredSegment      owl:equivalentProperty schema1:investor_profile__segment .
+ex:preferredCategory     owl:equivalentProperty schema1:investor_profile__category .
+
+# ── CashFlow ──────────────────────────────────────────────
+ex:cashFlowType          owl:equivalentProperty schema1:cash_flow__type .
+ex:amount                owl:equivalentProperty schema1:cash_flow__amount .
+
+# ── PortfolioHealth ───────────────────────────────────────
+ex:goalMatchPct          owl:equivalentProperty schema1:portfolio_health__goal_match_pct .
+ex:riskScore             owl:equivalentProperty schema1:portfolio_health__risk_score .
+ex:liquidityScore        owl:equivalentProperty schema1:portfolio_health__liquidity_score .
+ex:diversificationScore  owl:equivalentProperty schema1:portfolio_health__diversification_score .
+
+# ── RebalancingAction ─────────────────────────────────────
+ex:currentAllocationPct  owl:equivalentProperty schema1:rebalancing_action__current_allocation_pct .
+ex:targetAllocationPct   owl:equivalentProperty schema1:rebalancing_action__target_allocation_pct .
+
+# ── SectorAllocation ──────────────────────────────────────
+ex:allocationPct         owl:equivalentProperty schema1:sector_allocation__allocation_pct .
+ex:totalInvestment       owl:equivalentProperty schema1:sector_allocation__total_investment .
+ex:sectorName            owl:equivalentProperty schema1:sector_allocation__sector .
+
+
+
+# ============================================================
+# CLASS DECLARATIONS
+# ============================================================
+ex:InvestorProfile        a owl:Class ; rdfs:label "Investor Profile" .
+ex:InvestmentGoal         a owl:Class ; rdfs:label "Investment Goal" .
+ex:PortfolioHolding       a owl:Class ; rdfs:label "Portfolio Holding" .
+ex:InvestmentType         a owl:Class ; rdfs:label "Investment Type" .
+ex:AssetClass             a owl:Class ; rdfs:label "Asset Class" .
+ex:Sector                 a owl:Class ; rdfs:label "Sector" .
+ex:Segment                a owl:Class ; rdfs:label "Market Segment" .
+ex:InvestmentRiskCategory a owl:Class ; rdfs:label "Investment Risk Category" .
+ex:SectorAllocation       a owl:Class ; rdfs:label "Sector Allocation" .
+ex:PortfolioHealth        a owl:Class ; rdfs:label "Portfolio Health" .
+ex:CashFlow               a owl:Class ; rdfs:label "Cash Flow" .
+ex:RebalancingAction      a owl:Class ; rdfs:label "Rebalancing Action" .
+ex:ScenarioRebalancing    a owl:Class ; rdfs:label "Scenario-Based Rebalancing" .
+
+# ============================================================
+# OBJECT PROPERTY DECLARATIONS
+# ============================================================
+ex:hasInvestor       a owl:ObjectProperty ; rdfs:range ex:InvestorProfile .
+ex:hasInvestmentGoal a owl:ObjectProperty ; rdfs:domain ex:InvestorProfile   ; rdfs:range ex:InvestmentGoal .
+ex:hasHolding        a owl:ObjectProperty ; rdfs:domain ex:InvestorProfile   ; rdfs:range ex:PortfolioHolding .
+ex:hasInvestmentType a owl:ObjectProperty ; rdfs:domain ex:PortfolioHolding  ; rdfs:range ex:InvestmentType .
+ex:hasAssetClass     a owl:ObjectProperty ; rdfs:domain ex:PortfolioHolding  ; rdfs:range ex:AssetClass .
+ex:hasSector         a owl:ObjectProperty ; rdfs:range ex:Sector .
+ex:hasSegment        a owl:ObjectProperty ; rdfs:domain ex:PortfolioHolding  ; rdfs:range ex:Segment .
+ex:hasRiskCategory   a owl:ObjectProperty ; rdfs:domain ex:InvestmentType    ; rdfs:range ex:InvestmentRiskCategory .
+
+# ============================================================
+# DATATYPE PROPERTY DECLARATIONS (selected key ones)
+# ============================================================
+ex:investorId          a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:investorName        a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:invtypeId           a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:investmentTypeName  a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:categoryId          a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:categoryName        a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:sectorId            a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:sectorName          a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:segmentId           a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:segmentName         a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:riskCategoryId      a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:riskLevel           a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:holdingId           a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:investmentName      a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:purchaseDate        a owl:DatatypeProperty ; rdfs:range xsd:date .
+ex:cost                a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:currentValue        a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:returnsPct          a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:dividends           a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:taxesPaid           a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:goalId              a owl:DatatypeProperty ; rdfs:range xsd:string .
+ex:targetAmount        a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:progressPct         a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:shortfall           a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:timeToGoalMonths    a owl:DatatypeProperty ; rdfs:range xsd:integer .
+ex:avgAnnualReturnPct  a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:avgPostTaxReturnPct a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:avgSharpeRatio      a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:avgVolatilityPct    a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ex:stdDevAnnualReturnPct a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+
+# ============================================================
+# REFERENCE DATA – InvestmentType   (source: investment_types.csv)
+# ONE canonical node per row.  No duplicates from categories.csv.
+# ============================================================
+ex:INVTYPE001 a ex:InvestmentType ; ex:invtypeId "INVTYPE001" ; ex:investmentTypeName "Bond" .
+ex:INVTYPE002 a ex:InvestmentType ; ex:invtypeId "INVTYPE002" ; ex:investmentTypeName "SGB" .
+ex:INVTYPE003 a ex:InvestmentType ; ex:invtypeId "INVTYPE003" ; ex:investmentTypeName "PPF" .
+ex:INVTYPE004 a ex:InvestmentType ; ex:invtypeId "INVTYPE004" ; ex:investmentTypeName "EPF" .
+ex:INVTYPE005 a ex:InvestmentType ; ex:invtypeId "INVTYPE005" ; ex:investmentTypeName "ETF" .
+ex:INVTYPE006 a ex:InvestmentType ; ex:invtypeId "INVTYPE006" ; ex:investmentTypeName "Equity" .
+ex:INVTYPE007 a ex:InvestmentType ; ex:invtypeId "INVTYPE007" ; ex:investmentTypeName "MF" .
+ex:INVTYPE008 a ex:InvestmentType ; ex:invtypeId "INVTYPE008" ; ex:investmentTypeName "REIT" .
+ex:INVTYPE009 a ex:InvestmentType ; ex:invtypeId "INVTYPE009" ; ex:investmentTypeName "Debt MF" .
+ex:INVTYPE010 a ex:InvestmentType ; ex:invtypeId "INVTYPE010" ; ex:investmentTypeName "Mutual Fund" .
+ex:INVTYPE011 a ex:InvestmentType ; ex:invtypeId "INVTYPE011" ; ex:investmentTypeName "FD" .
+ex:INVTYPE012 a ex:InvestmentType ; ex:invtypeId "INVTYPE012" ; ex:investmentTypeName "Debt" .
+ex:INVTYPE013 a ex:InvestmentType ;
+    ex:invtypeId "INVTYPE013" ;
+    ex:investmentTypeName "Coporate Bond" ;
+    rdfs:comment "Source typo in investment_types.csv – intended 'Corporate Bond'. Holdings using 'Corporate Bond' map here." .
+ex:INVTYPE014 a ex:InvestmentType ;
+    ex:invtypeId "INVTYPE014" ;
+    ex:investmentTypeName "Soverign Government Bond" ;
+    rdfs:comment "Source typo in investment_types.csv – intended 'Sovereign Government Bond'." .
+ex:INVTYPE015 a ex:InvestmentType ; ex:invtypeId "INVTYPE015" ; ex:investmentTypeName "Alternative Investment Funds (AIF - Cat I)" .
+ex:INVTYPE016 a ex:InvestmentType ; ex:invtypeId "INVTYPE016" ; ex:investmentTypeName "Alternative Investment Funds (AIF Cat II)" .
+ex:INVTYPE017 a ex:InvestmentType ; ex:invtypeId "INVTYPE017" ; ex:investmentTypeName "Alternative Investment Funds (AIF Cat III)" .
+ex:INVTYPE018 a ex:InvestmentType ; ex:invtypeId "INVTYPE018" ; ex:investmentTypeName "Global Equity" .
+ex:INVTYPE019 a ex:InvestmentType ; ex:invtypeId "INVTYPE019" ; ex:investmentTypeName "Cash & Equivalent" .
+ex:INVTYPE020 a ex:InvestmentType ; ex:invtypeId "INVTYPE020" ; ex:investmentTypeName "Certificates of Deposit (CDs)" .
+
+# ============================================================
+# REFERENCE DATA – AssetClass   (source: categories.csv)
+# Separate hierarchy from InvestmentType – no nodes shared/duplicated.
+# ============================================================
+ex:CATEGORY001 a ex:AssetClass ; ex:categoryId "CATEGORY001" ; ex:categoryName "Bond" .
+ex:CATEGORY002 a ex:AssetClass ; ex:categoryId "CATEGORY002" ; ex:categoryName "SGB" .
+ex:CATEGORY003 a ex:AssetClass ; ex:categoryId "CATEGORY003" ; ex:categoryName "PPF" .
+ex:CATEGORY004 a ex:AssetClass ; ex:categoryId "CATEGORY004" ; ex:categoryName "EPF" .
+ex:CATEGORY005 a ex:AssetClass ; ex:categoryId "CATEGORY005" ; ex:categoryName "ETF" .
+ex:CATEGORY006 a ex:AssetClass ; ex:categoryId "CATEGORY006" ; ex:categoryName "Equity" .
+ex:CATEGORY007 a ex:AssetClass ; ex:categoryId "CATEGORY007" ; ex:categoryName "Mutual Fund" .
+ex:CATEGORY008 a ex:AssetClass ; ex:categoryId "CATEGORY008" ; ex:categoryName "REIT" .
+ex:CATEGORY009 a ex:AssetClass ; ex:categoryId "CATEGORY009" ; ex:categoryName "FD" .
+ex:CATEGORY010 a ex:AssetClass ; ex:categoryId "CATEGORY010" ; ex:categoryName "Debt" .
+
+# ============================================================
+# REFERENCE DATA – Sector   (source: sectors.csv)
+# ============================================================
+ex:SECTOR001  a ex:Sector ; ex:sectorId "SECTOR001"  ; ex:sectorName "Government" .
+ex:SECTOR002  a ex:Sector ; ex:sectorId "SECTOR002"  ; ex:sectorName "Gold" .
+ex:SECTOR003  a ex:Sector ; ex:sectorId "SECTOR003"  ; ex:sectorName "Technology" .
+ex:SECTOR004  a ex:Sector ; ex:sectorId "SECTOR004"  ; ex:sectorName "Pharma" .
+ex:SECTOR005  a ex:Sector ; ex:sectorId "SECTOR005"  ; ex:sectorName "Diversified" .
+ex:SECTOR006  a ex:Sector ; ex:sectorId "SECTOR006"  ; ex:sectorName "Index" .
+ex:SECTOR007  a ex:Sector ; ex:sectorId "SECTOR007"  ; ex:sectorName "Real Estate" .
+ex:SECTOR008  a ex:Sector ; ex:sectorId "SECTOR008"  ; ex:sectorName "Banking" .
+ex:SECTOR009  a ex:Sector ; ex:sectorId "SECTOR009"  ; ex:sectorName "Corporate" .
+ex:SECTOR010  a ex:Sector ; ex:sectorId "SECTOR010"  ; ex:sectorName "Debt" .
+ex:SECTOR011  a ex:Sector ; ex:sectorId "SECTOR011"  ; ex:sectorName "Infrastructure" .
+ex:SECTOR012  a ex:Sector ; ex:sectorId "SECTOR012"  ; ex:sectorName "Global" .
+ex:SECTOR013  a ex:Sector ; ex:sectorId "SECTOR013"  ; ex:sectorName "Energy" .
+ex:SECTOR014  a ex:Sector ; ex:sectorId "SECTOR014"  ; ex:sectorName "FMCG" .
+ex:SECTOR015  a ex:Sector ; ex:sectorId "SECTOR015"  ; ex:sectorName "Automobile" .
+ex:SECTOR016  a ex:Sector ; ex:sectorId "SECTOR016"  ; ex:sectorName "Healthcare" .
+ex:SECTOR017  a ex:Sector ; ex:sectorId "SECTOR017"  ; ex:sectorName "Private Equity" .
+
+# ============================================================
+# REFERENCE DATA – Segment   (source: segments.csv)
+# ============================================================
+ex:SEGMENT001 a ex:Segment ; ex:segmentId "SEGMENT001" ; ex:segmentName "Large Cap" .
+ex:SEGMENT002 a ex:Segment ; ex:segmentId "SEGMENT002" ; ex:segmentName "Commodity" .
+ex:SEGMENT003 a ex:Segment ; ex:segmentId "SEGMENT003" ; ex:segmentName "Fixed Income" .
+ex:SEGMENT004 a ex:Segment ; ex:segmentId "SEGMENT004" ; ex:segmentName "Mid Cap" .
+ex:SEGMENT005 a ex:Segment ; ex:segmentId "SEGMENT005" ; ex:segmentName "Diversified" .
+ex:SEGMENT006 a ex:Segment ; ex:segmentId "SEGMENT006" ; ex:segmentName "Hybrid" .
+ex:SEGMENT007 a ex:Segment ; ex:segmentId "SEGMENT007" ; ex:segmentName "Small Cap" .
+ex:SEGMENT008 a ex:Segment ; ex:segmentId "SEGMENT008" ; ex:segmentName "Thematic" .
+ex:SEGMENT009 a ex:Segment ; ex:segmentId "SEGMENT009" ; ex:segmentName "International" .
+
+# ============================================================
+# REFERENCE DATA – InvestmentRiskCategory  (source: investment_risk_categories.csv)
+# IMPORTANT: These nodes describe investment-PRODUCT risk (Medium/High/Low).
+# They do NOT represent investor risk-tolerance levels.
+# Do NOT confuse with investor risk profile (Conservative/Moderate/Aggressive).
+# The hallucinated RISK_001="Conservative" / RISK_003="Aggressive" nodes are removed.
+# ============================================================
+ex:RISK001 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK001" ;
+    ex:investmentTypeLiteral "Coporate Bond" ;
+    ex:fullForm "Coporate Bond" ;
+    ex:riskLevel "Medium" .
+
+ex:RISK002 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK002" ;
+    ex:investmentTypeLiteral "Soverign Government Bond" ;
+    ex:fullForm "Government Bond" ;
+    ex:riskLevel "Low" .
+
+ex:RISK003 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK003" ;
+    ex:investmentTypeLiteral "Alternative Investment Funds (AIF - Cat I)" ;
+    ex:fullForm "Private Equity" ;
+    ex:riskLevel "High" .
+
+ex:RISK004 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK004" ;
+    ex:investmentTypeLiteral "Alternative Investment Funds (AIF Cat II)" ;
+    ex:fullForm "Venture Capital" ;
+    ex:riskLevel "High" .
+
+ex:RISK005 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK005" ;
+    ex:investmentTypeLiteral "Alternative Investment Funds (AIF Cat III)" ;
+    ex:fullForm "Global Macro Hedge Funds" ;
+    ex:riskLevel "High" .
+
+ex:RISK006 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK006" ;
+    ex:investmentTypeLiteral "Global Equity" ;
+    ex:fullForm "Global Equity" ;
+    ex:riskLevel "High" .
+
+ex:RISK007 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK007" ;
+    ex:investmentTypeLiteral "Equity" ;
+    ex:fullForm "Equity (Stocks)" ;
+    ex:riskLevel "High" .
+
+ex:RISK008 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK008" ;
+    ex:investmentTypeLiteral "Mutual Fund" ;
+    ex:fullForm "Debt Mutual Fund" ;
+    ex:riskLevel "Low" .
+
+ex:RISK009 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK009" ;
+    ex:investmentTypeLiteral "REIT" ;
+    ex:fullForm "Real Estate Investment Trust" ;
+    ex:riskLevel "Medium" .
+
+ex:RISK010 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK010" ;
+    ex:investmentTypeLiteral "Cash & Equivalent" ;
+    ex:fullForm "Cash" ;
+    ex:riskLevel "Low" .
+
+ex:RISK011 a ex:InvestmentRiskCategory ;
+    ex:riskCategoryId "RISK011" ;
+    ex:investmentTypeLiteral "Certificates of Deposit (CDs)" ;
+    ex:fullForm "Certificates of Deposit (CDs)" ;
+    ex:riskLevel "Low" .
+
+# Link InvestmentType nodes → their risk categories
+ex:INVTYPE013 ex:hasRiskCategory ex:RISK001 .   # Coporate Bond       → Medium
+ex:INVTYPE014 ex:hasRiskCategory ex:RISK002 .   # Soverign Govt Bond  → Low
+ex:INVTYPE015 ex:hasRiskCategory ex:RISK003 .   # AIF Cat I           → High
+ex:INVTYPE016 ex:hasRiskCategory ex:RISK004 .   # AIF Cat II          → High
+ex:INVTYPE017 ex:hasRiskCategory ex:RISK005 .   # AIF Cat III         → High
+ex:INVTYPE018 ex:hasRiskCategory ex:RISK006 .   # Global Equity       → High
+ex:INVTYPE006 ex:hasRiskCategory ex:RISK007 .   # Equity              → High
+ex:INVTYPE010 ex:hasRiskCategory ex:RISK008 .   # Mutual Fund         → Low
+ex:INVTYPE008 ex:hasRiskCategory ex:RISK009 .   # REIT                → Medium
+ex:INVTYPE019 ex:hasRiskCategory ex:RISK010 .   # Cash & Equivalent   → Low
+ex:INVTYPE020 ex:hasRiskCategory ex:RISK011 .   # CDs                 → Low
+
+# ============================================================
+# INVESTOR PROFILES   (source: investor_profile.csv)
+# riskTolerance stored as plain string literal.
+# "High" and "Highest" are NOT in the schema's allowed values
+# (Conservative/Moderate/Aggressive) – kept as-is per source data.
+# No invented risk-tolerance nodes.
+# ============================================================
+
+ex:INV001 a ex:InvestorProfile ;
+    ex:investorId          "INV001" ;
+    ex:investorName        "Deepak Sharma" ;
+    ex:investmentGoalLabel "Income Generation" ;
+    ex:riskTolerance       "Moderate" ;
+    ex:timeHorizon         "Long-term" ;
+    ex:sectorFocus         "Government, Gold, Debt" ;
+    ex:preferredSegment    "Large Cap" ;
+    ex:preferredCategory   "Bonds, SGB, PPF" ;
+    ex:notes               "Focus on safety and inflation hedge" .
+
+ex:INV002 a ex:InvestorProfile ;
+    ex:investorId          "INV002" ;
+    ex:investorName        "Neha Sharma 2" ;
+    ex:investmentGoalLabel "Growth" ;
+    ex:riskTolerance       "High" ;
+    ex:timeHorizon         "Long-term" ;
+    ex:sectorFocus         "Technology, Pharma, Infra" ;
+    ex:preferredSegment    "Mid Cap" ;
+    ex:preferredCategory   "Equity, MF, ETF" ;
+    ex:notes               "Aggressive equity growth strategy" .
+
+ex:INV003 a ex:InvestorProfile ;
+    ex:investorId          "INV003" ;
+    ex:investorName        "Rajesh Iyer" ;
+    ex:investmentGoalLabel "Income Generation" ;
+    ex:riskTolerance       "Moderate" ;
+    ex:timeHorizon         "Medium-term" ;
+    ex:sectorFocus         "Real Estate, Banking, Corporate" ;
+    ex:preferredSegment    "Diversified" ;
+    ex:preferredCategory   "REIT, Debt MF, FD" ;
+    ex:notes               "Stable income with moderate growth" .
+
+ex:INV004 a ex:InvestorProfile ;
+    ex:investorId          "INV004" ;
+    ex:investorName        "Elon Musk" ;
+    ex:investmentGoalLabel "Maximise Cash" ;
+    ex:riskTolerance       "Highest" .
+    # sector_focus, time_horizon, segment, category, notes are blank in CSV – not added.
+
+# ============================================================
+# INVESTMENT GOALS   (sources: investment_goals.csv + goal_tracking.csv
+#                              + goal_performance.csv + goal_risk_metrics.csv)
+#
+# BUG FIX – goal_tracking.csv source data error:
+#   All three rows set goal_id = "G001" regardless of investor.
+#   The correct mapping (from investment_goals.csv) is:
+#     INV001 → G001  (row 10d18e8e – correctly already G001)
+#     INV002 → G002  (row 23cfae3f – CSV says G001, CORRECTED)
+#     INV003 → G003  (row bd92ec7b – CSV says G001, CORRECTED)
+# ============================================================
+
+ex:G001 a ex:InvestmentGoal ;
+    ex:goalId              "G001" ;
+    ex:investmentGoalLabel "Income Generation" ;
+    ex:description         "Focus on safety and inflation hedge" ;
+    ex:hasInvestor         ex:INV001 ;
+    # --- goal_tracking row for INV001 ---
+    ex:goalTrackingId      "10d18e8e-3ee8-4819-b5c5-9061aecc6016" ;
+    ex:targetAmount        "1000000"^^xsd:decimal ;
+    ex:currentValue        "1046172"^^xsd:decimal ;
+    ex:progressPct         "104.62"^^xsd:decimal ;
+    ex:shortfall           "-46172"^^xsd:decimal ;
+    ex:timeToGoalMonths    "36"^^xsd:integer ;
+    # --- goal_performance row for INV001, G001 ---
+    ex:goalPerformanceId   "47fef283-1b62-435f-8659-5dd9bd9e7863" ;
+    ex:avgAnnualReturnPct  "13.9"^^xsd:decimal ;
+    ex:avgPostTaxReturnPct "11.12"^^xsd:decimal ;
+    ex:avgSharpeRatio      "2.24"^^xsd:decimal ;
+    # --- goal_risk_metrics row for INV001, G001 ---
+    ex:goalRiskId          "660c5d78-3ad7-44c8-8212-fb28dfa7129d" ;
+    ex:avgVolatilityPct    "6.19"^^xsd:decimal ;
+    ex:stdDevAnnualReturnPct "9.15"^^xsd:decimal .
+
+ex:G002 a ex:InvestmentGoal ;
+    ex:goalId              "G002" ;
+    ex:investmentGoalLabel "Growth" ;
+    ex:description         "Aggressive equity growth strategy" ;
+    ex:hasInvestor         ex:INV002 ;
+    # --- goal_tracking row for INV002 (CORRECTED from G001) ---
+    ex:goalTrackingId      "23cfae3f-8b67-4760-ab78-9d4ba2a8265a" ;
+    ex:targetAmount        "1500000"^^xsd:decimal ;
+    ex:currentValue        "1345444"^^xsd:decimal ;
+    ex:progressPct         "89.7"^^xsd:decimal ;
+    ex:shortfall           "154556"^^xsd:decimal ;
+    ex:timeToGoalMonths    "60"^^xsd:integer ;
+    # --- goal_performance row for INV002, G002 ---
+    ex:goalPerformanceId   "9435aacb-e132-4e93-b8d3-eea0d414ba17" ;
+    ex:avgAnnualReturnPct  "14"^^xsd:decimal ;
+    ex:avgPostTaxReturnPct "11.2"^^xsd:decimal ;
+    ex:avgSharpeRatio      "2.21"^^xsd:decimal ;
+    # --- goal_risk_metrics row for INV002, G002 ---
+    ex:goalRiskId          "44b3866e-4285-4987-a809-beb00bfc7653" ;
+    ex:avgVolatilityPct    "6.33"^^xsd:decimal ;
+    ex:stdDevAnnualReturnPct "7.08"^^xsd:decimal .
+
+ex:G003 a ex:InvestmentGoal ;
+    ex:goalId              "G003" ;
+    ex:investmentGoalLabel "Income Generation" ;
+    ex:description         "Stable income with moderate growth" ;
+    ex:hasInvestor         ex:INV003 ;
+    # --- goal_tracking row for INV003 (CORRECTED from G001) ---
+    ex:goalTrackingId      "bd92ec7b-6ce3-417d-b281-f3eac80abd04" ;
+    ex:targetAmount        "800000"^^xsd:decimal ;
+    ex:currentValue        "1188753"^^xsd:decimal ;
+    ex:progressPct         "148.59"^^xsd:decimal ;
+    ex:shortfall           "-388753"^^xsd:decimal ;
+    ex:timeToGoalMonths    "24"^^xsd:integer ;
+    # --- goal_performance row for INV003, G003 ---
+    ex:goalPerformanceId   "a92ecdd1-e709-4c56-8b6d-1978eef6b3ba" ;
+    ex:avgAnnualReturnPct  "14.25"^^xsd:decimal ;
+    ex:avgPostTaxReturnPct "11.4"^^xsd:decimal ;
+    ex:avgSharpeRatio      "2.24"^^xsd:decimal ;
+    # --- goal_risk_metrics row for INV003, G003 ---
+    ex:goalRiskId          "2ae8b64d-eed3-424b-806f-f7bec330baeb" ;
+    ex:avgVolatilityPct    "6.37"^^xsd:decimal ;
+    ex:stdDevAnnualReturnPct "8.27"^^xsd:decimal .
+
+# Investor → Goal object links
+ex:INV001 ex:hasInvestmentGoal ex:G001 .
+ex:INV002 ex:hasInvestmentGoal ex:G002 .
+ex:INV003 ex:hasInvestmentGoal ex:G003 .
+
+# ============================================================
+# PORTFOLIO HOLDINGS   (source: portfolio_holdings.csv – all 10 for INV001)
+#
+# KEY FIXES applied to every holding:
+#  • ex:hasInvestmentType  – object link to InvestmentType node (was missing)
+#  • ex:hasAssetClass      – object link to AssetClass node where category matches
+#  • ex:hasSector          – object link to Sector node by name
+#  • ex:hasSegment         – object link to Segment node where name matches segments.csv
+#
+# Literals kept alongside object links for full-text search in Neo4j/Protégé.
+#
+# Segment "Debt" / "Private Equity" → NOT in segments.csv → literal only, no object link.
+# Category "Private Equity" → NOT in categories.csv → literal only, no object link.
+# "Corporate Bond" holding text → maps to INVTYPE013 "Coporate Bond" (source typo).
+# ============================================================
+
+# --- Holding 1: Corporate Bond – NTPC Limited ---
+ex:h-57d02903 a ex:PortfolioHolding ;
+    ex:holdingId            "57d02903-fbaf-4601-894f-627a7d57884c" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:investmentTypeLiteral "Corporate Bond" ;
+    ex:hasInvestmentType    ex:INVTYPE013 ;   # "Coporate Bond" – typo in source
+    ex:investmentName       "NTPC Limited" ;
+    ex:sectorLiteral        "Government" ;
+    ex:hasSector            ex:SECTOR001 ;
+    ex:segmentLiteral       "Debt" ;
+    # "Debt" absent from segments.csv – no hasSegment link
+    ex:categoryLiteral      "Bond" ;
+    ex:hasAssetClass        ex:CATEGORY001 ;
+    ex:purchaseDate         "2022-09-24"^^xsd:date ;
+    ex:cost                 "1050000"^^xsd:decimal ;
+    ex:currentValue         "1150000"^^xsd:decimal ;
+    ex:returnsPct           "10"^^xsd:decimal ;
+    ex:dividends            "5388"^^xsd:decimal ;
+    ex:taxesPaid            "4105"^^xsd:decimal .
+
+# --- Holding 2: Certificates of Deposit – SBI ---
+ex:h-ca4c4275 a ex:PortfolioHolding ;
+    ex:holdingId            "ca4c4275-c692-4664-85c6-c08776b75678" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:investmentTypeLiteral "Certificates of Deposit (CDs)" ;
+    ex:hasInvestmentType    ex:INVTYPE020 ;
+    ex:investmentName       "State Bank Of India CD 12sep23" ;
+    ex:sectorLiteral        "Banking" ;
+    ex:hasSector            ex:SECTOR008 ;
+    ex:segmentLiteral       "Debt" ;
+    # "Debt" absent from segments.csv – no hasSegment link
+    ex:categoryLiteral      "Debt" ;
+    ex:hasAssetClass        ex:CATEGORY010 ;
+    ex:purchaseDate         "2022-11-08"^^xsd:date ;
+    ex:cost                 "1000000"^^xsd:decimal ;
+    ex:currentValue         "1030000"^^xsd:decimal ;
+    ex:returnsPct           "3"^^xsd:decimal ;
+    ex:dividends            "6407"^^xsd:decimal ;
+    ex:taxesPaid            "3144"^^xsd:decimal .
+
+# --- Holding 3: AIF Cat I – Aditya Birla Private Equity ---
+ex:h-9226b530 a ex:PortfolioHolding ;
+    ex:holdingId            "9226b530-8464-4238-89c2-a21c285e0526" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:investmentTypeLiteral "Alternative Investment Funds (AIF - Cat I)" ;
+    ex:hasInvestmentType    ex:INVTYPE015 ;
+    ex:investmentName       "Aditya Birla Private Equity Trust" ;
+    ex:sectorLiteral        "Private Equity" ;
+    ex:hasSector            ex:SECTOR017 ;
+    ex:segmentLiteral       "Private Equity" ;
+    # "Private Equity" absent from segments.csv – no hasSegment link
+    ex:categoryLiteral      "Private Equity" ;
+    # "Private Equity" absent from categories.csv – no hasAssetClass link
+    ex:purchaseDate         "2022-12-23"^^xsd:date ;
+    ex:cost                 "11019100"^^xsd:decimal ;
+    ex:currentValue         "15028100"^^xsd:decimal ;
+    ex:returnsPct           "36"^^xsd:decimal ;
+    ex:dividends            "2753"^^xsd:decimal ;
+    ex:taxesPaid            "2017"^^xsd:decimal .
+
+# --- Holding 4: Equity – Tata Motors ---
+ex:h-1ff23dce a ex:PortfolioHolding ;
+    ex:holdingId            "1ff23dce-e8b8-4f2c-9a2f-809436240818" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:investmentTypeLiteral "Equity" ;
+    ex:hasInvestmentType    ex:INVTYPE006 ;
+    ex:investmentName       "Tata Motors Passenger Vehicles Ltd" ;
+    ex:sectorLiteral        "Automobile" ;
+    ex:hasSector            ex:SECTOR015 ;
+    ex:segmentLiteral       "Large Cap" ;
+    ex:hasSegment           ex:SEGMENT001 ;
+    ex:categoryLiteral      "Equity" ;
+    ex:hasAssetClass        ex:CATEGORY006 ;
+    ex:purchaseDate         "2022-05-19"^^xsd:date ;
+    ex:cost                 "2176015"^^xsd:decimal ;
+    ex:currentValue         "2793077"^^xsd:decimal ;
+    ex:returnsPct           "28"^^xsd:decimal ;
+    ex:dividends            "6508"^^xsd:decimal ;
+    ex:taxesPaid            "1607"^^xsd:decimal .
+
+# --- Holding 5: Equity – Infosys ---
+ex:h-a6e0c082 a ex:PortfolioHolding ;
+    ex:holdingId            "a6e0c082-bc96-4121-8a16-af2a46888a53" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:investmentTypeLiteral "Equity" ;
+    ex:hasInvestmentType    ex:INVTYPE006 ;
+    ex:investmentName       "Infosys Ltd." ;
+    ex:sectorLiteral        "Technology" ;
+    ex:hasSector            ex:SECTOR003 ;
+    ex:segmentLiteral       "Large Cap" ;
+    ex:hasSegment           ex:SEGMENT001 ;
+    ex:categoryLiteral      "Equity" ;
+    ex:hasAssetClass        ex:CATEGORY006 ;
+    ex:purchaseDate         "2022-07-09"^^xsd:date ;
+    ex:cost                 "4176015"^^xsd:decimal ;
+    ex:currentValue         "5793077"^^xsd:decimal ;
+    ex:returnsPct           "39"^^xsd:decimal ;
+    ex:dividends            "7549"^^xsd:decimal ;
+    ex:taxesPaid            "1947"^^xsd:decimal .
+
+# --- Holding 6: Equity – Persistent Systems ---
+ex:h-69530831 a ex:PortfolioHolding ;
+    ex:holdingId            "69530831-f9e0-40f8-bcdc-5505b5a3b3e7" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:investmentTypeLiteral "Equity" ;
+    ex:hasInvestmentType    ex:INVTYPE006 ;
+    ex:investmentName       "Persistent Systems Ltd." ;
+    ex:sectorLiteral        "Technology" ;
+    ex:hasSector            ex:SECTOR003 ;
+    ex:segmentLiteral       "Mid Cap" ;
+    ex:hasSegment           ex:SEGMENT004 ;
+    ex:categoryLiteral      "Equity" ;
+    ex:hasAssetClass        ex:CATEGORY006 ;
+    ex:purchaseDate         "2022-01-19"^^xsd:date ;
+    ex:cost                 "264864"^^xsd:decimal ;
+    ex:currentValue         "310110"^^xsd:decimal ;
+    ex:returnsPct           "17"^^xsd:decimal ;
+    ex:dividends            "4655"^^xsd:decimal ;
+    ex:taxesPaid            "1086"^^xsd:decimal .
+
+# --- Holding 7: REIT – Brookfield India ---
+ex:h-c9148ad6 a ex:PortfolioHolding ;
+    ex:holdingId            "c9148ad6-cbbc-4182-ab70-5f5d7d366487" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:investmentTypeLiteral "REIT" ;
+    ex:hasInvestmentType    ex:INVTYPE008 ;
+    ex:investmentName       "Brookfield India Real Estate Trust" ;
+    ex:sectorLiteral        "Infrastructure" ;
+    ex:hasSector            ex:SECTOR011 ;
+    ex:segmentLiteral       "Mid Cap" ;
+    ex:hasSegment           ex:SEGMENT004 ;
+    ex:categoryLiteral      "REIT" ;
+    ex:hasAssetClass        ex:CATEGORY008 ;
+    ex:purchaseDate         "2022-07-04"^^xsd:date ;
+    ex:cost                 "5229947"^^xsd:decimal ;
+    ex:currentValue         "6269835"^^xsd:decimal ;
+    ex:returnsPct           "20"^^xsd:decimal ;
+    ex:dividends            "5632"^^xsd:decimal ;
+    ex:taxesPaid            "3253"^^xsd:decimal .
+
+# --- Holding 8: Equity – Cipla ---
+ex:h-b42fc93a a ex:PortfolioHolding ;
+    ex:holdingId            "b42fc93a-d778-40fe-a815-f3adb7f9ef4b" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:investmentTypeLiteral "Equity" ;
+    ex:hasInvestmentType    ex:INVTYPE006 ;
+    ex:investmentName       "Cipla Ltd." ;
+    ex:sectorLiteral        "Healthcare" ;
+    ex:hasSector            ex:SECTOR016 ;
+    ex:segmentLiteral       "Large Cap" ;
+    ex:hasSegment           ex:SEGMENT001 ;
+    ex:categoryLiteral      "Equity" ;
+    ex:hasAssetClass        ex:CATEGORY006 ;
+    ex:purchaseDate         "2022-11-23"^^xsd:date ;
+    ex:cost                 "1869590"^^xsd:decimal ;
+    ex:currentValue         "1992470"^^xsd:decimal ;
+    ex:returnsPct           "7"^^xsd:decimal ;
+    ex:dividends            "8456"^^xsd:decimal ;
+    ex:taxesPaid            "3352"^^xsd:decimal .
+
+# --- Holding 9: Corporate Bond – Hinduja Leyland Finance ---
+ex:h-89a14ab4 a ex:PortfolioHolding ;
+    ex:holdingId            "89a14ab4-cc6e-41db-a9d8-84e398176e22" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:investmentTypeLiteral "Corporate Bond" ;
+    ex:hasInvestmentType    ex:INVTYPE013 ;   # "Coporate Bond" – typo in source
+    ex:investmentName       "Hinduja Leyland Finance Limited" ;
+    ex:sectorLiteral        "Corporate" ;
+    ex:hasSector            ex:SECTOR009 ;
+    ex:segmentLiteral       "Debt" ;
+    # "Debt" absent from segments.csv – no hasSegment link
+    ex:categoryLiteral      "Bond" ;
+    ex:hasAssetClass        ex:CATEGORY001 ;
+    ex:purchaseDate         "2022-04-26"^^xsd:date ;
+    ex:cost                 "3173890"^^xsd:decimal ;
+    ex:currentValue         "3466900"^^xsd:decimal ;
+    ex:returnsPct           "9"^^xsd:decimal ;
+    ex:dividends            "9192"^^xsd:decimal ;
+    ex:taxesPaid            "1272"^^xsd:decimal .
+
+# --- Holding 10: Global Equity – Apple Inc ---
+ex:h-0e5c7ae5 a ex:PortfolioHolding ;
+    ex:holdingId            "0e5c7ae5-05cd-42e1-8568-4d8953b05b7f" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:investmentTypeLiteral "Global Equity" ;
+    ex:hasInvestmentType    ex:INVTYPE018 ;
+    ex:investmentName       "Apple Inc" ;
+    ex:sectorLiteral        "Technology" ;
+    ex:hasSector            ex:SECTOR003 ;
+    ex:segmentLiteral       "Large Cap" ;
+    ex:hasSegment           ex:SEGMENT001 ;
+    ex:categoryLiteral      "Equity" ;
+    ex:hasAssetClass        ex:CATEGORY006 ;
+    ex:purchaseDate         "2022-07-06"^^xsd:date ;
+    ex:cost                 "601230"^^xsd:decimal ;
+    ex:currentValue         "814562"^^xsd:decimal ;
+    ex:returnsPct           "35"^^xsd:decimal ;
+    ex:dividends            "4880"^^xsd:decimal ;
+    ex:taxesPaid            "2756"^^xsd:decimal .
+
+# Investor → Holding links (all 10)
+ex:INV001 ex:hasHolding
+    ex:h-57d02903, ex:h-ca4c4275, ex:h-9226b530, ex:h-1ff23dce, ex:h-a6e0c082,
+    ex:h-69530831, ex:h-c9148ad6, ex:h-b42fc93a, ex:h-89a14ab4, ex:h-0e5c7ae5 .
+
+# ============================================================
+# SECTOR ALLOCATIONS   (source: sector_allocations.csv)
+#
+# KEY FIX: The sector_allocation_id UUID is stored as ex:sectorAllocationId.
+# The previous KG incorrectly put the UUID into the sectorId field.
+# ex:hasSector now links to the correct Sector node by matching sector name.
+# ============================================================
+
+ex:sa-426d690a a ex:SectorAllocation ;
+    ex:sectorAllocationId  "426d690a-10fe-4149-b778-00db91d8a7a7" ;
+    ex:hasInvestor         ex:INV001 ;
+    ex:sectorName          "Government" ;
+    ex:hasSector           ex:SECTOR001 ;
+    ex:totalInvestment     "1150000"^^xsd:decimal ;
+    ex:allocationPct       "3"^^xsd:decimal .
+
+ex:sa-d0bbd45e a ex:SectorAllocation ;
+    ex:sectorAllocationId  "d0bbd45e-fde0-4d5f-bb5c-bf3428db34c2" ;
+    ex:hasInvestor         ex:INV001 ;
+    ex:sectorName          "Technology" ;
+    ex:hasSector           ex:SECTOR003 ;
+    ex:totalInvestment     "6917749"^^xsd:decimal ;
+    ex:allocationPct       "19"^^xsd:decimal .
+
+ex:sa-e06bdec7 a ex:SectorAllocation ;
+    ex:sectorAllocationId  "e06bdec7-d26f-4543-bd8e-f351e05e9bcc" ;
+    ex:hasInvestor         ex:INV001 ;
+    ex:sectorName          "Corporate" ;
+    ex:hasSector           ex:SECTOR009 ;
+    ex:totalInvestment     "475621"^^xsd:decimal ;
+    ex:allocationPct       "1"^^xsd:decimal .
+
+ex:sa-9026854c a ex:SectorAllocation ;
+    ex:sectorAllocationId  "9026854c-484e-4c04-9689-ef182b5a32cb" ;
+    ex:hasInvestor         ex:INV001 ;
+    ex:sectorName          "Automobile" ;
+    ex:hasSector           ex:SECTOR015 ;
+    ex:totalInvestment     "2793077"^^xsd:decimal ;
+    ex:allocationPct       "8"^^xsd:decimal .
+
+ex:sa-6f65acc4 a ex:SectorAllocation ;
+    ex:sectorAllocationId  "6f65acc4-281b-4708-8f87-cbe437c58b54" ;
+    ex:hasInvestor         ex:INV001 ;
+    ex:sectorName          "Private Equity" ;
+    ex:hasSector           ex:SECTOR017 ;
+    ex:totalInvestment     "15028100"^^xsd:decimal ;
+    ex:allocationPct       "42"^^xsd:decimal .
+
+ex:sa-d53b7925 a ex:SectorAllocation ;
+    ex:sectorAllocationId  "d53b7925-c674-4503-ac37-96b6aa688fa3" ;
+    ex:hasInvestor         ex:INV001 ;
+    ex:sectorName          "Infrastructure" ;
+    ex:hasSector           ex:SECTOR011 ;
+    ex:totalInvestment     "6269835"^^xsd:decimal ;
+    ex:allocationPct       "18"^^xsd:decimal .
+
+ex:sa-51648c33 a ex:SectorAllocation ;
+    ex:sectorAllocationId  "51648c33-f9c4-4e68-8434-7f65052db52c" ;
+    ex:hasInvestor         ex:INV001 ;
+    ex:sectorName          "Healthcare" ;
+    ex:hasSector           ex:SECTOR016 ;
+    ex:totalInvestment     "1992470"^^xsd:decimal ;
+    ex:allocationPct       "6"^^xsd:decimal .
+
+ex:sa-bce7cabb a ex:SectorAllocation ;
+    ex:sectorAllocationId  "bce7cabb-90cd-47a0-b08f-b3103c62d0a7" ;
+    ex:hasInvestor         ex:INV001 ;
+    ex:sectorName          "Banking" ;
+    ex:hasSector           ex:SECTOR008 ;
+    ex:totalInvestment     "1030000"^^xsd:decimal ;
+    ex:allocationPct       "3"^^xsd:decimal .
+
+# ============================================================
+# CASH FLOWS   (source: cash_flow.csv)
+# ============================================================
+
+ex:cf-15a6c830 a ex:CashFlow ;
+    ex:cashFlowId   "15a6c830-b586-4c2a-a961-94b2ddce3452" ;
+    ex:hasInvestor  ex:INV001 ;
+    ex:date         "2023-04-01"^^xsd:date ;
+    ex:cashFlowType "SIP" ;
+    ex:amount       "10000"^^xsd:decimal ;
+    ex:source       "Gov Bond" ;
+    ex:notes        "Monthly SIP" .
+
+ex:cf-9247031b a ex:CashFlow ;
+    ex:cashFlowId   "9247031b-4377-4765-b204-21ab5579ad04" ;
+    ex:hasInvestor  ex:INV002 ;
+    ex:date         "2023-04-01"^^xsd:date ;
+    ex:cashFlowType "Dividend" ;
+    ex:amount       "2000"^^xsd:decimal ;
+    ex:source       "Tech Innovators Ltd" ;
+    ex:notes        "Quarterly dividend" .
+
+ex:cf-21a75a71 a ex:CashFlow ;
+    ex:cashFlowId   "21a75a71-5366-4d07-bef4-fa83fa262a17" ;
+    ex:hasInvestor  ex:INV003 ;
+    ex:date         "2023-04-01"^^xsd:date ;
+    ex:cashFlowType "SWP" ;
+    ex:amount       "5000"^^xsd:decimal ;
+    ex:source       "Urban REIT" ;
+    ex:notes        "Monthly withdrawal" .
+
+# ============================================================
+# PORTFOLIO HEALTH   (source: portfolio_health.csv)
+# NOTE: Source CSV column "rick_score" is a typo for "risk_score".
+#       Corrected to ex:riskScore here.
+# ============================================================
+
+ex:ph-309dfcae a ex:PortfolioHealth ;
+    ex:portfolioHealthId    "309dfcae-f07f-4f24-b157-004d52df3882" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:goalMatchPct         "86.5"^^xsd:decimal ;
+    ex:riskScore            "Low" ;
+    ex:liquidityScore       "High" ;
+    ex:diversificationScore "Moderate" .
+
+ex:ph-5960dbdf a ex:PortfolioHealth ;
+    ex:portfolioHealthId    "5960dbdf-8d31-4e39-a109-488b259de33a" ;
+    ex:hasInvestor          ex:INV002 ;
+    ex:goalMatchPct         "36.7"^^xsd:decimal ;
+    ex:riskScore            "High" ;
+    ex:liquidityScore       "Moderate" ;
+    ex:diversificationScore "High" .
+
+ex:ph-0f8ff20a a ex:PortfolioHealth ;
+    ex:portfolioHealthId    "0f8ff20a-f60f-408a-8378-642754fd8837" ;
+    ex:hasInvestor          ex:INV003 ;
+    ex:goalMatchPct         "80.6"^^xsd:decimal ;
+    ex:riskScore            "Moderate" ;
+    ex:liquidityScore       "High" ;
+    ex:diversificationScore "Moderate" .
+
+# ============================================================
+# REBALANCING ACTIONS   (source: rebalancing_examples.csv)
+# ============================================================
+
+ex:rb-2afd3d6f a ex:RebalancingAction ;
+    ex:rebalanceId          "2afd3d6f-fd4c-47c2-a4af-5c861fe98961" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:logic                "Threshold (>5%)" ;
+    ex:currentAllocationPct "70"^^xsd:decimal ;
+    ex:targetAllocationPct  "65"^^xsd:decimal ;
+    ex:action               "Sell Bonds" ;
+    ex:amount               "25000"^^xsd:decimal ;
+    ex:notes                "Reduce overweight in bonds" .
+
+ex:rb-7adcf922 a ex:RebalancingAction ;
+    ex:rebalanceId          "7adcf922-4160-49df-82a1-fb274c7bd7b0" ;
+    ex:hasInvestor          ex:INV002 ;
+    ex:logic                "Calendar (Annual)" ;
+    ex:currentAllocationPct "50"^^xsd:decimal ;
+    ex:targetAllocationPct  "60"^^xsd:decimal ;
+    ex:action               "Buy Equity" ;
+    ex:amount               "50000"^^xsd:decimal ;
+    ex:notes                "Increase equity exposure" .
+
+ex:rb-7a9c10bb a ex:RebalancingAction ;
+    ex:rebalanceId          "7a9c10bb-5797-47b1-9b53-4f96825f538d" ;
+    ex:hasInvestor          ex:INV003 ;
+    ex:logic                "Tax-aware" ;
+    ex:currentAllocationPct "60"^^xsd:decimal ;
+    ex:targetAllocationPct  "55"^^xsd:decimal ;
+    ex:action               "Sell REIT" ;
+    ex:amount               "20000"^^xsd:decimal ;
+    ex:notes                "Avoid short-term tax impact" .
+
+# ============================================================
+# SCENARIO-BASED REBALANCING   (source: scenario_based_rebalancing.csv)
+# ============================================================
+
+ex:scr-c3664c34 a ex:ScenarioRebalancing ;
+    ex:scenarioRebalanceId  "c3664c34-73b9-4894-afc7-6a021a0f5c32" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:scenario             "Market Crash" ;
+    ex:triggeredAction      "Increase Bonds" ;
+    ex:affectedAssetsSectors "Equity, Bonds" ;
+    ex:currentAllocationPct "30"^^xsd:decimal ;
+    ex:newAllocationPct     "50"^^xsd:decimal ;
+    ex:rationale            "Shift to safer assets due to volatility" .
+
+ex:scr-7adfae1a a ex:ScenarioRebalancing ;
+    ex:scenarioRebalanceId  "7adfae1a-6fa5-431d-b950-c95a5b8e0106" ;
+    ex:hasInvestor          ex:INV001 ;
+    ex:scenario             "Interest Rate Hike" ;
+    ex:triggeredAction      "Reduce Long Bonds" ;
+    ex:affectedAssetsSectors "Government Bonds" ;
+    ex:currentAllocationPct "40"^^xsd:decimal ;
+    ex:newAllocationPct     "30"^^xsd:decimal ;
+    ex:rationale            "Avoid duration risk" .
+
+ex:scr-422fc39a a ex:ScenarioRebalancing ;
+    ex:scenarioRebalanceId  "422fc39a-8718-46d3-9dd0-0cc69b0aa20c" ;
+    ex:hasInvestor          ex:INV002 ;
+    ex:scenario             "Bull Market" ;
+    ex:triggeredAction      "Increase Equity" ;
+    ex:affectedAssetsSectors "Technology, Pharma" ;
+    ex:currentAllocationPct "60"^^xsd:decimal ;
+    ex:newAllocationPct     "75"^^xsd:decimal ;
+    ex:rationale            "Capitalize on growth momentum" .
+
+ex:scr-523e782c a ex:ScenarioRebalancing ;
+    ex:scenarioRebalanceId  "523e782c-9af8-4fbf-99e7-e3064dd520f3" ;
+    ex:hasInvestor          ex:INV002 ;
+    ex:scenario             "Approaching Goal" ;
+    ex:triggeredAction      "Reduce Equity" ;
+    ex:affectedAssetsSectors "Equity, MF" ;
+    ex:currentAllocationPct "70"^^xsd:decimal ;
+    ex:newAllocationPct     "50"^^xsd:decimal ;
+    ex:rationale            "Lock in gains and reduce risk" .
+
+ex:scr-ba1a1979 a ex:ScenarioRebalancing ;
+    ex:scenarioRebalanceId  "ba1a1979-f262-42e9-a6a7-91179592370f" ;
+    ex:hasInvestor          ex:INV003 ;
+    ex:scenario             "Job Loss" ;
+    ex:triggeredAction      "Increase Liquidity" ;
+    ex:affectedAssetsSectors "REIT, Debt MF" ;
+    ex:currentAllocationPct "50"^^xsd:decimal ;
+    ex:newAllocationPct     "65"^^xsd:decimal ;
+    ex:rationale            "Ensure cash availability" .
+
+ex:scr-fd3cdc6d a ex:ScenarioRebalancing ;
+    ex:scenarioRebalanceId  "fd3cdc6d-9535-40cc-9616-c89263470a8f" ;
+    ex:hasInvestor          ex:INV003 ;
+    ex:scenario             "Real Estate Boom" ;
+    ex:triggeredAction      "Increase REIT" ;
+    ex:affectedAssetsSectors "Real Estate" ;
+    ex:currentAllocationPct "40"^^xsd:decimal ;
+    ex:newAllocationPct     "55"^^xsd:decimal ;
+    ex:rationale            "Benefit from rising property values" .

@@ -1,0 +1,307 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-099",
+  "question": "Across profile category, how do holding gain, allocation concentration, rebalancing gap, scenario change, and goal volatility compare using five related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_holding_gain\":1965169.97,\"avg_max_allocation_pct\":14.46,\"avg_rebalance_gap\":2.38,\"avg_scenario_change\":-10.65},{\"group_value\":\"Debt\",\"avg_holding_gain\":3662669.48,\"avg_max_allocation_pct\":16.35,\"avg_rebalance_gap\":-1.33,\"avg_scenario_change\":-6.64},{\"group_value\":\"Equity\",\"avg_holding_gain\":3046375.45,\"avg_max_allocation_pct\":16.71,\"avg_rebalance_gap\":-4.06,\"avg_scenario_change\":-1.19},{\"group_value\":\"Gold\",\"avg_holding_gain\":4369052.04,\"avg_max_allocation_pct\":16.67,\"avg_rebalance_gap\":-0.38,\"avg_scenario_change\":0.89},{\"group_value\":\"Hybrid\",\"avg_holding_gain\":5711321.49,\"avg_max_allocation_pct\":17.2,\"avg_rebalance_gap\":0.98,\"avg_scenario_change\":2.77},{\"group_value\":\"Real Estate\",\"avg_holding_gain\":2548538.78,\"avg_max_allocation_pct\":17.25,\"avg_rebalance_gap\":1.5,\"avg_scenario_change\":-2.63}]",
+  "pipeline_output": "Equity: holding gain 64.97802760057662018446332173, allocation concentration 15.73044800010419395049528302, rebalancing gap -3.141927223719676549865229110, scenario change -2.153503787878787878787878788, goal volatility 14.84175283375990141149237472; Debt: holding gain 81.91180461784857389252993645, allocation concentration 14.66647392628305066573232323, rebalancing gap 0.2198074974670719351570415402, scenario change -6.243621399176954732510288062, goal volatility 14.28881115040425405250305250; Gold: holding gain 81.5635956635956635956635958, allocation concentration 15.88725500117772855134259259, rebalancing gap -1.755440251572327044025157230, scenario change 0.7384393063583815028901734104, goal volatility 14.24897145223945995598006646; Hybrid: holding gain 106.5945855131710394868289603, allocation concentration 15.24630104597321126305333333, rebalancing gap -0.3432165318957771787960467194, scenario change 4.145318352059925093632958802, goal volatility 14.24350409814353294682017544; Real Estate: holding gain 53.77195228838827454744409782, allocation concentration 15.48137049754666859221428571, rebalancing gap 1.608096186681844052361980647, scenario change -1.778634751773049645390070922, goal volatility 13.83221397209959436735870819.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 200.299,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do holding gain, allocation concentration, rebalancing gap, scenario change, and goal volatility compare using five related tables?\" So we need to retrieve ontology classes, classify math/aggregation terms (maybe compare implies maybe need aggregation like average, sum, etc). The query asks \"compare\" across profile category for those metrics using five related tables. Likely need to retrieve classes, classify numeric terms (holding gain, allocation concentration, etc are numeric metrics). Then generate SPARQL, scan, validate, explain. Also may need to use Filter_Aggregate, Order_By, etc? But plan steps only, not actual execution. Provide numbered steps.\n\nSequence: 1 Retrieve (ontology classes). 2 Classify (identify numeric/aggregation terms). 3 Generate (SPARQL query to pull metrics across profile category from five tables). 4 Scan (execute query). 5 Validate (check results). 6 Explain (present answer). Possibly also need Filter_Aggregate to compute comparisons. But classification step may trigger need for aggregation; we could include Filter_Aggregate after Scan? However chronology: after Scan we can do Validate then maybe Filter_Aggregate? But the rules don't specify order beyond Validate before Explain. Could include additional steps before Validate? Probably after Scan we can do Filter_Aggregate to compute comparisons, then Validate, then Explain. But Validate checks data after any processing. So steps: Retrieve, Classify, Generate, Scan, Filter_Aggregate, Validate, Explain.\n\nMake sure we only use provided operators. Yes.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the ontology classes for “profile category”, “holding gain”, “allocation concentration”, “rebalancing gap”, “scenario change”, “goal volatility”, and the five related tables.  \n\n2. Classify – identify the numeric‑aggregation intent in the query (comparison of metric values across profile categories) and tag the metrics as numeric fields requiring aggregation/comparison.  \n\n3. Generate – write a SPARQL (or equivalent graph) query that selects, for each profile category, the values of holding gain, allocation concentration, rebalancing gap, scenario change, and goal volatility from the five related tables, applying any necessary aggregation functions (e.g., AVG, SUM) to enable comparison.  \n\n4. Scan – execute the generated query against the knowledge graph to retrieve the raw metric data.  \n\n5. Filter_Aggregate – apply aggregation/comparison operations on the scanned results to produce comparative figures (e.g., averages, totals, rankings) for each metric across profile categories.  \n\n6. Validate – verify that the aggregated comparison results are complete, correctly typed, and consistent with the underlying tables.  \n\n7. Explain – present the comparative analysis of holding gain, allocation concentration, rebalancing gap, scenario change, and goal volatility across profile categories to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nGoal: answer query: \"Across profile category, how do holding gain, allocation concentration, rebalancing gap, scenario change, and goal volatility compare using five related tables?\" This involves comparing metrics across profile category, likely need to retrieve ontology classes, classify numeric aggregation (maybe compare values across categories). Steps: Retrieve ontology classes (profile category, holding gain, allocation concentration, rebalancing gap, scenario change, goal volatility). Then Classify for numeric aggregation/comparison. Then Generate SPARQL to pull data from five related tables. Then Scan to execute. Then Validate data. Then Explain to user.\n\nPotentially also need Filter_Aggregate, Order_By, etc. But plan should be linear, can include those operators as needed after Scan? The chronology says after Scan must Validate, then Explain final. It doesn't forbid other operators before Validate? The critical laws: start with Retrieve, then Classify if needed, then Generate, then Scan, then Validate, then Explain. It doesn't mention where other operators like Filter_Aggregate can be placed; but they likely happen between Generate and Scan? Actually Generate writes query; the query can include filters, aggregates, ordering. So we can incorporate those concepts within Generate, not separate steps.\n\nThus steps:\n\n1. Retrieve ontology classes relevant to query.\n2. Classify numeric/aggregation terms (holding gain, allocation concentration, rebalancing gap, scenario change, goal volatility) for comparison.\n3. Generate SPARQL query that selects these metrics across profile category from the five related tables, possibly using aggregation functions (e.g., AVG) and grouping by profile category.\n4. Scan to execute the query.\n5. Validate results (check completeness, consistency across tables).\n6. Explain the comparative results to the user.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the ontology classes for **ProfileCategory**, **HoldingGain**, **AllocationConcentration**, **RebalancingGap**, **ScenarioChange**, and **GoalVolatility**, as well as the five related tables that store these measures.  \n\n2. Classify – identify the numeric‑aggregation intent in the query (comparison of metric values across profile categories) and tag the relevant terms (HoldingGain, AllocationConcentration, RebalancingGap, ScenarioChange, GoalVolatility) for aggregation/comparative operations.  \n\n3. Generate – write a SPARQL (or equivalent graph) query that:  \n   * selects each **ProfileCategory**;  \n   * retrieves the corresponding values of HoldingGain, AllocationConcentration, RebalancingGap, ScenarioChange, and GoalVolatility from the five related tables;  \n   * applies appropriate aggregation functions (e.g., AVG, SUM) if multiple records per category exist;  \n   * groups results by **ProfileCategory** for side‑by‑side comparison.  \n\n4. Scan – execute the generated query against the knowledge graph to obtain the comparative dataset.  \n\n5. Validate – verify that the returned rows cover all profile categories, that each metric is present for every category, and that the data types and aggregation results are consistent across the five tables.  \n\n6. Explain – present the user with a clear comparison of HoldingGain, AllocationConcentration, RebalancingGap, ScenarioChange, and GoalVolatility across each profile category, highlighting any notable differences or trends.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do holding gain, allocation concentration, rebalancing gap, scenario change, and goal volatility compare using five related tables?\" So we need to retrieve ontology classes, classify numeric/aggregation terms (holding gain, allocation concentration, rebalancing gap, scenario change, goal volatility likely numeric metrics). Then generate SPARQL, scan, validate, explain.\n\nWe also may need to use other operators like Filter_Aggregate, Order_By, etc. But the plan must be linear steps, each step with operator name and description? The instruction: \"Output ONLY the numbered steps.\" So just list steps like \"1. Retrieve ...\" etc.\n\nWe need to incorporate needed operators: Retrieve, Classify, Generate, Scan, Validate, Explain. Possibly also Filter_Aggregate if needed to compare across profile category using five tables. But we can keep simple: after scanning we might need to aggregate. But chronology: after Validate we could do Explain only. No other steps after Validate except Explain. So if we need aggregation, we must incorporate before Validate? Actually Validate checks data after Scan. Could we do Filter_Aggregate before Validate? The rules don't forbid extra steps before Validate, but Validate must happen after Scan. It doesn't say Validate must be immediate after Scan, but typical flow: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain. If we need aggregation, we could incorporate within Generate query (i.e., SPARQL includes aggregation). So no extra operator needed.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify numeric/aggregation terms: holding gain, allocation concentration, rebalancing gap, scenario change, goal volatility)\n3. Generate (write SPARQL query to compare these metrics across profile category using five related tables)\n4. Scan (execute the SPARQL query)\n5. Validate (check results for completeness and correctness)\n6. Explain (present comparison to user)\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the ontology classes relevant to “profile category”, “holding gain”, “allocation concentration”, “rebalancing gap”, “scenario change”, “goal volatility”, and the five related tables.  \n2. Classify – label the identified terms as numeric/aggregation concepts (e.g., metrics to be compared, requiring aggregation or statistical functions).  \n3. Generate – compose a SPARQL (or equivalent graph) query that selects and aggregates the five metrics for each profile category across the five tables, enabling direct comparison.  \n4. Scan – execute the generated query against the knowledge graph/database to retrieve the comparison data.  \n5. Validate – verify that the returned results contain all profile categories and the five metrics, checking for missing or inconsistent values.  \n6. Explain – present the comparative analysis of holding gain, allocation concentration, rebalancing gap, scenario change, and goal volatility across profile categories to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "PortfolioHolding",
+      "SectorAllocation",
+      "RebalancingAction",
+      "ScenarioRebalancing",
+      "InvestmentGoal"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.86,
+    "target_field": "holding gain, allocation concentration, rebalancing gap, scenario change, goal volatility",
+    "schema_datatype": "unknown",
+    "why_this_intent": "The query asks for comparative numeric analysis across the 'category' attribute, involving several metrics that are not exact schema fields but correspond to numeric properties (e.g., returnsPct, allocationPct, avgVolatilityPct). This requires aggregation, so the intent is numeric aggregation with an unknown exact field mapping.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category\n       (AVG(xsd:decimal(?holdingGain)) AS ?avgHoldingGain)\n       (AVG(xsd:decimal(?allocConcentration)) AS ?avgAllocationConcentration)\n       (AVG(xsd:decimal(?rebalanceGap)) AS ?avgRebalancingGap)\n       (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChange)\n       (AVG(xsd:decimal(?goalVolatility)) AS ?avgGoalVolatility)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?invId ;\n       wm:category ?category .\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?invId ;\n               wm:returnsPct ?returnsPct .\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?allocationPct)) AS ?allocConcentration) WHERE {\n      ?alloc a wm:SectorAllocation ;\n             wm:investorId ?invId ;\n             wm:allocationPct ?allocationPct .\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?gap)) AS ?rebalanceGap) WHERE {\n      ?reb a wm:RebalancingAction ;\n           wm:investorId ?invId ;\n           wm:targetAllocationPct ?target ;\n           wm:currentAllocationPct ?current .\n      BIND((xsd:decimal(?target) - xsd:decimal(?current)) AS ?gap)\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?change)) AS ?scenarioChange) WHERE {\n      ?scen a wm:ScenarioRebalancing ;\n            wm:investorId ?invId ;\n            wm:newAllocationPct ?new ;\n            wm:currentAllocationPct ?curr .\n      BIND((xsd:decimal(?new) - xsd:decimal(?curr)) AS ?change)\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?volatility)) AS ?goalVolatility) WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:investorId ?invId ;\n            wm:avgVolatilityPct ?volatility .\n    } GROUP BY ?invId\n  }\n}\nGROUP BY ?category",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category\n       (AVG(?holdingGain) AS ?avgHoldingGain)\n       (AVG(?allocConcentration) AS ?avgAllocationConcentration)\n       (AVG(?rebalanceGap) AS ?avgRebalancingGap)\n       (AVG(?scenarioChange) AS ?avgScenarioChange)\n       (AVG(?goalVolatility) AS ?avgGoalVolatility)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:category ?category .\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:returnsPct ?returnsPct .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?allocationPct)) AS ?allocConcentration) WHERE {\n      ?inv wm:hasSectorAllocation ?alloc .\n      ?alloc wm:allocationPct ?allocationPct .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?gap)) AS ?rebalanceGap) WHERE {\n      ?inv wm:hasRebalancingAction ?reb .\n      ?reb wm:targetAllocationPct ?target .\n      ?reb wm:currentAllocationPct ?current .\n      BIND((xsd:decimal(?target) - xsd:decimal(?current)) AS ?gap)\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?change)) AS ?scenarioChange) WHERE {\n      ?inv wm:hasScenarioRebalancing ?scen .\n      ?scen wm:newAllocationPct ?new .\n      ?scen wm:currentAllocationPct ?curr .\n      BIND((xsd:decimal(?new) - xsd:decimal(?curr)) AS ?change)\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?volatility)) AS ?goalVolatility) WHERE {\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:avgVolatilityPct ?volatility .\n    } GROUP BY ?inv\n  }\n}\nGROUP BY ?category",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category\n       (AVG(xsd:decimal(?holdingGain)) AS ?avgHoldingGain)\n       (AVG(xsd:decimal(?allocConcentration)) AS ?avgAllocationConcentration)\n       (AVG(xsd:decimal(?rebalanceGap)) AS ?avgRebalancingGap)\n       (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChange)\n       (AVG(xsd:decimal(?goalVolatility)) AS ?avgGoalVolatility)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?invId ;\n       wm:category ?category .\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?invId ;\n               wm:returnsPct ?returnsPct .\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?allocationPct)) AS ?allocConcentration) WHERE {\n      ?alloc a wm:SectorAllocation ;\n             wm:investorId ?invId ;\n             wm:allocationPct ?allocationPct .\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?gap)) AS ?rebalanceGap) WHERE {\n      ?reb a wm:RebalancingAction ;\n           wm:investorId ?invId ;\n           wm:targetAllocationPct ?target ;\n           wm:currentAllocationPct ?current .\n      BIND((xsd:decimal(?target) - xsd:decimal(?current)) AS ?gap)\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?change)) AS ?scenarioChange) WHERE {\n      ?scen a wm:ScenarioRebalancing ;\n            wm:investorId ?invId ;\n            wm:newAllocationPct ?new ;\n            wm:currentAllocationPct ?curr .\n      BIND((xsd:decimal(?new) - xsd:decimal(?curr)) AS ?change)\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?volatility)) AS ?goalVolatility) WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:investorId ?invId ;\n            wm:avgVolatilityPct ?volatility .\n    } GROUP BY ?invId\n  }\n}\nGROUP BY ?category",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category\n       (AVG(xsd:decimal(?holdingGain)) AS ?avgHoldingGain)\n       (AVG(xsd:decimal(?allocConcentration)) AS ?avgAllocationConcentration)\n       (AVG(xsd:decimal(?rebalanceGap)) AS ?avgRebalancingGap)\n       (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChange)\n       (AVG(xsd:decimal(?goalVolatility)) AS ?avgGoalVolatility)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?invId ;\n       wm:category ?category .\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?invId ;\n               wm:returnsPct ?returnsPct .\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?allocationPct)) AS ?allocConcentration) WHERE {\n      ?alloc a wm:SectorAllocation ;\n             wm:investorId ?invId ;\n             wm:allocationPct ?allocationPct .\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?gap)) AS ?rebalanceGap) WHERE {\n      ?reb a wm:RebalancingAction ;\n           wm:investorId ?invId ;\n           wm:targetAllocationPct ?target ;\n           wm:currentAllocationPct ?current .\n      BIND((xsd:decimal(?target) - xsd:decimal(?current)) AS ?gap)\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?change)) AS ?scenarioChange) WHERE {\n      ?scen a wm:ScenarioRebalancing ;\n            wm:investorId ?invId ;\n            wm:newAllocationPct ?new ;\n            wm:currentAllocationPct ?curr .\n      BIND((xsd:decimal(?new) - xsd:decimal(?curr)) AS ?change)\n    } GROUP BY ?invId\n  }\n\n  OPTIONAL {\n    SELECT ?invId (AVG(xsd:decimal(?volatility)) AS ?goalVolatility) WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:investorId ?invId ;\n            wm:avgVolatilityPct ?volatility .\n    } GROUP BY ?invId\n  }\n}\nGROUP BY ?category",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category\n       (AVG(?holdingGain) AS ?avgHoldingGain)\n       (AVG(?allocConcentration) AS ?avgAllocationConcentration)\n       (AVG(?rebalanceGap) AS ?avgRebalancingGap)\n       (AVG(?scenarioChange) AS ?avgScenarioChange)\n       (AVG(?goalVolatility) AS ?avgGoalVolatility)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:category ?category .\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:returnsPct ?returnsPct .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?allocationPct)) AS ?allocConcentration) WHERE {\n      ?inv wm:hasSectorAllocation ?alloc .\n      ?alloc wm:allocationPct ?allocationPct .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?gap)) AS ?rebalanceGap) WHERE {\n      ?inv wm:hasRebalancingAction ?reb .\n      ?reb wm:targetAllocationPct ?target .\n      ?reb wm:currentAllocationPct ?current .\n      BIND((xsd:decimal(?target) - xsd:decimal(?current)) AS ?gap)\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?change)) AS ?scenarioChange) WHERE {\n      ?inv wm:hasScenarioRebalancing ?scen .\n      ?scen wm:newAllocationPct ?new .\n      ?scen wm:currentAllocationPct ?curr .\n      BIND((xsd:decimal(?new) - xsd:decimal(?curr)) AS ?change)\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?volatility)) AS ?goalVolatility) WHERE {\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:avgVolatilityPct ?volatility .\n    } GROUP BY ?inv\n  }\n}\nGROUP BY ?category",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category\n       (AVG(?holdingGain) AS ?avgHoldingGain)\n       (AVG(?allocConcentration) AS ?avgAllocationConcentration)\n       (AVG(?rebalanceGap) AS ?avgRebalancingGap)\n       (AVG(?scenarioChange) AS ?avgScenarioChange)\n       (AVG(?goalVolatility) AS ?avgGoalVolatility)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:category ?category .\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:returnsPct ?returnsPct .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?allocationPct)) AS ?allocConcentration) WHERE {\n      ?inv wm:hasSectorAllocation ?alloc .\n      ?alloc wm:allocationPct ?allocationPct .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?gap)) AS ?rebalanceGap) WHERE {\n      ?inv wm:hasRebalancingAction ?reb .\n      ?reb wm:targetAllocationPct ?target .\n      ?reb wm:currentAllocationPct ?current .\n      BIND((xsd:decimal(?target) - xsd:decimal(?current)) AS ?gap)\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?change)) AS ?scenarioChange) WHERE {\n      ?inv wm:hasScenarioRebalancing ?scen .\n      ?scen wm:newAllocationPct ?new .\n      ?scen wm:currentAllocationPct ?curr .\n      BIND((xsd:decimal(?new) - xsd:decimal(?curr)) AS ?change)\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?volatility)) AS ?goalVolatility) WHERE {\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:avgVolatilityPct ?volatility .\n    } GROUP BY ?inv\n  }\n}\nGROUP BY ?category",
+        "status": "success",
+        "row_count": 5,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 5,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The result set is non‑empty and includes a row for each profile category. The returned columns (category, avgHoldingGain, avgAllocationConcentration, avgRebalancingGap, avgScenarioChange, avgGoalVolatility) directly correspond to the metrics requested in the query. The SPARQL correctly aggregates each metric (using AVG) per investor and then per category, providing the comparative averages across categories as the user asked. No ranking or filtering requirements are violated.",
+    "validator_reason": "The result set is non‑empty and includes a row for each profile category. The returned columns (category, avgHoldingGain, avgAllocationConcentration, avgRebalancingGap, avgScenarioChange, avgGoalVolatility) directly correspond to the metrics requested in the query. The SPARQL correctly aggregates each metric (using AVG) per investor and then per category, providing the comparative averages across categories as the user asked. No ranking or filtering requirements are violated.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 5,
+    "final_answer": "Equity: holding gain 64.97802760057662018446332173, allocation concentration 15.73044800010419395049528302, rebalancing gap -3.141927223719676549865229110, scenario change -2.153503787878787878787878788, goal volatility 14.84175283375990141149237472; Debt: holding gain 81.91180461784857389252993645, allocation concentration 14.66647392628305066573232323, rebalancing gap 0.2198074974670719351570415402, scenario change -6.243621399176954732510288062, goal volatility 14.28881115040425405250305250; Gold: holding gain 81.5635956635956635956635958, allocation concentration 15.88725500117772855134259259, rebalancing gap -1.755440251572327044025157230, scenario change 0.7384393063583815028901734104, goal volatility 14.24897145223945995598006646; Hybrid: holding gain 106.5945855131710394868289603, allocation concentration 15.24630104597321126305333333, rebalancing gap -0.3432165318957771787960467194, scenario change 4.145318352059925093632958802, goal volatility 14.24350409814353294682017544; Real Estate: holding gain 53.77195228838827454744409782, allocation concentration 15.48137049754666859221428571, rebalancing gap 1.608096186681844052361980647, scenario change -1.778634751773049645390070922, goal volatility 13.83221397209959436735870819.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth JSON with Pipeline Output.\n\nGround Truth: list of objects with fields: group_value (null, Debt, Equity, Gold, Hybrid, Real Estate) and avg_holding_gain, avg_max_allocation_pct, avg_rebalance_gap, avg_scenario_change. No goal volatility in ground truth.\n\nPipeline Output: provides for each category (Equity, Debt, Gold, Hybrid, Real Estate) values: holding gain, allocation concentration, rebalancing gap, scenario change, goal volatility. The numbers are completely different (e.g., Equity holding gain 64.978... vs ground truth avg_holding_gain 3046375.45). Also allocation concentration vs avg_max_allocation_pct: numbers differ. Also includes extra field goal volatility not in ground truth. The pipeline output does not match any numbers. So mismatch.\n\nThus output: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

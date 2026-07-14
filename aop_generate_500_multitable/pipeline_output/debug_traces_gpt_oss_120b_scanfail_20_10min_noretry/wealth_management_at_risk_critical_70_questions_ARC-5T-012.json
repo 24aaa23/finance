@@ -1,0 +1,317 @@
+{
+  "sample_row_id": "wealth_management_at_risk_critical_70_questions:ARC-5T-012",
+  "question": "Which investors have risk_score above 100, allocation_pct above 100, negative-return holdings, and underfunded goals?",
+  "ground_truth": "[]",
+  "pipeline_output": "No data was found in the knowledge graph. The requested entity may not exist.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 697.436,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate",
+    "failure_stage": "Validate",
+    "short_circuit_stage": "Validate"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nWe have query: \"Which investors have risk_score above 100, allocation_pct above 100, negative-return holdings, and underfunded goals?\"\n\nWe need to find ontology classes first using Retrieve. Then classify numeric comparisons (risk_score above 100, allocation_pct above 100) and maybe \"negative-return holdings\" and \"underfunded goals\" also involve numeric or classification. So we need to use Classify for math/aggregation words. The query includes numeric thresholds, so we need Classify.\n\nThen Generate SPARQL after Retrieve and Classify. Then Scan, Validate, Explain.\n\nPotentially we also need Filter_Aggregate to apply filters? But the plan is linear; we can include steps like Filter_Aggregate after Scan? However chronology says after Scan we must Validate then Explain. It doesn't forbid other steps before Scan, but they must be before Generate? Actually steps: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain. We can insert other operators before Generate? The rules: \"If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve').\" So we can have Retrieve, Classify, maybe Filter_Aggregate? But Filter_Aggregate is likely used after Scan to process results. However chronology doesn't forbid extra steps after Validate? It says Explain must be final. So we can have steps: Retrieve, Classify, Generate, Scan, Filter_Aggregate, Validate, Explain. But Validate after Scan, then maybe Filter_Aggregate before Validate? Actually Validate checks data after Scan, then we could filter. But maybe better: Scan, Filter_Aggregate, Validate, Explain. But Validate should happen after Scan, but can also happen after Filter_Aggregate? The rule: \"Validate (checking data) must happen AFTER Scan.\" It doesn't say it must be immediate. So okay.\n\nThus steps:\n\n1. Retrieve ontology classes relevant to investors, risk_score, allocation_pct, holdings, goals.\n2. Classify numeric and comparative terms (risk_score > 100, allocation_pct > 100, negative-return, underfunded).\n3. Generate SPARQL query to select investors meeting those conditions.\n4. Scan to execute the SPARQL query.\n5. Filter_Aggregate to keep only investors satisfying all four criteria (if not already in query).\n6. Validate the result set for completeness and correctness.\n7. Explain the final list to the user.\n\nMake sure to use exact operator names.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the ontology classes for **Investor**, **RiskScore**, **AllocationPct**, **Holding**, and **Goal**.  \n2. Classify – identify and label the numeric/comparative elements: “risk_score above 100”, “allocation_pct above 100”, “negative‑return holdings”, and “underfunded goals”.  \n3. Generate – write a SPARQL query that selects investors whose risk_score > 100, allocation_pct > 100, have at least one holding with a negative return, and have at least one goal that is underfunded.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Filter_Aggregate – apply any additional filtering/aggregation needed to ensure all four conditions are satisfied for each returned investor.  \n6. Validate – verify that the filtered result set is accurate, complete, and conforms to the schema.  \n7. Explain – present the final list of investors that meet all the specified criteria to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nWe have query: \"Which investors have risk_score above 100, allocation_pct above 100, negative-return holdings, and underfunded goals?\"\n\nWe need to find ontology classes first using Retrieve. Then classify numeric comparisons (risk_score above 100, allocation_pct above 100) and maybe \"negative-return holdings\" and \"underfunded goals\" are conditions but not aggregation. The rule: Use Classify for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. Here we have numeric comparisons >100, which is math. So we need a Classify step to identify numeric condition.\n\nThen Generate SPARQL query after Retrieve and Classify. Then Scan to execute. Then Validate. Then Explain.\n\nPotential extra steps: maybe Filter_Aggregate to filter based on conditions? But after scanning we could filter results. However we can incorporate conditions in SPARQL. But we might need Filter_Aggregate operator to apply numeric filters after scanning. The chronology says Scan must happen immediately after Generate. So we cannot insert Filter_Aggregate between Generate and Scan. So we need to embed filters in SPARQL query. Then after Scan we can Validate. Possibly also use Set_Intersect etc but not needed.\n\nThus steps:\n\n1. Retrieve: get ontology classes (Investor, RiskScore, AllocationPct, Holding, Return, Goal, FundingStatus etc.)\n\n2. Classify: identify numeric comparisons (risk_score > 100, allocation_pct > 100) and negative-return holdings, underfunded goals.\n\n3. Generate: write SPARQL query to select investors where risk_score > 100, allocation_pct > 100, holdings with return < 0, and goals with funding status underfunded.\n\n4. Scan: execute the SPARQL query.\n\n5. Validate: check that results meet all criteria.\n\n6. Explain: present answer to user.\n\nThus 6 steps.\n\nMake sure to use exact operator names.\n\nLet's output numbered steps.</reasoning>1. Retrieve – obtain the relevant ontology classes (e.g., Investor, RiskScore, AllocationPct, Holding, Return, Goal, FundingStatus).  \n2. Classify – identify and label the numeric and conditional criteria in the query (risk_score > 100, allocation_pct > 100, holdings with negative return, goals that are underfunded).  \n3. Generate – compose a SPARQL query that selects investors satisfying all four conditions using the classes identified in step 1 and the criteria classified in step 2.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned investors indeed meet every specified condition (risk_score > 100, allocation_pct > 100, at least one negative‑return holding, and at least one underfunded goal).  \n6. Explain – present the final list of investors to the user, describing how each meets the required criteria.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only the provided operators, following the chronology.\n\nThe query: \"Which investors have risk_score above 100, allocation_pct above 100, negative-return holdings, and underfunded goals?\"\n\nWe need to find ontology classes first using Retrieve. Then classify numeric comparisons (risk_score above 100, allocation_pct above 100) and maybe negative-return holdings and underfunded goals are conditions but not aggregation. However classification for math/aggregation words: \"above\" is a numeric comparison, but the rule says use Classify for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. \"above\" is a numeric comparison; maybe we still need Classify to handle numeric condition. Probably we need to use Classify to interpret numeric thresholds.\n\nThus steps:\n\n1. Retrieve (ontology classes) – get classes like Investor, RiskScore, AllocationPct, Holding, Return, Goal, FundingStatus.\n\n2. Classify – identify numeric conditions: risk_score > 100, allocation_pct > 100, negative-return holdings (return < 0), underfunded goals (maybe funding status < required). Also identify entity type: investors.\n\n3. Generate – write SPARQL query to select investors satisfying those conditions.\n\n4. Scan – execute the SPARQL query.\n\n5. Validate – check results for correctness (e.g., ensure fields present, no nulls).\n\n6. Explain – present answer to user.\n\nThus 6 steps.\n\nMake sure to follow chronology: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve – Obtain the ontology classes relevant to the query (e.g., Investor, RiskScore, AllocationPct, Holding, Return, Goal, FundingStatus).  \n\n2. Classify – Identify and label the numeric and conditional criteria in the query: “risk_score above 100”, “allocation_pct above 100”, “negative‑return holdings”, and “underfunded goals”.  \n\n3. Generate – Write a SPARQL (or equivalent graph) query that selects investors who satisfy all four classified conditions.  \n\n4. Scan – Execute the generated query against the knowledge graph to retrieve the matching investor records.  \n\n5. Validate – Verify that the returned records meet each of the specified criteria and contain the required fields.  \n\n6. Explain – Present the final list of investors to the user, describing how each meets the risk_score, allocation_pct, negative‑return holdings, and underfunded‑goal requirements.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "PortfolioHealth",
+      "SectorAllocation",
+      "PortfolioHolding",
+      "InvestmentGoal"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "point_lookup",
+    "confidence": 0.95,
+    "target_field": "investorId",
+    "schema_datatype": "categorical_string",
+    "why_this_intent": "The query asks for a list of investors satisfying several numeric and boolean conditions. This is a retrieval of specific entities (investors), not a mathematical aggregation, so it maps to a point_lookup intent.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasPortfolioHealth ?ph ;\n       wm:hasSectorAllocation ?sa ;\n       wm:hasHolding ?hold ;\n       wm:hasInvestmentGoal ?goal .\n       \n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 100)\n\n  ?sa wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 100)\n\n  ?hold wm:returnsPct ?retPct .\n  FILTER(xsd:decimal(?retPct) < 0)\n\n  ?goal wm:shortfall ?shortfall .\n  FILTER(xsd:decimal(?shortfall) > 0)\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasPortfolioHealth ?ph ;\n       wm:hasSectorAllocation ?sa ;\n       wm:hasHolding ?hold ;\n       wm:hasInvestmentGoal ?goal .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 100)\n\n  ?sa wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 100)\n\n  ?hold wm:returnsPct ?retPct .\n  FILTER(xsd:decimal(?retPct) < 0)\n\n  ?goal wm:shortfall ?shortfall .\n  FILTER(xsd:decimal(?shortfall) > 0)\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasPortfolioHealth ?ph ;\n       wm:hasSectorAllocation ?sa ;\n       wm:hasHolding ?hold ;\n       wm:hasInvestmentGoal ?goal .\n       \n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 100)\n\n  ?sa wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 100)\n\n  ?hold wm:returnsPct ?retPct .\n  FILTER(xsd:decimal(?retPct) < 0)\n\n  ?goal wm:shortfall ?shortfall .\n  FILTER(xsd:decimal(?shortfall) > 0)\n}",
+        "status": "success",
+        "row_count": 0,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      },
+      {
+        "attempt": 1,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasPortfolioHealth ?ph ;\n       wm:hasSectorAllocation ?sa ;\n       wm:hasHolding ?hold ;\n       wm:hasInvestmentGoal ?goal .\n       \n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 100)\n\n  ?sa wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 100)\n\n  ?hold wm:returnsPct ?retPct .\n  FILTER(xsd:decimal(?retPct) < 0)\n\n  ?goal wm:shortfall ?shortfall .\n  FILTER(xsd:decimal(?shortfall) > 0)\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasPortfolioHealth ?ph ;\n       wm:hasSectorAllocation ?sa ;\n       wm:hasHolding ?hold ;\n       wm:hasInvestmentGoal ?goal .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 100)\n\n  ?sa wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 100)\n\n  ?hold wm:returnsPct ?retPct .\n  FILTER(xsd:decimal(?retPct) < 0)\n\n  ?goal wm:shortfall ?shortfall .\n  FILTER(xsd:decimal(?shortfall) > 0)\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasPortfolioHealth ?ph ;\n       wm:hasSectorAllocation ?sa ;\n       wm:hasHolding ?hold ;\n       wm:hasInvestmentGoal ?goal .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 100)\n\n  ?sa wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 100)\n\n  ?hold wm:returnsPct ?retPct .\n  FILTER(xsd:decimal(?retPct) < 0)\n\n  ?goal wm:shortfall ?shortfall .\n  FILTER(xsd:decimal(?shortfall) > 0)\n}",
+        "status": "success",
+        "row_count": 0,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      },
+      {
+        "attempt": 2,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasPortfolioHealth ?ph ;\n       wm:hasSectorAllocation ?sa ;\n       wm:hasHolding ?hold ;\n       wm:hasInvestmentGoal ?goal .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 100)\n\n  ?sa wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 100)\n\n  ?hold wm:returnsPct ?retPct .\n  FILTER(xsd:decimal(?retPct) < 0)\n\n  ?goal wm:shortfall ?shortfall .\n  FILTER(xsd:decimal(?shortfall) > 0)\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasPortfolioHealth ?ph ;\n       wm:hasSectorAllocation ?sa ;\n       wm:hasHolding ?hold ;\n       wm:hasInvestmentGoal ?goal .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 100)\n\n  ?sa wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 100)\n\n  ?hold wm:returnsPct ?retPct .\n  FILTER(xsd:decimal(?retPct) < 0)\n\n  ?goal wm:shortfall ?shortfall .\n  FILTER(xsd:decimal(?shortfall) > 0)\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasPortfolioHealth ?ph ;\n       wm:hasSectorAllocation ?sa ;\n       wm:hasHolding ?hold ;\n       wm:hasInvestmentGoal ?goal .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 100)\n\n  ?sa wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 100)\n\n  ?hold wm:returnsPct ?retPct .\n  FILTER(xsd:decimal(?retPct) < 0)\n\n  ?goal wm:shortfall ?shortfall .\n  FILTER(xsd:decimal(?shortfall) > 0)\n}",
+        "status": "success",
+        "row_count": 0,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 0,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 0,
+    "final_answer": "No data was found in the knowledge graph. The requested entity may not exist.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth and Pipeline Output.\n\nQuestion: \"Which investors have risk_score above 100, allocation_pct above 100, negative-return holdings, and underfunded goals?\" Ground Truth: [] (empty list). So ground truth says no investors meet criteria (i.e., no data). Pipeline Output: \"No data was found in the knowledge graph. The requested entity may not exist.\"\n\nGround truth explicitly says no rows/no data. So pipeline output says no data found. That matches. According to rule 3: Only mark \"No data found\" as MATCH when Ground Truth explicitly says no rows/no data/no business rule. Here ground truth is [] meaning no results. So pipeline output matches. So output MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "Validate",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

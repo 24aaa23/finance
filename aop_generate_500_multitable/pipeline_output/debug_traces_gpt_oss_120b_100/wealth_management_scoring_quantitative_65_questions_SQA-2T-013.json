@@ -1,0 +1,228 @@
+{
+  "sample_row_id": "wealth_management_scoring_quantitative_65_questions:SQA-2T-013",
+  "question": "What is the monthly net cash flow for 2025?",
+  "ground_truth": "[{\"month\":\"2025-01\",\"net_cash_flow\":181329.0},{\"month\":\"2025-02\",\"net_cash_flow\":100134058.0},{\"month\":\"2025-03\",\"net_cash_flow\":211583.0},{\"month\":\"2025-04\",\"net_cash_flow\":172342.0},{\"month\":\"2025-05\",\"net_cash_flow\":-99828549.0},{\"month\":\"2025-06\",\"net_cash_flow\":100130325.0},{\"month\":\"2025-07\",\"net_cash_flow\":153349.0},{\"month\":\"2025-08\",\"net_cash_flow\":170181.0},{\"month\":\"2025-09\",\"net_cash_flow\":137036.0},{\"month\":\"2025-10\",\"net_cash_flow\":100184447.0},{\"month\":\"2025-11\",\"net_cash_flow\":140325.0},{\"month\":\"2025-12\",\"net_cash_flow\":198122.0}]",
+  "pipeline_output": "Month 01: 181329.0, Month 02: 100134058.0, Month 03: 211583.0, Month 04: 172342.0, Month 05: -99828549.0, Month 06: 100130325.0, Month 07: 153349.0, Month 08: 170181.0, Month 09: 137036.0, Month 10: 100184447.0, Month 11: 140325.0, Month 12: 198122.0",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 166.111,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan to answer query \"What is the monthly net cash flow for 2025?\" using only provided operators, following chronology.\n\nWe need to start with Retrieve to find ontology classes. Then Classify for math/aggregation etc. The query asks for monthly net cash flow for 2025. That's likely an aggregation (maybe sum of cash flow per month). So we need to classify the query for math/aggregation. Then Generate SPARQL after Classify. Then Scan, Validate, Explain.\n\nPotentially also need Filter_Aggregate, Order_By, etc. But the plan should be linear steps using operators. We can include steps like Retrieve, Classify, Generate, Scan, Validate, Explain. Possibly also Filter_Aggregate if needed. But the chronology says after Generate must be Scan, then Validate, then Explain. We can include additional steps before Generate? The rules: start by finding ontology classes using Retrieve. Then Classify for math/aggregation. Then Generate (writing SPARQL) after Classify (or Retrieve). So we can have Retrieve, Classify, Generate, Scan, Validate, Explain. If we need to filter for year 2025 and monthly, we might incorporate that in the SPARQL generation step; no separate operator needed. So steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"What is the monthly net cash flow for 2025?\"\n\nWe need to find ontology classes first using Retrieve. Then classify for math/aggregation: \"monthly net cash flow\" likely requires aggregation (sum of cash flow per month). So we need Classify to detect aggregation. Then Generate SPARQL to compute monthly net cash flow for 2025 (maybe using aggregation functions). Then Scan to execute. Then Validate to check data. Then Explain to answer.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (detect aggregation/math)\n3. Generate (SPARQL query for monthly net cash flow 2025)\n4. Scan (execute query)\n5. Validate (ensure results correct)\n6. Explain (present answer)\n\nMake sure to follow chronology: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the relevant ontology classes (e.g., CashFlow, Date, Amount, NetCashFlow, Month, Year).  \n2. Classify – identify that the query involves a numeric aggregation (“monthly net cash flow”) and thus requires a mathematical/aggregation operation.  \n3. Generate – compose a SPARQL query that aggregates the net cash‑flow amounts by month for the year 2025 (using SUM or similar).  \n4. Scan – execute the generated SPARQL query against the knowledge graph to obtain the monthly net cash‑flow values.  \n5. Validate – check that the returned data covers all months of 2025 and that the amounts are correctly summed.  \n6. Explain – present the monthly net cash‑flow results for 2025 to the user in a clear, concise format.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"What is the monthly net cash flow for 2025?\"\n\nWe need to find ontology classes first using Retrieve. Then classify for math/aggregation: \"monthly net cash flow\" implies aggregation (maybe sum of cash flow per month). So we need Classify for numeric aggregation. Then Generate SPARQL query. Then Scan. Then Validate. Then Explain.\n\nPotentially also need Filter_Aggregate before Validate? The rules don't forbid extra operators, but aggregation can be done inside SPARQL. So we keep simple plan.\n\nThus steps:\n\n1. Retrieve – locate the relevant ontology classes (e.g., CashFlow, Date, Amount).  \n2. Classify – identify that the query involves a numeric aggregation (“net cash flow”) and a temporal grouping (“monthly”).  \n3. Generate – write a SPARQL query that selects, groups by month, and sums the net cash‑flow amounts for the year 2025.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned data correctly represents monthly net cash‑flow values for 2025 (e.g., correct months, non‑null sums).  \n6. Explain – present the monthly net cash‑flow figures for 2025 to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Explain",
+              "inputs": [
+                5
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2
+            },
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "CashFlow"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.97,
+    "target_field": "amount",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks for the monthly net cash flow, which requires summing the numeric 'amount' field from the CashFlow class for dates in 2025.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT (STR(?month) AS ?Month) (SUM(xsd:decimal(?amount)) AS ?NetCashFlow)\nWHERE {\n  ?cf a wm:CashFlow .\n  ?cf wm:date ?date .\n  ?cf wm:amount ?amount .\n  FILTER(CONTAINS(?date, \"2025\")) .\n  BIND(SUBSTR(?date, 6, 2) AS ?month)\n}\nGROUP BY ?month\nORDER BY ?month",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT (STR(?month) AS ?Month) (SUM(xsd:decimal(?amount)) AS ?NetCashFlow)\nWHERE {\n  ?cf wm:date ?date .\n  ?cf wm:amount ?amount .\n  FILTER(CONTAINS(LCASE(STR(?date)), \"2025\")) .\n  BIND(SUBSTR(STR(?date), 6, 2) AS ?month)\n}\nGROUP BY ?month\nORDER BY ?month",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT (STR(?month) AS ?Month) (SUM(xsd:decimal(?amount)) AS ?NetCashFlow)\nWHERE {\n  ?cf a wm:CashFlow .\n  ?cf wm:date ?date .\n  ?cf wm:amount ?amount .\n  FILTER(CONTAINS(?date, \"2025\")) .\n  BIND(SUBSTR(?date, 6, 2) AS ?month)\n}\nGROUP BY ?month\nORDER BY ?month",
+        "status": "success",
+        "row_count": 0,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      },
+      {
+        "attempt": 1,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT (STR(?month) AS ?Month) (SUM(xsd:decimal(?amount)) AS ?NetCashFlow)\nWHERE {\n  ?cf a wm:CashFlow .\n  ?cf wm:date ?date .\n  ?cf wm:amount ?amount .\n  FILTER(CONTAINS(?date, \"2025\")) .\n  BIND(SUBSTR(?date, 6, 2) AS ?month)\n}\nGROUP BY ?month\nORDER BY ?month",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT (STR(?month) AS ?Month) (SUM(xsd:decimal(?amount)) AS ?NetCashFlow)\nWHERE {\n  ?cf wm:date ?date .\n  ?cf wm:amount ?amount .\n  FILTER(CONTAINS(LCASE(STR(?date)), \"2025\")) .\n  BIND(SUBSTR(STR(?date), 6, 2) AS ?month)\n}\nGROUP BY ?month\nORDER BY ?month",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT (STR(?month) AS ?Month) (SUM(xsd:decimal(?amount)) AS ?NetCashFlow)\nWHERE {\n  ?cf wm:date ?date .\n  ?cf wm:amount ?amount .\n  FILTER(CONTAINS(LCASE(STR(?date)), \"2025\")) .\n  BIND(SUBSTR(STR(?date), 6, 2) AS ?month)\n}\nGROUP BY ?month\nORDER BY ?month",
+        "status": "success",
+        "row_count": 12,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 12,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL correctly aggregates cash flow amounts per month for the year 2025, returning the expected columns 'Month' and 'NetCashFlow'. The result set is non‑empty and includes a row for each month with summed values, fully satisfying the request for the monthly net cash flow for 2025.",
+    "validator_reason": "The SPARQL correctly aggregates cash flow amounts per month for the year 2025, returning the expected columns 'Month' and 'NetCashFlow'. The result set is non‑empty and includes a row for each month with summed values, fully satisfying the request for the monthly net cash flow for 2025.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 12,
+    "final_answer": "Month 01: 181329.0, Month 02: 100134058.0, Month 03: 211583.0, Month 04: 172342.0, Month 05: -99828549.0, Month 06: 100130325.0, Month 07: 153349.0, Month 08: 170181.0, Month 09: 137036.0, Month 10: 100184447.0, Month 11: 140325.0, Month 12: 198122.0",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth JSON list of months with net cash flow values to pipeline output string. The pipeline output lists each month with same values. All values match exactly. So it's a MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

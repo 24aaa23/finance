@@ -1,0 +1,340 @@
+{
+  "sample_row_id": "wealth_management_temporal_transaction_65_questions:TT-044",
+  "question": "Which investors have Manual Override rebalancing actions and Flash Crash scenario records?",
+  "ground_truth": "[{\"investor_id\":\"INV-044\",\"investor_name\":\"Ishita Sharma\"},{\"investor_id\":\"INV-112\",\"investor_name\":\"Amit Gupta\"},{\"investor_id\":\"INV-131\",\"investor_name\":\"Priyanka Sharma\"},{\"investor_id\":\"INV-156\",\"investor_name\":\"Meena Kulkarni\"},{\"investor_id\":\"INV-170\",\"investor_name\":\"Meena Reddy\"},{\"investor_id\":\"INV-206\",\"investor_name\":\"Rahul Patel\"},{\"investor_id\":\"INV-226\",\"investor_name\":\"Sneha Bhat\"},{\"investor_id\":\"INV-338\",\"investor_name\":\"Rahul Mehta\"},{\"investor_id\":\"INV-341\",\"investor_name\":\"Ramesh Reddy\"},{\"investor_id\":\"INV-369\",\"investor_name\":\"Geeta Sharma\"},{\"investor_id\":\"INV-378\",\"investor_name\":\"Geeta Verma\"},{\"investor_id\":\"INV-454\",\"investor_name\":\"Arjun Kulkarni\"},{\"investor_id\":\"INV-549\",\"investor_name\":\"Aishwarya Hegde\"},{\"investor_id\":\"INV-594\",\"investor_name\":\"Siddharth Mishra\"},{\"investor_id\":\"INV-683\",\"investor_name\":\"Ankita Bhat\"},{\"investor_id\":\"INV-715\",\"investor_name\":\"Anand Pandey\"},{\"investor_id\":\"INV-781\",\"investor_name\":\"Dipti Reddy\"},{\"investor_id\":\"INV-798\",\"investor_name\":\"Aishwarya Singh\"},{\"investor_id\":\"INV-809\",\"investor_name\":\"Anjali Chauhan\"},{\"investor_id\":\"INV-890\",\"investor_name\":\"Sunita Deshmukh\"},{\"investor_id\":\"INV-894\",\"investor_name\":\"Rahul Kulkarni\"},{\"investor_id\":\"INV-944\",\"investor_name\":\"Ishita Bhat\"},{\"investor_id\":\"INV-986\",\"investor_name\":\"Rajesh Kulkarni\"},{\"investor_id\":\"INV-1036\",\"investor_name\":\"Arjun Deshmukh\"},{\"investor_id\":\"INV-1057\",\"investor_name\":\"Abhishek Iyer\"},{\"investor_id\":\"INV-1074\",\"investor_name\":\"Vivek Pandey\"},{\"investor_id\":\"INV-1083\",\"investor_name\":\"Ishita Arora\"},{\"investor_id\":\"INV-1121\",\"investor_name\":\"Rajesh Arora\"},{\"investor_id\":\"INV-1155\",\"investor_name\":\"Rahul Bhat\"},{\"investor_id\":\"INV-1179\",\"investor_name\":\"Arjun Pandey\"},{\"investor_id\":\"INV-1197\",\"investor_name\":\"Rahul Yadav\"},{\"investor_id\":\"INV-1203\",\"investor_name\":\"Ankita Iyer\"},{\"investor_id\":\"INV-1205\",\"investor_name\":\"Sneha Mehta\"},{\"investor_id\":\"INV-1238\",\"investor_name\":\"Bhavna Bhat\"},{\"investor_id\":\"INV-1274\",\"investor_name\":\"Arjun Deshmukh\"},{\"investor_id\":\"INV-1282\",\"investor_name\":\"Akshay Pandey\"},{\"investor_id\":\"INV-1302\",\"investor_name\":\"Arjun Nair\"},{\"investor_id\":\"INV-1345\",\"investor_name\":\"Rajesh Verma\"},{\"investor_id\":\"INV-1347\",\"investor_name\":\"Rohan Hegde\"},{\"investor_id\":\"INV-1412\",\"investor_name\":\"Ishita Deshmukh\"},{\"investor_id\":\"INV-1448\",\"investor_name\":\"Anjali Mehta\"}]",
+  "pipeline_output": "INV-1197 Rahul Yadav, INV-226 Sneha Bhat, INV-594 Siddharth Mishra, INV-890 Sunita Deshmukh, INV-1203 Ankita Iyer, INV-986 Rajesh Kulkarni, INV-1302 Arjun Nair, INV-131 Priyanka Sharma, INV-549 Aishwarya Hegde, INV-112 Amit Gupta, INV-1205 Sneha Mehta, INV-1282 Akshay Pandey, INV-1448 Anjali Mehta, INV-683 Ankita Bhat, INV-944 Ishita Bhat, INV-1083 Ishita Arora, INV-1121 Rajesh Arora, INV-1057 Abhishek Iyer, INV-206 Rahul Patel, INV-338 Rahul Mehta, INV-341 Ramesh Reddy, INV-369 Geeta Sharma, INV-378 Geeta Verma, INV-1345 Rajesh Verma, INV-454 Arjun Kulkarni, INV-715 Anand Pandey, INV-894 Rahul Kulkarni, INV-1238 Bhavna Bhat, INV-1274 Arjun Deshmukh, INV-156 Meena Kulkarni, INV-170 Meena Reddy, INV-781 Dipti Reddy, INV-1074 Vivek Pandey, INV-798 Aishwarya Singh, INV-809 Anjali Chauhan, INV-1036 Arjun Deshmukh, INV-1155 Rahul Bhat, INV-1179 Arjun Pandey, INV-1347 Rohan Hegde, INV-1412 Ishita Deshmukh, INV-044 Ishita Sharma.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 347.429,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have Manual Override rebalancing actions and Flash Crash scenario records?\" This is a lookup/listing question, but involves two conditions: investors with Manual Override rebalancing actions AND Flash Crash scenario records. Likely need to retrieve ontology classes, then generate query, scan, validate, explain. No math classification needed. So steps:\n\n1. Retrieve (ontology classes) – maybe retrieve classes: Investor, RebalancingAction, Scenario, etc.\n\n2. Generate (SPARQL) – write query to select investors where there exists a rebalancing action with type Manual Override and a scenario record with type Flash Crash.\n\n3. Scan – execute query.\n\n4. Validate – check results.\n\n5. Explain – present answer.\n\nThus 5 steps. Ensure we follow order: Retrieve, Generate, Scan, Validate, Explain. No need for Classify because no math. So output numbered steps.</reasoning>1. Retrieve – Obtain the relevant ontology classes (e.g., Investor, RebalancingAction, Scenario) and their properties.  \n2. Generate – Write a SPARQL query that selects investors who have a RebalancingAction with a “Manual Override” type **and** a Scenario record with a “Flash Crash” type.  \n3. Scan – Execute the generated SPARQL query against the knowledge graph.  \n4. Validate – Verify that the returned results correctly satisfy both conditions (Manual Override rebalancing actions and Flash Crash scenario records).  \n5. Explain – Present the list of qualifying investors to the user.",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Generate",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Scan",
+              "inputs": [
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Validate",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Explain",
+              "inputs": [
+                "4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have Manual Override rebalancing actions and Flash Crash scenario records?\"\n\nWe need to find investors that have both Manual Override rebalancing actions and Flash Crash scenario records. This is a set intersection of investors with those two types of records.\n\nSteps:\n\n1. Retrieve ontology classes: likely Investor, RebalancingAction, ScenarioRecord, etc.\n\n2. Classify? The query is a simple lookup/listing, not math/aggregation. According to rule 2, if only simple lookup/listing, go straight from Retrieve to Generate. So we skip Classify.\n\n3. Generate SPARQL query to get investors with both conditions. Use Set_Intersect? Actually we can incorporate intersection in SPARQL, but we have Set_Intersect operator for set operations after retrieving sets. Could do: Generate two queries: one for investors with Manual Override rebalancing actions, another for investors with Flash Crash scenario records. Then use Set_Intersect to get common investors.\n\nThus plan:\n\n1. Retrieve (ontology classes)\n\n2. Generate (SPARQL for investors with Manual Override rebalancing actions)\n\n3. Scan (execute query)\n\n4. Validate (check results)\n\n5. Generate (SPARQL for investors with Flash Crash scenario records)\n\n6. Scan\n\n7. Validate\n\n8. Set_Intersect (intersect the two result sets)\n\n9. Validate (maybe ensure non-empty)\n\n10. Explain (present answer)\n\nWe must follow chronology: Retrieve first. Then Generate after Retrieve (or after Classify). Since no classification needed, we go to Generate. Then Scan, Validate. Then second Generate, Scan, Validate. Then Set_Intersect, Validate, Explain.\n\nWe need to ensure each step uses correct operator.\n\nThus output numbered steps.\n\n</reasoning>1. Retrieve – obtain the ontology classes relevant to investors, rebalancing actions, and scenario records.  \n2. Generate – write a SPARQL query that returns all investors linked to a “Manual Override” rebalancing action.  \n3. Scan – execute the SPARQL query from step 2 against the knowledge graph.  \n4. Validate – verify that the result set from step 3 is correctly formatted and contains investor identifiers.  \n5. Generate – write a second SPARQL query that returns all investors linked to a “Flash Crash” scenario record.  \n6. Scan – execute the SPARQL query from step 5 against the knowledge graph.  \n7. Validate – verify that the result set from step 6 is correctly formatted and contains investor identifiers.  \n8. Set_Intersect – compute the intersection of the two validated investor sets (Manual Override investors ∩ Flash Crash investors).  \n9. Validate – confirm that the intersected set is accurate and non‑empty (or note if empty).  \n10. Explain – present the final list of investors who have both Manual Override rebalancing actions and Flash Crash scenario records.",
+        "dag_sequence": "Retrieve -> Generate -> Generate -> Scan -> Scan -> Validate -> Validate -> Set_Intersect -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 44,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n7",
+              "operator": "Validate",
+              "inputs": [
+                "n5"
+              ]
+            },
+            {
+              "id": "n8",
+              "operator": "Set_Intersect",
+              "inputs": [
+                "n6",
+                "n7"
+              ]
+            },
+            {
+              "id": "n9",
+              "operator": "Validate",
+              "inputs": [
+                "n8"
+              ]
+            },
+            {
+              "id": "n10",
+              "operator": "Explain",
+              "inputs": [
+                "n9"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n4"
+            },
+            {
+              "source": "n3",
+              "target": "n5"
+            },
+            {
+              "source": "n4",
+              "target": "n6"
+            },
+            {
+              "source": "n5",
+              "target": "n7"
+            },
+            {
+              "source": "n6",
+              "target": "n8"
+            },
+            {
+              "source": "n7",
+              "target": "n8"
+            },
+            {
+              "source": "n8",
+              "target": "n9"
+            },
+            {
+              "source": "n9",
+              "target": "n10"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "RebalancingAction",
+      "ScenarioRebalancing",
+      "MarketScenario"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "",
+    "confidence": null,
+    "target_field": "",
+    "schema_datatype": "",
+    "why_this_intent": "",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasRebalancingAction ?ra .\n  ?ra wm:action ?action .\n  FILTER(CONTAINS(LCASE(STR(?action)), \"manual override\"))\n\n  ?inv wm:hasScenarioRebalancing ?sr .\n  ?sr wm:scenario ?scenario .\n  FILTER(CONTAINS(LCASE(STR(?scenario)), \"flash crash\"))\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasRebalancingAction ?ra .\n  ?ra wm:logic ?raLogic .\n  FILTER(CONTAINS(LCASE(STR(?raLogic)), \"manual override\"))\n\n  ?inv wm:hasScenarioRebalancing ?sr .\n  ?sr wm:scenario ?srScenario .\n  FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasRebalancingAction ?ra .\n  ?ra wm:action ?action .\n  FILTER(CONTAINS(LCASE(STR(?action)), \"manual override\"))\n\n  ?inv wm:hasScenarioRebalancing ?sr .\n  ?sr wm:scenario ?scenario .\n  FILTER(CONTAINS(LCASE(STR(?scenario)), \"flash crash\"))\n}",
+        "status": "success",
+        "row_count": 0,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      },
+      {
+        "attempt": 1,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasRebalancingAction ?ra .\n  ?ra wm:action ?action .\n  FILTER(CONTAINS(LCASE(STR(?action)), \"manual override\"))\n\n  ?inv wm:hasScenarioRebalancing ?sr .\n  ?sr wm:scenario ?scenario .\n  FILTER(CONTAINS(LCASE(STR(?scenario)), \"flash crash\"))\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasRebalancingAction ?ra .\n  ?ra rdfs:label ?raLabel .\n  FILTER(CONTAINS(LCASE(STR(?raLabel)), \"manual override\"))\n\n  ?inv wm:hasScenarioRebalancing ?sr .\n  ?sr rdfs:label ?srLabel .\n  FILTER(CONTAINS(LCASE(STR(?srLabel)), \"flash crash\"))\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasRebalancingAction ?ra .\n  ?ra rdfs:label ?raLabel .\n  FILTER(CONTAINS(LCASE(STR(?raLabel)), \"manual override\"))\n\n  ?inv wm:hasScenarioRebalancing ?sr .\n  ?sr rdfs:label ?srLabel .\n  FILTER(CONTAINS(LCASE(STR(?srLabel)), \"flash crash\"))\n}",
+        "status": "success",
+        "row_count": 0,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      },
+      {
+        "attempt": 2,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasRebalancingAction ?ra .\n  ?ra rdfs:label ?raLabel .\n  FILTER(CONTAINS(LCASE(STR(?raLabel)), \"manual override\"))\n\n  ?inv wm:hasScenarioRebalancing ?sr .\n  ?sr rdfs:label ?srLabel .\n  FILTER(CONTAINS(LCASE(STR(?srLabel)), \"flash crash\"))\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasRebalancingAction ?ra .\n  ?ra wm:logic ?raLogic .\n  FILTER(CONTAINS(LCASE(STR(?raLogic)), \"manual override\"))\n\n  ?inv wm:hasScenarioRebalancing ?sr .\n  ?sr wm:scenario ?srScenario .\n  FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasRebalancingAction ?ra .\n  ?ra wm:logic ?raLogic .\n  FILTER(CONTAINS(LCASE(STR(?raLogic)), \"manual override\"))\n\n  ?inv wm:hasScenarioRebalancing ?sr .\n  ?sr wm:scenario ?srScenario .\n  FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n}",
+        "status": "success",
+        "row_count": 41,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 41,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query asks for investors that have both Manual Override rebalancing actions and Flash Crash scenario records. The SPARQL correctly filters on those conditions and returns the investorId and investorName columns, which logically answer the question. The result set is non‑empty, and the returned fields match the requested information without missing or extraneous data.",
+    "validator_reason": "The query asks for investors that have both Manual Override rebalancing actions and Flash Crash scenario records. The SPARQL correctly filters on those conditions and returns the investorId and investorName columns, which logically answer the question. The result set is non‑empty, and the returned fields match the requested information without missing or extraneous data.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 41,
+    "final_answer": "INV-1197 Rahul Yadav, INV-226 Sneha Bhat, INV-594 Siddharth Mishra, INV-890 Sunita Deshmukh, INV-1203 Ankita Iyer, INV-986 Rajesh Kulkarni, INV-1302 Arjun Nair, INV-131 Priyanka Sharma, INV-549 Aishwarya Hegde, INV-112 Amit Gupta, INV-1205 Sneha Mehta, INV-1282 Akshay Pandey, INV-1448 Anjali Mehta, INV-683 Ankita Bhat, INV-944 Ishita Bhat, INV-1083 Ishita Arora, INV-1121 Rajesh Arora, INV-1057 Abhishek Iyer, INV-206 Rahul Patel, INV-338 Rahul Mehta, INV-341 Ramesh Reddy, INV-369 Geeta Sharma, INV-378 Geeta Verma, INV-1345 Rajesh Verma, INV-454 Arjun Kulkarni, INV-715 Anand Pandey, INV-894 Rahul Kulkarni, INV-1238 Bhavna Bhat, INV-1274 Arjun Deshmukh, INV-156 Meena Kulkarni, INV-170 Meena Reddy, INV-781 Dipti Reddy, INV-1074 Vivek Pandey, INV-798 Aishwarya Singh, INV-809 Anjali Chauhan, INV-1036 Arjun Deshmukh, INV-1155 Rahul Bhat, INV-1179 Arjun Pandey, INV-1347 Rohan Hegde, INV-1412 Ishita Deshmukh, INV-044 Ishita Sharma.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth list of investors (IDs and names) with Pipeline Output list. Ground Truth includes many IDs. Let's list Ground Truth IDs:\n\nINV-044 Ishita Sharma\nINV-112 Amit Gupta\nINV-131 Priyanka Sharma\nINV-156 Meena Kulkarni\nINV-170 Meena Reddy\nINV-206 Rahul Patel\nINV-226 Sneha Bhat\nINV-338 Rahul Mehta\nINV-341 Ramesh Reddy\nINV-369 Geeta Sharma\nINV-378 Geeta Verma\nINV-454 Arjun Kulkarni\nINV-549 Aishwarya Hegde\nINV-594 Siddharth Mishra\nINV-683 Ankita Bhat\nINV-715 Anand Pandey\nINV-781 Dipti Reddy\nINV-798 Aishwarya Singh\nINV-809 Anjali Chauhan\nINV-890 Sunita Deshmukh\nINV-894 Rahul Kulkarni\nINV-944 Ishita Bhat\nINV-986 Rajesh Kulkarni\nINV-1036 Arjun Deshmukh\nINV-1057 Abhishek Iyer\nINV-1074 Vivek Pandey\nINV-1083 Ishita Arora\nINV-1121 Rajesh Arora\nINV-1155 Rahul Bhat\nINV-1179 Arjun Pandey\nINV-1197 Rahul Yadav\nINV-1203 Ankita Iyer\nINV-1205 Sneha Mehta\nINV-1238 Bhavna Bhat\nINV-1274 Arjun Deshmukh\nINV-1282 Akshay Pandey\nINV-1302 Arjun Nair\nINV-1345 Rajesh Verma\nINV-1347 Rohan Hegde\nINV-1412 Ishita Deshmukh\nINV-1448 Anjali Mehta\n\nCount them: let's count: 1-44? Actually list length: let's count: 1 INV-044,2 INV-112,3 INV-131,4 INV-156,5 INV-170,6 INV-206,7 INV-226,8 INV-338,9 INV-341,10 INV-369,11 INV-378,12 INV-454,13 INV-549,14 INV-594,15 INV-683,16 INV-715,17 INV-781,18 INV-798,19 INV-809,20 INV-890,21 INV-894,22 INV-944,23 INV-986,24 INV-1036,25 INV-1057,26 INV-1074,27 INV-1083,28 INV-1121,29 INV-1155,30 INV-1179,31 INV-1197,32 INV-1203,33 INV-1205,34 INV-1238,35 INV-1274,36 INV-1282,37 INV-1302,38 INV-1345,39 INV-1347,40 INV-1412,41 INV-1448. So 41 entries.\n\nNow Pipeline Output list: It includes many IDs. Let's list them:\n\nINV-1197 Rahul Yadav\nINV-226 Sneha Bhat\nINV-594 Siddharth Mishra\nINV-890 Sunita Deshmukh\nINV-1203 Ankita Iyer\nINV-986 Rajesh Kulkarni\nINV-1302 Arjun Nair\nINV-131 Priyanka Sharma\nINV-549 Aishwarya Hegde\nINV-112 Amit Gupta\nINV-1205 Sneha Mehta\nINV-1282 Akshay Pandey\nINV-1448 Anjali Mehta\nINV-683 Ankita Bhat\nINV-944 Ishita Bhat\nINV-1083 Ishita Arora\nINV-1121 Rajesh Arora\nINV-1057 Abhishek Iyer\nINV-206 Rahul Patel\nINV-338 Rahul Mehta\nINV-341 Ramesh Reddy\nINV-369 Geeta Sharma\nINV-378 Geeta Verma\nINV-1345 Rajesh Verma\nINV-454 Arjun Kulkarni\nINV-715 Anand Pandey\nINV-894 Rahul Kulkarni\nINV-1238 Bhavna Bhat\nINV-1274 Arjun Deshmukh\nINV-156 Meena Kulkarni\nINV-170 Meena Reddy\nINV-781 Dipti Reddy\nINV-1074 Vivek Pandey\nINV-798 Aishwarya Singh\nINV-809 Anjali Chauhan\nINV-1036 Arjun Deshmukh\nINV-1155 Rahul Bhat\nINV-1179 Arjun Pandey\nINV-1347 Rohan Hegde\nINV-1412 Ishita Deshmukh\nINV-044 Ishita Sharma\n\nNow compare: Does pipeline include all ground truth entries? Let's check missing ones:\n\nGround truth list includes INV-044 (present), INV-112 (present), INV-131 (present), INV-156 (present), INV-170 (present), INV-206 (present), INV-226 (present), INV-338 (present), INV-341 (present), INV-369 (present), INV-378 (present), INV-454 (present), INV-549 (present), INV-594 (present), INV-683 (present), INV-715 (present), INV-781 (present), INV-798 (present), INV-809 (present), INV-890 (present), INV-894 (present), INV-944 (present), INV-986 (present), INV-1036 (present), INV-1057 (present), INV-1074 (present), INV-1083 (present), INV-1121 (present), INV-1155 (present), INV-1179 (present), INV-1197 (present), INV-1203 (present), INV-1205 (present), INV-1238 (present), INV-1274 (present), INV-1282 (present), INV-1302 (present), INV-1345 (present), INV-1347 (present), INV-1412 (present), INV-1448 (present).\n\nAll appear present. Check any extra entries in pipeline not in ground truth? Let's see pipeline includes all same IDs; seems exactly the same set, maybe order different. Did pipeline include INV-549? Yes. Did pipeline include INV-594? Yes. Did pipeline include INV-1205? Yes. Did pipeline include INV-1203? Yes. Did pipeline include INV-1282? Yes. Did pipeline include INV-1302? Yes. Did pipeline include INV-1345? Yes. Did pipeline include INV-1347? Yes. Did pipeline include INV-1412? Yes. Did pipeline include INV-1448? Yes.\n\nThus pipeline output contains all ground truth entries, no missing. So should be MATCH.\n\nCheck formatting: Ground truth is JSON list of objects; pipeline output is a comma-separated list of \"ID Name\". All IDs and names present. So MATCH.\n\nThus answer: MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

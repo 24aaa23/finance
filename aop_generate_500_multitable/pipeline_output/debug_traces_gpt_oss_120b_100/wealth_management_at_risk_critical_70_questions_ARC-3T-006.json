@@ -1,0 +1,346 @@
+{
+  "sample_row_id": "wealth_management_at_risk_critical_70_questions:ARC-3T-006",
+  "question": "Which investors have liquidity_score below 25 and at least one allocation_pct above 40?",
+  "ground_truth": "[{\"investor_id\":\"INV-082\",\"investor_name\":\"Amit Chauhan\"},{\"investor_id\":\"INV-096\",\"investor_name\":\"Anita Mishra\"},{\"investor_id\":\"INV-1096\",\"investor_name\":\"Amrita Sharma\"},{\"investor_id\":\"INV-1312\",\"investor_name\":\"Amit Verma\"},{\"investor_id\":\"INV-1371\",\"investor_name\":\"Sunita Patel\"},{\"investor_id\":\"INV-1451\",\"investor_name\":\"Kavita Arora\"},{\"investor_id\":\"INV-1537\",\"investor_name\":\"Anjali Singh\"},{\"investor_id\":\"INV-333\",\"investor_name\":\"Vivek Rao\"},{\"investor_id\":\"INV-762\",\"investor_name\":\"Chetan Pandey\"},{\"investor_id\":\"INV-830\",\"investor_name\":\"Anjali Yadav\"}]",
+  "pipeline_output": "The investors are Kavita Arora (INV-1451), Amit Chauhan (INV-082), Anjali Singh (INV-1537), Sunita Patel (INV-1371), Vivek Rao (INV-333), Anita Mishra (INV-096), Amit Verma (INV-1312), Chetan Pandey (INV-762), Anjali Yadav (INV-830), and Amrita Sharma (INV-1096).",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 87.817,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have liquidity_score below 25 and at least one allocation_pct above 40?\"\n\nWe need to find ontology classes first using Retrieve. Then classify numeric comparisons? The query includes numeric comparisons (below 25, above 40). According to rule 2, we must use Classify for math, aggregation, or numeric-superlative words. So we need to use Classify to identify numeric conditions.\n\nSequence:\n\n1. Retrieve (ontology classes)\n2. Classify (identify numeric conditions: liquidity_score < 25, allocation_pct > 40)\n3. Generate (write SPARQL query using identified classes and conditions)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nThus steps numbered.\n\nMake sure to use only operators listed.\n\nThus final answer: list steps with numbers.\n\n</reasoning>1. Retrieve – obtain the ontology classes relevant to “investor”, “liquidity_score”, and “allocation_pct”.  \n2. Classify – identify and label the numeric‑comparison elements in the query (liquidity_score < 25, allocation_pct > 40).  \n3. Generate – construct a SPARQL query that selects investors whose liquidity_score is below 25 and who have at least one allocation_pct above 40, using the classes from step 1 and the conditions from step 2.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned results satisfy both numeric conditions and contain the required investor identifiers.  \n6. Explain – present the list of investors that meet the criteria to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have liquidity_score below 25 and at least one allocation_pct above 40?\" This is a simple lookup/listing with two numeric conditions. According to rules: start by finding ontology classes using Retrieve. Then classify for math/aggregation? The query includes numeric comparisons (<, >). The rule says: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', etc. Does numeric comparison count? It says \"math, aggregation, or numeric-superlative words\". The phrase \"below\" and \"above\" are numeric comparisons, maybe considered math. Likely need to use Classify to identify numeric filters. So after Retrieve, we do Classify. Then Generate (write SPARQL). Then Scan, Validate, Explain.\n\nThus steps:\n\n1. Retrieve: get ontology classes (Investor, liquidity_score, allocation_pct).\n2. Classify: identify numeric filter criteria (liquidity_score < 25, allocation_pct > 40).\n3. Generate: construct SPARQL query to select investors meeting both conditions (maybe using FILTER).\n4. Scan: execute the SPARQL query against KG.\n5. Validate: ensure results are correct, non-empty, data types match.\n6. Explain: present list of investors to user.\n\nMake sure ordering correct. Provide numbered steps only.</reasoning>1. Retrieve – obtain the relevant ontology classes and properties (e.g., **Investor**, **liquidity_score**, **allocation_pct**).  \n2. Classify – identify the numeric filter conditions in the query (“liquidity_score below 25” and “allocation_pct above 40”).  \n3. Generate – write a SPARQL query that selects all **Investor** instances where `?investor :liquidity_score ?ls` with `?ls < 25` **and** there exists at least one `?alloc :allocation_pct ?ap` with `?ap > 40`.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – check that the returned results conform to the expected schema and that the numeric constraints are satisfied.  \n6. Explain – present the user with the list of investors that meet both criteria.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have liquidity_score below 25 and at least one allocation_pct above 40?\"\n\nWe need to retrieve ontology classes first: likely Investor, liquidity_score, allocation_pct. So step 1: Retrieve (ontology classes). Then we need to classify numeric comparison? The query includes numeric thresholds (<25, >40). According to rule 2, use 'Classify' for math, aggregation, or numeric-superlative words. So we need a Classify step to identify numeric conditions.\n\nThen Generate SPARQL after Retrieve and Classify. Then Scan to execute. Then Validate to check data. Then Explain to present answer.\n\nThus steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nWe might need Filter_Aggregate? Actually the query is a filter condition, but we can embed filter in SPARQL generated. No separate operator needed. The plan is linear.\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "PortfolioHealth",
+      "SectorAllocation"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "point_lookup",
+    "confidence": 0.96,
+    "target_field": "liquidityScore, allocationPct",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query requests a list of investors that satisfy numeric threshold conditions on liquidityScore (PortfolioHealth) and allocationPct (SectorAllocation). This is a filtered retrieval, not an aggregation or taxonomy task.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:liquidityScore ?liqScore .\n  FILTER ( xsd:decimal(?liqScore) < 25 )\n\n  FILTER EXISTS {\n    ?inv wm:hasSectorAllocation ?sa .\n    ?sa wm:allocationPct ?allocPct .\n    FILTER ( xsd:decimal(?allocPct) > 40 )\n  }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:liquidityScore ?liqScore .\n  FILTER ( xsd:decimal(?liqScore) < 25 )\n\n  FILTER EXISTS {\n    ?inv wm:hasSectorAllocation ?sa .\n    ?sa wm:allocationPct ?allocPct .\n    FILTER ( xsd:decimal(?allocPct) > 40 )\n  }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:liquidityScore ?liqScore .\n  FILTER ( xsd:decimal(?liqScore) < 25 )\n\n  FILTER EXISTS {\n    ?inv wm:hasSectorAllocation ?sa .\n    ?sa wm:allocationPct ?allocPct .\n    FILTER ( xsd:decimal(?allocPct) > 40 )\n  }\n}",
+        "status": "success",
+        "row_count": 10,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 10,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL correctly filters investors with liquidityScore < 25 and at least one allocationPct > 40, and returns the expected columns (investorId, investorName). The result set is non‑empty, matching the query's request for the list of such investors.",
+    "validator_reason": "The SPARQL correctly filters investors with liquidityScore < 25 and at least one allocationPct > 40, and returns the expected columns (investorId, investorName). The result set is non‑empty, matching the query's request for the list of such investors.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 10,
+    "final_answer": "The investors are Kavita Arora (INV-1451), Amit Chauhan (INV-082), Anjali Singh (INV-1537), Sunita Patel (INV-1371), Vivek Rao (INV-333), Anita Mishra (INV-096), Amit Verma (INV-1312), Chetan Pandey (INV-762), Anjali Yadav (INV-830), and Amrita Sharma (INV-1096).",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth list of investors (10 entries) with Pipeline Output list. Ground Truth: [{\"investor_id\":\"INV-082\",\"investor_name\":\"Amit Chauhan\"},{\"investor_id\":\"INV-096\",\"investor_name\":\"Anita Mishra\"},{\"investor_id\":\"INV-1096\",\"investor_name\":\"Amrita Sharma\"},{\"investor_id\":\"INV-1312\",\"investor_name\":\"Amit Verma\"},{\"investor_id\":\"INV-1371\",\"investor_name\":\"Sunita Patel\"},{\"investor_id\":\"INV-1451\",\"investor_name\":\"Kavita Arora\"},{\"investor_id\":\"INV-1537\",\"investor_name\":\"Anjali Singh\"},{\"investor_id\":\"INV-333\",\"investor_name\":\"Vivek Rao\"},{\"investor_id\":\"INV-762\",\"investor_name\":\"Chetan Pandey\"},{\"investor_id\":\"INV-830\",\"investor_name\":\"Anjali Yadav\"}]\n\nPipeline Output: \"The investors are Kavita Arora (INV-1451), Amit Chauhan (INV-082), Anjali Singh (INV-1537), Sunita Patel (INV-1371), Vivek Rao (INV-333), Anita Mishra (INV-096), Amit Verma (INV-1312), Chetan Pandey (INV-762), Anjali Yadav (INV-830), and Amrita Sharma (INV-1096).\"\n\nIt includes all 10 investors, same IDs and names. Order different but that's fine. All present. So MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "sample_row_id": "wealth_management_70_question_benchmark:WM-2T-020",
+  "question": "Which Conservative investors have both a risk score above 80 and a liquidity score below 20?",
+  "ground_truth": "[{\"investor_id\":\"INV-1048\",\"investor_name\":\"Geeta Pandey\",\"risk_score\":94.821904,\"liquidity_score\":7.857197},{\"investor_id\":\"INV-1200\",\"investor_name\":\"Ishita Gupta\",\"risk_score\":86.941488,\"liquidity_score\":12.52214},{\"investor_id\":\"INV-1348\",\"investor_name\":\"Anand Deshmukh\",\"risk_score\":94.936217,\"liquidity_score\":17.145857},{\"investor_id\":\"INV-1537\",\"investor_name\":\"Anjali Singh\",\"risk_score\":83.698024,\"liquidity_score\":7.675518},{\"investor_id\":\"INV-378\",\"investor_name\":\"Geeta Verma\",\"risk_score\":81.80541,\"liquidity_score\":6.237556},{\"investor_id\":\"INV-396\",\"investor_name\":\"Sunita Deshmukh\",\"risk_score\":83.014503,\"liquidity_score\":7.640485},{\"investor_id\":\"INV-557\",\"investor_name\":\"Priyanka Arora\",\"risk_score\":87.92128,\"liquidity_score\":15.358681},{\"investor_id\":\"INV-885\",\"investor_name\":\"Sneha Nair\",\"risk_score\":86.066751,\"liquidity_score\":11.733766},{\"investor_id\":\"INV-990\",\"investor_name\":\"Anita Reddy\",\"risk_score\":82.843055,\"liquidity_score\":16.253879}]",
+  "pipeline_output": "Anita Reddy (INV-990), Anjali Singh (INV-1537), Ishita Gupta (INV-1200), Sunita Deshmukh (INV-396), Geeta Pandey (INV-1048), Sneha Nair (INV-885), Geeta Verma (INV-378), Priyanka Arora (INV-557), Anand Deshmukh (INV-1348)",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 186.675,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which Conservative investors have both a risk score above 80 and a liquidity score below 20?\" This is a simple lookup/listing with numeric filters. According to rule 2, we need to use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. Here we have numeric comparisons (above 80, below 20). Are those considered math? The rule says \"Classify for math, aggregation, or numeric-superlative words\". Numeric comparisons are math. So we should use Classify to identify the numeric filters. Then Retrieve ontology classes. Then Classify. Then Generate (SPARQL). Then Scan. Then Validate. Then Explain.\n\nThus steps:\n\n1. Retrieve (ontology classes for Investor, RiskScore, LiquidityScore, maybe Conservative classification)\n2. Classify (identify numeric conditions: risk score > 80, liquidity score < 20)\n3. Generate (write SPARQL query to select investors of type Conservative with those score constraints)\n4. Scan (execute the query)\n5. Validate (check results)\n6. Explain (present answer)\n\nMake sure to use exact operator names. Output only numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which Conservative investors have both a risk score above 80 and a liquidity score below 20?\"\n\nWe need to find ontology classes first: likely Investor, RiskScore, LiquidityScore, maybe ConservativeInvestor class or attribute.\n\nStep1: Retrieve (ontology classes for Investor, RiskScore, LiquidityScore, maybe Conservative classification)\nStep2: Generate (SPARQL query to select investors of type Conservative with riskScore > 80 and liquidityScore < 20)\nStep3: Scan (execute the query)\nStep4: Validate (ensure results meet criteria)\nStep5: Explain (present answer)\n\nWe must ensure we follow chronology: Retrieve, then maybe Classify? Not needed. So steps as above.\n\nThus output numbered steps only.</reasoning>1. Retrieve – obtain the ontology classes for investors, the “Conservative” investor type, and the properties “risk score” and “liquidity score”.  \n2. Generate – write a SPARQL query that selects individuals of class ConservativeInvestor where ?riskScore > 80 and ?liquidityScore < 20.  \n3. Scan – execute the generated SPARQL query against the knowledge graph.  \n4. Validate – check that the returned individuals satisfy both the risk‑score‑above‑80 and liquidity‑score‑below‑20 conditions.  \n5. Explain – present the list of Conservative investors that meet the specified criteria to the user.",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Generate",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Scan",
+              "inputs": [
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Validate",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Explain",
+              "inputs": [
+                "4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which Conservative investors have both a risk score above 80 and a liquidity score below 20?\"\n\nWe need to find ontology classes first: likely Investor, RiskScore, LiquidityScore, maybe Conservative (a type or attribute). Use Retrieve.\n\nThen classify numeric comparison words: \"above 80\" \"below 20\" are numeric comparisons. According to rule, we must use Classify for math, aggregation, or numeric-superlative words. So we need a Classify step to identify numeric conditions.\n\nAfter Retrieve and Classify, we generate SPARQL query using Generate.\n\nThen Scan to execute.\n\nThen Validate to check results.\n\nThen Explain to answer user.\n\nThus steps:\n\n1. Retrieve (ontology classes relevant to query: Investor, Conservative, riskScore, liquidityScore).\n\n2. Classify (identify numeric‑comparison elements in the query).\n\n3. Generate (compose SPARQL query).\n\n4. Scan (execute).\n\n5. Validate (verify constraints).\n\n6. Explain (present list).\n\nMake sure steps numbered.\n\nThus final answer.</reasoning>1. Retrieve – obtain the ontology classes and properties needed for the query (e.g., Investor, Conservative type, riskScore, liquidityScore).  \n2. Classify – identify and label the numeric‑comparison elements in the query (“risk score above 80” and “liquidity score below 20”).  \n3. Generate – compose a SPARQL query that selects entities of class Conservative Investor where riskScore > 80 AND liquidityScore < 20.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned results satisfy both the risk‑score and liquidity‑score constraints.  \n6. Explain – present the list of Conservative investors meeting the criteria to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "PortfolioHealth"
+    ],
+    "why_selected": "Investor class provides the entity; PortfolioHealth links to riskScore and liquidityScore needed for numeric filters.",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "Detect numeric filter conditions (riskScore > 80, liquidityScore < 20).",
+    "confidence": 0.97,
+    "target_field": "riskScore, liquidityScore",
+    "schema_datatype": "xsd:decimal",
+    "why_this_intent": "Numeric comparisons require explicit classification to generate correct FILTER clauses.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  ?inv wm:segment ?segment .\n  FILTER(LCASE(STR(?segment)) = \"conservative\") .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  ?ph wm:liquidityScore ?liqScore .\n  FILTER(xsd:decimal(?riskScore) > 80) .\n  FILTER(xsd:decimal(?liqScore) < 20) .\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investor ?name\nWHERE {\n  ?investor a wm:Investor .\n  ?investor wm:riskTolerance ?rt .\n  FILTER(LCASE(STR(?rt)) = \"conservative\") .\n  OPTIONAL { ?investor rdfs:label ?name . }\n  ?investor wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  ?ph wm:liquidityScore ?liqScore .\n  FILTER(xsd:decimal(?riskScore) > 80) .\n  FILTER(xsd:decimal(?liqScore) < 20) .\n}",
+    "why_this_sparql": "Filters enforce Conservative segment and numeric thresholds; OPTIONAL label retrieval yields human‑readable names.",
+    "join_choices": [
+      {
+        "left": "?investor",
+        "right": "?ph",
+        "predicate": "wm:hasPortfolioHealth"
+      }
+    ],
+    "aggregation_choices": [],
+    "filter_choices": [
+      "segment = conservative",
+      "riskScore > 80",
+      "liquidityScore < 20"
+    ],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  ?inv wm:segment ?segment .\n  FILTER(LCASE(STR(?segment)) = \"conservative\") .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  ?ph wm:liquidityScore ?liqScore .\n  FILTER(xsd:decimal(?riskScore) > 80) .\n  FILTER(xsd:decimal(?liqScore) < 20) .\n}",
+        "status": "success",
+        "row_count": 0,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      },
+      {
+        "attempt": 1,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  ?inv wm:segment ?segment .\n  FILTER(LCASE(STR(?segment)) = \"conservative\") .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  ?ph wm:liquidityScore ?liqScore .\n  FILTER(xsd:decimal(?riskScore) > 80) .\n  FILTER(xsd:decimal(?liqScore) < 20) .\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investor ?name\nWHERE {\n  ?investor a wm:Investor .\n  ?investor wm:riskTolerance ?rt .\n  FILTER(LCASE(STR(?rt)) = \"conservative\") .\n  OPTIONAL { ?investor rdfs:label ?name . }\n  ?investor wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  ?ph wm:liquidityScore ?liqScore .\n  FILTER(xsd:decimal(?riskScore) > 80) .\n  FILTER(xsd:decimal(?liqScore) < 20) .\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investor ?name\nWHERE {\n  ?investor a wm:Investor .\n  ?investor wm:riskTolerance ?rt .\n  FILTER(LCASE(STR(?rt)) = \"conservative\") .\n  OPTIONAL { ?investor rdfs:label ?name . }\n  ?investor wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  ?ph wm:liquidityScore ?liqScore .\n  FILTER(xsd:decimal(?riskScore) > 80) .\n  FILTER(xsd:decimal(?liqScore) < 20) .\n}",
+        "status": "success",
+        "row_count": 9,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 9,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL query correctly filters for investors with a risk tolerance of \"Conservative\" and applies the required numeric constraints (riskScore > 80 and liquidityScore < 20). The returned columns (investor, name) align with the request for the identities of such investors. The result set is non‑empty and contains distinct investor IRIs with their labels, satisfying the original query.",
+    "validator_reason": "The SPARQL query correctly filters for investors with a risk tolerance of \"Conservative\" and applies the required numeric constraints (riskScore > 80 and liquidityScore < 20). The returned columns (investor, name) align with the request for the identities of such investors. The result set is non‑empty and contains distinct investor IRIs with their labels, satisfying the original query.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 9,
+    "final_answer": "Anita Reddy (INV-990), Anjali Singh (INV-1537), Ishita Gupta (INV-1200), Sunita Deshmukh (INV-396), Geeta Pandey (INV-1048), Sneha Nair (INV-885), Geeta Verma (INV-378), Priyanka Arora (INV-557), Anand Deshmukh (INV-1348)",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth list of investors meeting criteria: Conservative investors with risk >80 and liquidity <20. Ground truth lists 9 investors: INV-1048 Geeta Pandey, INV-1200 Ishita Gupta, INV-1348 Anand Deshmukh, INV-1537 Anjali Singh, INV-378 Geeta Verma, INV-396 Sunita Deshmukh, INV-557 Priyanka Arora, INV-885 Sneha Nair, INV-990 Anita Reddy.\n\nPipeline output lists same nine names? Let's check: \"Anita Reddy (INV-990), Anjali Singh (INV-1537), Ishita Gupta (INV-1200), Sunita Deshmukh (INV-396), Geeta Pandey (INV-1048), Sneha Nair (INV-885), Geeta Verma (INV-378), Priyanka Arora (INV-557), Anand Deshmukh (INV-1348)\". That includes all nine, same IDs. Order different but fine. All present. So matches ground truth exactly. Therefore output MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

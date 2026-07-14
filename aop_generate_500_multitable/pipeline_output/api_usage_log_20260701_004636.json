@@ -1,0 +1,543 @@
+{
+    "How does average goal progress compare across investor risk-tolerance groups?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Refine": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have a positive total goal shortfall, negative total holding gain, and net cash flow below 10,000?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors both purchased a holding and had a cash-flow transaction during 2025?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Generate": 2,
+            "Refine": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which five investors have the highest current holding value among those with a portfolio risk score above 70?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which Aggressive investors have diversification_score below 25 and at least one holding?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 3,
+            "Filter_Aggregate": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "For each profile risk_tolerance value, how many investors have risk_score above 70?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which five investors with average goal progress below 40% and risk above 50 have the highest total Withdrawal amount?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 3,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which portfolio-health records have risk_score above 80?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "For each holding sector value, how many holdings are present?": {
+        "total_calls": 21,
+        "functions": {
+            "Planner_Generate_Chain": 6,
+            "Planner_Rewrite_DAG": 6,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have profile category Equity and risk_score above 80?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors had cash-flow activity during 2025 but purchased no holdings during 2025?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Generate": 4,
+            "Refine": 2,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Using the rule that an investor should have complete profile context and at least one holding matching their profile category, which investors fail either condition?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have sector allocation above 20%, Withdrawal amount greater than Deposit amount, a Sell action, and a Flash Crash scenario?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 3,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have Bear Market scenario rebalancing and Withdrawal cash-flow transactions?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Across risk_tolerance, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Generate": 1,
+            "Refine": 2,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have total holding gain below 0 and liquidity_score below 30?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have average avg_volatility_pct above 30 and diversification_score below 30?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Across sector allocation, how do holding returns compare using two related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have Child Education goals and a Wallet cash-flow source?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "For each sector, how do average allocation percentage and maximum allocation percentage compare?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "For each risk-tolerance group and holding investment type, how many distinct investors are represented?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Across time_horizon, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Refine": 2,
+            "Final_Result_Grader": 1
+        }
+    },
+    "For each risk-tolerance group, how do total holding value and total sector-allocation investment compare?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Refine": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Across risk_tolerance, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Across time_horizon, how do transaction count, holding count, goal count, and scenario count compare using four related tables?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Refine": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "For each profile category, what is the 2025 monthly net cash flow?": {
+        "total_calls": 20,
+        "functions": {
+            "Planner_Generate_Chain": 6,
+            "Planner_Rewrite_DAG": 6,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Generate": 3,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have underfunded goals, risk_score above 80, liquidity_score below 20, and allocation_pct above 30?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "For each investor category, what are the number of holdings and number of distinct investors represented?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Using the required holding context rule that segment must be present, which holdings have missing segment?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "For each investment_type, how many holdings are present?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have average avg_sharpe_ratio below 0, average avg_volatility_pct above 10, total_holding_gain below 0, and net_cash_flow below 1000000?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 2,
+            "Refine": 2,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have quantitative burden score above 50000000, where score = total shortfall - total holding gain - net cash flow + risk_pressure_score?": {
+        "total_calls": 21,
+        "functions": {
+            "Planner_Generate_Chain": 6,
+            "Planner_Rewrite_DAG": 6,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 2,
+            "Refine": 2,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors purchased a holding and had cash-flow activity during 2025 and also received a rebalancing action?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Generate": 2,
+            "Refine": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which Moderate investors have average goal progress below 30% and a risk score above 60?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 3,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Which investors have complete profile context fields but at least one holding with missing classification fields?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Generate": 1,
+            "Refine": 2,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "What are the distinct investment goals associated with investors that have health scores?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Generate": 2,
+            "Refine": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Across time_horizon, how do cash-flow inflow and outflow compare using two related tables?": {
+        "total_calls": 19,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 3,
+            "Refine": 1,
+            "Validate": 3,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "Across risk_tolerance, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?": {
+        "total_calls": 17,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Refine": 2,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "For each risk_tolerance and allocation sector, how many investors have allocation_pct above 30 and diversification_score below 30?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    },
+    "For each investment goal, what is the average progress_pct and average shortfall?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Generate": 1,
+            "Validate": 1,
+            "Explain": 1,
+            "Final_Result_Grader": 1
+        }
+    }
+}

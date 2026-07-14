@@ -1,0 +1,377 @@
+{
+  "sample_row_id": "wealth_management_scoring_quantitative_65_questions:SQA-4T-014",
+  "question": "Which investors have total_holding_gain below 0, net_cash_flow below 0, and risk_pressure_score above 180, where risk_pressure_score = risk_score + (100 - liquidity_score) + (100 - diversification_score)?",
+  "ground_truth": "[{\"investor_id\":\"INV-1351\",\"investor_name\":\"Geeta Deshmukh\",\"total_holding_gain\":-970191.0,\"net_cash_flow\":-429.0,\"risk_pressure_score\":198.11},{\"investor_id\":\"INV-167\",\"investor_name\":\"Priyanka Reddy\",\"total_holding_gain\":-480805.5,\"net_cash_flow\":-1047.0,\"risk_pressure_score\":203.85}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 268.656,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: find investors with total_holding_gain <0, net_cash_flow <0, and risk_pressure_score >180, where risk_pressure_score = risk_score + (100 - liquidity_score) + (100 - diversification_score). Need to compute derived metric, so we need math classification. Steps:\n\n1 Retrieve ontology classes (Investor, maybe metrics). Use Retrieve.\n\n2 Classify: identify math operation (risk_pressure_score calculation, comparisons). So use Classify.\n\n3 Generate: write SPARQL query that selects investors with conditions, includes calculation of risk_pressure_score using expression.\n\n4 Scan: execute query.\n\n5 Validate: check results meet criteria.\n\n6 Explain: present answer.\n\nPotentially need Math_Compute? The calculation can be done within SPARQL, but we might need Math_Compute operator to compute risk_pressure_score after retrieving raw scores. However we can embed in query. The classification step says for math words we must use Classify. Not necessarily need Math_Compute unless we need separate step. Could include Math_Compute after Scan to compute derived metric if not done in query. The rules only specify order for certain steps, but we must keep linear execution. It says Validate must happen after Scan. It doesn't forbid other steps between Scan and Validate. However risk_pressure_score is computed; we could compute after retrieving raw scores. So steps:\n\n1 Retrieve\n\n2 Classify\n\n3 Generate\n\n4 Scan\n\n5 Math_Compute (compute risk_pressure_score for each row)\n\n6 Filter_Aggregate (apply conditions total_holding_gain<0, net_cash_flow<0, risk_pressure_score>180)\n\n7 Validate\n\n8 Explain\n\nBut need to ensure we follow chronology: Validate after Scan, but we added steps between Scan and Validate (Math_Compute, Filter_Aggregate). The rule says \"Validate (checking data) must happen AFTER Scan.\" It doesn't say it must be immediately after Scan, just after. So okay.\n\nBut also we might need Filter_Aggregate to apply conditions. Could also embed conditions in SPARQL, but then no need for extra steps. Simpler plan: embed all conditions in query, then no extra steps. Steps: Retrieve, Classify, Generate, Scan, Validate, Explain. That satisfies chronology. Use Classify for math. The query includes calculation.\n\nThus final answer: numbered steps 1-6.\n\nLet's craft.\n\n</reasoning>1. **Retrieve** – Obtain the ontology classes relevant to the query (e.g., `Investor`, `total_holding_gain`, `net_cash_flow`, `risk_score`, `liquidity_score`, `diversification_score`).  \n\n2. **Classify** – Identify and label the mathematical components of the request (the derived metric `risk_pressure_score = risk_score + (100 - liquidity_score) + (100 - diversification_score)` and the numeric filters “below 0” and “above 180”).  \n\n3. **Generate** – Write a SPARQL (or equivalent graph) query that:  \n   * Selects instances of `Investor`.  \n   * Retrieves the properties `total_holding_gain`, `net_cash_flow`, `risk_score`, `liquidity_score`, and `diversification_score`.  \n   * Computes `risk_pressure_score` using the expression `risk_score + (100 - liquidity_score) + (100 - diversification_score)`.  \n   * Applies the filters `total_holding_gain < 0`, `net_cash_flow < 0`, and `risk_pressure_score > 180`.  \n\n4. **Scan** – Execute the generated query against the knowledge graph to obtain the candidate investors.  \n\n5. **Validate** – Verify that each returned investor indeed satisfies all three numeric conditions and that the computed `risk_pressure_score` matches the defined formula.  \n\n6. **Explain** – Present the final list of investors to the user, optionally summarizing the key values (`total_holding_gain`, `net_cash_flow`, `risk_pressure_score`) for each.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Steps: Retrieve ontology classes, Classify for math (risk_pressure_score calculation). Then Generate SPARQL query using classification result. Then Scan to execute query. Then Validate results. Then Explain to user.\n\nPotentially also need Filter_Aggregate? But we can compute risk_pressure_score within SPARQL; we might need Math_Compute? But classification says math, but actual compute is within SPARQL. So we can embed. The plan: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nThus answer: numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Rejected by Python validator: missing dependency path: Classify -> Generate",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Steps: 1 Retrieve ontology classes. Then Classify for math (since we have numeric calculations: risk_pressure_score defined as expression, also conditions total_holding_gain below 0, net_cash_flow below 0, risk_pressure_score above 180). So after Retrieve, we do Classify to identify math/aggregation. Then Generate SPARQL query using classification. Then Scan to execute. Then Validate to check data. Then Explain to present answer. Possibly also need Filter_Aggregate? But we can embed conditions in SPARQL. The plan should be linear steps. So steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nWe might also need Math_Compute to compute risk_pressure_score? But we can compute within SPARQL using expression. However classification step identifies math, but actual compute may be done via Math_Compute operator after Scan? The chronology says after Scan we do Validate then Explain. No mention of Math_Compute. But we could include Math_Compute before Validate to compute derived score. However we can embed expression in SPARQL, but maybe need to compute after retrieving raw fields. The query: need risk_pressure_score = risk_score + (100 - liquidity_score) + (100 - diversification_score). Could compute via Math_Compute after Scan. However classification: we must use Classify for math words. So we have that. The simplest plan is Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nThus final answer: numbered steps 1-6.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Rejected by Python validator: missing dependency path: Classify -> Generate",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "PortfolioHealth",
+      "CashFlow",
+      "PortfolioHolding"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "boolean_comparison",
+    "confidence": 0.96,
+    "target_field": "investorId",
+    "schema_datatype": "categorical_string",
+    "why_this_intent": "The query asks for investors satisfying numeric conditions, which is a Boolean filter rather than a numeric aggregation. It does not request a mathematical aggregation on a categorical field.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalHoldingGain ?netCashFlow ?riskPressureScore WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName ;\n       wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore ;\n      wm:liquidityScore ?liquidityScore ;\n      wm:diversificationScore ?diversificationScore .\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?gain)) AS ?totalHoldingGain) WHERE {\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:currentValue ?cv ;\n            wm:cost ?cost .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    } GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n\n  BIND ( xsd:decimal(?riskScore) + (100.0 - xsd:decimal(?liquidityScore)) + (100.0 - xsd:decimal(?diversificationScore)) AS ?riskPressureScore)\n\n  FILTER ( ?totalHoldingGain < 0 )\n  FILTER ( ?netCashFlow < 0 )\n  FILTER ( ?riskPressureScore > 180 )\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalHoldingGain ?netCashFlow ?riskPressureScore WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName ;\n       wm:hasPortfolioHealth ?ph .\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?cv) - xsd:decimal(?cost)) AS ?totalHoldingGain) WHERE {\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:currentValue ?cv ;\n            wm:cost ?cost .\n    } GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amt .\n    } GROUP BY ?inv\n  }\n\n  ?ph wm:riskScore ?riskScore ;\n      wm:liquidityScore ?liquidityScore ;\n      wm:diversificationScore ?divScore .\n\n  BIND ( xsd:decimal(?riskScore) + (100 - xsd:decimal(?liquidityScore)) + (100 - xsd:decimal(?divScore)) AS ?riskPressureScore)\n\n  FILTER ( ?totalHoldingGain < 0 )\n  FILTER ( ?netCashFlow < 0 )\n  FILTER ( ?riskPressureScore > 180 )\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalHoldingGain ?netCashFlow ?riskPressureScore WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName ;\n       wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore ;\n      wm:liquidityScore ?liquidityScore ;\n      wm:diversificationScore ?diversificationScore .\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?gain)) AS ?totalHoldingGain) WHERE {\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:currentValue ?cv ;\n            wm:cost ?cost .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    } GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n\n  BIND ( xsd:decimal(?riskScore) + (100.0 - xsd:decimal(?liquidityScore)) + (100.0 - xsd:decimal(?diversificationScore)) AS ?riskPressureScore)\n\n  FILTER ( ?totalHoldingGain < 0 )\n  FILTER ( ?netCashFlow < 0 )\n  FILTER ( ?riskPressureScore > 180 )\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalHoldingGain ?netCashFlow ?riskPressureScore WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName ;\n       wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore ;\n      wm:liquidityScore ?liquidityScore ;\n      wm:diversificationScore ?diversificationScore .\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?gain)) AS ?totalHoldingGain) WHERE {\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:currentValue ?cv ;\n            wm:cost ?cost .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    } GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n\n  BIND ( xsd:decimal(?riskScore) + (100.0 - xsd:decimal(?liquidityScore)) + (100.0 - xsd:decimal(?diversificationScore)) AS ?riskPressureScore)\n\n  FILTER ( ?totalHoldingGain < 0 )\n  FILTER ( ?netCashFlow < 0 )\n  FILTER ( ?riskPressureScore > 180 )\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalHoldingGain ?netCashFlow ?riskPressureScore WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName ;\n       wm:hasPortfolioHealth ?ph .\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?cv) - xsd:decimal(?cost)) AS ?totalHoldingGain) WHERE {\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:currentValue ?cv ;\n            wm:cost ?cost .\n    } GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n\n  ?ph wm:riskScore ?riskScore ;\n      wm:liquidityScore ?liquidityScore ;\n      wm:diversificationScore ?diversificationScore .\n\n  BIND ( xsd:decimal(?riskScore) + (100 - xsd:decimal(?liquidityScore)) + (100 - xsd:decimal(?diversificationScore)) AS ?riskPressureScore)\n\n  FILTER ( ?totalHoldingGain < 0 )\n  FILTER ( ?netCashFlow < 0 )\n  FILTER ( ?riskPressureScore > 180 )\n}",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalHoldingGain ?netCashFlow ?riskPressureScore WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName ;\n       wm:hasPortfolioHealth ?ph .\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?cv) - xsd:decimal(?cost)) AS ?totalHoldingGain) WHERE {\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:currentValue ?cv ;\n            wm:cost ?cost .\n    } GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n\n  ?ph wm:riskScore ?riskScore ;\n      wm:liquidityScore ?liquidityScore ;\n      wm:diversificationScore ?diversificationScore .\n\n  BIND ( xsd:decimal(?riskScore) + (100 - xsd:decimal(?liquidityScore)) + (100 - xsd:decimal(?diversificationScore)) AS ?riskPressureScore)\n\n  FILTER ( ?totalHoldingGain < 0 )\n  FILTER ( ?netCashFlow < 0 )\n  FILTER ( ?riskPressureScore > 180 )\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalHoldingGain ?netCashFlow ?riskPressureScore WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName ;\n       wm:hasPortfolioHealth ?ph .\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?cv) - xsd:decimal(?cost)) AS ?totalHoldingGain) WHERE {\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:currentValue ?cv ;\n            wm:cost ?cost .\n    } GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n\n  ?ph wm:riskScore ?riskScore ;\n      wm:liquidityScore ?liquidityScore ;\n      wm:diversificationScore ?diversificationScore .\n\n  BIND ( xsd:decimal(?riskScore) + (100 - xsd:decimal(?liquidityScore)) + (100 - xsd:decimal(?diversificationScore)) AS ?riskPressureScore)\n\n  FILTER ( ?totalHoldingGain < 0 )\n  FILTER ( ?netCashFlow < 0 )\n  FILTER ( ?riskPressureScore > 180 )\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalHoldingGain ?netCashFlow ?riskPressureScore WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName ;\n       wm:hasPortfolioHealth ?ph .\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?cv) - xsd:decimal(?cost)) AS ?totalHoldingGain) WHERE {\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:currentValue ?cv ;\n            wm:cost ?cost .\n    } GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amt .\n    } GROUP BY ?inv\n  }\n\n  ?ph wm:riskScore ?riskScore ;\n      wm:liquidityScore ?liquidityScore ;\n      wm:diversificationScore ?divScore .\n\n  BIND ( xsd:decimal(?riskScore) + (100 - xsd:decimal(?liquidityScore)) + (100 - xsd:decimal(?divScore)) AS ?riskPressureScore)\n\n  FILTER ( ?totalHoldingGain < 0 )\n  FILTER ( ?netCashFlow < 0 )\n  FILTER ( ?riskPressureScore > 180 )\n}",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": "Refine was too similar to timed-out SPARQL, so Generate rewrote with stronger feedback."
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalHoldingGain ?netCashFlow ?riskPressureScore WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName ;\n       wm:hasPortfolioHealth ?ph .\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?cv) - xsd:decimal(?cost)) AS ?totalHoldingGain) WHERE {\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:currentValue ?cv ;\n            wm:cost ?cost .\n    } GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amt .\n    } GROUP BY ?inv\n  }\n\n  ?ph wm:riskScore ?riskScore ;\n      wm:liquidityScore ?liquidityScore ;\n      wm:diversificationScore ?divScore .\n\n  BIND ( xsd:decimal(?riskScore) + (100 - xsd:decimal(?liquidityScore)) + (100 - xsd:decimal(?divScore)) AS ?riskPressureScore)\n\n  FILTER ( ?totalHoldingGain < 0 )\n  FILTER ( ?netCashFlow < 0 )\n  FILTER ( ?riskPressureScore > 180 )\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "SPARQL execution timed out after 60 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output with ground truth. Ground truth lists two investors with specific fields. Pipeline output: \"A database error prevented data retrieval.\" That does not contain any of the required facts. So it's a mismatch. According to rule 2, if pipeline says database error, mark MISMATCH. So answer: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

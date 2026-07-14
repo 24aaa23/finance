@@ -1,0 +1,210 @@
+{
+  "sample_row_id": "wealth_management_temporal_transaction_65_questions:TT-012",
+  "question": "For each investment_goal, what is the net cash flow of investors having that goal?",
+  "ground_truth": "[{\"investment_goal\":null,\"net_cash_flow\":501911557.0},{\"investment_goal\":\"Child Education\",\"net_cash_flow\":1605121056.0},{\"investment_goal\":\"Emergency Fund\",\"net_cash_flow\":805283192.0},{\"investment_goal\":\"Growth\",\"net_cash_flow\":705175070.0},{\"investment_goal\":\"Income Generation\",\"net_cash_flow\":1305111175.0},{\"investment_goal\":\"Retirement Planning\",\"net_cash_flow\":505673554.0},{\"investment_goal\":\"Wealth Preservation\",\"net_cash_flow\":1005021189.0}]",
+  "pipeline_output": "Growth: 705175070.0; Wealth Preservation: 1005021189.0; Child Education: 1605121056.0; Retirement Planning: 505673554.0; Income Generation: 1305111175.0; Emergency Fund: 805283192.0.",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 84.64,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest reward dynamic DAG: reward=0.5, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"For each investment_goal, what is the net cash flow of investors having that goal?\" This involves aggregation (net cash flow = sum of cash flows maybe). So need math/aggregation classification. Steps:\n\n1 Retrieve ontology classes (maybe InvestmentGoal, Investor, CashFlow). Use Retrieve.\n\n2 Classify to detect aggregation (net cash flow -> sum). Use Classify.\n\n3 Generate SPARQL query that groups by investment_goal and sums cash flow.\n\n4 Scan to execute.\n\n5 Validate results.\n\n6 Explain to user.\n\nWe may also need Filter_Aggregate? But classification already identifies aggregation; we might need Filter_Aggregate operator to perform grouping and sum. However the rules: after Generate and Scan, we can also use Filter_Aggregate? The chronology not explicitly mention but we must follow critical chronology: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain. Additional operators could be inserted maybe after Generate before Scan? But Scan must happen immediately after Generate. So cannot insert anything between Generate and Scan. So we cannot use Filter_Aggregate. The aggregation is expressed in SPARQL query; the execution engine will compute sum. So fine.\n\nThus steps list:\n\n1. Retrieve – obtain the ontology classes relevant to the query (e.g., InvestmentGoal, Investor, CashFlow).  \n2. Classify – identify that the query requires a numeric aggregation (“net cash flow”) and therefore needs a SUM operation.  \n3. Generate – write a SPARQL query that groups investors by their investment_goal and computes the SUM of their cash‑flow values (net cash flow).  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – check that the returned results contain a net cash‑flow value for each investment_goal and that no errors occurred.  \n6. Explain – present the user with the list of investment goals together with the corresponding net cash‑flow values.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"For each investment_goal, what is the net cash flow of investors having that goal?\" Need to find ontology classes first using Retrieve. Then Classify for math/aggregation: net cash flow is likely sum of cash flows (inflows minus outflows) per investment_goal. So need to classify for aggregation (Sum). Then Generate SPARQL to compute net cash flow per investment_goal. Then Scan to execute. Then Validate to check data. Then Explain to present answer.\n\nPotential extra steps: maybe need Filter_Aggregate? But we can incorporate aggregation in SPARQL. However we might need to use Filter_Aggregate operator to compute net cash flow (sum of cash flow values). But classification already identifies aggregation. The plan could include Generate, Scan, Validate, Explain. Could also include Extract? Not needed.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify aggregation: net cash flow sum)\n3. Generate (write SPARQL query to compute sum of cash flow per investment_goal)\n4. Scan (execute query)\n5. Validate (ensure results are correct)\n6. Explain (provide answer)\n\nMake sure order matches rules: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the ontology classes relevant to the query (e.g., InvestmentGoal, Investor, CashFlow).  \n2. Classify – identify the mathematical/aggregation operation required (“net cash flow” → sum of cash‑flow values).  \n3. Generate – compose a SPARQL query that groups investors by their investment_goal and computes the sum of their cash‑flow amounts (net cash flow).  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – check the returned results for completeness and correctness (e.g., ensure each investment_goal has a corresponding net cash‑flow value).  \n6. Explain – present the final answer to the user, listing each investment_goal with its calculated net cash flow.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"For each investment_goal, what is the net cash flow of investors having that goal?\"\n\nWe need to find ontology classes first using Retrieve. Then we need to classify math/aggregation: net cash flow is likely sum of cash flow (maybe cash inflow - outflow). So we need to classify for aggregation (Sum). So we need Classify after Retrieve.\n\nThen Generate SPARQL query that groups by investment_goal and computes net cash flow (maybe sum of cash flow). Then Scan to execute. Then Validate to check data. Then Explain to present answer.\n\nPotentially also need Filter_Aggregate? But we can incorporate aggregation in SPARQL; but we might need Filter_Aggregate operator to perform aggregation after scanning? The rules: after Scan, Validate, then Explain. It doesn't say you can't have other steps between. But to be safe, we can keep minimal steps.\n\nThus steps:\n\n1. Retrieve – obtain ontology classes (e.g., Investor, InvestmentGoal, CashFlow).\n\n2. Classify – identify that the query involves aggregation (net cash flow) and numeric operation (Sum).\n\n3. Generate – write SPARQL query that selects each investment_goal and computes SUM(?cashFlow) as the net cash flow for each goal, grouping by investment_goal.\n\n4. Scan – execute the generated SPARQL query against the knowledge graph.\n\n5. Validate – verify that the returned results are complete and consistent (e.g., no missing values).\n\n6. Explain – present the user with a clear list of each investment_goal and its corresponding net cash flow.\n\nThus output only numbered steps.</reasoning>1. Retrieve – fetch the ontology classes relevant to the query (e.g., Investor, InvestmentGoal, CashFlow).  \n2. Classify – recognize that the query requires a numeric aggregation (“net cash flow”) and therefore involves a **Sum** operation.  \n3. Generate – compose a SPARQL query that groups investors by their investment_goal and computes SUM(?cashFlow) as the net cash flow for each goal.  \n4. Scan – execute the generated SPARQL query against the knowledge graph to obtain the result set.  \n5. Validate – check the returned data for completeness and correctness (e.g., ensure every investment_goal has an associated net cash flow value).  \n6. Explain – present the user with a clear list of each investment_goal and its corresponding net cash flow.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest reward dynamic DAG: reward=0.5, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "InvestmentGoal",
+      "CashFlow",
+      "Investor"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.97,
+    "target_field": "amount",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks for the net (sum) cash flow per investment goal, which requires aggregating the numeric 'amount' field from the CashFlow class.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://w",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investmentGoal (SUM(xsd:decimal(?amount)) AS ?netCashFlow)\nWHERE {\n  ?ig a wm:InvestmentGoal ;\n      wm:investmentGoal ?investmentGoal ;\n      wm:belongsToInvestor ?inv .\n  ?inv wm:hasCashFlow ?cf .\n  ?cf wm:amount ?amount .\n}\nGROUP BY ?investmentGoal",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investmentGoal (SUM(xsd:decimal(?amount)) AS ?netCashFlow)\nWHERE {\n  ?ig a wm:InvestmentGoal ;\n      wm:investmentGoal ?investmentGoal ;\n      wm:belongsToInvestor ?inv .\n  ?inv wm:hasCashFlow ?cf .\n  ?cf wm:amount ?amount .\n}\nGROUP BY ?investmentGoal",
+        "status": "success",
+        "row_count": 6,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 6,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL query correctly aggregates cash flow amounts per investment goal using SUM and GROUP BY, and the returned columns (investmentGoal, netCashFlow) match the requested output. The result set is non‑empty and includes a row for each investment goal, fulfilling the user's request.",
+    "validator_reason": "The SPARQL query correctly aggregates cash flow amounts per investment goal using SUM and GROUP BY, and the returned columns (investmentGoal, netCashFlow) match the requested output. The result set is non‑empty and includes a row for each investment goal, fulfilling the user's request.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 6,
+    "final_answer": "Growth: 705175070.0; Wealth Preservation: 1005021189.0; Child Education: 1605121056.0; Retirement Planning: 505673554.0; Income Generation: 1305111175.0; Emergency Fund: 805283192.0.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth JSON list with pipeline output string.\n\nGround truth includes entries for investment_goal null, Child Education, Emergency Fund, Growth, Income Generation, Retirement Planning, Wealth Preservation. Values:\n\nnull: 501911557.0\nChild Education: 1605121056.0\nEmergency Fund: 805283192.0\nGrowth: 705175070.0\nIncome Generation: 1305111175.0\nRetirement Planning: 505673554.0\nWealth Preservation: 1005021189.0\n\nPipeline output: \"Growth: 705175070.0; Wealth Preservation: 1005021189.0; Child Education: 1605121056.0; Retirement Planning: 505673554.0; Income Generation: 1305111175.0; Emergency Fund: 805283192.0.\"\n\nMissing the entry for investment_goal null with net_cash_flow 501911557.0. All other entries present with correct numbers. So missing one value => PARTIAL (since not all values). According to rule 4, missing values are PARTIAL or MISMATCH, not MATCH. Since only one missing, it's PARTIAL.\n\nThus output \"PARTIAL\".</reasoning>PARTIAL",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

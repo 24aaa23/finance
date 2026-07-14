@@ -1,0 +1,346 @@
+{
+  "sample_row_id": "wealth_management_at_risk_critical_70_questions:ARC-4T-010",
+  "question": "How does average returns_pct compare for investors with liquidity_score below 30 grouped by risk_tolerance?",
+  "ground_truth": "[{\"risk_tolerance\":\"Conservative\",\"avg_returns_pct\":42.32},{\"risk_tolerance\":null,\"avg_returns_pct\":42.86},{\"risk_tolerance\":\"Moderate\",\"avg_returns_pct\":58.0},{\"risk_tolerance\":\"Aggressive\",\"avg_returns_pct\":68.1}]",
+  "pipeline_output": "Aggressive investors have an average returns_pct of 67.98941798941798941798941799, Moderate investors 57.93010752688172043010752688, and Conservative investors 42.34567901234567901234567901.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 96.422,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"How does average returns_pct compare for investors with liquidity_score below 30 grouped by risk_tolerance?\" So we need to retrieve ontology classes, classify math/aggregation (average), generate SPARQL, scan, validate, explain. Also need to filter on liquidity_score < 30, group by risk_tolerance, compute average returns_pct.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify that we need aggregation: average)\n3. Generate (write SPARQL query with FILTER liquidity_score < 30, GROUP BY risk_tolerance, AVG(returns_pct))\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nWe might need Filter_Aggregate? Actually we have operator Filter_Aggregate. Could be used to apply filter and aggregation. But chronology says after Generate we must Scan. So we could incorporate filter/aggregation in Generate SPARQL. The operators list includes Filter_Aggregate, but not required. However we could include a step using Filter_Aggregate before Generate? The rules: \"If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve').\" So we could have a step: Filter_Aggregate to define filter and aggregation? But maybe not needed; we can embed in SPARQL. But we could still include a step: Filter_Aggregate to specify filter and grouping. However chronology: after Generate we must Scan. So Filter_Aggregate could be before Generate? Not specified but could be after Retrieve and before Generate. But we have to follow linear execution plan; we can include it.\n\nThus steps:\n\n1. Retrieve\n2. Classify\n3. Filter_Aggregate (define filter liquidity_score <30 and aggregation average returns_pct grouped by risk_tolerance)\n4. Generate (SPARQL)\n5. Scan\n6. Validate\n7. Explain\n\nCheck if any other steps needed: maybe Check_Schema before Generate? Not required.\n\nThus output numbered steps only.</reasoning>1. Retrieve – obtain the ontology classes relevant to investors, liquidity_score, risk_tolerance, and returns_pct.  \n2. Classify – identify the mathematical operation (“average”) and the aggregation requirement in the query.  \n3. Filter_Aggregate – define the filter condition (liquidity_score < 30) and the aggregation (average of returns_pct) grouped by risk_tolerance.  \n4. Generate – write the SPARQL query that applies the filter, groups by risk_tolerance, and computes AVG(returns_pct).  \n5. Scan – execute the generated SPARQL query against the knowledge graph.  \n6. Validate – verify that the returned results are complete and correctly typed.  \n7. Explain – present the comparison of average returns_pct across the risk_tolerance groups to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Filter_Aggregate -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 32,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "3",
+              "operator": "Filter_Aggregate",
+              "inputs": []
+            },
+            {
+              "id": "4",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2",
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Scan",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Validate",
+              "inputs": [
+                "5"
+              ]
+            },
+            {
+              "id": "7",
+              "operator": "Explain",
+              "inputs": [
+                "6"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "4"
+            },
+            {
+              "source": "2",
+              "target": "4"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            },
+            {
+              "source": "6",
+              "target": "7"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"How does average returns_pct compare for investors with liquidity_score below 30 grouped by risk_tolerance?\" Steps:\n\n1. Retrieve ontology classes (maybe Investor, returns_pct, liquidity_score, risk_tolerance). Use Retrieve.\n\n2. Classify for math/aggregation: average returns_pct, grouping. So use Classify.\n\n3. Generate SPARQL query to compute average returns_pct for investors where liquidity_score < 30, group by risk_tolerance.\n\n4. Scan to execute query.\n\n5. Validate results.\n\n6. Explain to user.\n\nThus steps numbered 1-6. Ensure order: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nReturn only numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"How does average returns_pct compare for investors with liquidity_score below 30 grouped by risk_tolerance?\"\n\nWe need to:\n\n1. Retrieve ontology classes (maybe Investor, returns_pct, liquidity_score, risk_tolerance). Use Retrieve.\n\n2. Use Classify for math/aggregation: average returns_pct, grouping, filter condition. So we need to classify the query for aggregation.\n\n3. Generate SPARQL query after Classify (and Retrieve). So step: Generate.\n\n4. Scan to execute query.\n\n5. Validate results.\n\n6. Explain to user.\n\nPotential extra steps: Filter_Aggregate maybe used? But we must follow chronology: after Generate we must Scan; we could incorporate Filter_Aggregate inside SPARQL generation, but not separate operator. The plan should list steps using operators.\n\nThus steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nWe might also need to use Filter_Aggregate? Not required as per chronology; but we could include as separate step after Generate? However rule says Scan must happen immediately after Generate, so cannot insert other steps between. So we cannot have Filter_Aggregate separate; we embed filter/aggregation in SPARQL.\n\nThus final answer: numbered steps.\n\nLet's output.</reasoning>1. Retrieve – locate the ontology classes and properties relevant to the query (e.g., **Investor**, **returns_pct**, **liquidity_score**, **risk_tolerance**).  \n2. Classify – identify the mathematical and aggregation intent (“average”, “grouped by”, “below 30”) to determine that an aggregation (AVG) with a filter and grouping is required.  \n3. Generate – compose a SPARQL query that (a) filters investors where `liquidity_score < 30`, (b) groups the results by `risk_tolerance`, and (c) computes `AVG(returns_pct)` for each group.  \n4. Scan – execute the generated SPARQL query against the knowledge graph to retrieve the aggregated results.  \n5. Validate – check the returned data for completeness, correct datatype (numeric), and ensure no missing groups or errors.  \n6. Explain – present the user with a clear comparison of the average `returns_pct` for each `risk_tolerance` category among investors whose `liquidity_score` is below 30.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "PortfolioHolding",
+      "PortfolioHealth",
+      "Investor",
+      "RiskTolerance"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.99,
+    "target_field": "returnsPct",
+    "schema_datatype": "numeric",
+    "why_this_intent": "User requests average of returnsPct, which is a numeric field, filtered by numeric liquidityScore and grouped by categorical riskTolerance; this is a valid numeric aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance (AVG(xsd:decimal(?returnsPct)) AS ?avgReturnsPct)\nWHERE {\n  ?investor a wm:Investor ;\n            wm:hasPortfolioHealth ?health ;\n            wm:hasHolding ?holding ;\n            wm:riskTolerance ?riskTolerance .\n  ?health wm:liquidityScore ?liqScore .\n  FILTER(xsd:decimal(?liqScore) < 30) .\n  ?holding wm:returnsPct ?returnsPct .\n}\nGROUP BY ?riskTolerance\nORDER BY DESC(?avgReturnsPct)",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance (AVG(xsd:decimal(?returnsPct)) AS ?avgReturnsPct)\nWHERE {\n  ?investor a wm:Investor ;\n            wm:hasPortfolioHealth ?health ;\n            wm:hasHolding ?holding ;\n            wm:riskTolerance ?riskTolerance .\n  ?health wm:liquidityScore ?liqScore .\n  FILTER(xsd:decimal(?liqScore) < 30) .\n  ?holding wm:returnsPct ?returnsPct .\n}\nGROUP BY ?riskTolerance\nORDER BY DESC(?avgReturnsPct)",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance (AVG(xsd:decimal(?returnsPct)) AS ?avgReturnsPct)\nWHERE {\n  ?investor a wm:Investor ;\n            wm:hasPortfolioHealth ?health ;\n            wm:hasHolding ?holding ;\n            wm:riskTolerance ?riskTolerance .\n  ?health wm:liquidityScore ?liqScore .\n  FILTER(xsd:decimal(?liqScore) < 30) .\n  ?holding wm:returnsPct ?returnsPct .\n}\nGROUP BY ?riskTolerance\nORDER BY DESC(?avgReturnsPct)",
+        "status": "success",
+        "row_count": 3,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 3,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The result set is non‑empty and includes exactly the columns requested (riskTolerance and avgReturnsPct). The SPARQL correctly filters investors to those with liquidityScore < 30, groups by riskTolerance, computes the AVG of returnsPct, and returns the aggregated values. The data therefore fully answers the query “How does average returns_pct compare for investors with liquidity_score below 30 grouped by risk_tolerance?”",
+    "validator_reason": "The result set is non‑empty and includes exactly the columns requested (riskTolerance and avgReturnsPct). The SPARQL correctly filters investors to those with liquidityScore < 30, groups by riskTolerance, computes the AVG of returnsPct, and returns the aggregated values. The data therefore fully answers the query “How does average returns_pct compare for investors with liquidity_score below 30 grouped by risk_tolerance?”",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 3,
+    "final_answer": "Aggressive investors have an average returns_pct of 67.98941798941798941798941799, Moderate investors 57.93010752688172043010752688, and Conservative investors 42.34567901234567901234567901.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth JSON list with Pipeline Output.\n\nGround Truth: [{\"risk_tolerance\":\"Conservative\",\"avg_returns_pct\":42.32},{\"risk_tolerance\":null,\"avg_returns_pct\":42.86},{\"risk_tolerance\":\"Moderate\",\"avg_returns_pct\":58.0},{\"risk_tolerance\":\"Aggressive\",\"avg_returns_pct\":68.1}]\n\nPipeline Output: \"Aggressive investors have an average returns_pct of 67.98941798941798941798941799, Moderate investors 57.93010752688172043010752688, and Conservative investors 42.34567901234567901234567901.\"\n\nWe need to see if all values match. Ground Truth includes also a null risk_tolerance entry with avg_returns_pct 42.86. Pipeline Output does not mention that. Also the numbers differ slightly: Aggressive 68.1 vs 67.9894... difference ~0.11. Moderate 58.0 vs 57.9301... difference ~0.07. Conservative 42.32 vs 42.345679... difference ~0.0257. These are not exact matches. The rule: If Ground Truth contains a concrete number, the Pipeline Output must contain the same facts. Slight differences count as mismatch? The rule says must contain the same facts. Numbers differ, so mismatch. Also missing null risk_tolerance entry. So overall MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

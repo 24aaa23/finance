@@ -1,0 +1,348 @@
+{
+  "sample_row_id": "wealth_management_70_question_benchmark:WM-4T-002",
+  "question": "Which investors have a sector allocation above 20%, a 'Rebalance Sell' action, and a Bear Market scenario?",
+  "ground_truth": "[{\"investor_id\":\"INV-068\",\"investor_name\":\"Vikram Yadav\"},{\"investor_id\":\"INV-1504\",\"investor_name\":\"Ankita Rao\"},{\"investor_id\":\"INV-1531\",\"investor_name\":\"Rohan Singh\"},{\"investor_id\":\"INV-1539\",\"investor_name\":\"Amrita Chauhan\"},{\"investor_id\":\"INV-206\",\"investor_name\":\"Rahul Patel\"}]",
+  "pipeline_output": "Amrita Chauhan (INV-1539), Rahul Patel (INV-206), Rohan Singh (INV-1531), Ankita Rao (INV-1504), Vikram Yadav (INV-068)",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 82.259,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nThe query: \"Which investors have a sector allocation above 20%, a 'Rebalance Sell' action, and a Bear Market scenario?\"\n\nWe need to find investors meeting three criteria: sector allocation >20%, action = 'Rebalance Sell', scenario = Bear Market.\n\nWe need to start by finding ontology classes using Retrieve. Then classify for numeric comparison >20% (math). So we need Classify for math. Then Generate SPARQL query. Then Scan. Then Validate. Then Explain.\n\nPotentially also need Filter_Aggregate? But we can incorporate filters in SPARQL. The steps: 1 Retrieve ontology classes. 2 Classify numeric condition (sector allocation >20%). 3 Generate SPARQL query that selects investors where sector allocation >20% and action='Rebalance Sell' and scenario='Bear Market'. 4 Scan to execute query. 5 Validate results. 6 Explain answer.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the ontology classes relevant to investors, sector allocations, actions, and market scenarios.  \n2. Classify – identify and tag the numeric comparison (“sector allocation above 20%”) as a mathematical condition.  \n3. Generate – write a SPARQL query that selects investors whose sector‑allocation value > 20 %, whose associated action is “Rebalance Sell”, and whose market‑scenario is “Bear Market”.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – check that the returned records satisfy all three criteria (allocation > 20 %, correct action, correct scenario).  \n6. Explain – present the list of qualifying investors to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have a sector allocation above 20%, a 'Rebalance Sell' action, and a Bear Market scenario?\"\n\nWe need to find investors meeting three conditions: sector allocation >20%, action = Rebalance Sell, scenario = Bear Market.\n\nWe need to start with Retrieve to find ontology classes. Then we need to classify numeric comparison (above 20%) and maybe superlative? It's a numeric condition, so we need to use Classify for math. So after Retrieve, we do Classify to identify numeric condition.\n\nThen Generate to write SPARQL query using the identified classes and conditions.\n\nThen Scan to execute query.\n\nThen Validate to check data.\n\nThen Explain to present answer.\n\nThus steps:\n\n1. Retrieve (ontology classes related to investors, sector allocation, actions, market scenarios).\n\n2. Classify (identify numeric condition \"above 20%\" and filter criteria for action and scenario).\n\n3. Generate (compose SPARQL query to select investors where sector allocation >20%, action = 'Rebalance Sell', scenario = 'Bear Market').\n\n4. Scan (execute the SPARQL query against KG).\n\n5. Validate (ensure results meet all criteria, no missing fields).\n\n6. Explain (provide list of investors to user).\n\nMake sure to follow order. No extra steps.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the ontology classes for **Investor**, **SectorAllocation**, **Action**, and **MarketScenario**.  \n\n2. Classify – interpret the numeric condition “above 20%” and the categorical filters “Rebalance Sell” (Action) and “Bear Market” (MarketScenario).  \n\n3. Generate – write a SPARQL query that selects investors whose sector‑allocation value is > 20 %, whose latest action is “Rebalance Sell”, and whose market scenario is “Bear Market”.  \n\n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n\n5. Validate – verify that the returned records satisfy all three criteria (allocation > 20 %, correct action, correct scenario).  \n\n6. Explain – present the list of qualifying investors to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have a sector allocation above 20%, a 'Rebalance Sell' action, and a Bear Market scenario?\" This involves numeric comparison (above 20%) and conditions. According to critical laws: start with Retrieve to find ontology classes. Then need Classify for math/aggregation words: \"above 20%\" is numeric comparison, so we need Classify. Then Generate SPARQL after Retrieve and Classify. Then Scan, Validate, Explain.\n\nThus steps:\n\n1. Retrieve (ontology classes relevant: Investor, SectorAllocation, Action, MarketScenario)\n2. Classify (identify numeric condition \"above 20%\" and maybe filter criteria)\n3. Generate (write SPARQL query to select investors where sector allocation > 20%, action = 'Rebalance Sell', scenario = 'Bear Market')\n4. Scan (execute the SPARQL query)\n5. Validate (check results for correctness/completeness)\n6. Explain (present answer to user)\n\nMake sure to follow numbering. Output only numbered steps.</reasoning>1. Retrieve – obtain the ontology classes needed (e.g., Investor, SectorAllocation, Action, MarketScenario).  \n2. Classify – identify and interpret the numeric condition (“above 20%”) and the categorical filters (“Rebalance Sell” action, “Bear Market” scenario).  \n3. Generate – construct a SPARQL query that selects investors whose sector allocation value > 20 % AND whose latest action is “Rebalance Sell” AND whose market scenario is “Bear Market”.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned investor records satisfy all three criteria and contain no errors.  \n6. Explain – present the list of qualifying investors to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "SectorAllocation",
+      "RebalancingAction",
+      "MarketScenario",
+      "ScenarioRebalancing"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "point_lookup",
+    "confidence": 0.96,
+    "target_field": "investorId",
+    "schema_datatype": "categorical_string",
+    "why_this_intent": "The query requests a list of investors satisfying specific filter criteria (sector allocation > 20%, a specific rebalancing action, and a market scenario). This is a retrieval of entities, not a mathematical aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasSectorAllocation ?alloc .\n  ?alloc wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 20)\n\n  ?inv wm:hasRebalancingAction ?reb .\n  ?reb wm:action ?action .\n  FILTER(LCASE(STR(?action)) = \"rebalance sell\")\n\n  ?inv wm:hasScenarioRebalancing ?scenReb .\n  ?scenReb wm:scenario ?scenario .\n  FILTER(LCASE(STR(?scenario)) = \"bear market\")\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasSectorAllocation ?alloc .\n  ?alloc wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 20)\n\n  ?inv wm:hasRebalancingAction ?reb .\n  ?reb wm:action ?action .\n  FILTER(LCASE(STR(?action)) = \"rebalance sell\")\n\n  ?inv wm:hasScenarioRebalancing ?scenReb .\n  ?scenReb wm:scenario ?scenario .\n  FILTER(LCASE(STR(?scenario)) = \"bear market\")\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasSectorAllocation ?alloc .\n  ?alloc wm:allocationPct ?allocPct .\n  FILTER(xsd:decimal(?allocPct) > 20)\n\n  ?inv wm:hasRebalancingAction ?reb .\n  ?reb wm:action ?action .\n  FILTER(LCASE(STR(?action)) = \"rebalance sell\")\n\n  ?inv wm:hasScenarioRebalancing ?scenReb .\n  ?scenReb wm:scenario ?scenario .\n  FILTER(LCASE(STR(?scenario)) = \"bear market\")\n}",
+        "status": "success",
+        "row_count": 5,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 5,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL query correctly filters investors by sector allocation > 20%, a 'Rebalance Sell' action, and a Bear Market scenario, and returns the requested investor identifiers and names. The returned column names (investorId, investorName) align with the query's request for \"Which investors\", and the result set is non‑empty, satisfying all validation rules.",
+    "validator_reason": "The SPARQL query correctly filters investors by sector allocation > 20%, a 'Rebalance Sell' action, and a Bear Market scenario, and returns the requested investor identifiers and names. The returned column names (investorId, investorName) align with the query's request for \"Which investors\", and the result set is non‑empty, satisfying all validation rules.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 5,
+    "final_answer": "Amrita Chauhan (INV-1539), Rahul Patel (INV-206), Rohan Singh (INV-1531), Ankita Rao (INV-1504), Vikram Yadav (INV-068)",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth list of investors (5 entries) with Pipeline Output list (same 5 names). Ground Truth: [{\"investor_id\":\"INV-068\",\"investor_name\":\"Vikram Yadav\"},{\"investor_id\":\"INV-1504\",\"investor_name\":\"Ankita Rao\"},{\"investor_id\":\"INV-1531\",\"investor_name\":\"Rohan Singh\"},{\"investor_id\":\"INV-1539\",\"investor_name\":\"Amrita Chauhan\"},{\"investor_id\":\"INV-206\",\"investor_name\":\"Rahul Patel\"}]\n\nPipeline Output: \"Amrita Chauhan (INV-1539), Rahul Patel (INV-206), Rohan Singh (INV-1531), Ankita Rao (INV-1504), Vikram Yadav (INV-068)\"\n\nAll five present, order different but that's fine. IDs match (punctuation same). Names match. So all facts present. Therefore MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

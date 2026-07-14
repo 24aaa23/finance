@@ -1,0 +1,276 @@
+{
+  "sample_row_id": "wealth_management_at_risk_critical_70_questions:ARC-1T-003",
+  "question": "How many sector-allocation records have allocation_pct above 40, grouped by sector?",
+  "ground_truth": "[{\"sector\":\"Technology\",\"allocation_record_count\":13},{\"sector\":\"Automobile\",\"allocation_record_count\":2},{\"sector\":\"Pharma\",\"allocation_record_count\":2},{\"sector\":\"Corporate\",\"allocation_record_count\":3},{\"sector\":\"Infrastructure\",\"allocation_record_count\":3},{\"sector\":\"Private Equity\",\"allocation_record_count\":3},{\"sector\":\"Banking\",\"allocation_record_count\":5},{\"sector\":\"Real Estate\",\"allocation_record_count\":5},{\"sector\":\"Consumer Goods\",\"allocation_record_count\":6},{\"sector\":\"Financial Services\",\"allocation_record_count\":6},{\"sector\":\"Government\",\"allocation_record_count\":6},{\"sector\":\"Healthcare\",\"allocation_record_count\":6}]",
+  "pipeline_output": "Corporate: 3; Technology: 13; Consumer Goods: 6; Infrastructure: 3; Pharma: 2; Private Equity: 3; Banking: 5; Government: 6; Real Estate: 5; Financial Services: 6; Healthcare: 6; Automobile: 2",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 77.629,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"How many sector-allocation records have allocation_pct above 40, grouped by sector?\"\n\nWe need to find ontology classes first using Retrieve. Then classify for math/aggregation: we have \"how many\" => Count, also grouping => aggregation. So we need Classify after Retrieve. Then Generate SPARQL after Classify. Then Scan, Validate, Explain.\n\nPotentially also need Filter_Aggregate for filtering allocation_pct > 40 and grouping by sector, but the operators list includes Filter_Aggregate. However the chronology says after Generate we must Scan, then Validate, then Explain. The plan can include multiple steps before Generate? The rules: \"If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve').\" So we can have Retrieve, Classify, Generate, Scan, Validate, Explain. Could also include Filter_Aggregate as part of Generate? But we might need to use Filter_Aggregate operator to apply filter and aggregation before generating? Not sure. The operators are separate tasks; we could have a step \"Filter_Aggregate\" after Scan? But chronology says Scan must happen immediately after Generate. So cannot insert other steps between Generate and Scan. So we must incorporate filter and aggregation within the SPARQL generated. So we don't need separate Filter_Aggregate step.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify Count aggregation)\n3. Generate (write SPARQL query to count records where allocation_pct > 40 grouped by sector)\n4. Scan (execute the SPARQL)\n5. Validate (check results)\n6. Explain (present answer)\n\nThus output only numbered steps.\n\nLet's produce.</reasoning>1. Retrieve – locate the ontology classes relevant to “sector‑allocation” and “allocation_pct”.  \n2. Classify – identify the mathematical/aggregation intent (“how many” → Count, and grouping by sector).  \n3. Generate – compose a SPARQL query that filters sector‑allocation records with `allocation_pct > 40`, groups the results by sector, and returns the count per sector.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the query ran successfully and that the returned counts are consistent with the data.  \n6. Explain – present the user with the counts of sector‑allocation records having `allocation_pct` above 40, grouped by sector.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"How many sector-allocation records have allocation_pct above 40, grouped by sector?\"\n\nWe need to identify ontology classes: likely \"SectorAllocation\" class, maybe \"Sector\". Use Retrieve.\n\nThen classify for math/aggregation: we have \"Count\" (aggregation) and \"above 40\" (numeric comparison). So we need Classify.\n\nAfter Retrieve and Classify, we need Generate to write SPARQL query that counts records with allocation_pct > 40 grouped by sector.\n\nThen Scan to execute query.\n\nThen Validate to check data.\n\nThen Explain to present answer.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify aggregation/count and numeric filter)\n3. Generate (SPARQL query)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (respond to user)\n\nMake sure ordering matches rules: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain. No extra steps.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the relevant ontology classes (e.g., SectorAllocation, Sector, allocation_pct).  \n2. Classify – identify the numeric‑aggregation intent: “Count” of records and the filter “allocation_pct > 40”, plus grouping by sector.  \n3. Generate – compose a SPARQL query that counts SectorAllocation instances where allocation_pct > 40, grouped by their associated sector.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the query returned valid counts for each sector and that no errors occurred.  \n6. Explain – present the user with the counts of sector‑allocation records above 40 % for each sector.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"How many sector-allocation records have allocation_pct above 40, grouped by sector?\"\n\nWe need to find ontology classes: likely \"SectorAllocation\" or similar, and maybe \"Sector\". Use Retrieve.\n\nThen we need to classify for math/aggregation: we have \"how many\" => Count, also grouping => aggregation. So we need to use Classify to identify aggregation.\n\nThen Generate SPARQL after Retrieve and Classify.\n\nThen Scan to execute query.\n\nThen Validate to check data.\n\nThen Explain to user.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify aggregation/count)\n3. Generate (SPARQL query for count of sector-allocation records where allocation_pct > 40 grouped by sector)\n4. Scan (execute query)\n5. Validate (ensure results are correct)\n6. Explain (present results)\n\nMake sure to use exact operator names.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the relevant ontology classes (e.g., SectorAllocation, Sector, allocation_pct).  \n2. Classify – identify the mathematical/aggregation intent (“how many”, “above 40”, “grouped by sector”) to determine that a Count aggregation with a filter and grouping is required.  \n3. Generate – write the SPARQL query that counts SectorAllocation records where allocation_pct > 40, grouped by their associated Sector.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the query returned valid counts for each sector and that no errors occurred.  \n6. Explain – present the grouped counts to the user in a clear, concise answer.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "SectorAllocation",
+      "Sector"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.99,
+    "target_field": "allocationPct",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks for a count of SectorAllocation records where the numeric field allocationPct exceeds 40, grouped by sector. This is a valid numeric aggregation on a numeric field.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?sectorLabel (COUNT(?alloc) AS ?count)\nWHERE {\n  ?alloc wm:allocationPct ?pct .\n  FILTER(xsd:decimal(?pct) > 40) .\n  ?alloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n}\nGROUP BY ?sectorLabel",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?sectorLabel (COUNT(?alloc) AS ?count)\nWHERE {\n  ?alloc wm:allocationPct ?pct .\n  FILTER(xsd:decimal(?pct) > 40) .\n  ?alloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n}\nGROUP BY ?sectorLabel",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [
+      "SPARQL syntax correct"
+    ],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?sectorLabel (COUNT(?alloc) AS ?count)\nWHERE {\n  ?alloc wm:allocationPct ?pct .\n  FILTER(xsd:decimal(?pct) > 40) .\n  ?alloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n}\nGROUP BY ?sectorLabel",
+        "status": "success",
+        "row_count": 12,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 12,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL query correctly filters allocation_pct > 40, groups by sector, and returns the count per sector. The returned columns (sectorLabel, count) match the requested information, and the sample data provides non‑empty counts for each sector, satisfying the user's request.",
+    "validator_reason": "The SPARQL query correctly filters allocation_pct > 40, groups by sector, and returns the count per sector. The returned columns (sectorLabel, count) match the requested information, and the sample data provides non‑empty counts for each sector, satisfying the user's request.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 12,
+    "final_answer": "Corporate: 3; Technology: 13; Consumer Goods: 6; Infrastructure: 3; Pharma: 2; Private Equity: 3; Banking: 5; Government: 6; Real Estate: 5; Financial Services: 6; Healthcare: 6; Automobile: 2",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth JSON list of sectors with allocation_record_count values. Pipeline Output: \"Corporate: 3; Technology: 13; Consumer Goods: 6; Infrastructure: 3; Pharma: 2; Private Equity: 3; Banking: 5; Government: 6; Real Estate: 5; Financial Services: 6; Healthcare: 6; Automobile: 2\"\n\nGround Truth list includes sectors: Technology 13, Automobile 2, Pharma 2, Corporate 3, Infrastructure 3, Private Equity 3, Banking 5, Real Estate 5, Consumer Goods 6, Financial Services 6, Government 6, Healthcare 6.\n\nPipeline Output includes all those sectors with same counts. Order different but that's fine. All values match. So MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

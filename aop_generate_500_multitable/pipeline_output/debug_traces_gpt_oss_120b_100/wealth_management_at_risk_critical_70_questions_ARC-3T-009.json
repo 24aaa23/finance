@@ -1,0 +1,337 @@
+{
+  "sample_row_id": "wealth_management_at_risk_critical_70_questions:ARC-3T-009",
+  "question": "Which investors have Technology holdings and Technology allocation with allocation_pct above 30?",
+  "ground_truth": "[{\"investor_id\":\"INV-021\",\"investor_name\":\"Arvind Chauhan\"},{\"investor_id\":\"INV-1004\",\"investor_name\":\"Abhishek Hegde\"},{\"investor_id\":\"INV-1033\",\"investor_name\":\"Arjun Kulkarni\"},{\"investor_id\":\"INV-1091\",\"investor_name\":\"Bhavna Rao\"},{\"investor_id\":\"INV-1092\",\"investor_name\":\"Abhishek Mehta\"},{\"investor_id\":\"INV-1101\",\"investor_name\":\"Rahul Verma\"},{\"investor_id\":\"INV-1126\",\"investor_name\":\"Anita Iyer\"},{\"investor_id\":\"INV-1187\",\"investor_name\":\"Anita Rao\"},{\"investor_id\":\"INV-1335\",\"investor_name\":\"Anjali Gupta\"},{\"investor_id\":\"INV-1451\",\"investor_name\":\"Kavita Arora\"},{\"investor_id\":\"INV-251\",\"investor_name\":\"Ishita Sharma\"},{\"investor_id\":\"INV-255\",\"investor_name\":\"Rahul Singh\"},{\"investor_id\":\"INV-555\",\"investor_name\":\"Sneha Kulkarni\"},{\"investor_id\":\"INV-576\",\"investor_name\":\"Amit Kulkarni\"},{\"investor_id\":\"INV-668\",\"investor_name\":\"Ishita Joshi\"},{\"investor_id\":\"INV-713\",\"investor_name\":\"Vivek Sharma\"},{\"investor_id\":\"INV-734\",\"investor_name\":\"Amrita Yadav\"},{\"investor_id\":\"INV-762\",\"investor_name\":\"Chetan Pandey\"},{\"investor_id\":\"INV-921\",\"investor_name\":\"Vikram Sharma\"},{\"investor_id\":\"INV-926\",\"investor_name\":\"Anjali Mehta\"},{\"investor_id\":\"INV-951\",\"investor_name\":\"Amit Sharma\"}]",
+  "pipeline_output": "Investors: INV-1101 Rahul Verma, INV-1451 Kavita Arora, INV-951 Amit Sharma, INV-021 Arvind Chauhan, INV-251 Ishita Sharma, INV-255 Rahul Singh, INV-926 Anjali Mehta, INV-713 Vivek Sharma, INV-1091 Bhavna Rao, INV-1335 Anjali Gupta, INV-576 Amit Kulkarni, INV-1126 Anita Iyer, INV-668 Ishita Joshi, INV-762 Chetan Pandey, INV-555 Sneha Kulkarni, INV-734 Amrita Yadav, INV-1033 Arjun Kulkarni, INV-1004 Abhishek Hegde, INV-1092 Abhishek Mehta, INV-1187 Anita Rao, INV-921 Vikram Sharma",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 84.52,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have Technology holdings and Technology allocation with allocation_pct above 30?\"\n\nWe need to find ontology classes first using Retrieve. Then classify numeric superlative? There's a numeric condition \"allocation_pct above 30\" which is a numeric comparison. According to rule 2, we must use Classify for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. Does \"above 30\" count as numeric comparison? It's a numeric condition, not aggregation. The rule says \"Classify for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', 'Min', 'Max', 'Count', 'Highest', 'Lowest', 'Largest', or 'Smallest'.\" It doesn't explicitly mention comparison operators like \"above\". But it's a numeric condition, maybe still need Classify? The rule says \"If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'.\" This query includes a numeric filter (allocation_pct > 30). That's not an aggregation but a numeric filter. Might still need Classify? The rule seems to require Classify for math, aggregation, or numeric-superlative words. \"above 30\" is not one of those words. So maybe we can skip Classify and go Retrieve -> Generate. However, we might need to filter numeric condition, which could be done with Filter_Aggregate after Scan. The plan: Retrieve ontology classes, Generate SPARQL to get investors with holdings and allocation of Technology where allocation_pct > 30, Scan, Validate, Explain.\n\nBut we might need to classify the numeric condition? The rule says \"Classify for math, aggregation, or numeric-superlative words\". Not needed.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Generate (SPARQL query)\n3. Scan (execute query)\n4. Validate (check results)\n5. Explain (present answer)\n\nMake sure we follow chronology: Retrieve first, then maybe Classify if needed (skip), then Generate, then Scan, then Validate, then Explain.\n\nThus output numbered steps.\n\n</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have Technology holdings and Technology allocation with allocation_pct above 30?\"\n\nWe need to find investors that have holdings in Technology and also allocation in Technology with allocation_pct >30.\n\nWe need to retrieve ontology classes first. Then classify for numeric comparison (allocation_pct above 30) -> numeric-superlative? It's a comparison >, which is numeric. So we need to use Classify for math/numeric. Then Generate SPARQL query. Then Scan, Validate, Explain.\n\nPotentially also need Filter_Aggregate? But we can incorporate filter in SPARQL. The plan steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify numeric condition allocation_pct > 30)\n3. Generate (write SPARQL query to select investors with Technology holdings and allocation where allocation_pct >30)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the relevant ontology classes (e.g., Investor, Holding, Allocation, Industry, allocation_pct).  \n2. Classify – recognize the numeric condition “allocation_pct above 30” as a numeric filter that must be applied.  \n3. Generate – compose a SPARQL query that selects investors who (a) have a Holding whose Industry is “Technology” and (b) have an Allocation whose Industry is “Technology” with allocation_pct > 30.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned investors satisfy both the Technology holding and the Technology allocation > 30% criteria.  \n6. Explain – present the list of qualifying investors to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have Technology holdings and Technology allocation with allocation_pct above 30?\"\n\nWe need to find investors that have holdings in Technology and also allocation in Technology where allocation_pct > 30.\n\nWe need to retrieve ontology classes first: likely Investor, Holding, Allocation, Sector (Technology). Use Retrieve.\n\nThen classify: we have numeric comparison \"above 30\" which is a numeric-superlative? It's a numeric filter. According to rule, use Classify for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', 'Min', 'Max', 'Count', 'Highest', etc. \"above 30\" is a numeric comparison, maybe still need Classify? The rule says for math, aggregation, or numeric-superlative words. \"above 30\" is a numeric condition, not exactly those words but still numeric. Safer to include Classify to handle numeric condition.\n\nAfter Retrieve, we do Classify.\n\nThen Generate: write SPARQL to get investors with holdings sector Technology and allocation sector Technology with allocation_pct > 30.\n\nThen Scan to execute.\n\nThen Validate to check data.\n\nThen Explain to present answer.\n\nThus steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nMake sure each step includes operator name only? The output should be numbered steps, likely like \"1. Retrieve\", etc.\n\nThus final answer.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "PortfolioHolding",
+      "SectorAllocation",
+      "Sector"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "",
+    "confidence": null,
+    "target_field": "",
+    "schema_datatype": "",
+    "why_this_intent": "",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  # Technology holding\n  ?inv wm:hasHolding ?holding .\n  ?holding wm:hasSector ?sectorHolding .\n  ?sectorHolding rdfs:label ?sectorLabel .\n  FILTER(LCASE(STR(?sectorLabel)) = \"technology\") .\n\n  # Technology allocation > 30%\n  ?inv wm:hasSectorAllocation ?alloc .\n  ?alloc wm:hasSector ?sectorAlloc .\n  ?sectorAlloc rdfs:label ?sectorLabel2 .\n  FILTER(LCASE(STR(?sectorLabel2)) = \"technology\") .\n  ?alloc wm:allocationPct ?allocPct .\n  FILTER(?allocPct > 30)\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  # Technology holding\n  ?inv wm:hasHolding ?holding .\n  ?holding wm:hasSector ?sectorHolding .\n  ?sectorHolding rdfs:label ?sectorLabel .\n  FILTER(LCASE(STR(?sectorLabel)) = \"technology\") .\n\n  # Technology allocation > 30%\n  ?inv wm:hasSectorAllocation ?alloc .\n  ?alloc wm:hasSector ?sectorAlloc .\n  ?sectorAlloc rdfs:label ?sectorLabel2 .\n  FILTER(LCASE(STR(?sectorLabel2)) = \"technology\") .\n  ?alloc wm:allocationPct ?allocPct .\n  FILTER(?allocPct > 30)\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  # Technology holding\n  ?inv wm:hasHolding ?holding .\n  ?holding wm:hasSector ?sectorHolding .\n  ?sectorHolding rdfs:label ?sectorLabel .\n  FILTER(LCASE(STR(?sectorLabel)) = \"technology\") .\n\n  # Technology allocation > 30%\n  ?inv wm:hasSectorAllocation ?alloc .\n  ?alloc wm:hasSector ?sectorAlloc .\n  ?sectorAlloc rdfs:label ?sectorLabel2 .\n  FILTER(LCASE(STR(?sectorLabel2)) = \"technology\") .\n  ?alloc wm:allocationPct ?allocPct .\n  FILTER(?allocPct > 30)\n}",
+        "status": "success",
+        "row_count": 21,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 21,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL correctly retrieves investors that have both a Technology holding and a Technology sector allocation with allocation_pct > 30. The returned columns (investorId, investorName) align with the request for \"which investors\" and the result set is non‑empty, satisfying all validation rules.",
+    "validator_reason": "The SPARQL correctly retrieves investors that have both a Technology holding and a Technology sector allocation with allocation_pct > 30. The returned columns (investorId, investorName) align with the request for \"which investors\" and the result set is non‑empty, satisfying all validation rules.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 21,
+    "final_answer": "Investors: INV-1101 Rahul Verma, INV-1451 Kavita Arora, INV-951 Amit Sharma, INV-021 Arvind Chauhan, INV-251 Ishita Sharma, INV-255 Rahul Singh, INV-926 Anjali Mehta, INV-713 Vivek Sharma, INV-1091 Bhavna Rao, INV-1335 Anjali Gupta, INV-576 Amit Kulkarni, INV-1126 Anita Iyer, INV-668 Ishita Joshi, INV-762 Chetan Pandey, INV-555 Sneha Kulkarni, INV-734 Amrita Yadav, INV-1033 Arjun Kulkarni, INV-1004 Abhishek Hegde, INV-1092 Abhishek Mehta, INV-1187 Anita Rao, INV-921 Vikram Sharma",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth list of investors (IDs and names) with Pipeline Output list. Ground Truth includes many IDs: let's list them:\n\nGround Truth IDs and names:\nINV-021 Arvind Chauhan\nINV-1004 Abhishek Hegde\nINV-1033 Arjun Kulkarni\nINV-1091 Bhavna Rao\nINV-1092 Abhishek Mehta\nINV-1101 Rahul Verma\nINV-1126 Anita Iyer\nINV-1187 Anita Rao\nINV-1335 Anjali Gupta\nINV-1451 Kavita Arora\nINV-251 Ishita Sharma\nINV-255 Rahul Singh\nINV-555 Sneha Kulkarni\nINV-576 Amit Kulkarni\nINV-668 Ishita Joshi\nINV-713 Vivek Sharma\nINV-734 Amrita Yadav\nINV-762 Chetan Pandey\nINV-921 Vikram Sharma\nINV-926 Anjali Mehta\nINV-951 Amit Sharma\n\nCount: let's count: 1)021, 2)1004, 3)1033, 4)1091, 5)1092, 6)1101, 7)1126, 8)1187, 9)1335, 10)1451, 11)251, 12)255, 13)555, 14)576, 15)668, 16)713, 17)734, 18)762, 19)921, 20)926, 21)951. So 21 entries.\n\nPipeline Output: \"Investors: INV-1101 Rahul Verma, INV-1451 Kavita Arora, INV-951 Amit Sharma, INV-021 Arvind Chauhan, INV-251 Ishita Sharma, INV-255 Rahul Singh, INV-926 Anjali Mehta, INV-713 Vivek Sharma, INV-1091 Bhavna Rao, INV-1335 Anjali Gupta, INV-576 Amit Kulkarni, INV-1126 Anita Iyer, INV-668 Ishita Joshi, INV-762 Chetan Pandey, INV-555 Sneha Kulkarni, INV-734 Amrita Yadav, INV-1033 Arjun Kulkarni, INV-1004 Abhishek Hegde, INV-1092 Abhishek Mehta, INV-1187 Anita Rao, INV-921 Vikram Sharma\"\n\nLet's list those IDs: 1101,1451,951,021,251,255,926,713,1091,1335,576,1126,668,762,555,734,1033,1004,1092,1187,921. That's also 21 IDs. Compare with ground truth list: Are any missing or extra? Let's compare:\n\nGround truth IDs: 021 (present), 1004 (present), 1033 (present), 1091 (present), 1092 (present), 1101 (present), 1126 (present), 1187 (present), 1335 (present), 1451 (present), 251 (present), 255 (present), 555 (present), 576 (present), 668 (present), 713 (present), 734 (present), 762 (present), 921 (present), 926 (present), 951 (present). All appear in pipeline output. So pipeline output includes all ground truth entries, same names. Order different but that's fine.\n\nThus pipeline output matches ground truth fully. So output MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

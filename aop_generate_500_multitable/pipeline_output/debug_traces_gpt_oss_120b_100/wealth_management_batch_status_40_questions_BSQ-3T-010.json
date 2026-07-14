@@ -1,0 +1,275 @@
+{
+  "sample_row_id": "wealth_management_batch_status_40_questions:BSQ-3T-010",
+  "question": "Which investors have a risk score above 70, diversification below 30, and a sector allocation above 40%?",
+  "ground_truth": "[{\"investor_id\":\"INV-1537\",\"investor_name\":\"Anjali Singh\",\"risk_score\":83.698024,\"diversification_score\":29.082804,\"sector\":\"Healthcare\",\"allocation_pct\":44.497891},{\"investor_id\":\"INV-130\",\"investor_name\":\"Abhishek Verma\",\"risk_score\":86.207697,\"diversification_score\":23.146928,\"sector\":\"Financial Services\",\"allocation_pct\":63.211642}]",
+  "pipeline_output": "Anjali Singh (riskScore 83.69802405424508, divScore 29.082804328430093, allocPct 44.497891429817315) and Abhishek Verma (riskScore 86.2076969004697, divScore 23.146928038269465, allocPct 63.211641640034834) meet the criteria.",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 76.664,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have a risk score above 70, diversification below 30, and a sector allocation above 40%?\"\n\nWe need to find ontology classes first using Retrieve. Then classify numeric comparisons (above, below) maybe need Classify for math? The rule: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. Here we have numeric comparisons (above 70, below 30, above 40%). Not exactly those words but still numeric thresholds. The rule says \"for math, aggregation, or numeric-superlative words\". Might include comparisons? Probably we should still use Classify to identify numeric filters. So after Retrieve, we do Classify.\n\nThen Generate SPARQL query to retrieve investors meeting those conditions. Then Scan to execute. Then Validate to check data. Then Explain to present answer.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify numeric filter criteria: risk score >70, diversification <30, sector allocation >40%)\n3. Generate (write SPARQL query using identified classes and filters)\n4. Scan (execute the SPARQL query)\n5. Validate (ensure results meet criteria)\n6. Explain (provide answer to user)\n\nMake sure order matches critical chronology: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain. No extra steps.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the relevant ontology classes (e.g., Investor, RiskScore, Diversification, SectorAllocation).  \n2. Classify – identify and label the numeric conditions in the query (risk score > 70, diversification < 30, sector allocation > 40%).  \n3. Generate – construct a SPARQL query that selects investors satisfying the classified numeric filters.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned investors indeed meet all three numeric criteria.  \n6. Explain – present the list of qualifying investors to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have a risk score above 70, diversification below 30, and a sector allocation above 40%?\"\n\nWe need to retrieve ontology classes first. Then classify numeric comparisons (risk score, diversification, sector allocation) - these are numeric thresholds, so we need 'Classify' for math. Then generate SPARQL query after retrieve and classify. Then scan, validate, explain.\n\nThus steps:\n\n1. Retrieve (ontology classes relevant: Investor, RiskScore, Diversification, SectorAllocation etc.)\n2. Classify (identify numeric thresholds and comparison operators)\n3. Generate (write SPARQL query to select investors where riskScore > 70, diversification < 30, sectorAllocation > 40)\n4. Scan (execute the query)\n5. Validate (check results)\n6. Explain (present answer)\n\nMake sure we follow chronology: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nThus output numbered steps only.</reasoning>1. Retrieve – obtain the ontology classes and properties related to investors, risk scores, diversification metrics, and sector allocations.  \n2. Classify – identify and categorize the numeric conditions (“above 70”, “below 30”, “above 40%”) as mathematical/comparative operations.  \n3. Generate – construct a SPARQL query that selects investors whose riskScore > 70, diversification < 30, and sectorAllocation > 40.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned investor records satisfy all three numeric constraints.  \n6. Explain – present the list of qualifying investors to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have a risk score above 70, diversification below 30, and a sector allocation above 40%?\" This is a simple lookup/listing with numeric filters. According to rule 2, we need to use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', etc. Here we have numeric comparisons (above, below). Does that count as math? Probably yes: we need to classify the numeric conditions. So we should use Retrieve to find ontology classes, then Classify to identify numeric filters, then Generate to write SPARQL, then Scan to execute, then Validate to check results, then Explain to present answer.\n\nThus steps:\n\n1. Retrieve (ontology classes relevant: Investor, RiskScore, Diversification, SectorAllocation)\n2. Classify (identify numeric comparison operators and thresholds)\n3. Generate (compose SPARQL query using classes and filters)\n4. Scan (execute the SPARQL query)\n5. Validate (ensure results meet criteria)\n6. Explain (provide answer to user)\n\nMake sure order matches rules: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the ontology classes and properties related to investors, risk score, diversification, and sector allocation.  \n2. Classify – identify and label the numeric conditions (“above 70”, “below 30”, “above 40%”) as mathematical filters.  \n3. Generate – construct a SPARQL query that selects investors whose riskScore > 70, diversification < 30, and sectorAllocation > 40.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned investors satisfy all three numeric criteria.  \n6. Explain – present the list of qualifying investors to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "PortfolioHealth",
+      "SectorAllocation"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "boolean_comparison",
+    "confidence": 0.96,
+    "target_field": "riskScore, diversificationScore, allocationPct",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query filters investors based on numeric thresholds for riskScore (PortfolioHealth), diversificationScore (PortfolioHealth), and sector allocation percentage (SectorAllocation.allocationPct). This is a boolean comparison across numeric fields, not an aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorName ?riskScore ?divScore ?allocPct WHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  ?ph wm:diversificationScore ?divScore .\n  ?inv wm:hasSectorAllocation ?sa .\n  ?sa wm:allocationPct ?allocPct .\n  FILTER( xsd:decimal(?riskScore) > 70 && xsd:decimal(?divScore) < 30 && xsd:decimal(?allocPct) > 40 )\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorName ?riskScore ?divScore ?allocPct WHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  ?ph wm:diversificationScore ?divScore .\n  ?inv wm:hasSectorAllocation ?sa .\n  ?sa wm:allocationPct ?allocPct .\n  FILTER( xsd:decimal(?riskScore) > 70 && xsd:decimal(?divScore) < 30 && xsd:decimal(?allocPct) > 40 )\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorName ?riskScore ?divScore ?allocPct WHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  ?ph wm:diversificationScore ?divScore .\n  ?inv wm:hasSectorAllocation ?sa .\n  ?sa wm:allocationPct ?allocPct .\n  FILTER( xsd:decimal(?riskScore) > 70 && xsd:decimal(?divScore) < 30 && xsd:decimal(?allocPct) > 40 )\n}",
+        "status": "success",
+        "row_count": 2,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 2,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL query correctly filters investors with riskScore > 70, diversificationScore < 30, and allocationPct > 40. The returned columns (investorName, riskScore, divScore, allocPct) match the requested information, and the sample rows satisfy all three conditions. No aggregation or ranking was required, and the non‑empty result set fulfills the user's query.",
+    "validator_reason": "The SPARQL query correctly filters investors with riskScore > 70, diversificationScore < 30, and allocationPct > 40. The returned columns (investorName, riskScore, divScore, allocPct) match the requested information, and the sample rows satisfy all three conditions. No aggregation or ranking was required, and the non‑empty result set fulfills the user's query.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 2,
+    "final_answer": "Anjali Singh (riskScore 83.69802405424508, divScore 29.082804328430093, allocPct 44.497891429817315) and Abhishek Verma (riskScore 86.2076969004697, divScore 23.146928038269465, allocPct 63.211641640034834) meet the criteria.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth JSON list of two investors with details. Pipeline output lists both investors with same values (riskScore, divScore, allocPct). Need to check if all important values appear. Ground truth includes investor_id, investor_name, risk_score, diversification_score, sector, allocation_pct. Pipeline output includes name, riskScore, divScore, allocPct but does not include investor_id nor sector. According to rule 4: If Ground Truth is JSON, all important values in the JSON must appear in the Pipeline Output. Missing values are PARTIAL or MISMATCH, not MATCH. Since missing investor_id and sector, it's missing important values. So should be PARTIAL (since it includes some but not all). Also both investors present, but missing fields. So PARTIAL.</reasoning>PARTIAL",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

@@ -1,0 +1,398 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-046",
+  "question": "Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_max_allocation_pct\":18.67,\"avg_returns_pct\":111.12,\"avg_holding_value\":8654138.18},{\"group_value\":\"Diversified\",\"avg_max_allocation_pct\":17.47,\"avg_returns_pct\":75.63,\"avg_holding_value\":8366100.79},{\"group_value\":\"Large Cap\",\"avg_max_allocation_pct\":16.99,\"avg_returns_pct\":57.0,\"avg_holding_value\":7258009.44},{\"group_value\":\"Mid Cap\",\"avg_max_allocation_pct\":17.7,\"avg_returns_pct\":80.41,\"avg_holding_value\":8584272.86},{\"group_value\":\"Small Cap\",\"avg_max_allocation_pct\":15.95,\"avg_returns_pct\":83.84,\"avg_holding_value\":8580495.45}]",
+  "pipeline_output": "Diversified: avg allocation 14.99847574974852201661157025, avg return 72.95180722891566265060240964, avg value 904691.7888554216867469879518; Large Cap: avg allocation 15.20256664031177192071351351, avg return 57.40415569212759730757974832, avg value 789902.4160081943225051214516; Mid Cap: avg allocation 14.92744903342850817976063830, avg return 79.46694460988683740321620012, avg value 921223.9629243597379392495533; Small Cap: avg allocation 14.09380065851978003281914894, avg return 77.90023201856148491879350348, avg value 931240.9811484918793503480278",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 115.946,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Filter_Aggregate -> Math_Compute -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Filter_Aggregate -> Math_Compute -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Filter_Aggregate -> Math_Compute -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=39.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?\" We need to identify ontology classes: likely \"ProfileSegment\", \"AllocationConcentration\", \"HoldingReturn\", \"HoldingValue\", maybe \"Table\". So step1 Retrieve to find ontology classes.\n\nThen we have math/aggregation? The query asks to compare allocation concentration, holding return, and holding value across profile segment using three related tables. Likely need to compute comparisons, maybe averages or sums. The words \"compare\" maybe requires aggregation? Might need to compute maybe average per segment. The query includes numeric terms: allocation concentration, holding return, holding value. Might need to classify these as numeric metrics. According to rule 2: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. The query does not explicitly say average, sum, but \"compare\" suggests maybe need to compute values across tables. Might still need classification to indicate numeric metrics. The rule says if query is only simple lookup/listing go straight from Retrieve to Generate. Here we need comparison across three tables, likely need aggregation. So after Retrieve, we should Classify the numeric metrics.\n\nThen Generate SPARQL to pull data from three related tables linking by profile segment.\n\nThen Scan to execute.\n\nThen Validate to check data.\n\nThen Explain to present answer.\n\nThus steps:\n\n1. Retrieve: locate ontology classes relevant to profile segment, allocation concentration, holding return, holding value, and the three tables.\n\n2. Classify: identify that allocation concentration, holding return, holding value are numeric metrics requiring aggregation/comparison.\n\n3. Generate: construct SPARQL query that joins the three tables on profile segment and selects the metrics for comparison (maybe using aggregation functions like AVG or SUM).\n\n4. Scan: execute the generated SPARQL query against the knowledge graph.\n\n5. Validate: verify that the returned data is complete and consistent across the three tables.\n\n6. Explain: present the comparative results to the user.\n\nMake sure to use only listed operators. Provide numbered steps.</reasoning>1. Retrieve – locate the ontology classes for **ProfileSegment**, **AllocationConcentration**, **HoldingReturn**, **HoldingValue**, and the three related tables that contain these attributes.  \n\n2. Classify – flag **AllocationConcentration**, **HoldingReturn**, and **HoldingValue** as numeric metrics that will require aggregation/comparative analysis across the profile‑segment dimension.  \n\n3. Generate – write a SPARQL query that joins the three tables on the **ProfileSegment** identifier and selects the numeric metrics (e.g., using AVG, SUM, or other aggregation functions) so they can be compared side‑by‑side for each segment.  \n\n4. Scan – execute the generated SPARQL query against the knowledge graph to retrieve the aggregated values for each profile segment.  \n\n5. Validate – check the query results for completeness (all three tables represented), consistency (matching segment IDs), and reasonable numeric ranges.  \n\n6. Explain – present the user with a clear comparison of allocation concentration, holding return, and holding value across the profile segments, highlighting any notable differences.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?\" This is a comparative analysis across profile segment, involving three metrics: allocation concentration, holding return, holding value, using three related tables. Likely need to retrieve ontology classes, classify for math/aggregation (maybe need average, sum, etc). The query asks \"compare\" across profile segment; likely need aggregation (e.g., average allocation concentration per segment, average holding return, sum holding value). So we need to classify for numeric aggregation. Steps:\n\n1. Retrieve: find ontology classes (profile segment, allocation concentration, holding return, holding value, tables).\n2. Classify: identify that we need aggregation (maybe average, sum) for numeric metrics.\n3. Generate: write SPARQL or query to get data from three related tables, aggregating metrics per profile segment.\n4. Scan: execute the query.\n5. Validate: check results for completeness/consistency.\n6. Explain: present comparison to user.\n\nPotentially also need Filter_Aggregate, Order_By, etc. But we need linear steps; we can include those as part of Generate? Actually operators are separate. Could do Generate to produce query, then Scan, then Validate, then Explain. If need to filter/aggregate, could use Filter_Aggregate after Retrieve? But chronology: after Retrieve we can use Classify, then Generate, then Scan, then Validate, then Explain. We could incorporate Filter_Aggregate as part of Generate? But they are separate operators; we could include a step using Filter_Aggregate after Retrieve before Generate? Not sure if allowed. The critical laws: \"You must start by finding the ontology classes. Use 'Retrieve'.\" Then \"CRITICAL: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', ... If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'.\" So we need Classify. Then \"If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve').\" So we must have Retrieve, then Classify, then Generate, then Scan, then Validate, then Explain. Additional operators like Filter_Aggregate could be used after Generate? Not specified but could be inserted before Generate? The chronology only mandates order for those steps, but we could insert extra steps as long as order respects constraints. However they said \"CRITICAL LAWS OF EXECUTION (YOU MUST FOLLOW THIS CHRONOLOGY): 1... 2... 3... 4... 5... 6...\". It seems we must follow that order strictly. So we should not insert other operators out of order. Possibly we can include Filter_Aggregate after Generate but before Scan? The chronology doesn't mention it, but maybe allowed as long as after Generate and before Scan? Not sure. Safer to keep minimal steps: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nThus output numbered steps:\n\n1. Retrieve – locate ontology classes for profile segment, allocation concentration, holding return, holding value, and the three related tables.\n2. Classify – identify that the query requires numeric aggregation/comparison (e.g., average allocation concentration, average holding return, total holding value) across profile segments.\n3. Generate – construct a SPARQL (or graph) query that joins the three tables, groups by profile segment, and computes the required aggregates for the three metrics.\n4. Scan – execute the generated query against the knowledge graph to obtain the aggregated results.\n5. Validate – verify that the result set contains all profile segments and that the aggregated values are plausible (no nulls, correct data types).\n6. Explain – present the comparative analysis of allocation concentration, holding return, and holding value across profile segments to the user.\n\nReturn only numbered steps.</reasoning>1. Retrieve – locate the ontology classes for “profile segment”, “allocation concentration”, “holding return”, “holding value”, and the three related tables.  \n2. Classify – identify that the query requires numeric aggregation/comparison (e.g., average allocation concentration, average holding return, total holding value) across profile segments.  \n3. Generate – write a SPARQL (or graph) query that joins the three tables, groups the data by profile segment, and computes the necessary aggregates for the three metrics.  \n4. Scan – execute the generated query against the knowledge graph to obtain the aggregated results.  \n5. Validate – check that the result set includes all profile segments and that the aggregated values are complete, correctly typed, and free of anomalies.  \n6. Explain – present the comparative analysis of allocation concentration, holding return, and holding value across the profile segments to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?\" Need to find ontology classes first with Retrieve. Then classify for math/aggregation words: allocation concentration, holding return, holding value are likely numeric measures; also \"compare\" maybe need aggregation? Might need to compute comparisons across profile segment. So we need Classify for numeric measures. Then Generate SPARQL to retrieve data from three related tables (likely tables). Then Scan to execute. Then Validate to check data. Then Explain to present results.\n\nPotentially also need Filter_Aggregate, Order_By, Math_Compute? But we must follow chronology: after Validate we could do further operators before Explain? The rules say Explain must be final step, but we could have other steps before it. However we need to produce linear plan; we can include steps like Filter_Aggregate, Math_Compute, Set_Union etc. But must respect ordering: Retrieve first, then Classify, then Generate, then Scan, then Validate, then any other steps? The chronology only mandates ordering for those steps, not that no other steps can be inserted after Validate before Explain. But we should keep it simple: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nWe might need to use Filter_Aggregate to compare across profile segment. But not required; could be done in SPARQL. The plan can include Filter_Aggregate after Validate before Explain if needed. But the rule: \"Explain must be the absolute final step.\" So any other steps must be before Explain. Could include Math_Compute to compute differences. But not necessary.\n\nThus steps:\n\n1. Retrieve ontology classes relevant to profile segment, allocation concentration, holding return, holding value, and related tables.\n2. Classify the query terms to identify numeric/aggregation operations (allocation concentration, holding return, holding value, compare).\n3. Generate a SPARQL query that joins the three related tables on profile segment and selects the three measures, possibly with aggregation.\n4. Scan to execute the generated query and retrieve results.\n5. Validate the returned data for completeness and consistency across the three tables.\n6. Explain the comparison of allocation concentration, holding return, and holding value across profile segments to the user.\n\nThat's 6 steps. Ensure using exact operator names. Provide numbered list.</reasoning>1. Retrieve the ontology classes for **ProfileSegment**, **AllocationConcentration**, **HoldingReturn**, **HoldingValue**, and the three related tables.  \n2. Classify the query to identify the numeric/aggregation concepts: *allocation concentration*, *holding return*, *holding value*, and the comparative operation across profile segments.  \n3. Generate a SPARQL query that joins the three related tables on the **ProfileSegment** key and selects the three measures (with any needed aggregation).  \n4. Scan the knowledge graph by executing the generated SPARQL query to obtain the raw results.  \n5. Validate the retrieved data to ensure each profile segment has values for all three measures and that the joins are correct.  \n6. Explain the comparison of allocation concentration, holding return, and holding value across the profile segments based on the validated results.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Rejected by Python validator: missing dependency path: Classify -> Generate",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_2_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?\"\n\nInterpretation: Need to compare three metrics across profile segment using three related tables. Likely need to retrieve ontology classes, classify math/aggregation terms (allocation concentration, holding return, holding value maybe numeric). So steps:\n\n1. Retrieve ontology classes (profile segment, allocation concentration, holding return, holding value, tables).\n2. Classify for math/aggregation: allocation concentration, holding return, holding value are numeric metrics, maybe need aggregation like average across segment. So use Classify.\n3. Generate SPARQL query to pull data from three related tables linking via profile segment, selecting those metrics.\n4. Scan to execute query.\n5. Validate results.\n6. Explain to user.\n\nPotentially need Filter_Aggregate, Order_By, etc. But plan just linear steps; we can include those operators as separate steps after Scan? The critical chronology: after Scan, Validate, then final Explain. We can include additional operators before Scan? The order: Retrieve, then Classify, then Generate, then Scan, then Validate, then Explain. If need aggregation, we could incorporate Filter_Aggregate within Generate? But Filter_Aggregate is an operator; maybe we need to use it after Scan? The rules don't forbid using extra operators between steps as long as chronology is respected: after Scan we must Validate, but we could have Filter_Aggregate before Scan? Actually Generate writes SPARQL; we can embed aggregation in SPARQL. So we may not need separate Filter_Aggregate step. However we could include a step: Filter_Aggregate to compute comparisons after Scan. But chronology says Validate must happen after Scan, but doesn't forbid other steps before Validate? It says Validate must happen AFTER Scan. It doesn't say it must be immediate. But we could have Filter_Aggregate before Validate? That would be after Scan but before Validate, which might violate \"Validate must happen AFTER Scan\" (it is after, okay). But maybe better to keep simple: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nThus output numbered steps.\n\nLet's craft:\n\n1. Retrieve ontology classes related to \"profile segment\", \"allocation concentration\", \"holding return\", \"holding value\", and the three tables.\n2. Classify the terms \"allocation concentration\", \"holding return\", \"holding value\" as numeric/aggregation metrics.\n3. Generate a SPARQL query that links the three tables via the profile segment dimension and selects the three metrics, possibly with aggregation (e.g., average) for comparison.\n4. Scan the knowledge graph using the generated query to obtain the data.\n5. Validate the returned dataset for completeness and consistency across the three tables.\n6. Explain the comparison results to the user.\n\nReturn only numbered steps.</reasoning>1. Retrieve the ontology classes for “profile segment”, “allocation concentration”, “holding return”, “holding value”, and the three related tables.  \n2. Classify “allocation concentration”, “holding return”, and “holding value” as numeric/aggregation metrics.  \n3. Generate a SPARQL query that joins the three tables on the profile‑segment dimension and selects (or aggregates) the allocation concentration, holding return, and holding value for each segment.  \n4. Scan the knowledge graph by executing the generated SPARQL query.  \n5. Validate the returned results to ensure all three tables contributed data and the metrics are correctly aligned per profile segment.  \n6. Explain the comparative findings of allocation concentration, holding return, and holding value across the profile segments.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_2_path_2",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?\" So need to retrieve ontology classes, classify math/aggregation terms: allocation concentration, holding return, holding value likely numeric metrics; also \"compare\" maybe need aggregation like average? Might need to compute comparisons across profile segment. So steps: Retrieve (ontology classes), Classify (identify numeric aggregation), Generate (SPARQL to pull data from three tables linking profile segment, allocation concentration, holding return, holding value), Scan (execute), Validate (check data), Explain (final answer). Possibly also need Filter_Aggregate, Order_By, Math_Compute? But the plan should be linear and include necessary operators. The query wants comparison across profile segment, likely need to aggregate per segment (maybe average). So after Scan, we may need Filter_Aggregate to compute metrics, then Math_Compute to compare? But chronology: after Validate we could do Math_Compute? However Explain must be final step. The critical laws only specify order for Retrieve, Classify, Generate, Scan, Validate, Explain. They don't forbid other operators after Validate before Explain. So we can include Filter_Aggregate, Math_Compute before Explain. Provide steps numbered.\n\nThus steps:\n\n1. Retrieve – get ontology classes for profile segment, allocation concentration, holding return, holding value, and tables.\n2. Classify – identify numeric/aggregation terms (allocation concentration, holding return, holding value) and determine need for aggregation (e.g., average per segment).\n3. Generate – write SPARQL query joining the three related tables on profile segment and selecting the three metrics.\n4. Scan – execute the SPARQL query to retrieve raw data.\n5. Validate – ensure the returned data contains expected columns and no nulls.\n6. Filter_Aggregate – compute aggregate (e.g., average) of each metric per profile segment.\n7. Math_Compute – calculate comparative ratios or differences between the three metrics across segments.\n8. Explain – present the comparison results to the user.\n\nMake sure to use exact operator names. Provide numbered list.</reasoning>1. Retrieve – locate the ontology classes for **ProfileSegment**, **AllocationConcentration**, **HoldingReturn**, **HoldingValue**, and the three related tables that store these attributes.  \n\n2. Classify – identify that *allocation concentration*, *holding return*, and *holding value* are numeric metrics requiring aggregation/comparison (e.g., average per segment).  \n\n3. Generate – construct a SPARQL query that joins the three tables on the **ProfileSegment** identifier and selects the three numeric fields.  \n\n4. Scan – execute the generated SPARQL query to obtain the raw rows for each profile segment.  \n\n5. Validate – check that the result set contains the expected columns, that each segment has non‑null values for the three metrics, and that the join succeeded.  \n\n6. Filter_Aggregate – aggregate the metrics (e.g., compute the average allocation concentration, average holding return, and average holding value) for each profile segment.  \n\n7. Math_Compute – calculate comparative figures (differences, ratios, or ranking) among the three aggregated metrics within each segment.  \n\n8. Explain – present the comparative analysis of allocation concentration, holding return, and holding value across the profile segments to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Filter_Aggregate -> Math_Compute -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 39,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=39.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Filter_Aggregate",
+              "inputs": [
+                "n5"
+              ]
+            },
+            {
+              "id": "n7",
+              "operator": "Math_Compute",
+              "inputs": [
+                "n6"
+              ]
+            },
+            {
+              "id": "n8",
+              "operator": "Explain",
+              "inputs": [
+                "n5",
+                "n7"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n6",
+              "target": "n7"
+            },
+            {
+              "source": "n5",
+              "target": "n8"
+            },
+            {
+              "source": "n7",
+              "target": "n8"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_2_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?\" So we need to retrieve ontology classes, then classify for math/aggregation terms: allocation concentration, holding return, holding value likely numeric metrics, maybe need aggregation (e.g., average). So we need Classify for math/aggregation. Then Generate SPARQL to query three related tables, then Scan, Validate, Explain. Possibly also need Filter_Aggregate, Order_By, etc. But plan steps only, not actual queries. So steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify numeric/aggregation terms)\n3. Generate (write SPARQL to fetch allocation concentration, holding return, holding value across profile segment from three tables)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present comparison)\n\nWe might also need Filter_Aggregate if need aggregation across profile segment. But classification step will identify need for aggregation, then maybe we need Filter_Aggregate before Generate? The chronology says after Retrieve we can do Classify, then Generate, then Scan, then Validate, then Explain. We can incorporate Filter_Aggregate as part of Generate? But we must list steps using operators. Could include Filter_Aggregate as separate step after Generate? However rule: Scan must happen immediately after Generate. So cannot insert Filter_Aggregate between Generate and Scan. So any aggregation must be part of the SPARQL in Generate. So we don't need separate Filter_Aggregate step.\n\nThus final answer: numbered steps 1-6 as above.</reasoning>1. Retrieve – locate the ontology classes relevant to “profile segment”, “allocation concentration”, “holding return”, and “holding value”.  \n2. Classify – identify the numeric/aggregation intent of the terms (e.g., average, sum, comparison) to determine the required calculations.  \n3. Generate – compose a SPARQL (or equivalent graph) query that joins the three related tables and extracts the allocation concentration, holding return, and holding value for each profile segment, applying the appropriate aggregations identified in step 2.  \n4. Scan – execute the generated query against the knowledge graph to obtain the result set.  \n5. Validate – verify the returned data for completeness, correctness, and consistency across the three tables.  \n6. Explain – present the comparison of allocation concentration, holding return, and holding value across profile segments to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Segment",
+      "Investor",
+      "SectorAllocation",
+      "PortfolioHolding"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.96,
+    "target_field": "allocationPct (SectorAllocation), returnsPct (PortfolioHolding), currentValue (PortfolioHolding)",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks for a comparative analysis of allocation concentration, holding return, and holding value across profile segments, which involves numeric fields (allocationPct, returnsPct, currentValue) from three related tables. This is a numeric aggregation/comparison task, not a simple lookup or boolean query.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segmentLabel ?avgAllocationPct ?avgReturnPct ?avgCurrentValue\nWHERE {\n  {\n    SELECT ?seg ?segmentLabel (AVG(xsd:decimal(?allocPct)) AS ?avgAllocationPct)\n    WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasSegment ?seg .\n      ?seg rdfs:label ?segmentLabel .\n      ?inv wm:hasSectorAllocation ?alloc .\n      ?alloc wm:allocationPct ?allocPct .\n    }\n    GROUP BY ?seg ?segmentLabel\n  }\n  {\n    SELECT ?seg (AVG(xsd:decimal(?returnPct)) AS ?avgReturnPct) (AVG(xsd:decimal(?currVal)) AS ?avgCurrentValue)\n    WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasSegment ?seg .\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:returnsPct ?returnPct .\n      ?hold wm:currentValue ?currVal .\n    }\n    GROUP BY ?seg\n  }\n}\nORDER BY ?segmentLabel",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segmentLabel ?avgAllocationPct ?avgReturnPct ?avgCurrentValue\nWHERE {\n  {\n    SELECT ?seg ?segmentLabel (AVG(xsd:decimal(?allocPct)) AS ?avgAllocationPct)\n    WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasSegment ?seg .\n      ?seg rdfs:label ?segmentLabel .\n      ?inv wm:hasSectorAllocation ?alloc .\n      ?alloc wm:allocationPct ?allocPct .\n    }\n    GROUP BY ?seg ?segmentLabel\n  }\n  {\n    SELECT ?seg (AVG(xsd:decimal(?returnPct)) AS ?avgReturnPct) (AVG(xsd:decimal(?currVal)) AS ?avgCurrentValue)\n    WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasSegment ?seg .\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:returnsPct ?returnPct .\n      ?hold wm:currentValue ?currVal .\n    }\n    GROUP BY ?seg\n  }\n}\nORDER BY ?segmentLabel",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segmentLabel ?avgAllocationPct ?avgReturnPct ?avgCurrentValue\nWHERE {\n  {\n    SELECT ?seg ?segmentLabel (AVG(xsd:decimal(?allocPct)) AS ?avgAllocationPct)\n    WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasSegment ?seg .\n      ?seg rdfs:label ?segmentLabel .\n      ?inv wm:hasSectorAllocation ?alloc .\n      ?alloc wm:allocationPct ?allocPct .\n    }\n    GROUP BY ?seg ?segmentLabel\n  }\n  {\n    SELECT ?seg (AVG(xsd:decimal(?returnPct)) AS ?avgReturnPct) (AVG(xsd:decimal(?currVal)) AS ?avgCurrentValue)\n    WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasSegment ?seg .\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:returnsPct ?returnPct .\n      ?hold wm:currentValue ?currVal .\n    }\n    GROUP BY ?seg\n  }\n}\nORDER BY ?segmentLabel",
+        "status": "success",
+        "row_count": 4,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 4,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The result set is non‑empty and includes the columns segmentLabel, avgAllocationPct, avgReturnPct, and avgCurrentValue, which directly correspond to the requested comparison of allocation concentration, holding return, and holding value across profile segments. The SPARQL correctly aggregates the relevant measures (AVG) per segment, matching the user's intent to compare these metrics across segments. No missing fields or incorrect filters are present.",
+    "validator_reason": "The result set is non‑empty and includes the columns segmentLabel, avgAllocationPct, avgReturnPct, and avgCurrentValue, which directly correspond to the requested comparison of allocation concentration, holding return, and holding value across profile segments. The SPARQL correctly aggregates the relevant measures (AVG) per segment, matching the user's intent to compare these metrics across segments. No missing fields or incorrect filters are present.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 4,
+    "final_answer": "Diversified: avg allocation 14.99847574974852201661157025, avg return 72.95180722891566265060240964, avg value 904691.7888554216867469879518; Large Cap: avg allocation 15.20256664031177192071351351, avg return 57.40415569212759730757974832, avg value 789902.4160081943225051214516; Mid Cap: avg allocation 14.92744903342850817976063830, avg return 79.46694460988683740321620012, avg value 921223.9629243597379392495533; Small Cap: avg allocation 14.09380065851978003281914894, avg return 77.90023201856148491879350348, avg value 931240.9811484918793503480278",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth JSON list with pipeline output.\n\nGround truth:\n\n[\n {\"group_value\":null,\"avg_max_allocation_pct\":18.67,\"avg_returns_pct\":111.12,\"avg_holding_value\":8654138.18},\n {\"group_value\":\"Diversified\",\"avg_max_allocation_pct\":17.47,\"avg_returns_pct\":75.63,\"avg_holding_value\":8366100.79},\n {\"group_value\":\"Large Cap\",\"avg_max_allocation_pct\":16.99,\"avg_returns_pct\":57.0,\"avg_holding_value\":7258009.44},\n {\"group_value\":\"Mid Cap\",\"avg_max_allocation_pct\":17.7,\"avg_returns_pct\":80.41,\"avg_holding_value\":8584272.86},\n {\"group_value\":\"Small Cap\",\"avg_max_allocation_pct\":15.95,\"avg_returns_pct\":83.84,\"avg_holding_value\":8580495.45}\n]\n\nPipeline output: \"Diversified: avg allocation 14.99847574974852201661157025, avg return 72.95180722891566265060240964, avg value 904691.7888554216867469879518; Large Cap: avg allocation 15.20256664031177192071351351, avg return 57.40415569212759730757974832, avg value 789902.4160081943225051214516; Mid Cap: avg allocation 14.92744903342850817976063830, avg return 79.46694460988683740321620012, avg value 921223.9629243597379392495533; Small Cap: avg allocation 14.09380065851978003281914894, avg return 77.90023201856148491879350348, avg value 931240.9811484918793503480278\"\n\nObservations: Ground truth includes also a null group (overall?) with avg_max_allocation_pct 18.67, avg_returns_pct 111.12, avg_holding_value 8654138.18. Pipeline output does not include that row. Also the numbers differ significantly: pipeline numbers are far lower (e.g., Diversified avg allocation 14.998 vs ground truth 17.47). Returns also differ (72.95 vs 75.63). Values differ drastically (904,691 vs 8,366,100). So mismatched.\n\nThus output should be MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

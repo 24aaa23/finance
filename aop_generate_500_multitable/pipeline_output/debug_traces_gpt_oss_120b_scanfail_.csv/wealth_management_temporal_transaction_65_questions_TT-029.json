@@ -1,0 +1,334 @@
+{
+  "sample_row_id": "wealth_management_temporal_transaction_65_questions:TT-029",
+  "question": "Which ten investors have the highest net cash flow and average goal progress below 50?",
+  "ground_truth": "[{\"investor_id\":\"INV-082\",\"investor_name\":\"Amit Chauhan\",\"net_cash_flow\":400060568.0,\"avg_progress_pct\":47.44},{\"investor_id\":\"INV-1122\",\"investor_name\":\"Deepak Sharma\",\"net_cash_flow\":400025252.0,\"avg_progress_pct\":29.9},{\"investor_id\":\"INV-1362\",\"investor_name\":\"Rahul Bhat\",\"net_cash_flow\":400021140.0,\"avg_progress_pct\":24.64},{\"investor_id\":\"INV-1202\",\"investor_name\":\"Sunita Sharma\",\"net_cash_flow\":400016736.0,\"avg_progress_pct\":41.69},{\"investor_id\":\"INV-962\",\"investor_name\":\"Amit Mishra\",\"net_cash_flow\":399997944.0,\"avg_progress_pct\":34.37},{\"investor_id\":\"INV-042\",\"investor_name\":\"Suresh Bhat\",\"net_cash_flow\":399997020.0,\"avg_progress_pct\":41.67},{\"investor_id\":\"INV-842\",\"investor_name\":\"Akshay Iyer\",\"net_cash_flow\":399977932.0,\"avg_progress_pct\":33.55},{\"investor_id\":\"INV-1282\",\"investor_name\":\"Akshay Pandey\",\"net_cash_flow\":399974392.0,\"avg_progress_pct\":18.34},{\"investor_id\":\"INV-202\",\"investor_name\":\"Chetan Patel\",\"net_cash_flow\":300053883.0,\"avg_progress_pct\":33.33},{\"investor_id\":\"INV-482\",\"investor_name\":\"Deepak Mishra\",\"net_cash_flow\":300047883.0,\"avg_progress_pct\":40.05}]",
+  "pipeline_output": "The ten investors are: INV-202 Chetan Patel totalCashFlow 100017961.0 avgProgress 33.33333333333333333333333333; INV-482 Deepak Mishra totalCashFlow 100015961.0 avgProgress 40.04513275394943; INV-082 Amit Chauhan totalCashFlow 100015142.0 avgProgress 47.443781447639846; INV-1522 Sunita Kulkarni totalCashFlow 100014834.0 avgProgress 19.22835207209100066666666667; INV-1042 Rajesh Kulkarni totalCashFlow 100011994.0 avgProgress 30.000000000000001; INV-322 Akshay Nair totalCashFlow 100009040.0 avgProgress 6.666666666666666666666666667; INV-1122 Deepak Sharma totalCashFlow 100006313.0 avgProgress 29.8980587691256575; INV-282 Anita Deshmukh totalCashFlow 100006303.0 avgProgress 24.73116747451015966666666667; INV-1082 Suresh Verma totalCashFlow 100006214.0 avgProgress 18.30854994512099; INV-1482 Aishwarya Joshi totalCashFlow 100005610.0 avgProgress 32.843828152079502.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 219.063,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Steps: Retrieve ontology classes, then Classify for math/aggregation words (since query includes \"ten\", \"highest\", \"average\", \"below 50\" – numeric superlative). Then Generate (SPARQL) after Classify. Then Scan. Then Validate. Then Explain. Possibly also need Filter_Aggregate, Order_By, etc. But plan steps are just operators, not internal sub-steps. We can include multiple steps using operators in sequence. The plan should be linear: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain. However we might need to incorporate Filter_Aggregate, Order_By to compute top ten investors with highest net cash flow and average goal progress <50. But the plan can be just high-level steps; but they ask \"step-by-step, linear execution plan to answer this query using ONLY the provided operators.\" So we can include steps like Retrieve, Classify, Generate, Scan, Validate, Explain. But also we may need to use Filter_Aggregate and Order_By before Generate? Actually Generate writes SPARQL that includes filters, aggregates, ordering, limit. So we can just have a single Generate step that includes those. So plan:\n\n1. Retrieve (ontology classes)\n2. Classify (identify math/aggregation terms)\n3. Generate (construct SPARQL with FILTER for average goal progress <50, ORDER BY DESC(netCashFlow), LIMIT 10, using aggregation for average)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nThus steps numbered.</reasoning>1. Retrieve – obtain the ontology classes (e.g., Investor, NetCashFlow, GoalProgress).  \n2. Classify – identify the mathematical/aggregation elements in the query (“ten”, “highest”, “average”, “below 50”).  \n3. Generate – write a SPARQL query that (a) aggregates GoalProgress per investor to compute the average, (b) filters investors whose average GoalProgress < 50, (c) orders the remaining investors by NetCashFlow descending, and (d) limits the result to the top 10 investors.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned rows satisfy the filter (average GoalProgress < 50) and that exactly ten investors are returned.  \n6. Explain – present the list of the ten investors with the highest NetCashFlow and their corresponding average GoalProgress.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which ten investors have the highest net cash flow and average goal progress below 50?\" Need to find ontology classes first using Retrieve. Then classify math/aggregation words: highest, average, ten, below. So use Classify after Retrieve. Then Generate SPARQL after Classify. Then Scan, Validate, Explain. Also need to maybe use Filter_Aggregate, Order_By, maybe Set_Intersect? But the plan must be linear steps, each operator used once maybe. We need to incorporate steps to filter investors with average goal progress below 50, compute average goal progress per investor, compute net cash flow, order by net cash flow descending, limit 10. So after Generate we might need to use Filter_Aggregate and Order_By? But the rules: Generate writes SPARQL, which can include filters, aggregates, ordering, limit. So we can embed all logic in the SPARQL. So after Generate we just Scan to execute. Then Validate, then Explain.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify math/aggregation terms)\n3. Generate (write SPARQL query for investors with avg goal progress <50, order by net cash flow desc, limit 10)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nThat's linear. Provide numbered steps only.</reasoning>1. Retrieve – obtain the ontology classes relevant to investors, net cash flow, and goal progress.  \n2. Classify – identify and tag the mathematical and aggregation concepts in the query (“ten”, “highest”, “average”, “below 50”).  \n3. Generate – compose a SPARQL query that (a) groups data by investor, (b) computes the average goal‑progress per investor, (c) filters investors with average goal‑progress < 50, (d) retrieves each investor’s net cash flow, (e) orders the results by net cash flow descending, and (f) limits the output to the top 10 investors.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned rows satisfy the filter (average goal progress < 50) and that exactly ten investors are returned, ordered by highest net cash flow.  \n6. Explain – present the list of the ten investors with the highest net cash flow whose average goal progress is below 50.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "retrieve",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "classify",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "generate",
+              "operator": "Generate",
+              "inputs": [
+                "retrieve",
+                "classify"
+              ]
+            },
+            {
+              "id": "scan",
+              "operator": "Scan",
+              "inputs": [
+                "generate"
+              ]
+            },
+            {
+              "id": "validate",
+              "operator": "Validate",
+              "inputs": [
+                "scan"
+              ]
+            },
+            {
+              "id": "explain",
+              "operator": "Explain",
+              "inputs": [
+                "validate"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "retrieve",
+              "target": "generate"
+            },
+            {
+              "source": "classify",
+              "target": "generate"
+            },
+            {
+              "source": "generate",
+              "target": "scan"
+            },
+            {
+              "source": "scan",
+              "target": "validate"
+            },
+            {
+              "source": "validate",
+              "target": "explain"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Steps: 1 Retrieve to find ontology classes. 2 Classify for math/aggregation words: \"highest\", \"average\". 3 Generate SPARQL query. 4 Scan to execute. 5 Validate results. 6 Explain to user. Possibly also need Filter_Aggregate, Order_By, etc. But the plan is linear; we can include those as separate steps? The operators list includes many; we can incorporate them as part of the plan. However chronology: after Retrieve, we must Classify. Then Generate must happen after Classify (or Retrieve). Then Scan after Generate. Then Validate after Scan. Then Explain final. We can include intermediate steps like Filter_Aggregate, Order_By before Generate? Actually Generate writes SPARQL; we can embed filtering, ordering in the query. So we might not need separate steps. But we could also use Filter_Aggregate and Order_By as separate operators after Scan? Not sure. The rules: \"Scan (executing Graph query) must happen immediately AFTER Generate.\" So no other steps between Generate and Scan. So any filtering/ordering must be part of the SPARQL query generated. So plan steps:\n\n1 Retrieve (ontology classes)\n2 Classify (identify numeric/aggregation terms)\n3 Generate (SPARQL to compute average goal progress per investor, filter avg < 50, order by net cash flow descending, limit 10)\n4 Scan (execute query)\n5 Validate (check results for completeness, data types)\n6 Explain (present answer)\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the ontology classes for *Investor*, *NetCashFlow*, and *GoalProgress*.  \n2. Classify – identify the numeric‑superlative and aggregation terms in the query (“highest”, “average”, “below 50”).  \n3. Generate – write a SPARQL query that:  \n   • calculates each investor’s average GoalProgress,  \n   • filters investors with average GoalProgress < 50,  \n   • orders the remaining investors by NetCashFlow descending,  \n   • returns the top 10 investors (their identifiers and NetCashFlow values).  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned rows contain exactly ten investors, that the NetCashFlow values are numeric, and that the average GoalProgress for each is indeed below 50.  \n6. Explain – present the list of the ten investors with the highest NetCashFlow and their corresponding average GoalProgress to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "CashFlow",
+      "InvestmentGoal"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.97,
+    "target_field": "amount",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query requests the top ten investors by highest net cash flow (sum of numeric 'amount' field) with a filter on average goal progress (numeric 'progressPct'), which are both numeric fields, indicating a numeric aggregation intent.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalCashFlow ?avgProgress WHERE {\n  {\n    SELECT ?investor (SUM(xsd:decimal(?amount)) AS ?totalCashFlow) WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:cashFlowOfInvestor ?investor .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?investor\n  }\n  {\n    SELECT ?investor (AVG(xsd:decimal(?progress)) AS ?avgProgress) WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:belongsToInvestor ?investor .\n      ?goal wm:progressPct ?progress .\n    }\n    GROUP BY ?investor\n    HAVING (AVG(xsd:decimal(?progress)) < 50)\n  }\n  ?investor a wm:Investor .\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n}\nORDER BY DESC(?totalCashFlow)\nLIMIT 10",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalCashFlow ?avgProgress WHERE {\n  {\n    SELECT ?investor (SUM(xsd:decimal(?amount)) AS ?totalCashFlow) WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:cashFlowOfInvestor ?investor .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?investor\n  }\n  {\n    SELECT ?investor (AVG(xsd:decimal(?progress)) AS ?avgProgress) WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:belongsToInvestor ?investor .\n      ?goal wm:progressPct ?progress .\n    }\n    GROUP BY ?investor\n    HAVING (AVG(xsd:decimal(?progress)) < 50)\n  }\n  ?investor a wm:Investor .\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n}\nORDER BY DESC(?totalCashFlow)\nLIMIT 10",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?totalCashFlow ?avgProgress WHERE {\n  {\n    SELECT ?investor (SUM(xsd:decimal(?amount)) AS ?totalCashFlow) WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:cashFlowOfInvestor ?investor .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?investor\n  }\n  {\n    SELECT ?investor (AVG(xsd:decimal(?progress)) AS ?avgProgress) WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:belongsToInvestor ?investor .\n      ?goal wm:progressPct ?progress .\n    }\n    GROUP BY ?investor\n    HAVING (AVG(xsd:decimal(?progress)) < 50)\n  }\n  ?investor a wm:Investor .\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n}\nORDER BY DESC(?totalCashFlow)\nLIMIT 10",
+        "status": "success",
+        "row_count": 10,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 10,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL correctly aggregates net cash flow (SUM) and average goal progress (AVG), filters for average progress below 50, orders the results by descending cash flow, and limits to ten investors. The returned columns (investorId, investorName, totalCashFlow, avgProgress) match the requested information, and the sample data contains ten rows satisfying the criteria.",
+    "validator_reason": "The SPARQL correctly aggregates net cash flow (SUM) and average goal progress (AVG), filters for average progress below 50, orders the results by descending cash flow, and limits to ten investors. The returned columns (investorId, investorName, totalCashFlow, avgProgress) match the requested information, and the sample data contains ten rows satisfying the criteria.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 10,
+    "final_answer": "The ten investors are: INV-202 Chetan Patel totalCashFlow 100017961.0 avgProgress 33.33333333333333333333333333; INV-482 Deepak Mishra totalCashFlow 100015961.0 avgProgress 40.04513275394943; INV-082 Amit Chauhan totalCashFlow 100015142.0 avgProgress 47.443781447639846; INV-1522 Sunita Kulkarni totalCashFlow 100014834.0 avgProgress 19.22835207209100066666666667; INV-1042 Rajesh Kulkarni totalCashFlow 100011994.0 avgProgress 30.000000000000001; INV-322 Akshay Nair totalCashFlow 100009040.0 avgProgress 6.666666666666666666666666667; INV-1122 Deepak Sharma totalCashFlow 100006313.0 avgProgress 29.8980587691256575; INV-282 Anita Deshmukh totalCashFlow 100006303.0 avgProgress 24.73116747451015966666666667; INV-1082 Suresh Verma totalCashFlow 100006214.0 avgProgress 18.30854994512099; INV-1482 Aishwarya Joshi totalCashFlow 100005610.0 avgProgress 32.843828152079502.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth.\n\nQuestion: \"Which ten investors have the highest net cash flow and average goal progress below 50?\" Ground truth provides list of ten investors with IDs, names, net_cash_flow, avg_progress_pct. Those are:\n\n1 INV-082 Amit Chauhan net_cash_flow 400060568.0 avg_progress_pct 47.44\n2 INV-1122 Deepak Sharma 400025252.0 29.9\n3 INV-1362 Rahul Bhat 400021140.0 24.64\n4 INV-1202 Sunita Sharma 400016736.0 41.69\n5 INV-962 Amit Mishra 399997944.0 34.37\n6 INV-042 Suresh Bhat 399997020.0 41.67\n7 INV-842 Akshay Iyer 399977932.0 33.55\n8 INV-1282 Akshay Pandey 399974392.0 18.34\n9 INV-202 Chetan Patel 300053883.0 33.33\n10 INV-482 Deepak Mishra 300047883.0 40.05\n\nNow pipeline output: list of ten investors but different IDs and values.\n\nPipeline output:\n\nINV-202 Chetan Patel totalCashFlow 100017961.0 avgProgress 33.3333...\nINV-482 Deepak Mishra totalCashFlow 100015961.0 avgProgress 40.045...\nINV-082 Amit Chauhan totalCashFlow 100015142.0 avgProgress 47.443...\nINV-1522 Sunita Kulkarni totalCashFlow 100014834.0 avgProgress 19.228...\nINV-1042 Rajesh Kulkarni totalCashFlow 100011994.0 avgProgress 30.0\nINV-322 Akshay Nair totalCashFlow 100009040.0 avgProgress 6.666...\nINV-1122 Deepak Sharma totalCashFlow 100006313.0 avgProgress 29.898...\nINV-282 Anita Deshmukh totalCashFlow 100006303.0 avgProgress 24.731...\nINV-1082 Suresh Verma totalCashFlow 100006214.0 avgProgress 18.308...\nINV-1482 Aishwarya Joshi totalCashFlow 100005610.0 avgProgress 32.843...\n\nThese do not match ground truth values. The IDs partially overlap: INV-202, INV-482, INV-082, INV-1122 are present in ground truth, but the net cash flow numbers are completely different (100 million vs 300-400 million). Also many IDs are not in ground truth (INV-1522, etc). Also missing many ground truth entries (INV-1362, INV-1202, INV-962, INV-042, INV-842, INV-1282). So overall mismatch.\n\nThus output should be MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

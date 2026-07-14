@@ -1,0 +1,401 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-076",
+  "question": "Across profile category, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_net_cash_flow\":2181672.83,\"avg_scenario_change\":-8.03,\"avg_max_allocation_pct\":14.56,\"avg_sector_investment\":803033.89},{\"group_value\":\"Debt\",\"avg_net_cash_flow\":1169529.06,\"avg_scenario_change\":-6.24,\"avg_max_allocation_pct\":16.28,\"avg_sector_investment\":917501.86},{\"group_value\":\"Equity\",\"avg_net_cash_flow\":530338.73,\"avg_scenario_change\":-2.15,\"avg_max_allocation_pct\":17.14,\"avg_sector_investment\":856162.5},{\"group_value\":\"Gold\",\"avg_net_cash_flow\":552992.73,\"avg_scenario_change\":0.74,\"avg_max_allocation_pct\":16.55,\"avg_sector_investment\":938805.09},{\"group_value\":\"Hybrid\",\"avg_net_cash_flow\":1585541.01,\"avg_scenario_change\":4.15,\"avg_max_allocation_pct\":17.39,\"avg_sector_investment\":874711.48},{\"group_value\":\"Real Estate\",\"avg_net_cash_flow\":-506244.45,\"avg_scenario_change\":-1.78,\"avg_max_allocation_pct\":17.49,\"avg_sector_investment\":920698.89}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 227.059,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?\" Need to retrieve ontology classes, classify math/aggregation words. The query asks to compare across profile category the four metrics using four related tables. Likely need to retrieve classes (profile category, cash flow, scenario change, allocation concentration, sector investment, tables). Then classify for aggregation? The query does not contain explicit words like average, sum, min, max, count, highest, lowest, largest, smallest. So maybe no classification needed? However \"compare\" could be considered a comparative operation but not listed. So we may skip Classify and go from Retrieve to Generate. But we have four related tables; we need to integrate them. So after scanning we may need to Integrate. Also maybe need Filter_Aggregate to group by profile category. Steps: Retrieve, Generate, Scan, Integrate, Filter_Aggregate, Validate, Explain.",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Integrate -> Filter_Aggregate -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 40,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Integrate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Filter_Aggregate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Validate",
+              "inputs": [
+                "n5"
+              ]
+            },
+            {
+              "id": "n7",
+              "operator": "Explain",
+              "inputs": [
+                "n6"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n6",
+              "target": "n7"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nThe query: \"Across profile category, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?\"\n\nWe need to find ontology classes first: Retrieve.\n\nThen classify for math/aggregation? The query asks to compare cash flow, scenario change, allocation concentration, sector investment across profile category using four related tables. Likely need aggregation/comparison (maybe average, sum). So after Retrieve, we do Classify.\n\nThen Generate SPARQL, Scan, Validate, Explain.\n\nThus steps: Retrieve, Classify, Generate, Scan, Validate, Explain.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?\" Need to retrieve ontology classes first using Retrieve. Then classify for math/aggregation words. The query asks to compare cash flow, scenario change, allocation concentration, sector investment across profile category using four related tables. Likely need aggregation/comparison. So after Retrieve, we do Classify, then Generate, Scan, Validate, Explain.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 35,
+        "selected": false,
+        "why_selected_or_rejected": "Valid but higher cost than selected plan.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "CashFlow",
+      "ScenarioRebalancing",
+      "SectorAllocation",
+      "PortfolioHolding",
+      "Category"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "taxonomic_reasoning",
+    "confidence": 0.92,
+    "target_field": "unknown",
+    "schema_datatype": "unknown",
+    "why_this_intent": "The query requests a comparison of cash‑flow, scenario‑change, allocation‑concentration and sector‑investment metrics across profile categories, which implies grouping by the categorical 'category' field and summarising numeric measures. No single explicit numeric field is named for a direct aggregation, so the intent is best classified as taxonomic (group‑by) reasoning.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel \n       (SUM(xsd:decimal(?totalCashFlow)) AS ?totalCashFlow) \n       (AVG(xsd:decimal(?avgScenarioChange)) AS ?avgScenarioChange) \n       (SUM(xsd:decimal(?totalAllocationPct)) AS ?totalAllocationPct) \n       (SUM(xsd:decimal(?totalSectorInvestment)) AS ?totalSectorInvestment) \n       (SUM(xsd:decimal(?totalHoldingValue)) AS ?totalHoldingValue)\nWHERE {\n  # Map each investor to a single category (via any of its holdings)\n  {\n    SELECT ?investorId (SAMPLE(?cat) AS ?category) WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:investorId ?investorId ;\n          wm:hasCategory ?cat .\n    } GROUP BY ?investorId\n  }\n\n  # Cash flow per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?totalCashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  # Scenario change per investor (new - current allocation)\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?newAllocationPct) - xsd:decimal(?currentAllocationPct)) AS ?avgScenarioChange) WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct .\n    } GROUP BY ?investorId\n  }\n\n  # Sector allocation per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?allocationPct)) AS ?totalAllocationPct) (SUM(xsd:decimal(?totalInvestment)) AS ?totalSectorInvestment) WHERE {\n      ?sa a wm:SectorAllocation ;\n          wm:investorId ?investorId ;\n          wm:allocationPct ?allocationPct ;\n          wm:totalInvestment ?totalInvestment .\n    } GROUP BY ?investorId\n  }\n\n  # Portfolio holding value per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?currentValue)) AS ?totalHoldingValue) WHERE {\n      ?ph2 a wm:PortfolioHolding ;\n           wm:investorId ?investorId ;\n           wm:currentValue ?currentValue .\n    } GROUP BY ?investorId\n  }\n\n  BIND(?category AS ?cat)\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n}\nGROUP BY ?categoryLabel",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel (SUM(?cashFlow) AS ?totalCashFlow) (AVG(?scenarioChange) AS ?avgScenarioChange) (SUM(?allocationPct) AS ?totalAllocationPct) (SUM(?sectorInvestment) AS ?totalSectorInvestment)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasCategory ?cat .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?cashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?newAllocationPct) - xsd:decimal(?currentAllocationPct)) AS ?scenarioChange) WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?allocationPct)) AS ?allocationPct) (SUM(xsd:decimal(?totalInvestment)) AS ?sectorInvestment) WHERE {\n      ?sa a wm:SectorAllocation ;\n          wm:investorId ?investorId ;\n          wm:allocationPct ?allocationPct ;\n          wm:totalInvestment ?totalInvestment .\n    } GROUP BY ?investorId\n  }\n}\nGROUP BY ?categoryLabel",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel \n       (SUM(xsd:decimal(?totalCashFlow)) AS ?totalCashFlow) \n       (AVG(xsd:decimal(?avgScenarioChange)) AS ?avgScenarioChange) \n       (SUM(xsd:decimal(?totalAllocationPct)) AS ?totalAllocationPct) \n       (SUM(xsd:decimal(?totalSectorInvestment)) AS ?totalSectorInvestment) \n       (SUM(xsd:decimal(?totalHoldingValue)) AS ?totalHoldingValue)\nWHERE {\n  # Map each investor to a single category (via any of its holdings)\n  {\n    SELECT ?investorId (SAMPLE(?cat) AS ?category) WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:investorId ?investorId ;\n          wm:hasCategory ?cat .\n    } GROUP BY ?investorId\n  }\n\n  # Cash flow per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?totalCashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  # Scenario change per investor (new - current allocation)\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?newAllocationPct) - xsd:decimal(?currentAllocationPct)) AS ?avgScenarioChange) WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct .\n    } GROUP BY ?investorId\n  }\n\n  # Sector allocation per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?allocationPct)) AS ?totalAllocationPct) (SUM(xsd:decimal(?totalInvestment)) AS ?totalSectorInvestment) WHERE {\n      ?sa a wm:SectorAllocation ;\n          wm:investorId ?investorId ;\n          wm:allocationPct ?allocationPct ;\n          wm:totalInvestment ?totalInvestment .\n    } GROUP BY ?investorId\n  }\n\n  # Portfolio holding value per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?currentValue)) AS ?totalHoldingValue) WHERE {\n      ?ph2 a wm:PortfolioHolding ;\n           wm:investorId ?investorId ;\n           wm:currentValue ?currentValue .\n    } GROUP BY ?investorId\n  }\n\n  BIND(?category AS ?cat)\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n}\nGROUP BY ?categoryLabel",
+        "status": "error",
+        "row_count": null,
+        "error": "'NotBoundError' object has no attribute 'datatype'",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "sparql_error"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel \n       (SUM(xsd:decimal(?totalCashFlow)) AS ?totalCashFlow) \n       (AVG(xsd:decimal(?avgScenarioChange)) AS ?avgScenarioChange) \n       (SUM(xsd:decimal(?totalAllocationPct)) AS ?totalAllocationPct) \n       (SUM(xsd:decimal(?totalSectorInvestment)) AS ?totalSectorInvestment) \n       (SUM(xsd:decimal(?totalHoldingValue)) AS ?totalHoldingValue)\nWHERE {\n  # Map each investor to a single category (via any of its holdings)\n  {\n    SELECT ?investorId (SAMPLE(?cat) AS ?category) WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:investorId ?investorId ;\n          wm:hasCategory ?cat .\n    } GROUP BY ?investorId\n  }\n\n  # Cash flow per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?totalCashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  # Scenario change per investor (new - current allocation)\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?newAllocationPct) - xsd:decimal(?currentAllocationPct)) AS ?avgScenarioChange) WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct .\n    } GROUP BY ?investorId\n  }\n\n  # Sector allocation per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?allocationPct)) AS ?totalAllocationPct) (SUM(xsd:decimal(?totalInvestment)) AS ?totalSectorInvestment) WHERE {\n      ?sa a wm:SectorAllocation ;\n          wm:investorId ?investorId ;\n          wm:allocationPct ?allocationPct ;\n          wm:totalInvestment ?totalInvestment .\n    } GROUP BY ?investorId\n  }\n\n  # Portfolio holding value per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?currentValue)) AS ?totalHoldingValue) WHERE {\n      ?ph2 a wm:PortfolioHolding ;\n           wm:investorId ?investorId ;\n           wm:currentValue ?currentValue .\n    } GROUP BY ?investorId\n  }\n\n  BIND(?category AS ?cat)\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n}\nGROUP BY ?categoryLabel",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel (SUM(?cashFlow) AS ?totalCashFlow) (AVG(?scenarioChange) AS ?avgScenarioChange) (SUM(?allocationPct) AS ?totalAllocationPct) (SUM(?sectorInvestment) AS ?totalSectorInvestment) (SUM(?holdingValue) AS ?totalHoldingValue)\nWHERE {\n  {\n    SELECT ?investorId (SAMPLE(?cat) AS ?category) WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:investorId ?investorId ;\n          wm:hasCategory ?cat .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(?amount) AS ?cashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(?newAllocationPct - ?currentAllocationPct) AS ?scenarioChange) WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(?allocationPct) AS ?allocationPct) (SUM(?totalInvestment) AS ?sectorInvestment) WHERE {\n      ?sa a wm:SectorAllocation ;\n          wm:investorId ?investorId ;\n          wm:allocationPct ?allocationPct ;\n          wm:totalInvestment ?totalInvestment .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(?currentValue) AS ?holdingValue) WHERE {\n      ?ph2 a wm:PortfolioHolding ;\n           wm:investorId ?investorId ;\n           wm:currentValue ?currentValue .\n    } GROUP BY ?investorId\n  }\n\n  BIND(?category AS ?cat)\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n}\nGROUP BY ?categoryLabel",
+        "why_refined": "Rewrite using only valid RDF graph terms. Do not invent predicates or classes.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel (SUM(?cashFlow) AS ?totalCashFlow) (AVG(?scenarioChange) AS ?avgScenarioChange) (SUM(?allocationPct) AS ?totalAllocationPct) (SUM(?sectorInvestment) AS ?totalSectorInvestment) (SUM(?holdingValue) AS ?totalHoldingValue)\nWHERE {\n  {\n    SELECT ?investorId (SAMPLE(?cat) AS ?category) WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:investorId ?investorId ;\n          wm:hasCategory ?cat .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(?amount) AS ?cashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(?newAllocationPct - ?currentAllocationPct) AS ?scenarioChange) WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(?allocationPct) AS ?allocationPct) (SUM(?totalInvestment) AS ?sectorInvestment) WHERE {\n      ?sa a wm:SectorAllocation ;\n          wm:investorId ?investorId ;\n          wm:allocationPct ?allocationPct ;\n          wm:totalInvestment ?totalInvestment .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(?currentValue) AS ?holdingValue) WHERE {\n      ?ph2 a wm:PortfolioHolding ;\n           wm:investorId ?investorId ;\n           wm:currentValue ?currentValue .\n    } GROUP BY ?investorId\n  }\n\n  BIND(?category AS ?cat)\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n}\nGROUP BY ?categoryLabel",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel (SUM(?cashFlow) AS ?totalCashFlow) (AVG(?scenarioChange) AS ?avgScenarioChange) (SUM(?allocationPct) AS ?totalAllocationPct) (SUM(?sectorInvestment) AS ?totalSectorInvestment) (SUM(?holdingValue) AS ?totalHoldingValue)\nWHERE {\n  {\n    SELECT ?investorId (SAMPLE(?cat) AS ?category) WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:investorId ?investorId ;\n          wm:hasCategory ?cat .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(?amount) AS ?cashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(?newAllocationPct - ?currentAllocationPct) AS ?scenarioChange) WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(?allocationPct) AS ?allocationPct) (SUM(?totalInvestment) AS ?sectorInvestment) WHERE {\n      ?sa a wm:SectorAllocation ;\n          wm:investorId ?investorId ;\n          wm:allocationPct ?allocationPct ;\n          wm:totalInvestment ?totalInvestment .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(?currentValue) AS ?holdingValue) WHERE {\n      ?ph2 a wm:PortfolioHolding ;\n           wm:investorId ?investorId ;\n           wm:currentValue ?currentValue .\n    } GROUP BY ?investorId\n  }\n\n  BIND(?category AS ?cat)\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n}\nGROUP BY ?categoryLabel",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel (SUM(?cashFlow) AS ?totalCashFlow) (AVG(?scenarioChange) AS ?avgScenarioChange) (SUM(?allocationPct) AS ?totalAllocationPct) (SUM(?sectorInvestment) AS ?totalSectorInvestment)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasCategory ?cat .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?cashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?newAllocationPct) - xsd:decimal(?currentAllocationPct)) AS ?scenarioChange) WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?allocationPct)) AS ?allocationPct) (SUM(xsd:decimal(?totalInvestment)) AS ?sectorInvestment) WHERE {\n      ?sa a wm:SectorAllocation ;\n          wm:investorId ?investorId ;\n          wm:allocationPct ?allocationPct ;\n          wm:totalInvestment ?totalInvestment .\n    } GROUP BY ?investorId\n  }\n}\nGROUP BY ?categoryLabel",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel (SUM(?cashFlow) AS ?totalCashFlow) (AVG(?scenarioChange) AS ?avgScenarioChange) (SUM(?allocationPct) AS ?totalAllocationPct) (SUM(?sectorInvestment) AS ?totalSectorInvestment)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:hasCategory ?cat .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?cashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?newAllocationPct) - xsd:decimal(?currentAllocationPct)) AS ?scenarioChange) WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct .\n    } GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?allocationPct)) AS ?allocationPct) (SUM(xsd:decimal(?totalInvestment)) AS ?sectorInvestment) WHERE {\n      ?sa a wm:SectorAllocation ;\n          wm:investorId ?investorId ;\n          wm:allocationPct ?allocationPct ;\n          wm:totalInvestment ?totalInvestment .\n    } GROUP BY ?investorId\n  }\n}\nGROUP BY ?categoryLabel",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "SPARQL execution timed out after 60 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to decide if pipeline output answered question based on ground truth. Ground truth is JSON array with values for each group. Pipeline output: \"A database error prevented data retrieval.\"\n\nThus pipeline did not provide any data, so mismatch. According to rule 2, if pipeline says \"database error\", mark MISMATCH. So answer: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

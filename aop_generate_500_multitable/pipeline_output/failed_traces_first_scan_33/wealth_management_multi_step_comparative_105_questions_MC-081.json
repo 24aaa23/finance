@@ -1,0 +1,341 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-081",
+  "question": "Which ten investors have the highest four-table comparative score where score = net cash flow + holding gain - average shortfall + rebalance amount?",
+  "ground_truth": "[{\"investor_id\":\"INV-1122\",\"investor_name\":\"Deepak Sharma\",\"comparative_score\":102377014.03},{\"investor_id\":\"INV-522\",\"investor_name\":\"Siddharth Chauhan\",\"comparative_score\":101936833.91},{\"investor_id\":\"INV-042\",\"investor_name\":\"Suresh Bhat\",\"comparative_score\":101841663.6},{\"investor_id\":\"INV-482\",\"investor_name\":\"Deepak Mishra\",\"comparative_score\":101692129.08},{\"investor_id\":\"INV-1202\",\"investor_name\":\"Sunita Sharma\",\"comparative_score\":101487864.85},{\"investor_id\":\"INV-762\",\"investor_name\":\"Chetan Pandey\",\"comparative_score\":101391720.72},{\"investor_id\":\"INV-1402\",\"investor_name\":\"Dipti Yadav\",\"comparative_score\":101315218.5},{\"investor_id\":\"INV-802\",\"investor_name\":\"Sunita Arora\",\"comparative_score\":101295004.33},{\"investor_id\":\"INV-602\",\"investor_name\":\"Sneha Bhat\",\"comparative_score\":101003762.0},{\"investor_id\":\"INV-642\",\"investor_name\":\"Priyanka Mishra\",\"comparative_score\":100845789.65}]",
+  "pipeline_output": "The ten investors with the highest four‑table comparative scores are Deepak Sharma (https://wealth.example.org/kg/investor/INV-1122) score 102871043.030687705975; Deepak Mishra (https://wealth.example.org/kg/investor/INV-482) score 102104591.08101512133338; Siddharth Chauhan (https://wealth.example.org/kg/investor/INV-522) score 101936833.907036629; Suresh Bhat (https://wealth.example.org/kg/investor/INV-042) score 101911579.6000000000000233333; Chetan Pandey (https://wealth.example.org/kg/investor/INV-762) score 101719809.719482898; Priyanka Mishra (https://wealth.example.org/kg/investor/INV-642) score 101507613.6520560852666666667; Sunita Sharma (https://wealth.example.org/kg/investor/INV-1202) score 101487864.846559645725; Dipti Yadav (https://wealth.example.org/kg/investor/INV-1402) score 101433559.4988217051; Sunita Arora (https://wealth.example.org/kg/investor/INV-802) score 101423182.3333333333333333333; Sneha Bhat (https://wealth.example.org/kg/investor/INV-602) score 101074602.0.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 304.778,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Order_By -> Filter_Aggregate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Order_By -> Filter_Aggregate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Order_By -> Filter_Aggregate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=38.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nWe have query: \"Which ten investors have the highest four-table comparative score where score = net cash flow + holding gain - average shortfall + rebalance amount?\"\n\nWe need to find ontology classes (investor, net cash flow, holding gain, average shortfall, rebalance amount). Use Retrieve.\n\nThen we need to classify math, aggregation, numeric-superlative words: \"average\", \"highest\", \"ten\". So we need Classify.\n\nAfter Retrieve and Classify, we need to Generate SPARQL to compute score = net cash flow + holding gain - average shortfall + rebalance amount, and order by descending score, limit 10.\n\nThen Scan to execute query.\n\nThen Validate to check data.\n\nThen Explain to present answer.\n\nPotentially we might need Filter_Aggregate, Order_By, Math_Compute? But we must follow chronology: after Scan we can do Validate then Explain. But we might need to compute the score using Math_Compute? However the SPARQL can compute directly. But we could also use Math_Compute after Scan to compute score per investor. However chronology says Generate after Classify, then Scan, then Validate, then Explain. We can incorporate Math_Compute as part of the pipeline maybe after Scan? But not required. The plan should include steps using operators as needed.\n\nWe need to list steps numbered.\n\nStep 1: Retrieve ontology classes relevant to query.\n\nStep 2: Classify query to identify math and superlative terms.\n\nStep 3: Generate SPARQL query that selects investors, computes score = net cash flow + holding gain - average shortfall + rebalance amount, orders by score descending, limit 10.\n\nStep 4: Scan to execute the generated query.\n\nStep 5: Validate the returned results (ensure each investor has required fields, score computed correctly).\n\nStep 6: Explain the results to the user.\n\nWe might also need Filter_Aggregate to compute average shortfall? Actually \"average shortfall\" might be a property already aggregated per investor; but if not, we might need to compute average across something. But we can assume it's a property. So we don't need extra steps.\n\nThus final answer: numbered steps.\n\n</reasoning>1. **Retrieve** – Pull the ontology classes needed for the query (e.g., *Investor*, *NetCashFlow*, *HoldingGain*, *Shortfall*, *RebalanceAmount*).  \n\n2. **Classify** – Identify and tag the mathematical and superlative elements in the query: the arithmetic expression (net cash flow + holding gain − average shortfall + rebalance amount) and the superlative “highest ten”.  \n\n3. **Generate** – Write a SPARQL (or equivalent graph) query that:  \n   - selects each investor,  \n   - retrieves their *net cash flow*, *holding gain*, *average shortfall*, and *rebalance amount*,  \n   - computes **score = netCashFlow + holdingGain – averageShortfall + rebalanceAmount**,  \n   - orders the results by **score** descending,  \n   - limits the output to the top **10** investors.  \n\n4. **Scan** – Execute the generated query against the knowledge graph to obtain the candidate investors and their computed scores.  \n\n5. **Validate** – Verify that the returned rows contain all required fields, that the arithmetic computation was applied correctly, and that exactly ten investors are present.  \n\n6. **Explain** – Present the user with the list of the ten investors having the highest comparative score, including each investor’s name and the calculated score.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, respecting chronology.\n\nGoal: answer query: \"Which ten investors have the highest four-table comparative score where score = net cash flow + holding gain - average shortfall + rebalance amount?\"\n\nWe need to:\n\n1. Retrieve ontology classes (likely Investor, NetCashFlow, HoldingGain, Shortfall, RebalanceAmount, maybe Score). Use Retrieve.\n\n2. Classify math/aggregation words: \"average\", \"highest\", \"ten\", \"score = net cash flow + holding gain - average shortfall + rebalance amount\". So we need to use Classify to identify numeric-superlative \"Highest\" and aggregation \"Average\". Also maybe \"Sum\" implied by addition.\n\n3. Generate SPARQL query to compute score per investor using those fields, including average shortfall (maybe need to compute average across something). Use Generate.\n\n4. Scan to execute query.\n\n5. Validate results.\n\n6. Possibly need to Order_By to get highest ten. But Order_By is an operator; we need to include it. According to chronology: after Scan we can do Filter_Aggregate? Actually we need to sort and limit. Could be part of Generate query, but we might need to use Order_By operator after Scan? The rules: 'Scan' must happen immediately after 'Generate'. So after Scan we cannot do other operators before Validate. But we could embed ordering and limit in the SPARQL query generated. However we still might need to use Order_By operator as a separate step? The chronology doesn't forbid using Order_By after Scan? It says Validate must happen after Scan. It doesn't say Order_By cannot be after Scan, but the rule \"Scan must happen immediately AFTER Generate\" means no other operator between Generate and Scan. After Scan we can do Validate, then maybe Order_By? But we need ordering before validation? Probably validation checks data integrity, then we can Order_By, then maybe Filter_Aggregate to limit to ten. But we could also incorporate ordering and limit in the query, simplifying steps. But we still need to use Order_By operator? Not required if query includes ORDER BY. However the plan may include Order_By as separate step after Validate.\n\nLet's design steps:\n\n1. Retrieve: get ontology classes.\n\n2. Classify: identify math/aggregation terms.\n\n3. Generate: write SPARQL to compute score = netCashFlow + holdingGain - avg(shortfall) + rebalanceAmount for each investor, order by score descending, limit 10.\n\n4. Scan: execute query.\n\n5. Validate: ensure results contain ten investors and numeric scores.\n\n6. Explain: present answer.\n\nWe might also need Filter_Aggregate to limit to ten, but we can embed limit. But to show usage of operators, we could include Order_By and Filter_Aggregate after Validate. However chronology: Validate must happen after Scan, but after Validate we can do Order_By, Filter_Aggregate, etc., then Explain. That would be okay.\n\nBut we must respect \"CRITICAL: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', 'Min', 'Max', 'Count', 'Highest', 'Lowest', 'Largest', or 'Smallest'.\" So we need a Classify step.\n\nThus steps:\n\n1. Retrieve\n\n2. Classify\n\n3. Generate\n\n4. Scan\n\n5. Validate\n\n6. Order_By (to sort descending by score)\n\n7. Filter_Aggregate (to keep top ten)\n\n8. Explain\n\nBut note: after Scan we could directly Validate then Order_By then Filter_Aggregate then Explain. That's linear.\n\nCheck if any rule prohibits Order_By after Validate. No.\n\nThus final answer: numbered steps.\n\nLet's produce.</reasoning>1. Retrieve – obtain the ontology classes relevant to the query (e.g., **Investor**, **NetCashFlow**, **HoldingGain**, **Shortfall**, **RebalanceAmount**, and any class used for computed scores).  \n\n2. Classify – identify and tag the mathematical and superlative terms in the query (“net cash flow”, “holding gain”, “average shortfall”, “rebalance amount”, “score”, “highest”, “ten”).  \n\n3. Generate – write a SPARQL query that, for each **Investor**, computes **score = netCashFlow + holdingGain – AVG(shortfall) + rebalanceAmount** and returns the investor identifier together with the computed score.  \n\n4. Scan – execute the generated SPARQL query against the knowledge graph to retrieve the raw result set (investor‑score pairs).  \n\n5. Validate – check that the result set contains valid numeric scores for each investor and that the required fields are present.  \n\n6. Order_By – sort the validated result set in descending order of the computed **score**.  \n\n7. Filter_Aggregate – keep only the top **ten** investors from the ordered list.  \n\n8. Explain – present the final answer to the user, listing the ten investors with the highest four‑table comparative scores and their corresponding scores.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Order_By -> Filter_Aggregate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 38,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=38.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Order_By",
+              "inputs": [
+                "n5"
+              ]
+            },
+            {
+              "id": "n7",
+              "operator": "Filter_Aggregate",
+              "inputs": [
+                "n6"
+              ]
+            },
+            {
+              "id": "n8",
+              "operator": "Explain",
+              "inputs": [
+                "n7"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n6",
+              "target": "n7"
+            },
+            {
+              "source": "n7",
+              "target": "n8"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which ten investors have the highest four-table comparative score where score = net cash flow + holding gain - average shortfall + rebalance amount?\"\n\nWe need to find ontology classes first: investors, net cash flow, holding gain, average shortfall, rebalance amount. Use Retrieve.\n\nThen we need to classify math, aggregation, numeric-superlative words: \"score = net cash flow + holding gain - average shortfall + rebalance amount\" includes math, also \"ten\" and \"highest\" are numeric-superlative. So we must use Classify after Retrieve.\n\nThen we need to Generate SPARQL to compute score and order top ten. After Classify, we Generate.\n\nThen Scan to execute query.\n\nThen Validate to check data.\n\nThen Explain to present answer.\n\nThus steps:\n\n1. Retrieve (ontology classes relevant to investors and the four tables/attributes).\n\n2. Classify (identify math expression, aggregation, and superlative \"highest ten\").\n\n3. Generate (write SPARQL query that computes score = net cash flow + holding gain - average shortfall + rebalance amount, orders by descending score, limits 10, selects investors).\n\n4. Scan (execute the generated SPARQL query against the KG).\n\n5. Validate (ensure results contain ten investors and score values are correct).\n\n6. Explain (present the list of top ten investors with their scores).\n\nMake sure to use exact operator names.\n\nThus output only numbered steps.</reasoning>1. Retrieve – locate the ontology classes for **Investor**, **NetCashFlow**, **HoldingGain**, **AverageShortfall**, and **RebalanceAmount**.  \n\n2. Classify – identify the mathematical expression “net cash flow + holding gain – average shortfall + rebalance amount” and the numeric‑superlative phrase “ten investors with the highest …”.  \n\n3. Generate – compose a SPARQL query that (a) binds each investor to the four numeric properties, (b) computes **score = netCashFlow + holdingGain – averageShortfall + rebalanceAmount**, (c) orders results by descending **score**, and (d) limits the output to the top 10 investors.  \n\n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n\n5. Validate – verify that the query returned exactly ten investor entities, that each includes a computed **score**, and that the scores follow the descending order.  \n\n6. Explain – present the user with the list of the ten investors having the highest comparative score, including each investor’s name and its calculated score.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "CashFlow",
+      "InvestmentGoal",
+      "RebalancingAction",
+      "PortfolioHolding"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.96,
+    "target_field": "score",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks to compute a numeric score (net cash flow + holding gain - average shortfall + rebalance amount) and rank investors by that score, which involves arithmetic on numeric fields present in the schema.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investor ?investorName ?score\nWHERE {\n  # Net cash flow per investor\n  {\n    SELECT ?investor (SUM(xsd:decimal(?cfAmt)) AS ?netCashFlow)\n    WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?investor ;\n          wm:amount ?cfAmt .\n    }\n    GROUP BY ?investor\n  }\n  # Holding gain per investor (currentValue - cost)\n  {\n    SELECT ?investor (SUM(xsd:decimal(?gain)) AS ?holdingGain)\n    WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?cv ;\n          wm:cost ?cost .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    }\n    GROUP BY ?investor\n  }\n  # Average shortfall per investor\n  {\n    SELECT ?investor (AVG(xsd:decimal(?shortfall)) AS ?avgShortfall)\n    WHERE {\n      ?ig a wm:InvestmentGoal ;\n          wm:belongsToInvestor ?investor ;\n          wm:shortfall ?shortfall .\n    }\n    GROUP BY ?investor\n  }\n  # Rebalance amount per investor\n  {\n    SELECT ?investor (SUM(xsd:decimal(?raAmt)) AS ?rebalanceAmt)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:rebalancingActionOfInvestor ?investor ;\n          wm:amount ?raAmt .\n    }\n    GROUP BY ?investor\n  }\n  # Investor name\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  # Compute composite score\n  BIND ( COALESCE(?netCashFlow, 0) + COALESCE(?holdingGain, 0) - COALESCE(?avgShortfall, 0) + COALESCE(?rebalanceAmt, 0) AS ?score )\n}\nORDER BY DESC(?score)\nLIMIT 10",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investor ?investorName ?score\nWHERE {\n  ?investor a wm:Investor .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?cfAmt)) AS ?netCashFlow) WHERE {\n      ?investor wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cfAmt .\n    } GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {\n      ?investor wm:hasHolding ?ph .\n      ?ph wm:currentValue ?cv .\n      ?ph wm:cost ?cost .\n      BIND(xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    } GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (AVG(xsd:decimal(?shortfall)) AS ?avgShortfall) WHERE {\n      ?investor wm:hasInvestmentGoal ?ig .\n      ?ig wm:shortfall ?shortfall .\n    } GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?raAmt)) AS ?rebalanceAmt) WHERE {\n      ?investor wm:hasRebalancingAction ?ra .\n      ?ra wm:amount ?raAmt .\n    } GROUP BY ?investor\n  }\n\n  BIND (COALESCE(?netCashFlow, 0) + COALESCE(?holdingGain, 0) - COALESCE(?avgShortfall, 0) + COALESCE(?rebalanceAmt, 0) AS ?score)\n}\nORDER BY DESC(?score)\nLIMIT 10",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investor ?investorName ?score\nWHERE {\n  # Net cash flow per investor\n  {\n    SELECT ?investor (SUM(xsd:decimal(?cfAmt)) AS ?netCashFlow)\n    WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?investor ;\n          wm:amount ?cfAmt .\n    }\n    GROUP BY ?investor\n  }\n  # Holding gain per investor (currentValue - cost)\n  {\n    SELECT ?investor (SUM(xsd:decimal(?gain)) AS ?holdingGain)\n    WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?cv ;\n          wm:cost ?cost .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    }\n    GROUP BY ?investor\n  }\n  # Average shortfall per investor\n  {\n    SELECT ?investor (AVG(xsd:decimal(?shortfall)) AS ?avgShortfall)\n    WHERE {\n      ?ig a wm:InvestmentGoal ;\n          wm:belongsToInvestor ?investor ;\n          wm:shortfall ?shortfall .\n    }\n    GROUP BY ?investor\n  }\n  # Rebalance amount per investor\n  {\n    SELECT ?investor (SUM(xsd:decimal(?raAmt)) AS ?rebalanceAmt)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:rebalancingActionOfInvestor ?investor ;\n          wm:amount ?raAmt .\n    }\n    GROUP BY ?investor\n  }\n  # Investor name\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  # Compute composite score\n  BIND ( COALESCE(?netCashFlow, 0) + COALESCE(?holdingGain, 0) - COALESCE(?avgShortfall, 0) + COALESCE(?rebalanceAmt, 0) AS ?score )\n}\nORDER BY DESC(?score)\nLIMIT 10",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investor ?investorName ?score\nWHERE {\n  # Net cash flow per investor\n  {\n    SELECT ?investor (SUM(xsd:decimal(?cfAmt)) AS ?netCashFlow)\n    WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?investor ;\n          wm:amount ?cfAmt .\n    }\n    GROUP BY ?investor\n  }\n  # Holding gain per investor (currentValue - cost)\n  {\n    SELECT ?investor (SUM(xsd:decimal(?gain)) AS ?holdingGain)\n    WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?cv ;\n          wm:cost ?cost .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    }\n    GROUP BY ?investor\n  }\n  # Average shortfall per investor\n  {\n    SELECT ?investor (AVG(xsd:decimal(?shortfall)) AS ?avgShortfall)\n    WHERE {\n      ?ig a wm:InvestmentGoal ;\n          wm:belongsToInvestor ?investor ;\n          wm:shortfall ?shortfall .\n    }\n    GROUP BY ?investor\n  }\n  # Rebalance amount per investor\n  {\n    SELECT ?investor (SUM(xsd:decimal(?raAmt)) AS ?rebalanceAmt)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:rebalancingActionOfInvestor ?investor ;\n          wm:amount ?raAmt .\n    }\n    GROUP BY ?investor\n  }\n  # Investor name\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  # Compute composite score\n  BIND ( COALESCE(?netCashFlow, 0) + COALESCE(?holdingGain, 0) - COALESCE(?avgShortfall, 0) + COALESCE(?rebalanceAmt, 0) AS ?score )\n}\nORDER BY DESC(?score)\nLIMIT 10",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investor ?investorName ?score\nWHERE {\n  # List of investors\n  {\n    SELECT ?investor ?investorName WHERE {\n      ?investor a wm:Investor .\n      OPTIONAL { ?investor wm:investorName ?investorName . }\n    }\n  }\n  # Net cash flow per investor\n  OPTIONAL {\n    SELECT ?investor (SUM(?cfAmt) AS ?netCashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?investor ;\n          wm:amount ?cfAmt .\n    }\n    GROUP BY ?investor\n  }\n  # Holding gain per investor\n  OPTIONAL {\n    SELECT ?investor (SUM(?gain) AS ?holdingGain) WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?cv ;\n          wm:cost ?cost .\n      BIND(?cv - ?cost AS ?gain)\n    }\n    GROUP BY ?investor\n  }\n  # Average shortfall per investor\n  OPTIONAL {\n    SELECT ?investor (AVG(?shortfall) AS ?avgShortfall) WHERE {\n      ?ig a wm:InvestmentGoal ;\n          wm:belongsToInvestor ?investor ;\n          wm:shortfall ?shortfall .\n    }\n    GROUP BY ?investor\n  }\n  # Rebalance amount per investor\n  OPTIONAL {\n    SELECT ?investor (SUM(?raAmt) AS ?rebalanceAmt) WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:rebalancingActionOfInvestor ?investor ;\n          wm:amount ?raAmt .\n    }\n    GROUP BY ?investor\n  }\n  BIND (COALESCE(?netCashFlow, 0) + COALESCE(?holdingGain, 0) - COALESCE(?avgShortfall, 0) + COALESCE(?rebalanceAmt, 0) AS ?score)\n}\nORDER BY DESC(?score)\nLIMIT 10",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investor ?investorName ?score\nWHERE {\n  # List of investors\n  {\n    SELECT ?investor ?investorName WHERE {\n      ?investor a wm:Investor .\n      OPTIONAL { ?investor wm:investorName ?investorName . }\n    }\n  }\n  # Net cash flow per investor\n  OPTIONAL {\n    SELECT ?investor (SUM(?cfAmt) AS ?netCashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?investor ;\n          wm:amount ?cfAmt .\n    }\n    GROUP BY ?investor\n  }\n  # Holding gain per investor\n  OPTIONAL {\n    SELECT ?investor (SUM(?gain) AS ?holdingGain) WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?cv ;\n          wm:cost ?cost .\n      BIND(?cv - ?cost AS ?gain)\n    }\n    GROUP BY ?investor\n  }\n  # Average shortfall per investor\n  OPTIONAL {\n    SELECT ?investor (AVG(?shortfall) AS ?avgShortfall) WHERE {\n      ?ig a wm:InvestmentGoal ;\n          wm:belongsToInvestor ?investor ;\n          wm:shortfall ?shortfall .\n    }\n    GROUP BY ?investor\n  }\n  # Rebalance amount per investor\n  OPTIONAL {\n    SELECT ?investor (SUM(?raAmt) AS ?rebalanceAmt) WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:rebalancingActionOfInvestor ?investor ;\n          wm:amount ?raAmt .\n    }\n    GROUP BY ?investor\n  }\n  BIND (COALESCE(?netCashFlow, 0) + COALESCE(?holdingGain, 0) - COALESCE(?avgShortfall, 0) + COALESCE(?rebalanceAmt, 0) AS ?score)\n}\nORDER BY DESC(?score)\nLIMIT 10",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investor ?investorName ?score\nWHERE {\n  # List of investors\n  {\n    SELECT ?investor ?investorName WHERE {\n      ?investor a wm:Investor .\n      OPTIONAL { ?investor wm:investorName ?investorName . }\n    }\n  }\n  # Net cash flow per investor\n  OPTIONAL {\n    SELECT ?investor (SUM(?cfAmt) AS ?netCashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?investor ;\n          wm:amount ?cfAmt .\n    }\n    GROUP BY ?investor\n  }\n  # Holding gain per investor\n  OPTIONAL {\n    SELECT ?investor (SUM(?gain) AS ?holdingGain) WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?cv ;\n          wm:cost ?cost .\n      BIND(?cv - ?cost AS ?gain)\n    }\n    GROUP BY ?investor\n  }\n  # Average shortfall per investor\n  OPTIONAL {\n    SELECT ?investor (AVG(?shortfall) AS ?avgShortfall) WHERE {\n      ?ig a wm:InvestmentGoal ;\n          wm:belongsToInvestor ?investor ;\n          wm:shortfall ?shortfall .\n    }\n    GROUP BY ?investor\n  }\n  # Rebalance amount per investor\n  OPTIONAL {\n    SELECT ?investor (SUM(?raAmt) AS ?rebalanceAmt) WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:rebalancingActionOfInvestor ?investor ;\n          wm:amount ?raAmt .\n    }\n    GROUP BY ?investor\n  }\n  BIND (COALESCE(?netCashFlow, 0) + COALESCE(?holdingGain, 0) - COALESCE(?avgShortfall, 0) + COALESCE(?rebalanceAmt, 0) AS ?score)\n}\nORDER BY DESC(?score)\nLIMIT 10",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investor ?investorName ?score\nWHERE {\n  ?investor a wm:Investor .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?cfAmt)) AS ?netCashFlow) WHERE {\n      ?investor wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cfAmt .\n    } GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {\n      ?investor wm:hasHolding ?ph .\n      ?ph wm:currentValue ?cv .\n      ?ph wm:cost ?cost .\n      BIND(xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    } GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (AVG(xsd:decimal(?shortfall)) AS ?avgShortfall) WHERE {\n      ?investor wm:hasInvestmentGoal ?ig .\n      ?ig wm:shortfall ?shortfall .\n    } GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?raAmt)) AS ?rebalanceAmt) WHERE {\n      ?investor wm:hasRebalancingAction ?ra .\n      ?ra wm:amount ?raAmt .\n    } GROUP BY ?investor\n  }\n\n  BIND (COALESCE(?netCashFlow, 0) + COALESCE(?holdingGain, 0) - COALESCE(?avgShortfall, 0) + COALESCE(?rebalanceAmt, 0) AS ?score)\n}\nORDER BY DESC(?score)\nLIMIT 10",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investor ?investorName ?score\nWHERE {\n  ?investor a wm:Investor .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?cfAmt)) AS ?netCashFlow) WHERE {\n      ?investor wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cfAmt .\n    } GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {\n      ?investor wm:hasHolding ?ph .\n      ?ph wm:currentValue ?cv .\n      ?ph wm:cost ?cost .\n      BIND(xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    } GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (AVG(xsd:decimal(?shortfall)) AS ?avgShortfall) WHERE {\n      ?investor wm:hasInvestmentGoal ?ig .\n      ?ig wm:shortfall ?shortfall .\n    } GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?raAmt)) AS ?rebalanceAmt) WHERE {\n      ?investor wm:hasRebalancingAction ?ra .\n      ?ra wm:amount ?raAmt .\n    } GROUP BY ?investor\n  }\n\n  BIND (COALESCE(?netCashFlow, 0) + COALESCE(?holdingGain, 0) - COALESCE(?avgShortfall, 0) + COALESCE(?rebalanceAmt, 0) AS ?score)\n}\nORDER BY DESC(?score)\nLIMIT 10",
+        "status": "success",
+        "row_count": 10,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 10,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL query correctly computes the score as net cash flow + holding gain - average shortfall + rebalance amount, orders investors by descending score, and limits the result to the top ten. The returned columns (investor, investorName, score) match the requested output, and the sample data contains ten rows with appropriate values, satisfying the user's request.",
+    "validator_reason": "The SPARQL query correctly computes the score as net cash flow + holding gain - average shortfall + rebalance amount, orders investors by descending score, and limits the result to the top ten. The returned columns (investor, investorName, score) match the requested output, and the sample data contains ten rows with appropriate values, satisfying the user's request.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 10,
+    "final_answer": "The ten investors with the highest four‑table comparative scores are Deepak Sharma (https://wealth.example.org/kg/investor/INV-1122) score 102871043.030687705975; Deepak Mishra (https://wealth.example.org/kg/investor/INV-482) score 102104591.08101512133338; Siddharth Chauhan (https://wealth.example.org/kg/investor/INV-522) score 101936833.907036629; Suresh Bhat (https://wealth.example.org/kg/investor/INV-042) score 101911579.6000000000000233333; Chetan Pandey (https://wealth.example.org/kg/investor/INV-762) score 101719809.719482898; Priyanka Mishra (https://wealth.example.org/kg/investor/INV-642) score 101507613.6520560852666666667; Sunita Sharma (https://wealth.example.org/kg/investor/INV-1202) score 101487864.846559645725; Dipti Yadav (https://wealth.example.org/kg/investor/INV-1402) score 101433559.4988217051; Sunita Arora (https://wealth.example.org/kg/investor/INV-802) score 101423182.3333333333333333333; Sneha Bhat (https://wealth.example.org/kg/investor/INV-602) score 101074602.0.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth.\n\nGround truth list of ten investors with IDs, names, comparative_score values:\n\n1 INV-1122 Deepak Sharma 102377014.03\n2 INV-522 Siddharth Chauhan 101936833.91\n3 INV-042 Suresh Bhat 101841663.6\n4 INV-482 Deepak Mishra 101692129.08\n5 INV-1202 Sunita Sharma 101487864.85\n6 INV-762 Chetan Pandey 101391720.72\n7 INV-1402 Dipti Yadav 101315218.5\n8 INV-802 Sunita Arora 101295004.33\n9 INV-602 Sneha Bhat 101003762.0\n10 INV-642 Priyanka Mishra 100845789.65\n\nPipeline output list (order slightly different) with scores:\n\n- Deepak Sharma score 102871043.030687705975\n- Deepak Mishra score 102104591.08101512133338\n- Siddharth Chauhan score 101936833.907036629\n- Suresh Bhat score 101911579.6000000000000233333\n- Chetan Pandey score 101719809.719482898\n- Priyanka Mishra score 101507613.6520560852666666667\n- Sunita Sharma score 101487864.846559645725\n- Dipti Yadav score 101433559.4988217051\n- Sunita Arora score 101423182.3333333333333333333\n- Sneha Bhat score 101074602.0\n\nWe need to see if all facts match. The IDs and names: all present? Let's check each:\n\nDeepak Sharma present, ID matches INV-1122. Score differs: ground truth 102377014.03 vs pipeline 102871043.0306877. Not matching.\n\nDeepak Mishra: ground truth 101692129.08 vs pipeline 102104591.08. Different.\n\nSiddharth Chauhan: ground truth 101936833.91 vs pipeline 101936833.907... close but pipeline matches to many decimals, but ground truth 101936833.91. That is essentially same (rounded). So that one matches.\n\nSuresh Bhat: ground truth 101841663.6 vs pipeline 101911579.6. Different.\n\nChetan Pandey: ground truth 101391720.72 vs pipeline 101719809.719... different.\n\nPriyanka Mishra: ground truth 100845789.65 vs pipeline 101507613.652... different.\n\nSunita Sharma: ground truth 101487864.85 vs pipeline 101487864.846... close, matches.\n\nDipti Yadav: ground truth 101315218.5 vs pipeline 101433559.498... different.\n\nSunita Arora: ground truth 101295004.33 vs pipeline 101423182.333... different.\n\nSneha Bhat: ground truth 101003762.0 vs pipeline 101074602.0 different.\n\nThus many mismatches. Also order not required but values must match. Since many values differ, overall answer is MISMATCH. Not partial because many missing correct values. The pipeline output does include all ten investors but scores are wrong for most. According to rule 2, if numbers differ, it's mismatch. So overall MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

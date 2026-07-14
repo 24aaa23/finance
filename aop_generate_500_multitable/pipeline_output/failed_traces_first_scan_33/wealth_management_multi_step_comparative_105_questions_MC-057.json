@@ -1,0 +1,258 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-057",
+  "question": "Across risk_tolerance, how do holding gain, rebalancing amount, scenario change, and cash flow compare using four related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_holding_gain\":7503728.42,\"avg_rebalance_amount\":399232.81,\"avg_scenario_change\":-1.66},{\"group_value\":\"Aggressive\",\"avg_holding_gain\":3815414.11,\"avg_rebalance_amount\":406728.34,\"avg_scenario_change\":-1.91},{\"group_value\":\"Conservative\",\"avg_holding_gain\":2849503.63,\"avg_rebalance_amount\":406759.18,\"avg_scenario_change\":-2.49},{\"group_value\":\"Moderate\",\"avg_holding_gain\":4136970.94,\"avg_rebalance_amount\":406075.91,\"avg_scenario_change\":-0.47}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 270.678,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nWe have query: \"Across risk_tolerance, how do holding gain, rebalancing amount, scenario change, and cash flow compare using four related tables?\"\n\nWe need to find ontology classes first: Retrieve.\n\nThen we need to classify math/aggregation words. The query asks \"compare\" across risk_tolerance for holding gain, rebalancing amount, scenario change, cash flow. Likely need aggregation like maybe average, sum, etc. The words \"compare\" suggests maybe need to compute differences or maybe just list values. Not explicit aggregation words like average, sum. \"compare\" is not listed. So maybe we can skip Classify? However classification step is needed for math, aggregation, or numeric-superlative words. Since none present, we can skip.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Generate (SPARQL to pull holding gain, rebalancing amount, scenario change, cash flow grouped by risk_tolerance across four tables, maybe using UNION or JOIN)\n3. Scan (execute query)\n4. Validate (check data completeness)\n5. Explain (present comparison)\n\nBut we also need to link four related tables: Use Link operator to join them before scanning? Actually linking is part of query generation? Could be we need to use Link before Generate. However chronology: \"If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve'). 'Scan' (executing Graph query) must happen immediately AFTER 'Generate'.\" So Link could be part of Generate? But we have separate operator Link. Could we do Retrieve -> Link -> Generate -> Scan -> Validate -> Explain? The rules don't forbid extra steps between Retrieve and Generate, but they say Generate must happen after Retrieve (or after Classify). So we can insert Link before Generate. That's okay.\n\nThus plan:\n\n1. Retrieve: get ontology classes for risk_tolerance, holding_gain, rebalancing_amount, scenario_change, cash_flow, and the four related tables.\n2. Link: define relationships between the four tables based on common keys (e.g., risk_tolerance ID).\n3. Classify: optional? Not needed. Could skip.\n4. Generate: write SPARQL that selects holding_gain, rebalancing_amount, scenario_change, cash_flow for each risk_tolerance, possibly using aggregation functions like AVG to compare.\n5. Scan: execute the SPARQL.\n6. Validate: ensure results contain all risk_tolerance categories and numeric fields.\n7. Explain: present comparison.\n\nWe need to output only numbered steps. Should we include Classify step? Might be safe to omit.\n\nThus steps:\n\n1. Retrieve\n2. Link\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nNumber them.\n\nLet's produce.</reasoning>1. Retrieve – Obtain the ontology classes for **risk_tolerance**, **holding_gain**, **rebalancing_amount**, **scenario_change**, **cash_flow**, and the four related tables.  \n2. Link – Define and establish the relationships (foreign‑key joins) between the four tables based on the common **risk_tolerance** identifier.  \n3. Generate – Write a SPARQL (or equivalent graph query) that selects, for each **risk_tolerance** value, the corresponding **holding_gain**, **rebalancing_amount**, **scenario_change**, and **cash_flow** (using appropriate aggregation/comparison functions if needed).  \n4. Scan – Execute the generated query against the knowledge graph to retrieve the result set.  \n5. Validate – Verify that the returned data includes all **risk_tolerance** categories and that the numeric fields are present and correctly typed.  \n6. Explain – Present a clear comparison of **holding_gain**, **rebalancing_amount**, **scenario_change**, and **cash_flow** across the different **risk_tolerance** levels.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to write a step-by-step linear execution plan to answer the query using only provided operators. Must follow chronology:\n\n1. Start by finding ontology classes. Use 'Retrieve'.\n2. Use 'Classify' for math, aggregation, or numeric-superlative words. The query: \"Across risk_tolerance, how do holding gain, rebalancing amount, scenario change, and cash flow compare using four related tables?\" This includes comparison across risk_tolerance, likely need to compare numeric measures (holding gain, rebalancing amount, scenario change, cash flow). These are numeric, maybe need aggregation or comparison. So we need 'Classify' for math/aggregation. So after Retrieve, we do Classify.\n\n3. Then 'Generate' (writing SPARQL) after Retrieve or Classify. So after Classify, we Generate.\n\n4. Then 'Scan' to execute query.\n\n5. Then 'Validate'.\n\n6. Then 'Explain'.\n\nPotential extra steps: maybe need 'Filter_Aggregate' or 'Order_By' etc. But the plan can include them as part of the query generation; but we must list steps using operators. We could include 'Filter_Aggregate' after Scan? Actually Filter_Aggregate is an operator, but the chronology says after Scan we must Validate, then Explain. So we cannot insert other operators after Scan before Validate, unless they are part of the query generation (i.e., included in Generate). So we keep steps: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nThus answer: numbered steps 1-6 with operator names.\n\nLet's produce.</reasoning>1. Retrieve – locate the ontology classes relevant to **risk_tolerance**, **holding gain**, **rebalancing amount**, **scenario change**, and **cash flow** across the four related tables.  \n2. Classify – identify the numeric‑comparison/aggregation intent (e.g., compare values, compute differences, rank) embedded in the query.  \n3. Generate – construct the appropriate SPARQL (or graph‑query) statement that selects the four measures for each **risk_tolerance** category and applies the required comparisons/aggregations.  \n4. Scan – execute the generated query against the knowledge graph to obtain the raw result set.  \n5. Validate – check the returned data for completeness, type correctness, and consistency with the ontology definitions.  \n6. Explain – present the comparison of holding gain, rebalancing amount, scenario change, and cash flow across risk_tolerance, summarizing the findings for the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "retrieve",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "classify",
+              "operator": "Classify",
+              "inputs": [
+                "retrieve"
+              ]
+            },
+            {
+              "id": "generate",
+              "operator": "Generate",
+              "inputs": [
+                "retrieve",
+                "classify"
+              ]
+            },
+            {
+              "id": "scan",
+              "operator": "Scan",
+              "inputs": [
+                "generate"
+              ]
+            },
+            {
+              "id": "validate",
+              "operator": "Validate",
+              "inputs": [
+                "scan"
+              ]
+            },
+            {
+              "id": "explain",
+              "operator": "Explain",
+              "inputs": [
+                "validate"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "retrieve",
+              "target": "classify"
+            },
+            {
+              "source": "retrieve",
+              "target": "generate"
+            },
+            {
+              "source": "classify",
+              "target": "generate"
+            },
+            {
+              "source": "generate",
+              "target": "scan"
+            },
+            {
+              "source": "scan",
+              "target": "validate"
+            },
+            {
+              "source": "validate",
+              "target": "explain"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across risk_tolerance, how do holding gain, rebalancing amount, scenario change, and cash flow compare using four related tables?\" So we need to retrieve ontology classes, classify math/aggregation words (maybe compare implies aggregation). The query asks \"how do ... compare\". Could involve aggregation across risk_tolerance dimension. Words: \"compare\" maybe need aggregation? Not explicit numeric superlative. Might need to compute comparisons, maybe average or sum. So we need Classify. Then Generate, Scan, Validate, Explain.\n\nThus steps: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nLet's produce.</reasoning>1. Retrieve – locate the ontology classes for **risk_tolerance**, **holding_gain**, **rebalancing_amount**, **scenario_change**, **cash_flow**, and the four related tables.  \n2. Classify – detect the numeric‑comparison intent and any implicit aggregation required by the \"compare\" phrasing.  \n3. Generate – write a SPARQL query that pulls the four measures for each **risk_tolerance** value and applies the necessary aggregation/comparison logic.  \n4. Scan – run the query against the graph store.  \n5. Validate – ensure the result set contains all risk‑tolerance groups and the expected numeric fields.  \n6. Explain – format a comparative summary of the four measures across the risk‑tolerance categories.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Not selected: lower reward/higher cost than round_1_path_1."
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "RiskTolerance",
+      "PortfolioHolding",
+      "RebalancingAction",
+      "ScenarioRebalancing",
+      "CashFlow"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.96,
+    "target_field": "holding gain, rebalancing amount, scenario change, cash flow amount",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks to compare numeric measures (gain/return, rebalancing amount, allocation change, cash‑flow amount) across the categorical dimension risk_tolerance, which requires numeric aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskToleranceLabel ?holdingGain ?rebalancingAmount ?scenarioChange ?cashFlowTotal WHERE {\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?investorId ;\n               wm:returnsPct ?returnsPct .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?rebalancingAmount) WHERE {\n      ?rebalance a wm:RebalancingAction ;\n                 wm:investorId ?investorId ;\n                 wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?change)) AS ?scenarioChange) WHERE {\n      ?scenario a wm:ScenarioRebalancing ;\n                wm:investorId ?investorId ;\n                wm:newAllocationPct ?newAlloc ;\n                wm:currentAllocationPct ?currAlloc .\n      BIND ((xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?change)\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?cfAmount)) AS ?cashFlowTotal) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?cfAmount .\n    } GROUP BY ?investorId\n  }\n  OPTIONAL {\n    ?inv a wm:Investor ;\n         wm:investorId ?investorId ;\n         wm:hasRiskTolerance ?rt .\n    ?rt rdfs:label ?riskToleranceLabel .\n  }\n}\nORDER BY ?riskToleranceLabel",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskToleranceLabel ?holdingGain ?rebalancingAmount ?scenarioChange ?cashFlowTotal WHERE {\n  ?inv a wm:Investor .\n  OPTIONAL {\n    ?inv wm:hasRiskTolerance ?rt .\n    ?rt rdfs:label ?riskToleranceLabel .\n  }\n  {\n    SELECT ?inv (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:returnsPct ?returnsPct .\n    } GROUP BY ?inv\n  }\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?rebalancingAmount) WHERE {\n      ?inv wm:hasRebalancingAction ?rebalance .\n      ?rebalance wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n  {\n    SELECT ?inv (AVG(xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?scenarioChange) WHERE {\n      ?inv wm:hasScenarioRebalancing ?scenario .\n      ?scenario wm:newAllocationPct ?newAlloc .\n      ?scenario wm:currentAllocationPct ?currAlloc .\n    } GROUP BY ?inv\n  }\n  {\n    SELECT ?inv (SUM(xsd:decimal(?cfAmount)) AS ?cashFlowTotal) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cfAmount .\n    } GROUP BY ?inv\n  }\n}\nORDER BY ?riskToleranceLabel",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskToleranceLabel ?holdingGain ?rebalancingAmount ?scenarioChange ?cashFlowTotal WHERE {\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?investorId ;\n               wm:returnsPct ?returnsPct .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?rebalancingAmount) WHERE {\n      ?rebalance a wm:RebalancingAction ;\n                 wm:investorId ?investorId ;\n                 wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?change)) AS ?scenarioChange) WHERE {\n      ?scenario a wm:ScenarioRebalancing ;\n                wm:investorId ?investorId ;\n                wm:newAllocationPct ?newAlloc ;\n                wm:currentAllocationPct ?currAlloc .\n      BIND ((xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?change)\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?cfAmount)) AS ?cashFlowTotal) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?cfAmount .\n    } GROUP BY ?investorId\n  }\n  OPTIONAL {\n    ?inv a wm:Investor ;\n         wm:investorId ?investorId ;\n         wm:hasRiskTolerance ?rt .\n    ?rt rdfs:label ?riskToleranceLabel .\n  }\n}\nORDER BY ?riskToleranceLabel",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskToleranceLabel ?holdingGain ?rebalancingAmount ?scenarioChange ?cashFlowTotal WHERE {\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?investorId ;\n               wm:returnsPct ?returnsPct .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?rebalancingAmount) WHERE {\n      ?rebalance a wm:RebalancingAction ;\n                 wm:investorId ?investorId ;\n                 wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?change)) AS ?scenarioChange) WHERE {\n      ?scenario a wm:ScenarioRebalancing ;\n                wm:investorId ?investorId ;\n                wm:newAllocationPct ?newAlloc ;\n                wm:currentAllocationPct ?currAlloc .\n      BIND ((xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?change)\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?cfAmount)) AS ?cashFlowTotal) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?cfAmount .\n    } GROUP BY ?investorId\n  }\n  OPTIONAL {\n    ?inv a wm:Investor ;\n         wm:investorId ?investorId ;\n         wm:hasRiskTolerance ?rt .\n    ?rt rdfs:label ?riskToleranceLabel .\n  }\n}\nORDER BY ?riskToleranceLabel",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskToleranceLabel ?holdingGain ?rebalancingAmount ?scenarioChange ?cashFlowTotal WHERE {\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?investorId ;\n               wm:returnsPct ?returnsPct .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?rebalancingAmount) WHERE {\n      ?rebalance a wm:RebalancingAction ;\n                 wm:investorId ?investorId ;\n                 wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?scenarioChange) WHERE {\n      ?scenario a wm:ScenarioRebalancing ;\n                wm:investorId ?investorId ;\n                wm:newAllocationPct ?newAlloc ;\n                wm:currentAllocationPct ?currAlloc .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?cfAmount)) AS ?cashFlowTotal) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?cfAmount .\n    } GROUP BY ?investorId\n  }\n  OPTIONAL {\n    ?inv a wm:Investor ;\n         wm:investorId ?investorId ;\n         wm:hasRiskTolerance ?rt .\n    ?rt rdfs:label ?riskToleranceLabel .\n  }\n}\nORDER BY ?riskToleranceLabel",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskToleranceLabel ?holdingGain ?rebalancingAmount ?scenarioChange ?cashFlowTotal WHERE {\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?investorId ;\n               wm:returnsPct ?returnsPct .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?rebalancingAmount) WHERE {\n      ?rebalance a wm:RebalancingAction ;\n                 wm:investorId ?investorId ;\n                 wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?scenarioChange) WHERE {\n      ?scenario a wm:ScenarioRebalancing ;\n                wm:investorId ?investorId ;\n                wm:newAllocationPct ?newAlloc ;\n                wm:currentAllocationPct ?currAlloc .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?cfAmount)) AS ?cashFlowTotal) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?cfAmount .\n    } GROUP BY ?investorId\n  }\n  OPTIONAL {\n    ?inv a wm:Investor ;\n         wm:investorId ?investorId ;\n         wm:hasRiskTolerance ?rt .\n    ?rt rdfs:label ?riskToleranceLabel .\n  }\n}\nORDER BY ?riskToleranceLabel",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskToleranceLabel ?holdingGain ?rebalancingAmount ?scenarioChange ?cashFlowTotal WHERE {\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?investorId ;\n               wm:returnsPct ?returnsPct .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?rebalancingAmount) WHERE {\n      ?rebalance a wm:RebalancingAction ;\n                 wm:investorId ?investorId ;\n                 wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?scenarioChange) WHERE {\n      ?scenario a wm:ScenarioRebalancing ;\n                wm:investorId ?investorId ;\n                wm:newAllocationPct ?newAlloc ;\n                wm:currentAllocationPct ?currAlloc .\n    } GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?cfAmount)) AS ?cashFlowTotal) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?cfAmount .\n    } GROUP BY ?investorId\n  }\n  OPTIONAL {\n    ?inv a wm:Investor ;\n         wm:investorId ?investorId ;\n         wm:hasRiskTolerance ?rt .\n    ?rt rdfs:label ?riskToleranceLabel .\n  }\n}\nORDER BY ?riskToleranceLabel",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskToleranceLabel ?holdingGain ?rebalancingAmount ?scenarioChange ?cashFlowTotal WHERE {\n  ?inv a wm:Investor .\n  OPTIONAL {\n    ?inv wm:hasRiskTolerance ?rt .\n    ?rt rdfs:label ?riskToleranceLabel .\n  }\n  {\n    SELECT ?inv (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:returnsPct ?returnsPct .\n    } GROUP BY ?inv\n  }\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?rebalancingAmount) WHERE {\n      ?inv wm:hasRebalancingAction ?rebalance .\n      ?rebalance wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n  {\n    SELECT ?inv (AVG(xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?scenarioChange) WHERE {\n      ?inv wm:hasScenarioRebalancing ?scenario .\n      ?scenario wm:newAllocationPct ?newAlloc .\n      ?scenario wm:currentAllocationPct ?currAlloc .\n    } GROUP BY ?inv\n  }\n  {\n    SELECT ?inv (SUM(xsd:decimal(?cfAmount)) AS ?cashFlowTotal) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cfAmount .\n    } GROUP BY ?inv\n  }\n}\nORDER BY ?riskToleranceLabel",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskToleranceLabel ?holdingGain ?rebalancingAmount ?scenarioChange ?cashFlowTotal WHERE {\n  ?inv a wm:Investor .\n  OPTIONAL {\n    ?inv wm:hasRiskTolerance ?rt .\n    ?rt rdfs:label ?riskToleranceLabel .\n  }\n  {\n    SELECT ?inv (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:returnsPct ?returnsPct .\n    } GROUP BY ?inv\n  }\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?rebalancingAmount) WHERE {\n      ?inv wm:hasRebalancingAction ?rebalance .\n      ?rebalance wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n  {\n    SELECT ?inv (AVG(xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?scenarioChange) WHERE {\n      ?inv wm:hasScenarioRebalancing ?scenario .\n      ?scenario wm:newAllocationPct ?newAlloc .\n      ?scenario wm:currentAllocationPct ?currAlloc .\n    } GROUP BY ?inv\n  }\n  {\n    SELECT ?inv (SUM(xsd:decimal(?cfAmount)) AS ?cashFlowTotal) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cfAmount .\n    } GROUP BY ?inv\n  }\n}\nORDER BY ?riskToleranceLabel",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "SPARQL execution timed out after 60 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output with ground truth. Ground truth is JSON array with four objects containing avg_holding_gain, avg_rebalance_amount, avg_scenario_change for each risk_tolerance group (null, Aggressive, Conservative, Moderate). The pipeline output says: \"A database error prevented data retrieval.\"\n\nThus pipeline output does not contain any of the numbers. According to rule 2, if ground truth contains concrete numbers, pipeline output must contain same facts. It doesn't, so it's MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

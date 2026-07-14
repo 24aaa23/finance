@@ -1,0 +1,259 @@
+{
+  "sample_row_id": "wealth_management_70_question_benchmark:WM-1T-006",
+  "question": "What logic and action are recorded for rebalancing event 0000aba5-8fe8-4dcf-b422-fd78608ffddb?",
+  "ground_truth": "[{\"logic\":\"Valuation-based\",\"action\":\"Cash Deployment\"}]",
+  "pipeline_output": "The recorded logic is Valuation-based and the action is Cash Deployment.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 94.57,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan to answer the query using only provided operators. Must follow chronology: start with Retrieve to find ontology classes. Then Classify if needed for math/aggregation. The query: \"What logic and action are recorded for rebalancing event 0000aba5-8fe8-4dcf-b422-fd78608ffddb?\" This is a simple lookup: we need to retrieve logic and action fields for a specific event ID. No math/aggregation. So per rule 2: If query is only a simple lookup/listing question, go straight from Retrieve to Generate. So steps: 1 Retrieve (ontology classes). 2 Generate (SPARQL to get logic and action for that event ID). 3 Scan (execute query). 4 Validate (check data). 5 Explain (present answer). That's it.\n\nWe must output only numbered steps. So:\n\n1. Retrieve\n2. Generate\n3. Scan\n4. Validate\n5. Explain</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"What logic and action are recorded for rebalancing event 0000aba5-8fe8-4dcf-b422-fd78608ffddb?\"\n\nWe need to retrieve ontology classes, then maybe classify? The query asks for logic and action recorded for a specific rebalancing event ID. That's a simple lookup, not aggregation. So per rule: If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'. However we must still start by finding ontology classes using Retrieve. Then we can go directly to Generate (SPARQL) to retrieve logic and action for that event. Then Scan, Validate, Explain.\n\nThus steps:\n\n1. Retrieve (ontology classes related to rebalancing events, logic, action)\n2. Generate (SPARQL query to get logic and action for event with given ID)\n3. Scan (execute the SPARQL query)\n4. Validate (check that results are correct/complete)\n5. Explain (present answer to user)\n\nWe must number steps. Ensure we follow chronology: Retrieve first, then Generate, then Scan, Validate, Explain. No Classify needed because not aggregation.\n\nThus output lines:\n\n1. Retrieve\n2. Generate\n3. Scan\n4. Validate\n5. Explain\n\nBut maybe we need to be more descriptive? The prompt says \"Output ONLY the numbered steps.\" Likely just list numbers with operator names. We'll do that.\n\n</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"What logic and action are recorded for rebalancing event 0000aba5-8fe8-4dcf-b422-fd78608ffddb?\" This is a simple lookup: we need to retrieve ontology classes, then generate SPARQL to get logic and action for that event ID, then scan, validate, explain. No classification needed because no math/aggregation. According to rule 2: If query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'. So steps:\n\n1. Retrieve (ontology classes)\n2. Generate (SPARQL query to fetch logic and action for event with given ID)\n3. Scan (execute query)\n4. Validate (check results)\n5. Explain (present answer)\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [
+      "Assumes the ontology defines RebalancingAction with wm:action and wm:logic properties."
+    ],
+    "alternatives_available": [
+      "None"
+    ]
+  },
+  "retrieve": {
+    "selected_classes": [
+      "RebalancingLogic",
+      "RebalancingAction"
+    ],
+    "why_selected": "Chosen to capture the logic and action fields required by the question.",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "lookup",
+    "confidence": 1.0,
+    "target_field": "none",
+    "schema_datatype": "none",
+    "why_this_intent": "The query asks for specific attribute values, not aggregation or calculation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?action ?logic\nWHERE {\n  ?ra a wm:RebalancingAction ;\n      wm:rebalanceId ?rebalanceId .\n  FILTER(LCASE(STR(?rebalanceId)) = \"0000aba5-8fe8-4dcf-b422-fd78608ffddb\")\n  OPTIONAL { ?ra wm:action ?action . }\n  OPTIONAL { ?ra wm:logic ?logic . }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?action ?logic\nWHERE {\n  ?ra a wm:RebalancingAction ;\n      wm:rebalanceId ?rebalanceId .\n  FILTER(LCASE(STR(?rebalanceId)) = \"0000aba5-8fe8-4dcf-b422-fd78608ffddb\")\n  OPTIONAL { ?ra wm:action ?action . }\n  OPTIONAL { ?ra wm:logic ?logic . }\n}",
+    "why_this_sparql": "Selects the action and logic for the specific rebalanceId using OPTIONAL to preserve nulls.",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [
+      "FILTER on lower‑cased rebalanceId string equality"
+    ],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": "none"
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [
+        "?ra wm:action ?action",
+        "?ra wm:logic ?logic"
+      ],
+      "null_risk": "none"
+    },
+    "assumptions": [
+      "RebalancingAction instances have wm:action and wm:logic predicates."
+    ],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?action ?logic\nWHERE {\n  ?ra a wm:RebalancingAction ;\n      wm:rebalanceId ?rebalanceId .\n  FILTER(LCASE(STR(?rebalanceId)) = \"0000aba5-8fe8-4dcf-b422-fd78608ffddb\")\n  OPTIONAL { ?ra wm:action ?action . }\n  OPTIONAL { ?ra wm:logic ?logic . }\n}",
+        "status": "success",
+        "row_count": 1,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "Scan succeeded; returned a single matching row."
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 1,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query returned non-empty results with the requested columns action and logic for the specified rebalance ID.",
+    "validator_reason": "The query returned non-empty results with the requested columns action and logic for the specified rebalance ID.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 1,
+    "final_answer": "The recorded logic is Valuation-based and the action is Cash Deployment.",
+    "did_output_all_rows": true,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth: [{\"logic\":\"Valuation-based\",\"action\":\"Cash Deployment\"}]\n\nPipeline Output: \"The recorded logic is Valuation-based and the action is Cash Deployment.\"\n\nIt contains both logic and action matching. So MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

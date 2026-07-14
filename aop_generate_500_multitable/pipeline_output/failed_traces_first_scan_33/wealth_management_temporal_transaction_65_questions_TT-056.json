@@ -1,0 +1,242 @@
+{
+  "sample_row_id": "wealth_management_temporal_transaction_65_questions:TT-056",
+  "question": "Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?",
+  "ground_truth": "[{\"investor_id\":\"INV-044\",\"investor_name\":\"Ishita Sharma\"},{\"investor_id\":\"INV-170\",\"investor_name\":\"Meena Reddy\"},{\"investor_id\":\"INV-206\",\"investor_name\":\"Rahul Patel\"},{\"investor_id\":\"INV-369\",\"investor_name\":\"Geeta Sharma\"},{\"investor_id\":\"INV-454\",\"investor_name\":\"Arjun Kulkarni\"},{\"investor_id\":\"INV-549\",\"investor_name\":\"Aishwarya Hegde\"},{\"investor_id\":\"INV-781\",\"investor_name\":\"Dipti Reddy\"},{\"investor_id\":\"INV-798\",\"investor_name\":\"Aishwarya Singh\"},{\"investor_id\":\"INV-809\",\"investor_name\":\"Anjali Chauhan\"},{\"investor_id\":\"INV-890\",\"investor_name\":\"Sunita Deshmukh\"},{\"investor_id\":\"INV-1057\",\"investor_name\":\"Abhishek Iyer\"},{\"investor_id\":\"INV-1074\",\"investor_name\":\"Vivek Pandey\"},{\"investor_id\":\"INV-1083\",\"investor_name\":\"Ishita Arora\"},{\"investor_id\":\"INV-1121\",\"investor_name\":\"Rajesh Arora\"},{\"investor_id\":\"INV-1179\",\"investor_name\":\"Arjun Pandey\"},{\"investor_id\":\"INV-1205\",\"investor_name\":\"Sneha Mehta\"},{\"investor_id\":\"INV-1238\",\"investor_name\":\"Bhavna Bhat\"},{\"investor_id\":\"INV-1345\",\"investor_name\":\"Rajesh Verma\"},{\"investor_id\":\"INV-1347\",\"investor_name\":\"Rohan Hegde\"},{\"investor_id\":\"INV-1448\",\"investor_name\":\"Anjali Mehta\"}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 254.237,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?\" This is a simple lookup/listing question, but involves three conditions: investors that have Redemption transactions, Manual Override actions, and Flash Crash scenarios. This is a set intersection across three categories. No math/aggregation words. So per rule 2, if only simple lookup/listing, go straight from Retrieve to Generate. However we need to intersect sets maybe using Set_Intersect operator. The chronology: start with Retrieve to find ontology classes. Then Generate (SPARQL) after Retrieve. Then Scan to execute query. Then Validate. Then maybe Set_Intersect? Actually Set_Intersect is an operator; we could use it after Scan to intersect results from three separate scans? But we could also write a SPARQL that directly filters investors with all three relationships. Simpler: Retrieve classes, Generate query that selects investors with those three relationships, Scan, Validate, Explain. No need for Set_Intersect.\n\nThus steps:\n\n1. Retrieve (ontology classes for Investor, Transaction type Redemption, Action type Manual Override, Scenario type Flash Crash)\n2. Generate (SPARQL query to select investors where they have Redemption transaction, Manual Override action, Flash Crash scenario)\n3. Scan (execute the SPARQL query)\n4. Validate (ensure results are correct, non-empty, etc.)\n5. Explain (present the list to user)\n\nWe must number steps.\n\nThus output: 1. Retrieve ... 2. Generate ... etc.\n\nMake sure only operator names appear as steps, not extra text? The instruction: \"Output ONLY the numbered steps.\" Likely each step should be like \"1. Retrieve\" maybe with brief description? Usually they want \"1. Retrieve\" etc. But could include description after operator? The prompt says \"Write a step-by-step, linear execution plan to answer this query using ONLY the provided operators.\" So each step should include operator and maybe description. But \"Output ONLY the numbered steps.\" So we can include description after operator. Provide each step numbered.\n\nI'll produce:\n\n1. Retrieve – obtain ontology classes relevant to investors, transactions, actions, and scenarios.\n2. Generate – craft a SPARQL query that selects investors linked to Redemption transactions, Manual Override actions, and Flash Crash scenarios.\n3. Scan – execute the generated SPARQL query against the knowledge graph.\n4. Validate – check the returned investor list for completeness and correctness.\n5. Explain – present the final list of investors to the user.\n\nThat follows chronology.</reasoning>1. Retrieve – obtain the ontology classes for Investor, Redemption transaction, Manual Override action, and Flash Crash scenario.  \n2. Generate – write a SPARQL query that selects investors that have a Redemption transaction, a Manual Override action, and a Flash Crash scenario.  \n3. Scan – execute the generated SPARQL query on the knowledge graph.  \n4. Validate – verify that the returned investors satisfy all three conditions and that the result set is accurate.  \n5. Explain – present the final list of investors to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?\"\n\nWe need to find investors that have all three types of events: Redemption transactions, Manual Override actions, Flash Crash scenarios.\n\nWe need to start by finding ontology classes using Retrieve. Then we need to classify? The query is not about math/aggregation, just listing investors meeting criteria. So per rule 2: If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'. So we can skip Classify.\n\nThus steps:\n\n1. Retrieve (ontology classes relevant: Investor, Transaction, Action, Scenario maybe)\n2. Generate (SPARQL query that selects investors with Redemption transaction, Manual Override action, Flash Crash scenario; possibly using Set_Intersect? But we can embed in SPARQL with FILTER EXISTS. However we must use operators only; we could also use Set_Intersect after retrieving separate sets. But simpler: generate one query.\n\nBut we must follow chronology: Retrieve then Generate then Scan then Validate then Explain.\n\nThus steps:\n\n1. Retrieve\n2. Generate\n3. Scan\n4. Validate\n5. Explain\n\nWe may also need to use Set_Intersect if we want to intersect three sets. But not required; we can do in SPARQL.\n\nThus output only numbered steps.\n\nLet's craft:\n\n1. Retrieve – obtain ontology classes for Investor, Transaction, Action, Scenario.\n2. Generate – write SPARQL that selects distinct investors where there exists a Redemption transaction, a Manual Override action, and a Flash Crash scenario linked to that investor.\n3. Scan – execute the generated SPARQL query against the KG.\n4. Validate – check that results are non‑empty and each returned entity is of type Investor.\n5. Explain – present the list of investors meeting all three conditions.\n\nReturn only numbered steps.</reasoning>1. Retrieve – obtain the ontology classes needed (e.g., **Investor**, **Transaction**, **Action**, **Scenario**) and their relationships.  \n2. Generate – compose a SPARQL query that selects distinct investors who have a **Redemption** transaction, a **Manual Override** action, and a **Flash Crash** scenario associated with them.  \n3. Scan – execute the generated SPARQL query against the knowledge graph.  \n4. Validate – verify that the query returned results, confirm each result is an instance of the **Investor** class, and ensure all three conditions are satisfied for every returned investor.  \n5. Explain – present the final list of investors that meet all three criteria to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?\" So we need to find investors that have all three types of events. Steps: Retrieve ontology classes (Investor, Transaction, Action, Scenario). Then Classify? The query is a simple lookup/listing, no math/aggregation. According to rule 2: If only simple lookup/listing, go straight from Retrieve to Generate. So we skip Classify. Then Generate SPARQL to get investors with those three relationships. Then Scan. Then Validate. Then Explain. Possibly we need Set_Intersect to intersect three sets? But we can do in SPARQL. However we could also retrieve three sets and intersect using Set_Intersect. But rule says Generate after Retrieve (or after Classify). We could generate three subqueries, then Scan each? Simpler: one query. So steps:\n\n1. Retrieve\n2. Generate\n3. Scan\n4. Validate\n5. Explain\n\nMake sure to mention using only those operators. Provide numbered steps.</reasoning>1. Retrieve – obtain the ontology classes relevant to the query (e.g., **Investor**, **RedemptionTransaction**, **ManualOverrideAction**, **FlashCrashScenario**).  \n2. Generate – write a SPARQL query that selects all individuals of class **Investor** who are linked to a **RedemptionTransaction**, a **ManualOverrideAction**, and a **FlashCrashScenario** (using appropriate predicates and logical conjunction).  \n3. Scan – execute the generated SPARQL query against the knowledge graph to retrieve the matching investors.  \n4. Validate – check the returned results for completeness and correctness (e.g., ensure each investor indeed has all three required relationships).  \n5. Explain – present the final list of investors to the user, describing that these investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios.",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "CashFlow",
+      "RebalancingAction",
+      "MarketScenario",
+      "ScenarioRebalancing"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "",
+    "confidence": null,
+    "target_field": "",
+    "schema_datatype": "",
+    "why_this_intent": "",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?cf a wm:CashFlow ;\n        wm:cashFlowOfInvestor ?inv ;\n        wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(STR(?cfType)), \"redemption\"))\n  }\n\n  FILTER EXISTS {\n    ?ra a wm:RebalancingAction ;\n        wm:rebalancingActionOfInvestor ?inv ;\n        wm:action ?raAction .\n    FILTER(CONTAINS(LCASE(STR(?raAction)), \"manual override\"))\n  }\n\n  FILTER EXISTS {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:scenarioRebalancingOfInvestor ?inv ;\n        wm:scenario ?srScenario .\n    FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n  }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  ?inv a wm:Investor .\n  FILTER EXISTS {\n    ?cf a wm:CashFlow ;\n        wm:cashFlowOfInvestor ?inv ;\n        wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(STR(?cfType)), \"redemption\"))\n  }\n  FILTER EXISTS {\n    ?ra a wm:RebalancingAction ;\n        wm:rebalancingActionOfInvestor ?inv ;\n        wm:action ?raAction .\n    FILTER(CONTAINS(LCASE(STR(?raAction)), \"manual override\"))\n  }\n  FILTER EXISTS {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:scenarioRebalancingOfInvestor ?inv ;\n        wm:scenario ?srScenario .\n    FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n  }\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?cf a wm:CashFlow ;\n        wm:cashFlowOfInvestor ?inv ;\n        wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(STR(?cfType)), \"redemption\"))\n  }\n\n  FILTER EXISTS {\n    ?ra a wm:RebalancingAction ;\n        wm:rebalancingActionOfInvestor ?inv ;\n        wm:action ?raAction .\n    FILTER(CONTAINS(LCASE(STR(?raAction)), \"manual override\"))\n  }\n\n  FILTER EXISTS {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:scenarioRebalancingOfInvestor ?inv ;\n        wm:scenario ?srScenario .\n    FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n  }\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?cf a wm:CashFlow ;\n        wm:cashFlowOfInvestor ?inv ;\n        wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(STR(?cfType)), \"redemption\"))\n  }\n\n  FILTER EXISTS {\n    ?ra a wm:RebalancingAction ;\n        wm:rebalancingActionOfInvestor ?inv ;\n        wm:action ?raAction .\n    FILTER(CONTAINS(LCASE(STR(?raAction)), \"manual override\"))\n  }\n\n  FILTER EXISTS {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:scenarioRebalancingOfInvestor ?inv ;\n        wm:scenario ?srScenario .\n    FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n  }\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  {\n    SELECT ?inv WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?inv ;\n          wm:type ?cfType .\n      FILTER(CONTAINS(LCASE(STR(?cfType)), \"redemption\"))\n    }\n    GROUP BY ?inv\n  }\n  {\n    SELECT ?inv WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:rebalancingActionOfInvestor ?inv ;\n          wm:action ?raAction .\n      FILTER(CONTAINS(LCASE(STR(?raAction)), \"manual override\"))\n    }\n    GROUP BY ?inv\n  }\n  {\n    SELECT ?inv WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:scenarioRebalancingOfInvestor ?inv ;\n          wm:scenario ?srScenario .\n      FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n    }\n    GROUP BY ?inv\n  }\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n}",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  {\n    SELECT ?inv WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?inv ;\n          wm:type ?cfType .\n      FILTER(CONTAINS(LCASE(STR(?cfType)), \"redemption\"))\n    }\n    GROUP BY ?inv\n  }\n  {\n    SELECT ?inv WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:rebalancingActionOfInvestor ?inv ;\n          wm:action ?raAction .\n      FILTER(CONTAINS(LCASE(STR(?raAction)), \"manual override\"))\n    }\n    GROUP BY ?inv\n  }\n  {\n    SELECT ?inv WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:scenarioRebalancingOfInvestor ?inv ;\n          wm:scenario ?srScenario .\n      FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n    }\n    GROUP BY ?inv\n  }\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  {\n    SELECT ?inv WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?inv ;\n          wm:type ?cfType .\n      FILTER(CONTAINS(LCASE(STR(?cfType)), \"redemption\"))\n    }\n    GROUP BY ?inv\n  }\n  {\n    SELECT ?inv WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:rebalancingActionOfInvestor ?inv ;\n          wm:action ?raAction .\n      FILTER(CONTAINS(LCASE(STR(?raAction)), \"manual override\"))\n    }\n    GROUP BY ?inv\n  }\n  {\n    SELECT ?inv WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:scenarioRebalancingOfInvestor ?inv ;\n          wm:scenario ?srScenario .\n      FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n    }\n    GROUP BY ?inv\n  }\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  ?inv a wm:Investor .\n  FILTER EXISTS {\n    ?cf a wm:CashFlow ;\n        wm:cashFlowOfInvestor ?inv ;\n        wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(STR(?cfType)), \"redemption\"))\n  }\n  FILTER EXISTS {\n    ?ra a wm:RebalancingAction ;\n        wm:rebalancingActionOfInvestor ?inv ;\n        wm:action ?raAction .\n    FILTER(CONTAINS(LCASE(STR(?raAction)), \"manual override\"))\n  }\n  FILTER EXISTS {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:scenarioRebalancingOfInvestor ?inv ;\n        wm:scenario ?srScenario .\n    FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n  }\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n}",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  ?inv a wm:Investor .\n  FILTER EXISTS {\n    ?cf a wm:CashFlow ;\n        wm:cashFlowOfInvestor ?inv ;\n        wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(STR(?cfType)), \"redemption\"))\n  }\n  FILTER EXISTS {\n    ?ra a wm:RebalancingAction ;\n        wm:rebalancingActionOfInvestor ?inv ;\n        wm:action ?raAction .\n    FILTER(CONTAINS(LCASE(STR(?raAction)), \"manual override\"))\n  }\n  FILTER EXISTS {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:scenarioRebalancingOfInvestor ?inv ;\n        wm:scenario ?srScenario .\n    FILTER(CONTAINS(LCASE(STR(?srScenario)), \"flash crash\"))\n  }\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "SPARQL execution timed out after 60 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth. Ground truth is a list of many investors (IDs and names). The question: \"Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?\" Ground truth provides a list of investors (presumably those that meet criteria). Pipeline output: \"A database error prevented data retrieval.\"\n\nThus pipeline output does not contain the list; it's an error. According to rule 2, if pipeline says \"database error\" it's mismatch. So answer: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

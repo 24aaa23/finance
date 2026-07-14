@@ -1,0 +1,315 @@
+{
+  "sample_row_id": "wealth_management_enrichment_context_65_questions:EC-2T-005",
+  "question": "For each risk-tolerance and goal-context combination, how many goal rows are recorded?",
+  "ground_truth": "[{\"risk_tolerance\":null,\"investment_goal\":null,\"goal_row_count\":15},{\"risk_tolerance\":\"Aggressive\",\"investment_goal\":\"Child Education\",\"goal_row_count\":221},{\"risk_tolerance\":\"Aggressive\",\"investment_goal\":\"Retirement Planning\",\"goal_row_count\":224},{\"risk_tolerance\":\"Moderate\",\"investment_goal\":\"Child Education\",\"goal_row_count\":229},{\"risk_tolerance\":\"Moderate\",\"investment_goal\":\"Emergency Fund\",\"goal_row_count\":230},{\"risk_tolerance\":\"Conservative\",\"investment_goal\":\"Wealth Preservation\",\"goal_row_count\":230},{\"risk_tolerance\":\"Aggressive\",\"investment_goal\":\"Income Generation\",\"goal_row_count\":234},{\"risk_tolerance\":\"Moderate\",\"investment_goal\":\"Wealth Preservation\",\"goal_row_count\":235},{\"risk_tolerance\":\"Aggressive\",\"investment_goal\":\"Wealth Preservation\",\"goal_row_count\":236},{\"risk_tolerance\":\"Moderate\",\"investment_goal\":\"Income Generation\",\"goal_row_count\":242},{\"risk_tolerance\":\"Aggressive\",\"investment_goal\":\"Growth\",\"goal_row_count\":243},{\"risk_tolerance\":\"Conservative\",\"investment_goal\":\"Growth\",\"goal_row_count\":247},{\"risk_tolerance\":\"Conservative\",\"investment_goal\":\"Child Education\",\"goal_row_count\":250},{\"risk_tolerance\":\"Conservative\",\"investment_goal\":\"Emergency Fund\",\"goal_row_count\":252},{\"risk_tolerance\":\"Moderate\",\"investment_goal\":\"Retirement Planning\",\"goal_row_count\":252},{\"risk_tolerance\":\"Conservative\",\"investment_goal\":\"Income Generation\",\"goal_row_count\":253},{\"risk_tolerance\":\"Moderate\",\"investment_goal\":\"Growth\",\"goal_row_count\":255},{\"risk_tolerance\":\"Conservative\",\"investment_goal\":\"Retirement Planning\",\"goal_row_count\":259},{\"risk_tolerance\":\"Aggressive\",\"investment_goal\":\"Emergency Fund\",\"goal_row_count\":273},{\"risk_tolerance\":null,\"investment_goal\":\"Emergency Fund\",\"goal_row_count\":34},{\"risk_tolerance\":null,\"investment_goal\":\"Child Education\",\"goal_row_count\":35},{\"risk_tolerance\":null,\"investment_goal\":\"Wealth Preservation\",\"goal_row_count\":38},{\"risk_tolerance\":null,\"investment_goal\":\"Income Generation\",\"goal_row_count\":39},{\"risk_tolerance\":null,\"investment_goal\":\"Growth\",\"goal_row_count\":44},{\"risk_tolerance\":null,\"investment_goal\":\"Retirement Planning\",\"goal_row_count\":45},{\"risk_tolerance\":\"Moderate\",\"investment_goal\":null,\"goal_row_count\":79},{\"risk_tolerance\":\"Aggressive\",\"investment_goal\":null,\"goal_row_count\":83},{\"risk_tolerance\":\"Conservative\",\"investment_goal\":null,\"goal_row_count\":88}]",
+  "pipeline_output": "No data was found in the knowledge graph. The requested entity may not exist.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 262.87,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate",
+    "failure_stage": "Validate",
+    "short_circuit_stage": "Validate"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"For each risk-tolerance and goal-context combination, how many goal rows are recorded?\" This is aggregation (Count) across combinations of two dimensions: risk-tolerance and goal-context. So we need to classify as aggregation (Count). Steps:\n\n1. Retrieve ontology classes (maybe classes like RiskTolerance, GoalContext, Goal). Use Retrieve.\n\n2. Classify for aggregation (Count). Use Classify.\n\n3. Generate SPARQL query that selects risk-tolerance, goal-context, count of goal rows grouped by those two. Use Generate.\n\n4. Scan to execute query. Use Scan.\n\n5. Validate results. Use Validate.\n\n6. Explain to user. Use Explain.\n\nThus 6 steps. Ensure order: Retrieve, Classify, Generate, Scan, Validate, Explain. Provide numbered list.\n\n</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only the provided operators, following the chronology rules.\n\nQuery: \"For each risk-tolerance and goal-context combination, how many goal rows are recorded?\"\n\nWe need to get ontology classes first using Retrieve. Then we need to classify because we have aggregation (Count). So after Retrieve, we must use Classify to identify the aggregation operation (Count). Then Generate to write SPARQL query that groups by risk-tolerance and goal-context and counts goal rows. Then Scan to execute. Then Validate. Then Explain.\n\nWe may also need Filter_Aggregate? But we have Count, which is an aggregation, but classification already identifies that we need aggregation. The plan steps: 1 Retrieve, 2 Classify, 3 Generate, 4 Scan, 5 Validate, 6 Explain.\n\nWe might also need Check_Schema? Not required. The critical chronology says start by finding ontology classes using Retrieve. Then classification for math/aggregation. Then Generate after Retrieve or Classify. Then Scan, Validate, Explain.\n\nThus output numbered steps.\n\nLet's produce:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nMake sure to mention purpose? The instruction says output ONLY the numbered steps. So just list numbers with operator names.\n\nThus final.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"For each risk-tolerance and goal-context combination, how many goal rows are recorded?\"\n\nWe need to find ontology classes first: risk-tolerance, goal-context, goal rows.\n\nStep 1: Retrieve (ontology classes). Then classify because we have aggregation (Count). So step 2: Classify (identify Count aggregation). Then step 3: Generate (write SPARQL query to count goal rows grouped by risk-tolerance and goal-context). Step 4: Scan (execute query). Step 5: Validate (check results). Step 6: Explain (present answer).\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "InvestmentGoal",
+      "RiskTolerance",
+      "DerivedContext"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.97,
+    "target_field": "goalId",
+    "schema_datatype": "categorical_string",
+    "why_this_intent": "The query requests a count of InvestmentGoal rows grouped by risk tolerance and goal context, which is a numeric aggregation (count) over rows, not a mathematical operation on a categorical field.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance ?derivedContext ( ?goalCount AS ?goalCount )\nWHERE {\n  {\n    SELECT (COUNT(?goal) AS ?goalCount)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n    }\n  }\n  {\n    SELECT DISTINCT ?riskTolerance\n    WHERE {\n      ?riskTolerance a wm:RiskTolerance .\n    }\n  }\n  {\n    SELECT DISTINCT ?derivedContext\n    WHERE {\n      ?derivedContext a wm:DerivedContext .\n    }\n  }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance ?derivedContext (COUNT(?goal) AS ?goalCount)\nWHERE {\n  ?riskTolerance a wm:RiskTolerance .\n  ?derivedContext a wm:DerivedContext .\n  OPTIONAL { ?goal a wm:InvestmentGoal . }\n}\nGROUP BY ?riskTolerance ?derivedContext",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance ?derivedContext ( ?goalCount AS ?goalCount )\nWHERE {\n  {\n    SELECT (COUNT(?goal) AS ?goalCount)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n    }\n  }\n  {\n    SELECT DISTINCT ?riskTolerance\n    WHERE {\n      ?riskTolerance a wm:RiskTolerance .\n    }\n  }\n  {\n    SELECT DISTINCT ?derivedContext\n    WHERE {\n      ?derivedContext a wm:DerivedContext .\n    }\n  }\n}",
+        "status": "success",
+        "row_count": 78,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      },
+      {
+        "attempt": 1,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance ?derivedContext ( ?goalCount AS ?goalCount )\nWHERE {\n  {\n    SELECT (COUNT(?goal) AS ?goalCount)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n    }\n  }\n  {\n    SELECT DISTINCT ?riskTolerance\n    WHERE {\n      ?riskTolerance a wm:RiskTolerance .\n    }\n  }\n  {\n    SELECT DISTINCT ?derivedContext\n    WHERE {\n      ?derivedContext a wm:DerivedContext .\n    }\n  }\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance ?derivedContext (COUNT(?goal) AS ?goalCount)\nWHERE {\n  ?riskTolerance a wm:RiskTolerance .\n  ?derivedContext a wm:DerivedContext .\n  OPTIONAL { ?goal a wm:InvestmentGoal . }\n}\nGROUP BY ?riskTolerance ?derivedContext",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance ?derivedContext (COUNT(?goal) AS ?goalCount)\nWHERE {\n  ?riskTolerance a wm:RiskTolerance .\n  ?derivedContext a wm:DerivedContext .\n  OPTIONAL { ?goal a wm:InvestmentGoal . }\n}\nGROUP BY ?riskTolerance ?derivedContext",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      },
+      {
+        "attempt": 2,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance ?derivedContext (COUNT(?goal) AS ?goalCount)\nWHERE {\n  ?riskTolerance a wm:RiskTolerance .\n  ?derivedContext a wm:DerivedContext .\n  OPTIONAL { ?goal a wm:InvestmentGoal . }\n}\nGROUP BY ?riskTolerance ?derivedContext",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance ?derivedContext (COUNT(?goal) AS ?goalCount)\nWHERE {\n  ?riskTolerance a wm:RiskTolerance .\n  ?derivedContext a wm:DerivedContext .\n  OPTIONAL { ?goal a wm:InvestmentGoal . }\n}\nGROUP BY ?riskTolerance ?derivedContext",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance ?derivedContext (COUNT(?goal) AS ?goalCount)\nWHERE {\n  ?riskTolerance a wm:RiskTolerance .\n  ?derivedContext a wm:DerivedContext .\n  OPTIONAL { ?goal a wm:InvestmentGoal . }\n}\nGROUP BY ?riskTolerance ?derivedContext",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": 78,
+    "final_scan_error": "SPARQL execution timed out after 60 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 78,
+    "final_answer": "No data was found in the knowledge graph. The requested entity may not exist.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth. Ground truth is a list of many objects with counts. Pipeline output says: \"No data was found in the knowledge graph. The requested entity may not exist.\"\n\nGround truth clearly has data. So pipeline output is incorrect. According to rule 2, if ground truth contains concrete numbers, pipeline must contain same facts. Here pipeline says no data. So it's MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "scan_timeout",
+    "failure_stage": "Validate",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

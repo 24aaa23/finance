@@ -1,0 +1,256 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-019",
+  "question": "Across risk_tolerance, how do goal progress, health risk, and liquidity compare using three related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_progress_pct\":46.45,\"avg_risk_score\":55.31,\"avg_liquidity_score\":55.9},{\"group_value\":\"Aggressive\",\"avg_progress_pct\":39.76,\"avg_risk_score\":49.12,\"avg_liquidity_score\":47.17},{\"group_value\":\"Conservative\",\"avg_progress_pct\":38.25,\"avg_risk_score\":51.7,\"avg_liquidity_score\":50.85},{\"group_value\":\"Moderate\",\"avg_progress_pct\":41.21,\"avg_risk_score\":49.29,\"avg_liquidity_score\":49.69}]",
+  "pipeline_output": "Aggressive: avgProgressPct 39.17794323323324, avgRiskScore 48.96567808864515912025316456, avgLiquidityScore 46.70074735962504254429065744; Conservative: avgProgressPct 38.07835875282023, avgRiskScore 51.53686965027946314379514117, avgLiquidityScore 50.87998197975181398413747521; Moderate: avgProgressPct 40.87132288651158, avgRiskScore 48.73984258233311118162839248, avgLiquidityScore 49.55716448903172031350034795",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 282.637,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across risk_tolerance, how do goal progress, health risk, and liquidity compare using three related tables?\" We need to find ontology classes first with Retrieve. Then classify for math/aggregation? The query asks \"compare\" across risk_tolerance for three metrics: goal progress, health risk, liquidity. Likely need aggregation like average or maybe compare values. The phrase \"compare\" may imply we need to compute maybe average per risk_tolerance. So we need Classify for math/aggregation. Then Generate SPARQL to retrieve data from three related tables (maybe three classes). Then Scan, Validate, Explain. Possibly need Filter_Aggregate after Scan? Actually Generate writes query that includes aggregation. So we can incorporate aggregation in SPARQL. So steps:\n\n1. Retrieve – locate the ontology classes for **risk_tolerance**, **goal_progress**, **health_risk**, and **liquidity** (and the three related tables that contain them).  \n\n2. Classify – identify the numeric‑aggregation intent in the query (e.g., compute averages or other comparative statistics across risk_tolerance).  \n\n3. Generate – write a SPARQL (or equivalent graph) query that joins the three related tables on the common **risk_tolerance** dimension and selects the required comparative metrics (e.g., average goal_progress, average health_risk, average liquidity per risk‑tolerance category).  \n\n4. Scan – execute the generated query against the knowledge graph to retrieve the comparison data.  \n\n5. Validate – verify that the returned results are complete, correctly typed, and correspond to the intended risk_tolerance categories.  \n\n6. Explain – present the user with a clear comparison of goal progress, health risk, and liquidity across the different risk_tolerance levels.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Explain",
+              "inputs": [
+                5
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2
+            },
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Across risk_tolerance, how do goal progress, health risk, and liquidity compare using three related tables?\" So we need to retrieve ontology classes, then classify for math/aggregation? The query asks \"compare\" across risk_tolerance, likely need aggregation or compute comparisons. Might need numeric comparisons like average, maybe we need to classify for aggregation. The words \"compare\" could imply need for aggregation like average, sum, etc. So we can include Filter_Aggregate after Scan. However, the chronology says Generate must happen AFTER 'Classify' (or 'Retrieve'). So we can have Retrieve, Classify, Generate, Scan, Validate, Explain. \n\nThus steps:\n\n1. Retrieve – get ontology classes (risk_tolerance, goal_progress, health_risk, liquidity, and the three related tables that store these attributes).  \n\n2. Classify – detect that the query requires numeric comparison/aggregation across **risk_tolerance** (e.g., average or distribution of goal progress, health risk, and liquidity).  \n\n3. Generate – write a SPARQL (or equivalent graph) query that joins the three tables on **risk_tolerance** and selects or aggregates **goal_progress**, **health_risk**, and **liquidity** for each risk‑tolerance category.  \n\n4. Scan – execute the generated query against the knowledge graph to retrieve the comparison data.  \n\n5. Validate – verify that the returned results contain all risk‑tolerance categories and that the values for goal progress, health risk, and liquidity are correctly aligned and free of inconsistencies.  \n\n6. Explain – present the user with a clear comparison of goal progress, health risk, and liquidity across the different **risk_tolerance** levels.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across risk_tolerance, how do goal progress, health risk, and liquidity compare using three related tables?\" So we need to retrieve ontology classes, then classify for math/aggregation? The query asks to compare across risk_tolerance, likely need aggregation (maybe average) across risk_tolerance categories. So we need Classify for numeric-superlative? The words \"compare\" maybe implies need to compute some metric like average per risk_tolerance. So we should include Classify for aggregation.\n\nSteps:\n\n1. Retrieve – locate ontology classes (risk_tolerance, goal_progress, health_risk, liquidity, tables).\n2. Classify – identify need for aggregation/comparison.\n3. Generate – write SPARQL that joins three tables, groups by risk_tolerance, computes aggregates.\n4. Scan – execute query.\n5. Validate – check results.\n6. Explain – present comparison.\n\nThus six steps. Ensure order matches rules. Provide numbered list.\n\n</reasoning>1. Retrieve – Locate and list the ontology classes relevant to the query (e.g., **risk_tolerance**, **goal_progress**, **health_risk**, **liquidity**, and the three related tables that contain these attributes).  \n\n2. Classify – Identify the need for numeric aggregation/comparison across **risk_tolerance** (e.g., average or sum of **goal_progress**, **health_risk**, and **liquidity**).  \n\n3. Generate – Write a SPARQL (or equivalent graph) query that joins the three related tables, groups the data by **risk_tolerance**, and computes the required aggregate metrics for **goal_progress**, **health_risk**, and **liquidity**.  \n\n4. Scan – Execute the generated query against the knowledge grap",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Truncated"
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "RiskTolerance",
+      "InvestmentGoal",
+      "PortfolioHealth"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.96,
+    "target_field": "progressPct, riskScore, liquidityScore",
+    "schema_datatype": "numeric",
+    "why_this_intent": "User asks to compare numeric metrics (goal progress, health risk, liquidity) across the categorical risk_tolerance dimension, which requires aggregating numeric fields from related tables.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId \n       (AVG(xsd:decimal(?progressPct)) AS ?avgProgressPct) \n       (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore) \n       (AVG(xsd:decimal(?liquidityScore)) AS ?avgLiquidityScore)\nWHERE {\n  ?goal a wm:InvestmentGoal ;\n        wm:investorId ?investorId ;\n        wm:progressPct ?progressPct .\n  ?health a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?riskScore ;\n          wm:liquidityScore ?liquidityScore .\n}\nGROUP BY ?investorId\nORDER BY ?investorId",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance\n       (AVG(?progressPct) AS ?avgProgressPct)\n       (AVG(?riskScore) AS ?avgRiskScore)\n       (AVG(?liquidityScore) AS ?avgLiquidityScore)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:riskTolerance ?riskTolerance ;\n       wm:hasInvestmentGoal ?goal ;\n       wm:hasPortfolioHealth ?ph .\n\n  OPTIONAL { ?goal wm:progressPct ?progressPct . }\n  OPTIONAL { ?ph wm:riskScore ?riskScore . }\n  OPTIONAL { ?ph wm:liquidityScore ?liquidityScore . }\n}\nGROUP BY ?riskTolerance\nORDER BY ?riskTolerance",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId \n       (AVG(xsd:decimal(?progressPct)) AS ?avgProgressPct) \n       (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore) \n       (AVG(xsd:decimal(?liquidityScore)) AS ?avgLiquidityScore)\nWHERE {\n  ?goal a wm:InvestmentGoal ;\n        wm:investorId ?investorId ;\n        wm:progressPct ?progressPct .\n  ?health a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?riskScore ;\n          wm:liquidityScore ?liquidityScore .\n}\nGROUP BY ?investorId\nORDER BY ?investorId",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId \n       (AVG(xsd:decimal(?progressPct)) AS ?avgProgressPct) \n       (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore) \n       (AVG(xsd:decimal(?liquidityScore)) AS ?avgLiquidityScore)\nWHERE {\n  ?goal a wm:InvestmentGoal ;\n        wm:investorId ?investorId ;\n        wm:progressPct ?progressPct .\n  ?health a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?riskScore ;\n          wm:liquidityScore ?liquidityScore .\n}\nGROUP BY ?investorId\nORDER BY ?investorId",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance \n       (AVG(?avgProgress) AS ?avgProgressPct) \n       (AVG(?avgRisk) AS ?avgRiskScore) \n       (AVG(?avgLiquidity) AS ?avgLiquidityScore)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:riskTolerance ?riskTolerance .\n\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?p)) AS ?avgProgress)\n    WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:investorId ?investorId ;\n            wm:progressPct ?p .\n    }\n    GROUP BY ?investorId\n  }\n\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?r)) AS ?avgRisk) (AVG(xsd:decimal(?l)) AS ?avgLiquidity)\n    WHERE {\n      ?health a wm:PortfolioHealth ;\n              wm:investorId ?investorId ;\n              wm:riskScore ?r ;\n              wm:liquidityScore ?l .\n    }\n    GROUP BY ?investorId\n  }\n}\nGROUP BY ?riskTolerance\nORDER BY ?riskTolerance",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance \n       (AVG(?avgProgress) AS ?avgProgressPct) \n       (AVG(?avgRisk) AS ?avgRiskScore) \n       (AVG(?avgLiquidity) AS ?avgLiquidityScore)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:riskTolerance ?riskTolerance .\n\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?p)) AS ?avgProgress)\n    WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:investorId ?investorId ;\n            wm:progressPct ?p .\n    }\n    GROUP BY ?investorId\n  }\n\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?r)) AS ?avgRisk) (AVG(xsd:decimal(?l)) AS ?avgLiquidity)\n    WHERE {\n      ?health a wm:PortfolioHealth ;\n              wm:investorId ?investorId ;\n              wm:riskScore ?r ;\n              wm:liquidityScore ?l .\n    }\n    GROUP BY ?investorId\n  }\n}\nGROUP BY ?riskTolerance\nORDER BY ?riskTolerance",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance \n       (AVG(?avgProgress) AS ?avgProgressPct) \n       (AVG(?avgRisk) AS ?avgRiskScore) \n       (AVG(?avgLiquidity) AS ?avgLiquidityScore)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:riskTolerance ?riskTolerance .\n\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?p)) AS ?avgProgress)\n    WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:investorId ?investorId ;\n            wm:progressPct ?p .\n    }\n    GROUP BY ?investorId\n  }\n\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?r)) AS ?avgRisk) (AVG(xsd:decimal(?l)) AS ?avgLiquidity)\n    WHERE {\n      ?health a wm:PortfolioHealth ;\n              wm:investorId ?investorId ;\n              wm:riskScore ?r ;\n              wm:liquidityScore ?l .\n    }\n    GROUP BY ?investorId\n  }\n}\nGROUP BY ?riskTolerance\nORDER BY ?riskTolerance",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance\n       (AVG(?progressPct) AS ?avgProgressPct)\n       (AVG(?riskScore) AS ?avgRiskScore)\n       (AVG(?liquidityScore) AS ?avgLiquidityScore)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:riskTolerance ?riskTolerance ;\n       wm:hasInvestmentGoal ?goal ;\n       wm:hasPortfolioHealth ?ph .\n\n  OPTIONAL { ?goal wm:progressPct ?progressPct . }\n  OPTIONAL { ?ph wm:riskScore ?riskScore . }\n  OPTIONAL { ?ph wm:liquidityScore ?liquidityScore . }\n}\nGROUP BY ?riskTolerance\nORDER BY ?riskTolerance",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance\n       (AVG(?progressPct) AS ?avgProgressPct)\n       (AVG(?riskScore) AS ?avgRiskScore)\n       (AVG(?liquidityScore) AS ?avgLiquidityScore)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:riskTolerance ?riskTolerance ;\n       wm:hasInvestmentGoal ?goal ;\n       wm:hasPortfolioHealth ?ph .\n\n  OPTIONAL { ?goal wm:progressPct ?progressPct . }\n  OPTIONAL { ?ph wm:riskScore ?riskScore . }\n  OPTIONAL { ?ph wm:liquidityScore ?liquidityScore . }\n}\nGROUP BY ?riskTolerance\nORDER BY ?riskTolerance",
+        "status": "success",
+        "row_count": 3,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 3,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query returns non‑empty results with the expected columns (riskTolerance, avgProgressPct, avgRiskScore, avgLiquidityScore). It correctly aggregates goal progress, health risk, and liquidity scores (AVG) for each risk tolerance category, matching the user's request to compare these metrics across risk_tolerance using related tables.",
+    "validator_reason": "The query returns non‑empty results with the expected columns (riskTolerance, avgProgressPct, avgRiskScore, avgLiquidityScore). It correctly aggregates goal progress, health risk, and liquidity scores (AVG) for each risk tolerance category, matching the user's request to compare these metrics across risk_tolerance using related tables.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 3,
+    "final_answer": "Aggressive: avgProgressPct 39.17794323323324, avgRiskScore 48.96567808864515912025316456, avgLiquidityScore 46.70074735962504254429065744; Conservative: avgProgressPct 38.07835875282023, avgRiskScore 51.53686965027946314379514117, avgLiquidityScore 50.87998197975181398413747521; Moderate: avgProgressPct 40.87132288651158, avgRiskScore 48.73984258233311118162839248, avgLiquidityScore 49.55716448903172031350034795",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth JSON array with Pipeline Output.\n\nGround Truth:\n\n[\n {\"group_value\":null,\"avg_progress_pct\":46.45,\"avg_risk_score\":55.31,\"avg_liquidity_score\":55.9},\n {\"group_value\":\"Aggressive\",\"avg_progress_pct\":39.76,\"avg_risk_score\":49.12,\"avg_liquidity_score\":47.17},\n {\"group_value\":\"Conservative\",\"avg_progress_pct\":38.25,\"avg_risk_score\":51.7,\"avg_liquidity_score\":50.85},\n {\"group_value\":\"Moderate\",\"avg_progress_pct\":41.21,\"avg_risk_score\":49.29,\"avg_liquidity_score\":49.69}\n]\n\nPipeline Output: \"Aggressive: avgProgressPct 39.17794323323324, avgRiskScore 48.96567808864515912025316456, avgLiquidityScore 46.70074735962504254429065744; Conservative: avgProgressPct 38.07835875282023, avgRiskScore 51.53686965027946314379514117, avgLiquidityScore 50.87998197975181398413747521; Moderate: avgProgressPct 40.87132288651158, avgRiskScore 48.73984258233311118162839248, avgLiquidityScore 49.55716448903172031350034795\"\n\nObservations:\n\n- The pipeline output includes only three groups: Aggressive, Conservative, Moderate. It does not include the null group (overall). Ground Truth includes a row with group_value null and avg_progress_pct 46.45, avg_risk_score 55.31, avg_liquidity_score 55.9. That is missing.\n\n- Also the numbers differ slightly: Aggressive: GT 39.76 vs pipeline 39.1779 (difference). Conservative: 38.25 vs 38.0783 (difference). Moderate: 41.21 vs 40.8713 (difference). Risk scores also differ: Aggressive 49.12 vs 48.9656; Conservative 51.7 vs 51.5368; Moderate 49.29 vs 48.7398. Liquidity: Aggressive 47.17 vs 46.7007; Conservative 50.85 vs 50.8799 (close but slight diff); Moderate 49.69 vs 49.5571.\n\nThus many mismatches. Also missing null group.\n\nThus overall mismatch. According to rule: If any missing values or numbers differ, it's MISMATCH (not partial because many missing). So answer: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

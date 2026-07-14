@@ -1,0 +1,343 @@
+{
+  "sample_row_id": "wealth_management_70_question_benchmark:WM-2T-016",
+  "question": "Which five investors have the highest total current holding value?",
+  "ground_truth": "[{\"investor_id\":\"INV-693\",\"investor_name\":\"Rohan Mehta\",\"portfolio_value\":105692316.0},{\"investor_id\":\"INV-1023\",\"investor_name\":\"Priyanka Joshi\",\"portfolio_value\":105107466.0},{\"investor_id\":\"INV-1323\",\"investor_name\":\"Bhavna Bhat\",\"portfolio_value\":104735092.0},{\"investor_id\":\"INV-1233\",\"investor_name\":\"Suresh Rao\",\"portfolio_value\":101908668.5},{\"investor_id\":\"INV-1263\",\"investor_name\":\"Sunita Gupta\",\"portfolio_value\":97181987.5}]",
+  "pipeline_output": "The five investors with the highest total current holding value are Rohan Mehta (105692316.0), Priyanka Joshi (105107466.0), Bhavna Bhat (104735092.0), Suresh Rao (101908668.5) and Sunita Gupta (97181987.5).",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 76.691,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which five investors have the highest total current holding value?\" Steps:\n\n1. Retrieve ontology classes (likely Investor, Holding, Value). Use Retrieve.\n\n2. Classify for math/aggregation: need to identify that we need to compute total current holding value per investor and then get highest five. So use Classify to identify aggregation (Sum) and superlative (Highest). So step 2: Classify.\n\n3. Generate SPARQL query to compute total current holding value per investor, order descending, limit 5. Must happen after Retrieve and Classify. So step 3: Generate.\n\n4. Scan to execute query. Step 4: Scan.\n\n5. Validate results. Step 5: Validate.\n\n6. Explain to user. Step 6: Explain.\n\nThus 6 steps. Ensure ordering matches rules. Provide numbered list.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "Retrieve",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "Classify",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "Generate",
+              "operator": "Generate",
+              "inputs": [
+                "Retrieve",
+                "Classify"
+              ]
+            },
+            {
+              "id": "Scan",
+              "operator": "Scan",
+              "inputs": [
+                "Generate"
+              ]
+            },
+            {
+              "id": "Validate",
+              "operator": "Validate",
+              "inputs": [
+                "Scan"
+              ]
+            },
+            {
+              "id": "Explain",
+              "operator": "Explain",
+              "inputs": [
+                "Validate"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "Retrieve",
+              "target": "Generate"
+            },
+            {
+              "source": "Classify",
+              "target": "Generate"
+            },
+            {
+              "source": "Generate",
+              "target": "Scan"
+            },
+            {
+              "source": "Scan",
+              "target": "Validate"
+            },
+            {
+              "source": "Validate",
+              "target": "Explain"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which five investors have the highest total current holding value?\" Steps:\n\n1. Retrieve ontology classes (likely Investor, Holding, Value, etc.) using Retrieve.\n2. Classify for math/aggregation: need to identify that we need to compute total current holding value per investor and then get highest (top 5). So use Classify to identify aggregation and superlative.\n3. Generate SPARQL query to compute total current holding value per investor and order descending, limit 5.\n4. Scan to execute query.\n5. Validate results.\n6. Explain to user.\n\nThus steps numbered 1-6.\n\nMake sure we follow chronology: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nThus output only numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which five investors have the highest total current holding value?\" Need to find ontology classes (Investor, Holding, Value). Then classify for math/aggregation: highest total current holding value, need sum and order. So steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify math/aggregation terms: highest, total, sum)\n3. Generate (SPARQL to compute total current holding value per investor, order descending, limit 5)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nMake sure each step numbered.</reasoning>1. Retrieve – Obtain the ontology classes relevant to the query (e.g., **Investor**, **Holding**, **CurrentHoldingValue**).  \n2. Classify – Identify and label the mathematical/aggregation intent in the query (“highest”, “total”, “sum”, “five”).  \n3. Generate – Write a SPARQL (or equivalent graph) query that:  \n   a. Groups holdings by investor,  \n   b. Sums the **CurrentHoldingValue** for each investor,  \n   c. Orders the results by the summed value in descending order,  \n   d. Limits the output to the top 5 investors.  \n4. Scan – Execute the generated query against the knowledge graph to retrieve the result set.  \n5. Validate – Verify that the returned data satisfies the query requirements (correct number of investors, correct ordering, non‑null summed values).  \n6. Explain – Present the five investors with the highest total current holding value to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [
+      "Validator expects structured JSON with investor_id fields."
+    ],
+    "alternatives_available": [
+      "Return results as JSON array matching ground‑truth schema."
+    ]
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "PortfolioHolding"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.99,
+    "target_field": "currentValue",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks for the investors with the highest total current holding value, which requires summing the numeric 'currentValue' field from PortfolioHolding per investor and ranking the results.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorName (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentValue)\nWHERE {\n  ?investor wm:investorName ?investorName .\n  ?holding wm:heldByInvestor ?investor ;\n           wm:currentValue ?currentValue .\n}\nGROUP BY ?investor ?investorName\nORDER BY DESC(?totalCurrentValue)\nLIMIT 5",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investor ?investorName (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentValue)\nWHERE {\n  ?investor wm:investorName ?investorName .\n  ?holding wm:heldByInvestor ?investor ;\n           wm:currentValue ?currentValue .\n}\nGROUP BY ?investor ?investorName\nORDER BY DESC(?totalCurrentValue)\nLIMIT 5",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorName (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentValue)\nWHERE {\n  ?investor wm:investorName ?investorName .\n  ?holding wm:heldByInvestor ?investor ;\n           wm:currentValue ?currentValue .\n}\nGROUP BY ?investor ?investorName\nORDER BY DESC(?totalCurrentValue)\nLIMIT 5",
+        "status": "success",
+        "row_count": 5,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 5,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL query correctly aggregates each investor's total current holding value, orders the results in descending order, and limits to the top five. The returned columns (investorName, totalCurrentValue) match the requested information, and the data contains five non‑empty rows representing the five investors with the highest total current holding values.",
+    "validator_reason": "The SPARQL query correctly aggregates each investor's total current holding value, orders the results in descending order, and limits to the top five. The returned columns (investorName, totalCurrentValue) match the requested information, and the data contains five non‑empty rows representing the five investors with the highest total current holding values.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 5,
+    "final_answer": "The five investors with the highest total current holding value are Rohan Mehta (105692316.0), Priyanka Joshi (105107466.0), Bhavna Bhat (104735092.0), Suresh Rao (101908668.5) and Sunita Gupta (97181987.5).",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth and pipeline output. Ground truth: list of five investors with IDs, names, portfolio_value. Pipeline output: \"The five investors with the highest total current holding value are Rohan Mehta (105692316.0), Priyanka Joshi (105107466.0), Bhavna Bhat (104735092.0), Suresh Rao (101908668.5) and Sunita Gupta (97181987.5).\"\n\nPipeline output includes names and values, but does not include investor IDs. Ground truth includes IDs. According to rule 4: If Ground Truth is JSON, all important values in the JSON must appear in the Pipeline Output. Missing values are PARTIAL or MISMATCH, not MATCH. Important values: investor_id, investor_name, portfolio_value. Pipeline output includes investor_name and portfolio_value, but missing investor_id. So it's missing IDs. Therefore not full match. Since it includes most but missing IDs, it's PARTIAL, not MISMATCH? The rule says missing values are PARTIAL or MISMATCH, not MATCH. Need decide between PARTIAL and MISMATCH. Since it provides most info but missing IDs, that is partial. So answer: PARTIAL.</reasoning>PARTIAL",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

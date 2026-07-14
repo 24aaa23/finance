@@ -1,0 +1,110 @@
+Question,Ground Truth,New Pipeline Result,New Status,Old Status,Comparison / Comments,DAG Sequence,AOP Operator Sequence,Retrieved Classes,Generated SPARQL,Scan Status,Scan Row Count,Scan Error,Scan Raw Rows,Unknown Terms,Term Suggestions,Refine Reason,Validation Is Valid,Validation Reason,Self Heal Attempts,Short Circuit Stage,Failure Stage
+"Given all the data available, which investment type generates the highest average dividend income?","{""investment_type"": ""Corporate Bond"", ""average_dividends"": 7290}",Corporate Bond generates the highest average dividend income of 7290.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Classify -> Math_Compute -> Generate -> Scan -> Validate -> Explain,Retrieve -> Classify -> Math_Compute -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""InvestmentType""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentTypeName (AVG(xsd:decimal(?dividends)) AS ?averageDividendIncome)
+WHERE {
+  ?portfolioHolding ex:hasInvestmentType ?investmentType .
+  ?investmentType ex:investmentTypeName ?investmentTypeName .
+  ?portfolioHolding ex:dividends ?dividends .
+}
+GROUP BY ?investmentTypeName
+ORDER BY DESC(?averageDividendIncome)
+LIMIT 1",success,1,,"[{""investmentTypeName"": ""Coporate Bond"", ""averageDividendIncome"": ""7290""}]",[],{},,True,,0,,
+What sector has the highest allocation percentage in investor INV-001's actual portfolio?,"{""sector"": ""Private Equity"", ""allocation_pct"": 42}",No data was found in the knowledge graph. The requested entity may not exist.,MATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Order_By -> Extract -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""SectorAllocation""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName (MAX(xsd:decimal(?allocationPct)) AS ?maxAllocation)
+WHERE {
+  ?sectorAllocation a ex:SectorAllocation ;
+                     ex:hasInvestor ?investor ;
+                     ex:sectorName ?sectorName ;
+                     ex:allocationPct ?allocationPct .
+  FILTER(CONTAINS(LCASE(STR(?investor)), ""INV001""))
+}
+GROUP BY ?sectorName
+ORDER BY DESC(?maxAllocation)
+LIMIT 1",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+Provide the count of rebalancing actions have an Underweight drift direction?,1,The count of rebalancing actions with an Underweight drift direction is 0.,MATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""RebalancingAction""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?rebalancingAction) AS ?count)
+WHERE {
+  ?rebalancingAction a ex:RebalancingAction ;
+                     ex:logic ""Underweight"" .
+}",success,1,,"[{""count"": ""0""}]",[],{},,True,,0,,
+"Out of all options, which segment (Large Cap, Mid Cap etc.) has the most total invested amount?","{""segment"": ""Private Equity"", ""total_invested_amount"": 11019100}","Result from retrieved rows: [{""sectorName"": ""Private Equity"", ""totalAmount"": ""15028100""}]",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Order_By -> Extract -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""SectorAllocation""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName (SUM(xsd:decimal(?totalInvestment)) AS ?totalAmount)
+WHERE {
+  ?allocation a ex:SectorAllocation ;
+              ex:sectorName ?sectorName ;
+              ex:totalInvestment ?totalInvestment .
+}
+GROUP BY ?sectorName
+ORDER BY DESC(?totalAmount)
+LIMIT 1",success,1,,"[{""sectorName"": ""Private Equity"", ""totalAmount"": ""15028100""}]",[],{},Validation failed or zero rows,,,2,Validate,Validate
+Provide the count of Conservative risk profile investors have a portfolio diversification score below 50?,There is no business rule/data to calculate this from raw_data_sample.,The count of Conservative risk profile investors with a portfolio diversification score below 50 is 0.,MISMATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHealth""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?investor) AS ?count)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:riskTolerance ""Conservative"" .
+  
+  ?portfolioHealth a ex:PortfolioHealth ;
+                   ex:hasInvestor ?investor ;
+                   ex:diversificationScore ?diversificationScore .
+  
+  FILTER (xsd:decimal(?diversificationScore) < 50)
+}",success,1,,"[{""count"": ""0""}]",[],{},,True,,0,,
+Which risk profile group has the highest average investment goal target amount?,"{""risk_tolerance"": ""High"", ""average_target_amount"": 1500000}","The risk profile group with the highest average investment goal target amount is High, with an average target amount of 1500000.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestmentGoal"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskProfile (AVG(xsd:decimal(?targetAmount)) AS ?averageTargetAmount)
+WHERE {
+  ?investmentGoal ex:hasInvestor ?investorProfile .
+  ?investorProfile ex:riskTolerance ?riskProfile .
+  ?investmentGoal ex:targetAmount ?targetAmount .
+}
+GROUP BY ?riskProfile
+ORDER BY DESC(?averageTargetAmount)
+LIMIT 1",success,1,,"[{""riskProfile"": ""High"", ""averageTargetAmount"": ""1500000""}]",[],{},,True,,0,,
+"From the complete wealth management dataset, what was the total investment cost made in 2022?",30560651,"The total investment cost made in 2022 was 30,560,651.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Filter_Aggregate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Filter_Aggregate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?cost)) AS ?totalInvestmentCost)
+WHERE {
+  ?portfolioHolding a ex:PortfolioHolding ;
+                     ex:purchaseDate ?purchaseDate ;
+                     ex:cost ?cost .
+  FILTER(CONTAINS(LCASE(STR(?purchaseDate)), ""2022""))
+}",success,1,,"[{""totalInvestmentCost"": ""30560651""}]",[],{},,True,,0,,
+Do you know which investment type generates the lowest average dividend income?,"{""investment_type"": ""Alternative Investment Funds (AIF - Cat I)"", ""average_dividends"": 2753}",Alternative Investment Funds (AIF - Cat I) generates the lowest average dividend income of 2753.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain,Retrieve -> Classify -> Generate -> Scan -> Validate,"[""InvestmentTypeContext_InvestmentType"", ""PortfolioHolding_Dividends""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentType (AVG(xsd:decimal(?dividend)) AS ?averageDividend)
+WHERE {
+  ?holding ex:investmentTypeLiteral ?investmentType .
+  ?holding ex:dividends ?dividend .
+}
+GROUP BY ?investmentType
+ORDER BY ASC(?averageDividend)
+LIMIT 1",success,1,,"[{""investmentType"": ""Alternative Investment Funds (AIF - Cat I)"", ""averageDividend"": ""2753""}]",[],{},Validation failed or zero rows,,,2,Validate,Validate

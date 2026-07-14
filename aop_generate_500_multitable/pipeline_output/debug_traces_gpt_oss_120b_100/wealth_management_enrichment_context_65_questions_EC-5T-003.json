@@ -1,0 +1,201 @@
+{
+  "sample_row_id": "wealth_management_enrichment_context_65_questions:EC-5T-003",
+  "question": "Which investors have Growth goals, Technology holdings, Technology allocation, and SIP cash flows?",
+  "ground_truth": "[{\"investor_id\":\"INV-017\",\"investor_name\":\"Ankita Nair\"},{\"investor_id\":\"INV-021\",\"investor_name\":\"Arvind Chauhan\"},{\"investor_id\":\"INV-040\",\"investor_name\":\"Anita Joshi\"},{\"investor_id\":\"INV-080\",\"investor_name\":\"Anjali Iyer\"},{\"investor_id\":\"INV-1006\",\"investor_name\":\"Suresh Bhat\"},{\"investor_id\":\"INV-106\",\"investor_name\":\"Akshay Gupta\"},{\"investor_id\":\"INV-1070\",\"investor_name\":\"Ishita Chauhan\"},{\"investor_id\":\"INV-1084\",\"investor_name\":\"Amit Singh\"},{\"investor_id\":\"INV-1100\",\"investor_name\":\"Arjun Nair\"},{\"investor_id\":\"INV-1114\",\"investor_name\":\"Dipti Bhat\"},{\"investor_id\":\"INV-1153\",\"investor_name\":\"Arvind Sharma\"},{\"investor_id\":\"INV-117\",\"investor_name\":\"Akshay Patel\"},{\"investor_id\":\"INV-1187\",\"investor_name\":\"Anita Rao\"},{\"investor_id\":\"INV-126\",\"investor_name\":\"Vivek Pandey\"},{\"investor_id\":\"INV-1322\",\"investor_name\":\"Bhavna Gupta\"},{\"investor_id\":\"INV-1470\",\"investor_name\":\"Ankita Joshi\"},{\"investor_id\":\"INV-1474\",\"investor_name\":\"Amrita Yadav\"},{\"investor_id\":\"INV-1500\",\"investor_name\":\"Arvind Kulkarni\"},{\"investor_id\":\"INV-303\",\"investor_name\":\"Aishwarya Verma\"},{\"investor_id\":\"INV-330\",\"investor_name\":\"Amit Kulkarni\"},{\"investor_id\":\"INV-335\",\"investor_name\":\"Amrita Sharma\"},{\"investor_id\":\"INV-348\",\"investor_name\":\"Anjali Singh\"},{\"investor_id\":\"INV-353\",\"investor_name\":\"Vivek Deshmukh\"},{\"investor_id\":\"INV-430\",\"investor_name\":\"Abhishek Verma\"},{\"investor_id\":\"INV-479\",\"investor_name\":\"Ankita Singh\"},{\"investor_id\":\"INV-521\",\"investor_name\":\"Rahul Hegde\"},{\"investor_id\":\"INV-537\",\"investor_name\":\"Anjali Nair\"},{\"investor_id\":\"INV-585\",\"investor_name\":\"Arjun Yadav\"},{\"investor_id\":\"INV-640\",\"investor_name\":\"Vivek Bhat\"},{\"investor_id\":\"INV-840\",\"investor_name\":\"Vikram Mishra\"},{\"investor_id\":\"INV-921\",\"investor_name\":\"Vikram Sharma\"}]",
+  "pipeline_output": "Investors with Growth goals, Technology holdings, Technology allocation, and SIP cash flows are INV-021 Arvind Chauhan, INV-017 Ankita Nair, INV-117 Akshay Patel, INV-1006 Suresh Bhat, INV-1100 Arjun Nair, INV-521 Rahul Hegde, INV-126 Vivek Pandey, INV-303 Aishwarya Verma, INV-353 Vivek Deshmukh, INV-430 Abhishek Verma, INV-1474 Amrita Yadav, INV-080 Anjali Iyer, INV-1084 Amit Singh, INV-330 Amit Kulkarni, INV-335 Amrita Sharma, INV-537 Anjali Nair, INV-585 Arjun Yadav, INV-1114 Dipti Bhat, INV-106 Akshay Gupta, INV-1470 Ankita Joshi, INV-040 Anita Joshi, INV-840 Vikram Mishra, INV-1187 Anita Rao, INV-921 Vikram Sharma, INV-1070 Ishita Chauhan, INV-1500 Arvind Kulkarni, INV-348 Anjali Singh, INV-1322 Bhavna Gupta, INV-640 Vivek Bhat, INV-479 Ankita Singh, INV-1153 Arvind Sharma.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 95.307,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have Growth goals, Technology holdings, Technology allocation, and SIP cash flows?\"\n\nWe need to find investors that satisfy multiple criteria: Growth goals, Technology holdings, Technology allocation, SIP cash flows. Likely we need to retrieve ontology classes first. Then maybe classify? The query is a simple lookup/listing, not involving math/aggregation. According to rule 2: If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'. So we can skip Classify. Steps:\n\n1. Retrieve (ontology classes)\n2. Generate (write SPARQL query to select investors with those properties)\n3. Scan (execute query)\n4. Validate (check results)\n5. Explain (present answer)\n\nThus 5 steps.\n\nMake sure to use exact operator names.\n\nThus output:\n\n1. Retrieve\n2. Generate\n3. Scan\n4. Validate\n5. Explain\n\nBut need to phrase as numbered steps with description? The prompt: \"Output ONLY the numbered steps.\" Likely each line: \"1. Retrieve ...\". Provide brief description of each step.\n\nLet's produce:\n\n1. Retrieve the ontology classes related to investors, goals, holdings, allocations, and cash flow types.\n2. Generate a SPARQL query that selects investors who have a Growth goal, hold Technology assets, have a Technology allocation, and possess SIP cash flow records.\n3. Scan the knowledge graph using the generated query.\n4. Validate the returned investor list for completeness and correctness.\n5. Explain the final list of investors to the user.\n\nYes.</reasoning>1. Retrieve the ontology classes for investors, goals, holdings, allocations, and cash‑flow types.  \n2. Generate a SPARQL query that selects investors who have a **Growth** goal, **Technology** holdings, **Technology** allocation, and **SIP** cash‑flow.  \n3. Scan the knowledge graph with the generated query.  \n4. Validate the returned investor list for accuracy and completeness.  \n5. Explain the final list of investors that meet all four criteria.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have Growth goals, Technology holdings, Technology allocation, and SIP cash flows?\" This is a simple lookup/listing question: we need to retrieve investors that satisfy multiple criteria: goal type Growth, holdings category Technology, allocation category Technology, and cash flow type SIP. Likely need to retrieve ontology classes first, then maybe classify? The query does not involve math/aggregation words, so per rule 2, if simple lookup/listing, go straight from Retrieve to Generate. However we have multiple criteria; still simple listing. So steps:\n\n1. Retrieve (ontology classes) – maybe retrieve classes for Investor, Goal, Holding, Allocation, CashFlow, etc.\n\n2. Generate (SPARQL query) – construct query to find investors with those properties.\n\n3. Scan – execute query.\n\n4. Validate – ensure results meet criteria.\n\n5. Explain – present answer.\n\nThus 5 steps.\n\nMake sure to number them.\n\n</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have Growth goals, Technology holdings, Technology allocation, and SIP cash flows?\" This is a simple lookup/listing question: we need to retrieve investors that satisfy multiple criteria: they have Growth goals, they have Technology holdings, they have Technology allocation, and they have SIP cash flows. Likely need to retrieve ontology classes, then generate SPARQL with filters, then scan, validate, explain. No classification needed because no math/aggregation words. According to rule 2, if simple lookup/listing, go straight from Retrieve to Generate. So steps:\n\n1. Retrieve (ontology classes)\n2. Generate (SPARQL query to find investors with those attributes)\n3. Scan (execute query)\n4. Validate (check results)\n5. Explain (present answer)\n\nMake sure to use exact operator names. Provide numbered steps.</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Generate",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Scan",
+              "inputs": [
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Validate",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Explain",
+              "inputs": [
+                "4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": "...",
+  "classify": "...",
+  "generate": "...",
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?inv wm:hasInvestmentGoal ?goal .\n    ?goal wm:investmentGoal ?gName .\n    FILTER(CONTAINS(LCASE(STR(?gName)), \"growth\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasHolding ?hold .\n    ?hold wm:sector ?holdSector .\n    FILTER(CONTAINS(LCASE(STR(?holdSector)), \"technology\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasSectorAllocation ?alloc .\n    ?alloc wm:sector ?allocSector .\n    FILTER(CONTAINS(LCASE(STR(?allocSector)), \"technology\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasCashFlow ?cf .\n    ?cf wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(STR(?cfType)), \"sip\"))\n  }\n}",
+        "status": "success",
+        "row_count": 31,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 31,
+    "final_scan_error": ""
+  },
+  "validate": "...",
+  "explain": "...",
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth list of investors with Pipeline Output list. Ground Truth includes many IDs. Let's list them.\n\nGround Truth IDs (and names):\nINV-017 Ankita Nair\nINV-021 Arvind Chauhan\nINV-040 Anita Joshi\nINV-080 Anjali Iyer\nINV-1006 Suresh Bhat\nINV-106 Akshay Gupta\nINV-1070 Ishita Chauhan\nINV-1084 Amit Singh\nINV-1100 Arjun Nair\nINV-1114 Dipti Bhat\nINV-1153 Arvind Sharma\nINV-117 Akshay Patel\nINV-1187 Anita Rao\nINV-126 Vivek Pandey\nINV-1322 Bhavna Gupta\nINV-1470 Ankita Joshi\nINV-1474 Amrita Yadav\nINV-1500 Arvind Kulkarni\nINV-303 Aishwarya Verma\nINV-330 Amit Kulkarni\nINV-335 Amrita Sharma\nINV-348 Anjali Singh\nINV-353 Vivek Deshmukh\nINV-430 Abhishek Verma\nINV-479 Ankita Singh\nINV-521 Rahul Hegde\nINV-537 Anjali Nair\nINV-585 Arjun Yadav\nINV-640 Vivek Bhat\nINV-840 Vikram Mishra\nINV-921 Vikram Sharma\n\nCount them: let's count: 1)017,2)021,3)040,4)080,5)1006,6)106,7)1070,8)1084,9)1100,10)1114,11)1153,12)117,13)1187,14)126,15)1322,16)1470,17)1474,18)1500,19)303,20)330,21)335,22)348,23)353,24)430,25)479,26)521,27)537,28)585,29)640,30)840,31)921. So 31 investors.\n\nNow Pipeline Output list: \"INV-021 Arvind Chauhan, INV-017 Ankita Nair, INV-117 Akshay Patel, INV-1006 Suresh Bhat, INV-1100 Arjun Nair, INV-521 Rahul Hegde, INV-126 Vivek Pandey, INV-303 Aishwarya Verma, INV-353 Vivek Deshmukh, INV-430 Abhishek Verma, INV-1474 Amrita Yadav, INV-080 Anjali Iyer, INV-1084 Amit Singh, INV-330 Amit Kulkarni, INV-335 Amrita Sharma, INV-537 Anjali Nair, INV-585 Arjun Yadav, INV-1114 Dipti Bhat, INV-106 Akshay Gupta, INV-1470 Ankita Joshi, INV-040 Anita Joshi, INV-840 Vikram Mishra, INV-1187 Anita Rao, INV-921 Vikram Sharma, INV-1070 Ishita Chauhan, INV-1500 Arvind Kulkarni, INV-348 Anjali Singh, INV-1322 Bhavna Gupta, INV-640 Vivek Bhat, INV-479 Ankita Singh, INV-1153 Arvind Sharma.\"\n\nLet's list them: IDs present:\n\nINV-021\nINV-017\nINV-117\nINV-1006\nINV-1100\nINV-521\nINV-126\nINV-303\nINV-353\nINV-430\nINV-1474\nINV-080\nINV-1084\nINV-330\nINV-335\nINV-537\nINV-585\nINV-1114\nINV-106\nINV-1470\nINV-040\nINV-840\nINV-1187\nINV-921\nINV-1070\nINV-1500\nINV-348\nINV-1322\nINV-640\nINV-479\nINV-1153\n\nCount: 31 as well.\n\nNow compare to ground truth list: Are any missing or extra? Let's compare each ground truth ID to pipeline list.\n\nGround truth IDs: 017 present yes. 021 present yes. 040 present yes. 080 present yes. 1006 present yes. 106 present yes. 1070 present yes. 1084 present yes. 1100 present yes. 1114 present yes. 1153 present yes. 117 present yes. 1187 present yes. 126 present yes. 1322 present yes. 1470 present yes. 1474 present yes. 1500 present yes. 303 present yes. 330 present yes. 335 present yes. 348 present yes. 353 present yes. 430 present yes. 479 present yes. 521 present yes. 537 present yes. 585 present yes. 640 present yes. 840 present yes. 921 present yes.\n\nAll 31 ground truth IDs appear in pipeline output. Also pipeline output includes exactly those 31, no extra IDs beyond ground truth? Let's check if any pipeline ID not in ground truth: we listed all pipeline IDs; they all match ground truth list. So pipeline output includes all ground truth entries, correct names also match. So it's a full match.\n\nThus output should be MATCH.\n\nCheck rule: If ground truth is JSON list, all important values must appear. They do. So MATCH.\n\nReturn only word MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

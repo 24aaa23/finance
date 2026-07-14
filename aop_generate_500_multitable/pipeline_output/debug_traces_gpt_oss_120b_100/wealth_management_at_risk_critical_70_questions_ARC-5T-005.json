@@ -1,0 +1,186 @@
+{
+  "sample_row_id": "wealth_management_at_risk_critical_70_questions:ARC-5T-005",
+  "question": "Which investors have average goal progress below 30, risk_score above 70, negative-return holdings, and allocation_pct above 30?",
+  "ground_truth": "[{\"investor_id\":\"INV-1254\",\"investor_name\":\"Vikram Patel\"},{\"investor_id\":\"INV-1296\",\"investor_name\":\"Amit Chauhan\"},{\"investor_id\":\"INV-1312\",\"investor_name\":\"Amit Verma\"},{\"investor_id\":\"INV-1481\",\"investor_name\":\"Amit Mishra\"},{\"investor_id\":\"INV-393\",\"investor_name\":\"Amrita Pandey\"},{\"investor_id\":\"INV-654\",\"investor_name\":\"Geeta Rao\"}]",
+  "pipeline_output": "Investors INV-654 (Geeta Rao), INV-1254 (Vikram Patel), INV-1312 (Amit Verma), INV-393 (Amrita Pandey), INV-1296 (Amit Chauhan) and INV-1481 (Amit Mishra) have average goal progress below 30.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 100.391,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nWe have query: \"Which investors have average goal progress below 30, risk_score above 70, negative-return holdings, and allocation_pct above 30?\"\n\nWe need to identify ontology classes: investors, goal progress, risk_score, holdings with negative return, allocation_pct. So first step Retrieve.\n\nThen we have math/aggregation: average goal progress => need Classify for math/aggregation.\n\nAlso we have numeric comparisons (below 30, above 70, above 30) but classification is for math, aggregation, or numeric-superlative words. So we need Classify for \"average\". Possibly also for \"negative-return holdings\"? That's a condition but not aggregation. So just Classify for average.\n\nAfter Retrieve and Classify, we need Generate (SPARQL) to query KG.\n\nThen Scan to execute query.\n\nThen Validate to check data.\n\nThen Explain to user.\n\nThus steps:\n\n1. Retrieve – locate the ontology classes and properties for **Investor**, **GoalProgress**, **RiskScore**, **Holding** (including return value), and **AllocationPct**.  \n\n2. Classify – identify and tag the aggregation term **“average”** (for GoalProgress) and the numeric comparison operators ( < 30, > 70, < 0, > 30 ) that will be needed in the query.  \n\n3. Generate – write a SPARQL query that:  \n   * groups holdings by investor,  \n   * computes `AVG(?goalProgress)` and filters `< 30`,  \n   * filters `?riskScore > 70`,  \n   * filters holdings where `?return < 0` (negative‑return), and  \n   * filters `?allocationPct > 30`.  \n\n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n\n5. Validate – verify that the returned investors satisfy all four conditions (average goal progress, risk score, negative‑return holdings, allocation percentage).  \n\n6. Explain – present the final list of investors that meet the specified criteria to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "InvestmentGoal",
+      "PortfolioHealth",
+      "PortfolioHolding",
+      "SectorAllocation"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "point_lookup",
+    "confidence": 0.95,
+    "target_field": "investor",
+    "schema_datatype": "unknown",
+    "why_this_intent": "The query asks for a list of investors satisfying several numeric filter conditions (progressPct, riskScore, returnsPct, allocationPct). No aggregation is requested, just retrieval of matching investor entities.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName ?avgProgress WHERE {\n  {\n    SELECT ?inv (AVG(xsd:decimal(?progress)) AS ?avgProgress) WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:progressPct ?progress .\n    }\n    GROUP BY ?inv\n    HAVING (AVG(xsd:decimal(?progress)) < 30)\n  }\n  {\n    SELECT ?inv WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasPortfolioHealth ?ph .\n      ?ph wm:riskScore ?riskScore .\n      FILTER(xsd:decimal(?riskScore) > 70)\n    }\n  }\n  {\n    SELECT DISTINCT ?inv WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:returnsPct ?ret .\n      FILTER(xsd:decimal(?ret) < 0)\n    }\n  }\n  {\n    SELECT ?inv WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasSectorAllocation ?alloc .\n      ?alloc wm:allocationPct ?allocPct .\n      FILTER(xsd:decimal(?allocPct) > 30)\n    }\n  }\n  ?inv wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName ?avgProgress WHERE {\n  {\n    SELECT ?inv (AVG(xsd:decimal(?progress)) AS ?avgProgress) WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:progressPct ?progress .\n    }\n    GROUP BY ?inv\n    HAVING (AVG(xsd:decimal(?progress)) < 30)\n  }\n  {\n    SELECT ?inv WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasPortfolioHealth ?ph .\n      ?ph wm:riskScore ?riskScore .\n      FILTER(xsd:decimal(?riskScore) > 70)\n    }\n  }\n  {\n    SELECT DISTINCT ?inv WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:returnsPct ?ret .\n      FILTER(xsd:decimal(?ret) < 0)\n    }\n  }\n  {\n    SELECT ?inv WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasSectorAllocation ?alloc .\n      ?alloc wm:allocationPct ?allocPct .\n      FILTER(xsd:decimal(?allocPct) > 30)\n    }\n  }\n  ?inv wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName ?avgProgress WHERE {\n  {\n    SELECT ?inv (AVG(xsd:decimal(?progress)) AS ?avgProgress) WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:progressPct ?progress .\n    }\n    GROUP BY ?inv\n    HAVING (AVG(xsd:decimal(?progress)) < 30)\n  }\n  {\n    SELECT ?inv WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasPortfolioHealth ?ph .\n      ?ph wm:riskScore ?riskScore .\n      FILTER(xsd:decimal(?riskScore) > 70)\n    }\n  }\n  {\n    SELECT DISTINCT ?inv WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasHolding ?hold .\n      ?hold wm:returnsPct ?ret .\n      FILTER(xsd:decimal(?ret) < 0)\n    }\n  }\n  {\n    SELECT ?inv WHERE {\n      ?inv a wm:Investor .\n      ?inv wm:hasSectorAllocation ?alloc .\n      ?alloc wm:allocationPct ?allocPct .\n      FILTER(xsd:decimal(?allocPct) > 30)\n    }\n  }\n  ?inv wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n}",
+        "status": "success",
+        "row_count": 6,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 6,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL query correctly implements all required filters (average goal progress < 30, riskScore > 70, negative returns, allocationPct > 30) and returns the appropriate columns (investorId, investorName, avgProgress). The returned sample rows are non‑empty and include avgProgress values below 30, indicating the query satisfied the aggregation condition. Column names align with the user's request, and no extraneous or missing fields are present.",
+    "validator_reason": "The SPARQL query correctly implements all required filters (average goal progress < 30, riskScore > 70, negative returns, allocationPct > 30) and returns the appropriate columns (investorId, investorName, avgProgress). The returned sample rows are non‑empty and include avgProgress values below 30, indicating the query satisfied the aggregation condition. Column names align with the user's request, and no extraneous or missing fields are present.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 6,
+    "final_answer": "Investors INV-654 (Geeta Rao), INV-1254 (Vikram Patel), INV-1312 (Amit Verma), INV-393 (Amrita Pandey), INV-1296 (Amit Chauhan) and INV-1481 (Amit Mishra) have average goal progress below 30.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth list of investors (6 entries) with Pipeline Output. Ground Truth: [{\"investor_id\":\"INV-1254\",\"investor_name\":\"Vikram Patel\"},{\"investor_id\":\"INV-1296\",\"investor_name\":\"Amit Chauhan\"},{\"investor_id\":\"INV-1312\",\"investor_name\":\"Amit Verma\"},{\"investor_id\":\"INV-1481\",\"investor_name\":\"Amit Mishra\"},{\"investor_id\":\"INV-393\",\"investor_name\":\"Amrita Pandey\"},{\"investor_id\":\"INV-654\",\"investor_name\":\"Geeta Rao\"}]\n\nPipeline Output: \"Investors INV-654 (Geeta Rao), INV-1254 (Vikram Patel), INV-1312 (Amit Verma), INV-393 (Amrita Pandey), INV-1296 (Amit Chauhan) and INV-1481 (Amit Mishra) have average goal progress below 30.\"\n\nThe question: \"Which investors have average goal progress below 30, risk_score above 70, negative-return holdings, and allocation_pct above 30?\" Ground Truth lists six investors meeting all criteria. Pipeline Output lists the same six investors (INV-654, INV-1254, INV-1312, INV-393, INV-1296, INV-1481) and includes names. It says they have average goal progress below 30, but does not mention risk_score above 70, negative-return holdings, allocation_pct above 30. However the requirement is that the output must answer the user's question. The question asks for investors meeting all four criteria. The pipeline output only mentions average goal progress below 30, not the other criteria. Does that count as answering? The output lists the investors, but only mentions one of the criteria. However the fact that they are listed implies they meet all criteria? The instruction: \"If the Pipeline Output gives only an intermediate row or one side of the comparison, mark MISMATCH.\" Here the pipeline output gives the list of investors but only mentions one condition. It does not explicitly state they meet the other conditions. According to rule 6: For yes/no or comparison questions, the Pipeline Output must explicitly answer yes/no or include all compared facts needed to prove the answer. If it only returns an intermediate row or one side of the comparison, mark MISMATCH. The question is a multi-condition filter. The pipeline output only mentions average goal progress below 30, not risk_score, negative-return holdings, allocation_pct. So it's missing facts. Therefore should be MISMATCH.\n\nThus output: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

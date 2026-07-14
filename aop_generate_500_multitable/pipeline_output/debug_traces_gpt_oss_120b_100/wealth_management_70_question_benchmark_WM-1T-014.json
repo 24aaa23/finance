@@ -1,0 +1,345 @@
+{
+  "sample_row_id": "wealth_management_70_question_benchmark:WM-1T-014",
+  "question": "How many rebalancing actions use each rebalancing logic?",
+  "ground_truth": "[{\"logic\":null,\"action_count\":309},{\"logic\":\"Automated Trigger\",\"action_count\":538},{\"logic\":\"Risk-parity\",\"action_count\":573},{\"logic\":\"Scenario-based\",\"action_count\":584},{\"logic\":\"Tactical\",\"action_count\":584},{\"logic\":\"Threshold-based\",\"action_count\":585},{\"logic\":\"Mean-reversion\",\"action_count\":586},{\"logic\":\"Momentum-driven\",\"action_count\":589},{\"logic\":\"Calendar-based\",\"action_count\":592},{\"logic\":\"Valuation-based\",\"action_count\":594},{\"logic\":\"Manual Override\",\"action_count\":658}]",
+  "pipeline_output": "https://wealth.example.org/kg/rebalancing-logic/Manual-Override: 658 actions; https://wealth.example.org/kg/rebalancing-logic/Valuation-based: 594 actions; https://wealth.example.org/kg/rebalancing-logic/Calendar-based: 592 actions; https://wealth.example.org/kg/rebalancing-logic/Momentum-driven: 589 actions; https://wealth.example.org/kg/rebalancing-logic/Mean-reversion: 586 actions; https://wealth.example.org/kg/rebalancing-logic/Threshold-based: 585 actions; https://wealth.example.org/kg/rebalancing-logic/Tactical: 584 actions; https://wealth.example.org/kg/rebalancing-logic/Scenario-based: 584 actions; https://wealth.example.org/kg/rebalancing-logic/Risk-parity: 573 actions; https://wealth.example.org/kg/rebalancing-logic/Automated-Trigger: 538 actions.",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 83.823,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"How many rebalancing actions use each rebalancing logic?\" This is asking for count per logic. So we need to retrieve ontology classes, then classify for math/aggregation (Count). Then generate SPARQL, scan, validate, explain.\n\nSteps:\n\n1. Retrieve (ontology classes) – find classes like RebalancingAction, RebalancingLogic.\n\n2. Classify (detect aggregation: Count) – classify query as requiring numeric aggregation.\n\n3. Generate (write SPARQL query to count actions per logic).\n\n4. Scan (execute query).\n\n5. Validate (check results).\n\n6. Explain (present answer).\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"How many rebalancing actions use each rebalancing logic?\" This asks count per logic. So we need to retrieve ontology classes, classify for Count, generate SPARQL, scan, validate, explain.\n\nSteps:\n\n1. Retrieve (ontology classes) – find classes like RebalancingAction, RebalancingLogic.\n\n2. Classify (identify that we need Count aggregation).\n\n3. Generate (write SPARQL query to count actions per logic).\n\n4. Scan (execute query).\n\n5. Validate (check results).\n\n6. Explain (present answer).\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"How many rebalancing actions use each rebalancing logic?\" This is an aggregation (Count) per rebalancing logic. So we need to classify for aggregation (Count). Steps: 1 Retrieve ontology classes. 2 Classify for aggregation. 3 Generate SPARQL query. 4 Scan to execute. 5 Validate results. 6 Explain to user.\n\nThus list steps numbered.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "RebalancingAction",
+      "RebalancingLogic"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.97,
+    "target_field": "rebalanceId",
+    "schema_datatype": "categorical_string",
+    "why_this_intent": "User requests a count of RebalancingAction instances per RebalancingLogic. This is a numeric aggregation (COUNT) over a categorical identifier, which is supported.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?logic (COUNT(?action) AS ?actionCount)\nWHERE {\n  ?action a wm:RebalancingAction ;\n          wm:hasRebalancingLogic ?logic .\n  ?logic a wm:RebalancingLogic .\n}\nGROUP BY ?logic\nORDER BY DESC(?actionCount)",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?logic (COUNT(?action) AS ?actionCount)\nWHERE {\n  ?action a wm:RebalancingAction ;\n          wm:hasRebalancingLogic ?logic .\n  ?logic a wm:RebalancingLogic .\n}\nGROUP BY ?logic\nORDER BY DESC(?actionCount)",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?logic (COUNT(?action) AS ?actionCount)\nWHERE {\n  ?action a wm:RebalancingAction ;\n          wm:hasRebalancingLogic ?logic .\n  ?logic a wm:RebalancingLogic .\n}\nGROUP BY ?logic\nORDER BY DESC(?actionCount)",
+        "status": "success",
+        "row_count": 10,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 10,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query correctly aggregates counts per logic and the returned columns match the request.",
+    "validator_reason": "The query correctly aggregates counts per logic and the returned columns match the request.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 10,
+    "final_answer": "https://wealth.example.org/kg/rebalancing-logic/Manual-Override: 658 actions; https://wealth.example.org/kg/rebalancing-logic/Valuation-based: 594 actions; https://wealth.example.org/kg/rebalancing-logic/Calendar-based: 592 actions; https://wealth.example.org/kg/rebalancing-logic/Momentum-driven: 589 actions; https://wealth.example.org/kg/rebalancing-logic/Mean-reversion: 586 actions; https://wealth.example.org/kg/rebalancing-logic/Threshold-based: 585 actions; https://wealth.example.org/kg/rebalancing-logic/Tactical: 584 actions; https://wealth.example.org/kg/rebalancing-logic/Scenario-based: 584 actions; https://wealth.example.org/kg/rebalancing-logic/Risk-parity: 573 actions; https://wealth.example.org/kg/rebalancing-logic/Automated-Trigger: 538 actions.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth list of logic and action_count. Ground Truth includes also a null logic with 309 actions. Pipeline Output lists many but does not include the null logic entry. It includes all other entries? Let's list Ground Truth entries:\n\n1. {\"logic\":null,\"action_count\":309}\n2. {\"logic\":\"Automated Trigger\",\"action_count\":538}\n3. {\"logic\":\"Risk-parity\",\"action_count\":573}\n4. {\"logic\":\"Scenario-based\",\"action_count\":584}\n5. {\"logic\":\"Tactical\",\"action_count\":584}\n6. {\"logic\":\"Threshold-based\",\"action_count\":585}\n7. {\"logic\":\"Mean-reversion\",\"action_count\":586}\n8. {\"logic\":\"Momentum-driven\",\"action_count\":589}\n9. {\"logic\":\"Calendar-based\",\"action_count\":592}\n10. {\"logic\":\"Valuation-based\",\"action_count\":594}\n11. {\"logic\":\"Manual Override\",\"action_count\":658}\n\nPipeline Output includes:\n\n- Manual-Override: 658\n- Valuation-based: 594\n- Calendar-based: 592\n- Momentum-driven: 589\n- Mean-reversion: 586\n- Threshold-based: 585\n- Tactical: 584\n- Scenario-based: 584\n- Risk-parity: 573\n- Automated-Trigger: 538\n\nIt does not include the null logic entry (309). So missing one value. According to rule 4: If JSON, all important values must appear. Missing values => PARTIAL or MISMATCH, not MATCH. Since missing one entry, it's PARTIAL (not full). So answer: PARTIAL.</reasoning>PARTIAL",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

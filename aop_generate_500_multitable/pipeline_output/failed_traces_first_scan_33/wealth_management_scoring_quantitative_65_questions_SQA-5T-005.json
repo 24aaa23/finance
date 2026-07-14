@@ -1,0 +1,228 @@
+{
+  "sample_row_id": "wealth_management_scoring_quantitative_65_questions:SQA-5T-005",
+  "question": "Which investors have average avg_sharpe_ratio below 0, average avg_volatility_pct above 20, negative total_holding_gain, and risk_score above 50?",
+  "ground_truth": "[{\"investor_id\":\"INV-1385\",\"investor_name\":\"Siddharth Arora\",\"avg_sharpe_ratio\":-1.82,\"avg_volatility_pct\":45.49,\"total_holding_gain\":-35155.0,\"risk_score\":63.83942},{\"investor_id\":\"INV-1385\",\"investor_name\":\"Siddharth Arora\",\"avg_sharpe_ratio\":-1.82,\"avg_volatility_pct\":45.49,\"total_holding_gain\":-35155.0,\"risk_score\":63.83942},{\"investor_id\":\"INV-1385\",\"investor_name\":\"Siddharth Arora\",\"avg_sharpe_ratio\":-1.82,\"avg_volatility_pct\":45.49,\"total_holding_gain\":-35155.0,\"risk_score\":63.83942},{\"investor_id\":\"INV-1385\",\"investor_name\":\"Siddharth Arora\",\"avg_sharpe_ratio\":-1.82,\"avg_volatility_pct\":45.49,\"total_holding_gain\":-35155.0,\"risk_score\":63.83942},{\"investor_id\":\"INV-1385\",\"investor_name\":\"Siddharth Arora\",\"avg_sharpe_ratio\":-1.82,\"avg_volatility_pct\":45.49,\"total_holding_gain\":-35155.0,\"risk_score\":63.83942}]",
+  "pipeline_output": "Investor INV-1385 Siddharth Arora meets the criteria with avg_sharpe_ratio -1.82, avg_volatility_pct 45.49234388692247, total_holding_gain -35155.0, risk_score 63.83942015969179.",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 186.456,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "Validate",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nWe have query: \"Which investors have average avg_sharpe_ratio below 0, average avg_volatility_pct above 20, negative total_holding_gain, and risk_score above 50?\"\n\nWe need to start by finding ontology classes using Retrieve. Then classify math/aggregation words: average, below, above, negative, above. So we need Classify step.\n\nThen Generate SPARQL after Classify. Then Scan. Then Validate the results for correctness (e.g., ensure numeric types, non-empty).\n\nPotentially also need Filter_Aggregate to compute averages? But we can incorporate in SPARQL. According to rules, after Generate we Scan. So we can include aggregation in query.\n\nThus steps:\n\n1. Retrieve ontology classes relevant to \"Investor\", \"avg_sharpe_ratio\", \"avg_volatility_pct\", \"total_holding_gain\", \"risk_score\".\n\n2. Classify the query to identify mathematical/aggregation operations: average, below, above, negative.\n\n3. Generate a SPARQL query that selects investors where AVG(avg_sharpe_ratio) < 0, AVG(avg_volatility_pct) > 20, total_holding_gain < 0, risk_score > 50.\n\n4. Scan to execute the generated SPARQL query against KG.\n\n5. Validate the results for correctness (e.g., ensure numeric types, non-empty).\n\n6. Explain the answer to the user.\n\nThus output numbered steps.</reasoning>1. Retrieve – Obtain the ontology classes and properties related to “Investor”, “avg_sharpe_ratio”, “avg_volatility_pct”, “total_holding_gain”, and “risk_score”.  \n\n2. Classify – Identify and label the mathematical/aggregation terms in the query: “average” (aggregation), “below”, “above”, “negative”, and the numeric thresholds (0, 20, 50).  \n\n3. Generate – Write a SPARQL query that:  \n   * Groups data by each investor,  \n   * Computes `AVG(?avg_sharpe_ratio)` and filters `< 0`,  \n   * Computes `AVG(?avg_volatility_pct)` and filters `> 20`,  \n   * Checks `?total_holding_gain < 0`,  \n   * Checks `?risk_score > 50`,  \n   * Returns the investor identifiers.  \n\n4. Scan – Execute the generated SPARQL query against the knowledge graph to retrieve the matching investors.  \n\n5. Validate – Verify that the returned results satisfy all the specified numeric conditions and that the data types are correct (e.g., numeric fields).  \n\n6. Explain – Present the list of investors that meet all the criteria to the user, describing how each condition was applied.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Steps:\n\n1. Retrieve ontology classes (likely Investor, metrics). Use Retrieve.\n\n2. Classify for math/aggregation: need to identify average, sum, etc. So use Classify to detect that we need average of avg_sharpe_ratio, avg_volatility_pct, sum? Actually negative total_holding_gain (maybe sum). risk_score above 50 (maybe attribute). So we need classification of these numeric aggregations.\n\n3. Generate SPARQL query using classification results.\n\n4. Scan to execute query.\n\n5. Validate results.\n\n6. Explain to user.\n\nPotentially also need Filter_Aggregate, Order_By? But we can embed filters in SPARQL. The plan may include using Filter_Aggregate to compute averages and filter. But per chronology, after Generate we must Scan, then Validate, then Explain. We can include intermediate steps like Filter_Aggregate before Generate? Actually classification is for math, aggregation words. Then Generate writes SPARQL that includes aggregation and filters. So we might not need separate Filter_Aggregate operator; but could include it after Scan? Not needed.\n\nThus steps:\n\n1. Retrieve\n\n2. Classify\n\n3. Generate\n\n4. Scan\n\n5. Validate\n\n6. Explain\n\nMake sure to mention that Generate will produce SPARQL with AVG, FILTER etc.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the ontology classes (e.g., Investor, avg_sharpe_ratio, avg_volatility_pct, total_holding_gain, risk_score).  \n\n2. Classify – identify and label the mathematical/aggregation terms in the query (“average”, “negative”, “above”, “below”).  \n\n3. Generate – write a SPARQL query that (a) groups by investor, (b) computes AVG(avg_sharpe_ratio) and AVG(avg_volatility_pct), (c) sums total_holding_gain, (d) retrieves risk_score, and (e) filters for AVG(avg_sharpe_ratio) < 0, AVG(avg_volatility_pct) > 20, SUM(total_holding_gain) < 0, and risk_score > 50.  \n\n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n\n5. Validate – check that the returned investor records satisfy all the specified numeric conditions.  \n\n6. Explain – present the final list of investors that meet the criteria to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nWe have query: \"Which investors have average avg_sharpe_ratio below 0, average avg_volatility_pct above 20, negative total_holding_gain, and risk_score above 50?\"\n\nWe need to find ontology classes first using Retrieve. Then classify math/aggregation words: average, below, above, negative, above. So we need Classify for those. Then Generate SPARQL after Classify. Then Scan, Validate, Explain.\n\nPotentially also need Filter_Aggregate for applying conditions? But the plan must be linear steps, each operator used once maybe. We can include Filter_Aggregate after Scan? Actually after Scan we have data, we might need to filter/aggregate. But the chronology says Validate after Scan, then Explain final. It doesn't forbid using other operators before Validate? The rules: Scan must happen immediately after Generate. So after Generate we must Scan. Then Validate after Scan. So any other operators like Filter_Aggregate must be before Generate? Or maybe part of Generate query. So we can embed filters in SPARQL. So we don't need separate Filter_Aggregate step.\n\nThus steps:\n\n1. Retrieve: get ontology classes (Investor, avg_sharpe_ratio, avg_volatility_pct, total_holding_gain, risk_score).\n\n2. Classify: identify math/aggregation terms (average, below, above, negative, above) and map to operations.\n\n3. Generate: construct SPARQL query that selects investors where AVG(avg_sharpe_ratio) < 0, AVG(avg_volatility_pct) > 20, SUM(total_holding_gain) < 0 (or total_holding_gain negative), and risk_score > 50.\n\n4. Scan: execute the SPARQL query against KG.\n\n5. Validate: check results for consistency, ensure numeric thresholds satisfied.\n\n6. Explain: present list of investors to user.\n\nThus output only numbered steps.</reasoning>1. **Retrieve** – Pull the ontology classes and properties relevant to the query (e.g., `Investor`, `avg_sharpe_ratio`, `avg_volatility_pct`, `total_holding_gain`, `risk_score`).  \n\n2. **Classify** – Identify and label the mathematical/aggregation terms in the query (“average”, “below”, “above”, “negative”, “above”) and map them to the appropriate operations (AVG, <, >, <0, >).  \n\n3. **Generate** – Write a SPARQL query that selects investors whose `AVG(?avg_sharpe_ratio) < 0`, `AVG(?avg_volatility_pct) > 20`, `SUM(?total_holding_gain) < 0` (or `?total_holding_gain < 0` if already aggregated), and `?risk_score > 50`.  \n\n4. **Scan** – Execute the generated SPARQL query against the knowledge graph to retrieve the matching investor identifiers.  \n\n5. **Validate** – Verify that the returned investors satisfy all numeric constraints and that no schema violations occurred.  \n\n6. **Explain** – Present the final list of investors to the user, summarizing how each meets the specified criteria.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: re"
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "InvestmentGoal",
+      "PortfolioHealth",
+      "PortfolioHolding"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.96,
+    "target_field": "avg_sharpe_ratio, avg_volatility_pct, total_holding_gain, risk_score",
+    "schema_datatype": "numeric|unknown",
+    "why_this_intent": "User requests numeric filters and averages on fields that are numeric in the schema (avg_sharpe_ratio, avg_volatility_pct, risk_score). The field total_holding_gain is not present in the schema, so its datatype is unknown, but the request is still a numeric aggregation rather than a categorical lookup.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?sharpe ?vol ?gain ?riskScore\nWHERE {\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?sharpeRatio)) AS ?sharpe) (AVG(xsd:decimal(?volatility)) AS ?vol)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:investorId ?investorId .\n      ?goal wm:avgSharpeRatio ?sharpeRatio .\n      ?goal wm:avgVolatilityPct ?volatility .\n    }\n    GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?gainVal)) AS ?gain)\n    WHERE {\n      ?holding a wm:PortfolioHolding .\n      ?holding wm:investorId ?investorId .\n      ?holding wm:currentValue ?curr .\n      ?holding wm:cost ?cost .\n      BIND (xsd:decimal(?curr) - xsd:decimal(?cost) AS ?gainVal)\n    }\n    GROUP BY ?investorId\n  }\n  ?health a wm:PortfolioHealth .\n  ?health wm:investorId ?investorId .\n  ?health wm:riskScore ?riskScore .\n\n  ?inv a wm:Investor .\n  ?inv wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER(?sharpe < 0 && ?vol > 20 && ?gain < 0 && ?riskScore > 50)\n}\nORDER BY ?investorId",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?sharpe ?vol ?gain ?riskScore\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  {\n    SELECT ?inv (AVG(xsd:decimal(?sharpeRatio)) AS ?sharpe) (AVG(xsd:decimal(?volatility)) AS ?vol)\n    WHERE {\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:avgSharpeRatio ?sharpeRatio .\n      ?goal wm:avgVolatilityPct ?volatility .\n    }\n    GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?gainVal)) AS ?gain)\n    WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:currentValue ?curr .\n      ?holding wm:cost ?cost .\n      BIND (xsd:decimal(?curr) - xsd:decimal(?cost) AS ?gainVal)\n    }\n    GROUP BY ?inv\n  }\n\n  ?inv wm:hasPortfolioHealth ?health .\n  ?health wm:riskScore ?riskScore .\n\n  FILTER(?sharpe < 0 && ?vol > 20 && ?gain < 0 && ?riskScore > 50)\n}\nORDER BY ?investorId",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?sharpe ?vol ?gain ?riskScore\nWHERE {\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?sharpeRatio)) AS ?sharpe) (AVG(xsd:decimal(?volatility)) AS ?vol)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:investorId ?investorId .\n      ?goal wm:avgSharpeRatio ?sharpeRatio .\n      ?goal wm:avgVolatilityPct ?volatility .\n    }\n    GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?gainVal)) AS ?gain)\n    WHERE {\n      ?holding a wm:PortfolioHolding .\n      ?holding wm:investorId ?investorId .\n      ?holding wm:currentValue ?curr .\n      ?holding wm:cost ?cost .\n      BIND (xsd:decimal(?curr) - xsd:decimal(?cost) AS ?gainVal)\n    }\n    GROUP BY ?investorId\n  }\n  ?health a wm:PortfolioHealth .\n  ?health wm:investorId ?investorId .\n  ?health wm:riskScore ?riskScore .\n\n  ?inv a wm:Investor .\n  ?inv wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER(?sharpe < 0 && ?vol > 20 && ?gain < 0 && ?riskScore > 50)\n}\nORDER BY ?investorId",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?sharpe ?vol ?gain ?riskScore\nWHERE {\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?sharpeRatio)) AS ?sharpe) (AVG(xsd:decimal(?volatility)) AS ?vol)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:investorId ?investorId .\n      ?goal wm:avgSharpeRatio ?sharpeRatio .\n      ?goal wm:avgVolatilityPct ?volatility .\n    }\n    GROUP BY ?investorId\n  }\n  {\n    SELECT ?investorId (SUM(xsd:decimal(?gainVal)) AS ?gain)\n    WHERE {\n      ?holding a wm:PortfolioHolding .\n      ?holding wm:investorId ?investorId .\n      ?holding wm:currentValue ?curr .\n      ?holding wm:cost ?cost .\n      BIND (xsd:decimal(?curr) - xsd:decimal(?cost) AS ?gainVal)\n    }\n    GROUP BY ?investorId\n  }\n  ?health a wm:PortfolioHealth .\n  ?health wm:investorId ?investorId .\n  ?health wm:riskScore ?riskScore .\n\n  ?inv a wm:Investor .\n  ?inv wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER(?sharpe < 0 && ?vol > 20 && ?gain < 0 && ?riskScore > 50)\n}\nORDER BY ?investorId",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?sharpe ?vol ?gain ?riskScore\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  {\n    SELECT ?inv (AVG(xsd:decimal(?sharpeRatio)) AS ?sharpe) (AVG(xsd:decimal(?volatility)) AS ?vol)\n    WHERE {\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:avgSharpeRatio ?sharpeRatio .\n      ?goal wm:avgVolatilityPct ?volatility .\n    }\n    GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?gainVal)) AS ?gain)\n    WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:currentValue ?curr .\n      ?holding wm:cost ?cost .\n      BIND (xsd:decimal(?curr) - xsd:decimal(?cost) AS ?gainVal)\n    }\n    GROUP BY ?inv\n  }\n\n  ?inv wm:hasPortfolioHealth ?health .\n  ?health wm:riskScore ?riskScore .\n\n  FILTER(?sharpe < 0 && ?vol > 20 && ?gain < 0 && ?riskScore > 50)\n}\nORDER BY ?investorId",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?investorName ?sharpe ?vol ?gain ?riskScore\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  {\n    SELECT ?inv (AVG(xsd:decimal(?sharpeRatio)) AS ?sharpe) (AVG(xsd:decimal(?volatility)) AS ?vol)\n    WHERE {\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:avgSharpeRatio ?sharpeRatio .\n      ?goal wm:avgVolatilityPct ?volatility .\n    }\n    GROUP BY ?inv\n  }\n\n  {\n    SELECT ?inv (SUM(xsd:decimal(?gainVal)) AS ?gain)\n    WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:currentValue ?curr .\n      ?holding wm:cost ?cost .\n      BIND (xsd:decimal(?curr) - xsd:decimal(?cost) AS ?gainVal)\n    }\n    GROUP BY ?inv\n  }\n\n  ?inv wm:hasPortfolioHealth ?health .\n  ?health wm:riskScore ?riskScore .\n\n  FILTER(?sharpe < 0 && ?vol > 20 && ?gain < 0 && ?riskScore > 50)\n}\nORDER BY ?investorId",
+        "status": "success",
+        "row_count": 1,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 1,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query returns non‑empty results with the exact columns requested (investorId, investorName, sharpe, vol, gain, riskScore). The SPARQL correctly aggregates avgSharpeRatio and avgVolatilityPct, computes total holding gain, and applies the filters (<0, >20, <0, >50) matching the user's conditions. The sample row satisfies all criteria, so the answer successfully addresses the query.",
+    "validator_reason": "The query returns non‑empty results with the exact columns requested (investorId, investorName, sharpe, vol, gain, riskScore). The SPARQL correctly aggregates avgSharpeRatio and avgVolatilityPct, computes total holding gain, and applies the filters (<0, >20, <0, >50) matching the user's conditions. The sample row satisfies all criteria, so the answer successfully addresses the query.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 1,
+    "final_answer": "Investor INV-1385 Siddharth Arora meets the criteria with avg_sharpe_ratio -1.82, avg_volatility_pct 45.49234388692247, total_holding_gain -35155.0, risk_score 63.83942015969179.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth and Pipeline Output.\n\nGround Truth: a JSON array with 5 identical entries (duplicate). Each entry: investor_id \"INV-1385\", investor_name \"Siddharth Arora\", avg_sharpe_ratio -1.82, avg_volatility_pct 45.49, total_holding_gain -35155.0, risk_score 63.83942.\n\nPipeline Output: \"Investor INV-1385 Siddharth Arora meets the criteria with avg_sharpe_ratio -1.82, avg_volatility_pct 45.49234388692247, total_holding_gain -35155.0, risk_score 63.83942015969179.\"\n\nWe need to see if all important values appear. The ground truth values: avg_sharpe_ratio -1.82 matches. avg_volatility_pct 45.49 vs pipeline 45.49234388692247. That's essentially same value with more precision; acceptable as same number? The rule: treat comma formatting etc. But does tolerance for small differences? It says if Ground Truth contains a concrete number, the Pipeline Output must contain the same facts. Here 45.49 vs 45.49234388692247. That's not exactly same but it's close. Is that considered same? Usually they'd require same numeric value; but they might accept more precise representation. Since 45.492... rounds to 45.49. I'd consider it matching. total_holding_gain -35155.0 matches. risk_score 63.83942 vs 63.83942015969179, again more precise. Acceptable.\n\nGround Truth has 5 duplicate rows; pipeline returns one row. According to rule 13: If Ground Truth lists multiple tied correct answers and pipeline returns only one, mark PARTIAL, not MATCH. Here ground truth lists 5 entries (identical). Are they considered multiple tied correct answers? They are duplicates, but still multiple rows. The question: \"Which investors have ...\" So answer should list investors meeting criteria. The ground truth lists the same investor repeated 5 times. The pipeline lists that investor once. Since ground truth includes multiple rows (though duplicates), pipeline only includes one. According to rule 13, that would be PARTIAL. However, maybe duplicates are not considered distinct answers; they are redundant. The rule says \"multiple tied correct answers\". Duplicates might be considered tied. But they are identical; returning one may be considered sufficient. The rule likely expects that if ground truth has multiple distinct answers, you need all. Duplicates may be considered redundant; but rule doesn't specify deduplication. I'd lean to PARTIAL because not all rows present. But could be MATCH because the essential fact is the investor ID and details, duplicates are irrelevant. The ground truth repeats same investor; the pipeline includes that investor. The question asks \"Which investors have ...\" So answer is list of investors; duplicates not needed. I'd argue MATCH.\n\nCheck rule 4: If Ground Truth is JSON, all important values in the JSON must appear in the Pipeline Output. Missing values are PARTIAL or MISMATCH. Important values: each entry includes same values. Pipeline includes those values. It includes all fields. So matches.\n\nThus I think MATCH.</reasoning>MATCH",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

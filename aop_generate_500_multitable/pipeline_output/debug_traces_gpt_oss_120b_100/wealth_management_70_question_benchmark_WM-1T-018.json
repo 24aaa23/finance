@@ -1,0 +1,351 @@
+{
+  "sample_row_id": "wealth_management_70_question_benchmark:WM-1T-018",
+  "question": "Which five sectors have the highest total recorded investment in sector allocation?",
+  "ground_truth": "[{\"sector\":\"Real Estate\",\"total_investment\":102625583.0},{\"sector\":\"Technology\",\"total_investment\":98798474.0},{\"sector\":\"Private Equity\",\"total_investment\":93789007.0},{\"sector\":\"Corporate\",\"total_investment\":90166843.0},{\"sector\":\"Financial Services\",\"total_investment\":88775676.0}]",
+  "pipeline_output": "The five sectors with the highest total recorded investment are Real Estate (102625583.0), Technology (98798474.0), Private Equity (93789007.0), Corporate (90166843.0) and Financial Services (88775676.0).",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 85.667,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which five sectors have the highest total recorded investment in sector allocation?\" Need to find ontology classes, then classify for math/aggregation (highest total recorded investment). Then generate SPARQL, scan, validate, explain. Possibly also need Order_By and Filter_Aggregate? But we must follow chronology: after Retrieve, we can use Classify, then Generate, then Scan, then Validate, then Explain. However we might need additional operators like Filter_Aggregate, Order_By before Generate? The rules say \"If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve').\" So we can include extra steps between Retrieve and Generate? Possibly we can include Classify then maybe Filter_Aggregate, Order_By, etc. But the chronology only mandates ordering of certain steps, not that we cannot have extra steps. However we must obey critical laws: 1. start by finding ontology classes using Retrieve. 2. Use Classify for math, aggregation, or numeric-superlative words such as 'Highest'. So we need Classify. 3. Generate after Classify (or Retrieve). So we can have Retrieve, Classify, Generate. 4. Scan after Generate. 5. Validate after Scan. 6. Explain final.\n\nThus steps: 1 Retrieve (ontology classes: Sector, Investment, SectorAllocation). 2 Classify (identify need for aggregation: sum of investment per sector, then highest). 3 Generate (write SPARQL to sum investment per sector, order descending, limit 5). 4 Scan (execute query). 5 Validate (ensure results non-empty, correct types). 6 Explain (present answer). That satisfies.\n\nThus output numbered steps only.</reasoning>1. Retrieve – Identify and fetch the relevant ontology classes (e.g., **Sector**, **Investment**, **SectorAllocation**) needed to answer the query.  \n2. Classify – Detect the mathematical/aggregation intent (“highest total recorded investment”) and determine that a **sum aggregation** per sector followed by a **ranking** is required.  \n3. Generate – Write a SPARQL query that:  \n   * groups records by sector,  \n   * computes the **SUM** of the recorded investment for each sector,  \n   * orders the results by the summed value in descending order, and  \n   * limits the output to the top **5** sectors.  \n4. Scan – Execute the generated SPARQL query against the knowledge graph to retrieve the result set.  \n5. Validate – Check that the returned data contains exactly five sectors, that each entry includes a sector identifier and a numeric total investment, and that no errors occurred during execution.  \n6. Explain – Present the user with the list of the five sectors having the highest total recorded investment in sector allocation, including the aggregated investment amounts.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which five sectors have the highest total recorded investment in sector allocation?\" Need to find ontology classes (Retrieve). Then classify for math/aggregation: highest total recorded investment => need Sum and Highest (superlative). So we need Classify after Retrieve. Then Generate SPARQL after Classify. Then Scan, Validate, Explain. Possibly also need Order_By, Filter_Aggregate? But we only need to list steps, not actual operators usage details. The plan should include steps like Retrieve, Classify, Generate, Scan, Validate, Explain. Could also include Filter_Aggregate and Order_By as separate steps? The plan must be linear execution plan using only provided operators. The chronology: start with Retrieve, then Classify for math, then Generate, then Scan, then Validate, then Explain. We could include additional operators between Generate and Scan? The rules say Scan must happen immediately after Generate. So no other steps between. So we cannot insert Filter_Aggregate or Order_By as separate steps; they must be part of the SPARQL query generated in Generate step. So plan steps:\n\n1. Retrieve (ontology classes related to sectors, investments, sector allocation).\n2. Classify (identify that the query requires aggregation (sum) and superlative (highest) to find top five sectors).\n3. Generate (compose SPARQL query that sums investment per sector, orders descending, limits to 5).\n4. Scan (execute the SPARQL query against the knowledge graph).\n5. Validate (check that results contain five sectors and total investment values are correct).\n6. Explain (present the five sectors with their total recorded investment to the user).\n\nThus output only numbered steps.</reasoning>1. Retrieve – locate the ontology classes for “Sector”, “Investment”, and “Sector Allocation”.  \n2. Classify – determine that the query requires numeric aggregation (sum of investment) and a superlative operation (highest) to select the top 5 sectors.  \n3. Generate – write a SPARQL query that groups by sector, sums the recorded investment, orders the results by the summed value in descending order, and limits the output to five sectors.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the query returned exactly five sectors and that each sector’s total investment value is correctly computed.  \n6. Explain – present the five sectors with the highest total recorded investment in sector allocation, including the summed investment amounts.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which five sectors have the highest total recorded investment in sector allocation?\" Need to find ontology classes, then classify math/aggregation (highest total recorded investment). Then generate SPARQL, scan, validate, explain. Possibly need Filter_Aggregate, Order_By, maybe Set_Union etc. But plan steps only list operators, not details of query. Provide numbered steps.\n\nSteps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify aggregation: total, highest, five)\n3. Generate (SPARQL to compute sum of investment per sector, order descending, limit 5)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nThat's it. Ensure order. Provide only numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Explain",
+              "inputs": [
+                5
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2
+            },
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Sector",
+      "SectorAllocation"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.99,
+    "target_field": "totalInvestment",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks for the five sectors with the highest total recorded investment, which requires aggregating and sorting the numeric 'totalInvestment' field in the SectorAllocation class.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?sectorLabel (SUM(xsd:decimal(?investment)) AS ?totalInvestment)\nWHERE {\n  ?alloc a wm:SectorAllocation ;\n         wm:hasSector ?sector ;\n         wm:totalInvestment ?investment .\n  ?sector rdfs:label ?sectorLabel .\n}\nGROUP BY ?sectorLabel\nORDER BY DESC(?totalInvestment)\nLIMIT 5",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?sectorLabel (SUM(xsd:decimal(?investment)) AS ?totalInvestment)\nWHERE {\n  ?alloc a wm:SectorAllocation ;\n         wm:hasSector ?sector ;\n         wm:totalInvestment ?investment .\n  ?sector rdfs:label ?sectorLabel .\n}\nGROUP BY ?sectorLabel\nORDER BY DESC(?totalInvestment)\nLIMIT 5",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?sectorLabel (SUM(xsd:decimal(?investment)) AS ?totalInvestment)\nWHERE {\n  ?alloc a wm:SectorAllocation ;\n         wm:hasSector ?sector ;\n         wm:totalInvestment ?investment .\n  ?sector rdfs:label ?sectorLabel .\n}\nGROUP BY ?sectorLabel\nORDER BY DESC(?totalInvestment)\nLIMIT 5",
+        "status": "success",
+        "row_count": 5,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 5,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL correctly aggregates total investment per sector, orders by descending total, and limits to five results. The returned columns (sectorLabel, totalInvestment) match the query's request for sector names and their summed investments, and the sample data provides five sectors with the highest totals, satisfying the user's request.",
+    "validator_reason": "The SPARQL correctly aggregates total investment per sector, orders by descending total, and limits to five results. The returned columns (sectorLabel, totalInvestment) match the query's request for sector names and their summed investments, and the sample data provides five sectors with the highest totals, satisfying the user's request.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 5,
+    "final_answer": "The five sectors with the highest total recorded investment are Real Estate (102625583.0), Technology (98798474.0), Private Equity (93789007.0), Corporate (90166843.0) and Financial Services (88775676.0).",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth JSON list of five sectors with totals. Pipeline output lists same five sectors with same numbers. All match. So output MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

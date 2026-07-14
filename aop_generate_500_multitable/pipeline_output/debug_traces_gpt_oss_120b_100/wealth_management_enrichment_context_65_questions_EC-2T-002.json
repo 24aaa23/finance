@@ -1,0 +1,195 @@
+{
+  "sample_row_id": "wealth_management_enrichment_context_65_questions:EC-2T-002",
+  "question": "What holding sectors appear for investors in the Equity category?",
+  "ground_truth": "[{\"sector\":\"Automobile\"},{\"sector\":\"Banking\"},{\"sector\":\"Consumer Goods\"},{\"sector\":\"Corporate\"},{\"sector\":\"Financial Services\"},{\"sector\":\"Government\"},{\"sector\":\"Healthcare\"},{\"sector\":\"Infrastructure\"},{\"sector\":\"Pharma\"},{\"sector\":\"Private Equity\"},{\"sector\":\"Real Estate\"},{\"sector\":\"Technology\"}]",
+  "pipeline_output": "The holding sectors are Technology, Government, Private Equity, Financial Services, Corporate, Banking, Automobile, Healthcare, Real Estate, Consumer Goods, Infrastructure, and Pharma.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 122.717,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "none",
+    "short_circuit_stage": "none"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"What holding sectors appear for investors in the Equity category?\" This is a simple lookup/listing question: we need to retrieve ontology classes, then generate SPARQL to get holding sectors for investors in Equity category, then scan, validate, explain.\n\nWe must start with Retrieve to find ontology classes. Since no math/aggregation, we can go straight from Retrieve to Generate (no Classify needed)\n\nThus steps:\n\n1. Retrieve\n2. Generate\n3. Scan\n4. Validate\n5. Explain\n\nWe may add description? The instruction: Output ONLY the numbered steps. Likely just list numbers with operator names. Probably each step line: \"1. Retrieve\", etc.\n\nThus final answer.</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only the provided operators, following the chronology rules.\n\nQuery: \"What holding sectors appear for investors in the Equity category?\" This is a simple lookup/listing question: we need to find holding sectors that appear for investors in the Equity category. Likely need to retrieve ontology classes, then generate a SPARQL query, scan, validate, explain.\n\nWe must start with Retrieve to find ontology classes. Since it's a simple lookup, we can go straight from Retrieve to Generate (no Classify needed because no math/aggregation). Then Scan, Validate, Explain.\n\nThus steps:\n\n1. Retrieve (ontology classes relevant to holdings, sectors, investors, categories)\n2. Generate (SPARQL query to list distinct holding sectors for investors where category = Equity)\n3. Scan (execute the SPARQL query)\n4. Validate (ensure results are correct, non-empty)\n5. Explain (present answer to user)\n\nWe need to output only numbered steps. Ensure each step uses exact operator name.\n\nThus:\n\n1. Retrieve\n2. Generate\n3. Scan\n4. Validate\n5. Explain\n\nProbably include brief description? The instruction says output ONLY the numbered steps. Likely just list numbers with operator names. Could be \"1. Retrieve\", etc.\n\nLet's output that.</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"What holding sectors appear for investors in the Equity category?\" This is a simple lookup/listing question: we need to find holding sectors for investors in Equity category. Likely need to retrieve ontology classes, then generate SPARQL to get holding sectors, scan, validate, explain.\n\nNo math/aggregation words, so we can go from Retrieve to Generate directly (skip Classify). Steps:\n\n1. Retrieve (ontology classes)\n2. Generate (SPARQL query to list holding sectors for investors where category = Equity)\n3. Scan (execute query)\n4. Validate (check results)\n5. Explain (present answer)\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "PortfolioHolding",
+      "Sector",
+      "Category",
+      "Investor"
+    ],
+    "why_selected": "Classes cover holdings, sector labels, investor relation, and category needed for the query.",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "list_sectors",
+    "confidence": 1.0,
+    "target_field": "sector",
+    "schema_datatype": "string",
+    "why_this_intent": "Question asks for a list of sectors associated with Equity holdings.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?sectorLabel WHERE {\n  ?holding a wm:PortfolioHolding .\n  ?holding wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  ?holding wm:heldByInvestor ?investor .\n  ?holding wm:hasCategory ?cat .\n  ?cat rdfs:label ?catLabel .\n  FILTER(CONTAINS(LCASE(STR(?catLabel)), \"equity\"))\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?sectorLabel WHERE {\n  ?holding a wm:PortfolioHolding .\n  ?holding wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  ?holding wm:heldByInvestor ?investor .\n  ?holding wm:hasCategory ?cat .\n  ?cat rdfs:label ?catLabel .\n  FILTER(CONTAINS(LCASE(STR(?catLabel)), \"equity\"))\n}",
+    "why_this_sparql": "Selects distinct sector labels for holdings whose category label contains \"Equity\".",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?sectorLabel WHERE {\n  ?holding a wm:PortfolioHolding .\n  ?holding wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  ?holding wm:heldByInvestor ?investor .\n  ?holding wm:hasCategory ?cat .\n  ?cat rdfs:label ?catLabel .\n  FILTER(CONTAINS(LCASE(STR(?catLabel)), \"equity\"))\n}",
+        "status": "success",
+        "row_count": 12,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "Successful scan returned the expected 12 distinct sector rows."
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 12,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query correctly retrieves distinct sector labels for holdings with category containing 'Equity', and the returned column matches the request with non-empty results.",
+    "validator_reason": "The query correctly retrieves distinct sector labels for holdings with category containing 'Equity', and the returned column matches the request with non-empty results.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 12,
+    "final_answer": "The holding sectors are Technology, Government, Private Equity, Financial Services, Corporate, Banking, Automobile, Healthcare, Real Estate, Consumer Goods, Infrastructure, and Pharma.",
+    "did_output_all_rows": true,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth list of sectors (12 items) with pipeline output list. Ground truth sectors: Automobile, Banking, Consumer Goods, Corporate, Financial Services, Government, Healthcare, Infrastructure, Pharma, Private Equity, Real Estate, Technology.\n\nPipeline output: \"Technology, Government, Private Equity, Financial Services, Corporate, Banking, Automobile, Healthcare, Real Estate, Consumer Goods, Infrastructure, and Pharma.\"\n\nCheck if all sectors present. Let's list pipeline: Technology, Government, Private Equity, Financial Services, Corporate, Banking, Automobile, Healthcare, Real Estate, Consumer Goods, Infrastructure, Pharma. That's exactly the same 12 sectors, just order different. All present. So MATCH.\n\nThus output MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "none",
+    "why_wrong": "",
+    "root_cause": "N/A",
+    "suggested_fix": "N/A",
+    "confidence": 1.0
+  }
+}

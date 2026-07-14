@@ -1,0 +1,202 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-079",
+  "question": "Across profile category, how do transaction count, holding count, goal count, and scenario count compare using four related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_transaction_count\":5.04,\"avg_holding_count\":9.93,\"avg_scenario_count\":1.67},{\"group_value\":\"Debt\",\"avg_transaction_count\":5.05,\"avg_holding_count\":10.15,\"avg_scenario_count\":1.6},{\"group_value\":\"Equity\",\"avg_transaction_count\":5.04,\"avg_holding_count\":9.75,\"avg_scenario_count\":1.43},{\"group_value\":\"Gold\",\"avg_transaction_count\":5.04,\"avg_holding_count\":9.64,\"avg_scenario_count\":1.64},{\"group_value\":\"Hybrid\",\"avg_transaction_count\":5.03,\"avg_holding_count\":9.6,\"avg_scenario_count\":1.63},{\"group_value\":\"Real Estate\",\"avg_transaction_count\":5.04,\"avg_holding_count\":9.6,\"avg_scenario_count\":1.59}]",
+  "pipeline_output": "Debt has transactionCount 1377, holdingCount 2716, goalCount 845, scenarioCount 276; Equity has transactionCount 1546, holdingCount 2984, goalCount 965, scenarioCount 274; Gold has transactionCount 1521, holdingCount 2835, goalCount 952, scenarioCount 301; Hybrid has transactionCount 1533, holdingCount 2940, goalCount 955, scenarioCount 310; Real Estate has transactionCount 1462, holdingCount 2849, goalCount 907, scenarioCount 311.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 319.401,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do transaction count, holding count, goal count, and scenario count compare using four related tables?\" So we need to retrieve ontology classes, classify math/aggregation words (Count). Then generate SPARQL query, scan, validate, explain.\n\nPotential steps:\n\n1. Retrieve (ontology classes) – maybe retrieve classes like ProfileCategory, Transaction, Holding, Goal, Scenario.\n\n2. Classify (identify aggregation: Count) – classify the need for count aggregation.\n\n3. Generate (write SPARQL query that groups by profile category and counts transactions, holdings, goals, scenarios using four related tables).\n\n4. Scan (execute query).\n\n5. Validate (check results for completeness/consistency).\n\n6. Explain (present results to user).\n\nThus 6 steps.\n\nMake sure we follow order: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve – Obtain the ontology classes relevant to the query (e.g., ProfileCategory, Transaction, Holding, Goal, Scenario and their relationships).  \n\n2. Classify – Identify and label the aggregation requirement (“Count”) for each of the four entities (transaction count, holding count, goal count, scenario count).  \n\n3. Generate – Write a SPARQL (or equivalent graph) query that groups results by ProfileCategory and computes the count of related Transaction, Holding, Goal, and Scenario instances using the four related tables.  \n\n4. Scan – Execute the generated query against the knowledge graph to retrieve the aggregated counts per profile category.  \n\n5. Validate – Verify that the returned counts are complete, correctly grouped by profile category, and that no table joins produced missing or duplicate records.  \n\n6. Explain – Present the comparative counts of transactions, holdings, goals, and scenarios for each profile category to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do transaction count, holding count, goal count, and scenario count compare using four related tables?\" So we need to retrieve ontology classes, classify math/aggregation words (Count). Then generate SPARQL, scan, validate, explain. Possibly also need Filter_Aggregate, Order_By, etc. But the plan must be linear steps, using operators. Steps: 1 Retrieve (ontology classes). 2 Classify (identify aggregation: Count). 3 Generate (write SPARQL to get counts per profile category across four tables). 4 Scan (execute query). 5 Validate (check results). 6 Explain (present comparison). Could also include Filter_Aggregate to aggregate counts per profile category. But classification already identifies need for aggregation. The plan could include Filter_Aggregate after Scan? Actually after Scan we have raw data; we might need to aggregate. But we could embed aggregation in SPARQL. The plan may include Filter_Aggregate as a separate step after Scan, before Validate. However chronology: Validate must happen after Scan, but can we have Filter_Aggregate before Validate? Possibly we can have Scan -> Filter_Aggregate -> Validate -> Explain. But Validate is checking data; maybe after aggregation. So steps: Retrieve, Classify, Generate, Scan, Filter_Aggregate, Validate, Explain.\n\nMake sure each step uses exact operator name. Provide numbered steps only.</reasoning>1. Retrieve – locate the ontology classes for “profile category”, “transaction”, “holding”, “goal”, and “scenario”.  \n2. Classify – identify the aggregation intent (“count”) for each of the four tables.  \n3. Generate – compose a SPARQL query that, for each profile category, counts the related transactions, holdings, goals, and scenarios by linking the four tables.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Filter_Aggregate – apply aggregation functions to produce the final count values per profile category for the four entities.  \n6. Validate – verify that the returned counts are complete and correspond to the expected schema relationships.  \n7. Explain – present the comparative counts of transactions, holdings, goals, and scenarios across each profile category to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do transaction count, holding count, goal count, and scenario count compare using four related tables?\" Need to find ontology classes, classify math/aggregation words (count), retrieve, generate SPARQL, scan, validate, explain.\n\nSteps:\n\n1. Retrieve (ontology classes) – find classes like ProfileCategory, Transaction, Holding, Goal, Scenario, maybe counts.\n\n2. Classify – identify that we need Count aggregation for each of four tables.\n\n3. Generate – write SPARQL query that for each profile category returns counts of transactions, holdings, goals, scenarios (maybe using subqueries or aggregates).\n\n4. Scan – execute the SPARQL query.\n\n5. Validate – check results for completeness/consistency.\n\n6. Explain – present comparison to user.\n\nThus 6 steps. Ensure order: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nReturn numbered list.</reasoning>1. Retrieve – Locate the ontology classes relevant to the query (e.g., ProfileCategory, Transaction, Holding, Goal, Scenario).  \n\n2. Classify – Identify the aggregation operation required: **Count** for each of the four related tables (transaction count, holding count, goal count, scenario count).  \n\n3. Generate – Write a SPARQL query that, for every ProfileCategory, aggregates the counts of related Transaction, Holding, Goal, and Scenario instances (using COUNT and appropriate GROUP BY).  \n\n4. Scan – Execute the generated SPARQL query against the knowledge graph to obtain the count results per profile category.  \n\n5. Validate – Verify that the returned data includes all profile categories and that each count column is populated and logically consistent.  \n\n6. Explain – Present the user with a clear comparison of transaction, holding, goal, and scenario counts across the profile categories.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": "Classes relevant to profile categories and related tables were selected; no missing classes detected.",
+  "classify": "Correctly identified numeric aggregation intent for four count fields.",
+  "generate": "SPARQL uses COUNT aggregation, producing total counts rather than the average values required by ground truth.",
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel \n       (COALESCE(?txCount, 0) AS ?transactionCount) \n       (COALESCE(?holdCount, 0) AS ?holdingCount) \n       (COALESCE(?goalCount, 0) AS ?goalCount) \n       (COALESCE(?scenarioCount, 0) AS ?scenarioCount)\nWHERE {\n  # categories linked to at least one investor\n  ?inv a wm:Investor .\n  ?inv wm:hasCategory ?cat .\n  OPTIONAL { ?cat rdfs:label ?catLabel . }\n\n  # transaction (CashFlow) count per category\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?cf) AS ?txCount)\n    WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:cashFlowOfInvestor ?inv2 .\n      ?inv2 wm:hasCategory ?cat .\n    } GROUP BY ?cat\n  }\n\n  # holding (PortfolioHolding) count per category\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?ph) AS ?holdCount)\n    WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:heldByInvestor ?inv2 .\n      ?inv2 wm:hasCategory ?cat .\n    } GROUP BY ?cat\n  }\n\n  # goal (InvestmentGoal) count per category\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?goal) AS ?goalCount)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:belongsToInvestor ?inv2 .\n      ?inv2 wm:hasCategory ?cat .\n    } GROUP BY ?cat\n  }\n\n  # scenario (ScenarioRebalancing) count per category\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?sc) AS ?scenarioCount)\n    WHERE {\n      ?sc a wm:ScenarioRebalancing .\n      ?sc wm:scenarioRebalancingOfInvestor ?inv2 .\n      ?inv2 wm:hasCategory ?cat .\n    } GROUP BY ?cat\n  }\n}\nGROUP BY ?cat ?catLabel ?txCount ?holdCount ?goalCount ?scenarioCount",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel \n       (COALESCE(?txCount, 0) AS ?transactionCount) \n       (COALESCE(?holdCount, 0) AS ?holdingCount) \n       (COALESCE(?goalCount, 0) AS ?goalCount) \n       (COALESCE(?scenarioCount, 0) AS ?scenarioCount)\nWHERE {\n  # categories linked to at least one investor\n  ?inv a wm:Investor .\n  ?inv wm:hasCategory ?cat .\n  OPTIONAL { ?cat rdfs:label ?catLabel . }\n\n  # transaction (CashFlow) count per category\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?cf) AS ?txCount)\n    WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:cashFlowOfInvestor ?inv2 .\n      ?inv2 wm:hasCategory ?cat .\n    } GROUP BY ?cat\n  }\n\n  # holding (PortfolioHolding) count per category\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?ph) AS ?holdCount)\n    WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:heldByInvestor ?inv2 .\n      ?inv2 wm:hasCategory ?cat .\n    } GROUP BY ?cat\n  }\n\n  # goal (InvestmentGoal) count per category\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?goal) AS ?goalCount)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:belongsToInvestor ?inv2 .\n      ?inv2 wm:hasCategory ?cat .\n    } GROUP BY ?cat\n  }\n\n  # scenario (ScenarioRebalancing) count per category\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?sc) AS ?scenarioCount)\n    WHERE {\n      ?sc a wm:ScenarioRebalancing .\n      ?sc wm:scenarioRebalancingOfInvestor ?inv2 .\n      ?inv2 wm:hasCategory ?cat .\n    } GROUP BY ?cat\n  }\n}\nGROUP BY ?cat ?catLabel ?txCount ?holdCount ?goalCount ?scenarioCount",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel\n       (COALESCE(?txCount, 0) AS ?transactionCount)\n       (COALESCE(?holdCount, 0) AS ?holdingCount)\n       (COALESCE(?goalCount, 0) AS ?goalCount)\n       (COALESCE(?scenarioCount, 0) AS ?scenarioCount)\nWHERE {\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?catLabel . }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?cf) AS ?txCount)\n    WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:cashFlowOfInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?ph) AS ?holdCount)\n    WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:heldByInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?goal) AS ?goalCount)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:belongsToInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?sc) AS ?scenarioCount)\n    WHERE {\n      ?sc a wm:ScenarioRebalancing .\n      ?sc wm:scenarioRebalancingOfInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n}\nORDER BY ?catLabel",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": "Refine was too similar to timed-out SPARQL, so Generate rewrote with stronger feedback."
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel\n       (COALESCE(?txCount, 0) AS ?transactionCount)\n       (COALESCE(?holdCount, 0) AS ?holdingCount)\n       (COALESCE(?goalCount, 0) AS ?goalCount)\n       (COALESCE(?scenarioCount, 0) AS ?scenarioCount)\nWHERE {\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?catLabel . }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?cf) AS ?txCount)\n    WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:cashFlowOfInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?ph) AS ?holdCount)\n    WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:heldByInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?goal) AS ?goalCount)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:belongsToInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?sc) AS ?scenarioCount)\n    WHERE {\n      ?sc a wm:ScenarioRebalancing .\n      ?sc wm:scenarioRebalancingOfInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n}\nORDER BY ?catLabel",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel\n       (COALESCE(?txCount, 0) AS ?transactionCount)\n       (COALESCE(?holdCount, 0) AS ?holdingCount)\n       (COALESCE(?goalCount, 0) AS ?goalCount)\n       (COALESCE(?scenarioCount, 0) AS ?scenarioCount)\nWHERE {\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?catLabel . }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?cf) AS ?txCount)\n    WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:cashFlowOfInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?ph) AS ?holdCount)\n    WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:heldByInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?goal) AS ?goalCount)\n    WHERE {\n      ?goal a wm:InvestmentGoal .\n      ?goal wm:belongsToInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (COUNT(DISTINCT ?sc) AS ?scenarioCount)\n    WHERE {\n      ?sc a wm:ScenarioRebalancing .\n      ?sc wm:scenarioRebalancingOfInvestor ?inv .\n      ?inv wm:hasCategory ?cat .\n    }\n    GROUP BY ?cat\n  }\n}\nORDER BY ?catLabel",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel\n       (COALESCE(?txCount, 0) AS ?transactionCount)\n       (COALESCE(?holdCount, 0) AS ?holdingCount)\n       (COALESCE(?goalCount, 0) AS ?goalCount)\n       (COALESCE(?scenarioCount, 0) AS ?scenarioCount)\nWHERE {\n  {\n    SELECT ?cat (COUNT(DISTINCT ?cf) AS ?txCount)\n           (COUNT(DISTINCT ?ph) AS ?holdCount)\n           (COUNT(DISTINCT ?goal) AS ?goalCount)\n           (COUNT(DISTINCT ?sc) AS ?scenarioCount)\n    WHERE {\n      {\n        SELECT ?cat ?cf WHERE {\n          ?cf a wm:CashFlow .\n          ?cf wm:cashFlowOfInvestor ?inv .\n          ?inv wm:hasCategory ?cat .\n        }\n      }\n      UNION\n      {\n        SELECT ?cat ?ph WHERE {\n          ?ph a wm:PortfolioHolding .\n          ?ph wm:heldByInvestor ?inv .\n          ?inv wm:hasCategory ?cat .\n        }\n      }\n      UNION\n      {\n        SELECT ?cat ?goal WHERE {\n          ?goal a wm:InvestmentGoal .\n          ?goal wm:belongsToInvestor ?inv .\n          ?inv wm:hasCategory ?cat .\n        }\n      }\n      UNION\n      {\n        SELECT ?cat ?sc WHERE {\n          ?sc a wm:ScenarioRebalancing .\n          ?sc wm:scenarioRebalancingOfInvestor ?inv .\n          ?inv wm:hasCategory ?cat .\n        }\n      }\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL { ?cat rdfs:label ?catLabel . }\n}\nORDER BY ?catLabel",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel\n       (COALESCE(?txCount, 0) AS ?transactionCount)\n       (COALESCE(?holdCount, 0) AS ?holdingCount)\n       (COALESCE(?goalCount, 0) AS ?goalCount)\n       (COALESCE(?scenarioCount, 0) AS ?scenarioCount)\nWHERE {\n  {\n    SELECT ?cat (COUNT(DISTINCT ?cf) AS ?txCount)\n           (COUNT(DISTINCT ?ph) AS ?holdCount)\n           (COUNT(DISTINCT ?goal) AS ?goalCount)\n           (COUNT(DISTINCT ?sc) AS ?scenarioCount)\n    WHERE {\n      {\n        SELECT ?cat ?cf WHERE {\n          ?cf a wm:CashFlow .\n          ?cf wm:cashFlowOfInvestor ?inv .\n          ?inv wm:hasCategory ?cat .\n        }\n      }\n      UNION\n      {\n        SELECT ?cat ?ph WHERE {\n          ?ph a wm:PortfolioHolding .\n          ?ph wm:heldByInvestor ?inv .\n          ?inv wm:hasCategory ?cat .\n        }\n      }\n      UNION\n      {\n        SELECT ?cat ?goal WHERE {\n          ?goal a wm:InvestmentGoal .\n          ?goal wm:belongsToInvestor ?inv .\n          ?inv wm:hasCategory ?cat .\n        }\n      }\n      UNION\n      {\n        SELECT ?cat ?sc WHERE {\n          ?sc a wm:ScenarioRebalancing .\n          ?sc wm:scenarioRebalancingOfInvestor ?inv .\n          ?inv wm:hasCategory ?cat .\n        }\n      }\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL { ?cat rdfs:label ?catLabel . }\n}\nORDER BY ?catLabel",
+        "status": "success",
+        "row_count": 5,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 5,
+    "final_scan_error": ""
+  },
+  "validate": "Validation passed syntactically but did not check semantic alignment with expected averages.",
+  "explain": "Explanation presented raw totals, mismatching expected average metrics.",
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth and Pipeline Output.\n\nQuestion: \"Across profile category, how do transaction count, holding count, goal count, and scenario count compare using four related tables?\" Ground Truth provides JSON array with group_value and avg_transaction_count, avg_holding_count, avg_scenario_count. It does not include goal count. It includes avg values per category (null, Debt, Equity, Gold, Hybrid, Real Estate). The pipeline output gives raw counts (transactionCount, holdingCount, goalCount, scenarioCount) per category (Debt, Equity, Gold, Hybrid, Real Estate). It does not include the null group. Also the numbers are completely different: Ground Truth avg transaction count ~5.04, pipeline shows 1377 etc. So mismatch.\n\nAlso missing goal count in ground truth (ground truth doesn't have goal count). The pipeline includes goalCount, but ground truth doesn't require it. However the numbers for transactionCount etc do not match the avg values. So mismatch.\n\nThus output: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

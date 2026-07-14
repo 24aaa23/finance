@@ -1,0 +1,394 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-050",
+  "question": "Across profile segment, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_net_cash_flow\":-2166872.13,\"avg_scenario_change\":-3.64,\"avg_scenario_count\":1.54},{\"group_value\":\"Diversified\",\"avg_net_cash_flow\":1316986.23,\"avg_scenario_change\":-0.8,\"avg_scenario_count\":1.59},{\"group_value\":\"Large Cap\",\"avg_net_cash_flow\":-418966.48,\"avg_scenario_change\":0.31,\"avg_scenario_count\":1.58},{\"group_value\":\"Mid Cap\",\"avg_net_cash_flow\":2180634.97,\"avg_scenario_change\":-1.31,\"avg_scenario_count\":1.61},{\"group_value\":\"Small Cap\",\"avg_net_cash_flow\":428442.16,\"avg_scenario_change\":-3.01,\"avg_scenario_count\":1.57}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 212.913,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following the critical chronology.\n\nWe have query: \"Across profile segment, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?\"\n\nInterpretation: Need to compare three metrics across profile segment: cash-flow net amount, scenario change, scenario count. Using three related tables. Likely need to retrieve ontology classes, classify numeric aggregation words: \"cash-flow net amount\" likely numeric, \"scenario change\" maybe numeric, \"scenario count\" includes Count (aggregation). So we need Classify for math/aggregation words: includes \"Count\". Also maybe \"compare\" suggests need for aggregation/comparison. So steps:\n\n1. Retrieve: find ontology classes (profile segment, cash-flow net amount, scenario change, scenario count, related tables).\n2. Classify: identify math/aggregation terms: \"cash-flow net amount\" (numeric), \"scenario change\" (numeric), \"scenario count\" (Count). So classification step.\n3. Generate: write SPARQL (or query) to retrieve these metrics across profile segment from three related tables, using appropriate aggregations.\n4. Scan: execute the query.\n5. Validate: check data correctness.\n6. Explain: present results to user.\n\nPotentially need Filter_Aggregate, Order_By, Link, Extract? But the plan only needs to list steps; we can include operators as needed. The query asks \"compare\", maybe need to compute differences. Could use Math_Compute after retrieving values. So after Validate, we could compute comparisons. Then Explain.\n\nChronology: after Validate we can do Math_Compute before Explain. That's allowed? The rules only specify order for certain steps, but we must keep linear execution. So steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Math_Compute (to compare values)\n7. Explain\n\nIf need to filter by profile segment, maybe use Filter_Aggregate before Generate? Actually classification identifies need for aggregation; we could incorporate filters in Generate. But we can include Filter_Aggregate as separate step after Scan to aggregate per segment. However we already have aggregation in query. Could still include.\n\nBut we must follow chronology: Retrieve -> Classify -> Generate -> Scan -> Validate -> (optional other ops) -> Explain final.\n\nThus final answer: numbered steps.\n\nLet's produce:\n\n1. Retrieve – obtain ontology classes for “profile segment”, “cash‑flow net amount”, “scenario change”, “scenario count”, and the three related tables.\n2. Classify – detect that the query contains numeric/aggregation terms (net amount, change, Count) and mark them for aggregation/comparison.\n3. Generate – compose a SPARQL (or graph) query that links the three tables, groups by profile segment, and selects the cash‑flow net amount, the scenario change, and the count of scenarios (using appropriate aggregation functions).\n4. Scan – execute the generated query against the knowledge graph and return the raw result set.\n5. Validate – verify that the result set contains values for all three metrics for each profile segment and that no nulls or mismatches exist.\n6. Math_Compute – calculate comparative figures (e.g., differences or ratios) between cash‑flow net amount, scenario change, and scenario count across the segments.\n7. Explain – present the comparative results to the user in a clear, ordered format.\n\nReturn only numbered steps.</reasoning>1. Retrieve – obtain the ontology classes for “profile segment”, “cash‑flow net amount”, “scenario change”, “scenario count”, and the three related tables.  \n2. Classify – identify the numeric/aggregation terms (cash‑flow net amount, scenario change, Count) that require aggregation or mathematical comparison.  \n3. Generate – write a SPARQL (or graph) query that links the three tables, groups by profile segment, and selects the cash‑flow net amount, the scenario change, and the count of scenarios (using appropriate aggregation functions).  \n4. Scan – execute the generated query against the knowledge graph and retrieve the raw result set.  \n5. Validate – check that the result set contains valid, non‑null values for all three metrics for each profile segment.  \n6. Math_Compute – compute the comparative figures (differences, ratios, or other comparisons) between cash‑flow net amount, scenario change, and scenario count across the profile segments.  \n7. Explain – present the comparative results to the user in a clear, ordered format.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Math_Compute -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 34,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Math_Compute",
+              "inputs": [
+                "n5"
+              ]
+            },
+            {
+              "id": "n7",
+              "operator": "Explain",
+              "inputs": [
+                "n6"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n6",
+              "target": "n7"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile segment, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?\" So we need to retrieve ontology classes, then classify math/aggregation terms: cash-flow net amount (likely numeric), scenario change (maybe numeric), scenario count (count). So classification needed. Then generate SPARQL after classify, then scan, validate, explain.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify math/aggregation terms: cash-flow net amount, scenario change, scenario count)\n3. Generate (write SPARQL query across three related tables linking profile segment, cash-flow net amount, scenario change, scenario count)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present comparison)\n\nMake sure each step uses exact operator names. Provide numbered list.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile segment, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?\" We need to identify ontology classes (profile segment, cash-flow net amount, scenario change, scenario count, tables). Use Retrieve first.\n\nThen classify for math, aggregation, numeric-superlative words: \"compare\", \"count\". There's \"scenario count\" which is a count aggregation. Also maybe need to compare values across segment, likely need aggregation. So we need Classify after Retrieve.\n\nThen Generate SPARQL to query three related tables for cash-flow net amount, scenario change, scenario count across profile segment.\n\nThen Scan to execute query.\n\nThen Validate to check data.\n\nThen Explain to present answer.\n\nPotentially also need Filter_Aggregate, Order_By, etc. But the plan just outlines steps; we can include those operators as separate steps if needed. The plan must be linear, each step numbered.\n\nSequence: 1 Retrieve (ontology classes). 2 Classify (identify aggregation). 3 Generate (SPARQL). 4 Scan (execute). 5 Validate (check). 6 Explain (final). Could also include Filter_Aggregate if needed after Scan? But per chronology, after Scan we go to Validate, then Explain. So we cannot insert extra steps after Validate except Explain. So we must embed any needed filtering/aggregation in the SPARQL generated. So steps are as above.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the ontology classes for “profile segment”, “cash‑flow net amount”, “scenario change”, “scenario count”, and the three related tables.  \n\n2. Classify – identify the numeric‑aggregation elements in the query (e.g., “scenario count” and the comparative analysis of cash‑flow net amount and scenario change).  \n\n3. Generate – write a SPARQL (or equivalent graph) query that joins the three tables on the profile segment key and selects the cash‑flow net amount, scenario change, and a COUNT of scenarios, applying any needed aggregation or comparison logic.  \n\n4. Scan – execute the generated query against the knowledge graph to retrieve the result set.  \n\n5. Validate – verify that the returned data correctly reflects the cash‑flow net amount, scenario change, and scenario count for each profile segment and that the aggregations are accurate.  \n\n6. Explain – present the comparative results to the user, describing how cash‑flow net amount, scenario change, and scenario count vary across the profile segments.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "CashFlow",
+      "ScenarioRebalancing",
+      "Investor",
+      "Segment",
+      "MarketScenario"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.95,
+    "target_field": "amount",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query requests numeric comparisons (cash‑flow net amount, scenario change, scenario count) across profile segments, which involve aggregating numeric fields such as CashFlow.amount and numeric scenario metrics.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment \n       (SUM(xsd:decimal(?cashAmt)) AS ?totalCashFlow) \n       (SUM(xsd:decimal(?allocChange)) AS ?totalAllocationChange) \n       (SUM(?scenarioCnt) AS ?totalScenarioCount)\nWHERE {\n  {\n    SELECT ?investorId ?segment (SUM(xsd:decimal(?amount)) AS ?cashAmt)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:segment ?segment ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?investorId ?segment\n  }\n  {\n    SELECT ?investorId ?segment (SUM(xsd:decimal(?newAllocationPct) - xsd:decimal(?currentAllocationPct)) AS ?allocChange) (COUNT(?scenario) AS ?scenarioCnt)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:segment ?segment ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct ;\n          wm:scenario ?scenario .\n    }\n    GROUP BY ?investorId ?segment\n  }\n}\nGROUP BY ?segment",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment ?totalCashFlow ?totalAllocationChange ?totalScenarioCount\nWHERE {\n  {\n    SELECT ?segment (SUM(?amount) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?segment\n  }\n  {\n    SELECT ?segment (SUM(?allocDiff) AS ?totalAllocationChange) (COUNT(?scenario) AS ?totalScenarioCount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?new ;\n          wm:currentAllocationPct ?cur ;\n          wm:scenario ?scenario .\n      BIND(?new - ?cur AS ?allocDiff)\n    }\n    GROUP BY ?segment\n  }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment \n       (SUM(xsd:decimal(?cashAmt)) AS ?totalCashFlow) \n       (SUM(xsd:decimal(?allocChange)) AS ?totalAllocationChange) \n       (SUM(?scenarioCnt) AS ?totalScenarioCount)\nWHERE {\n  {\n    SELECT ?investorId ?segment (SUM(xsd:decimal(?amount)) AS ?cashAmt)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:segment ?segment ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?investorId ?segment\n  }\n  {\n    SELECT ?investorId ?segment (SUM(xsd:decimal(?newAllocationPct) - xsd:decimal(?currentAllocationPct)) AS ?allocChange) (COUNT(?scenario) AS ?scenarioCnt)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:segment ?segment ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct ;\n          wm:scenario ?scenario .\n    }\n    GROUP BY ?investorId ?segment\n  }\n}\nGROUP BY ?segment",
+        "status": "error",
+        "row_count": null,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "sparql_error"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment \n       (SUM(xsd:decimal(?cashAmt)) AS ?totalCashFlow) \n       (SUM(xsd:decimal(?allocChange)) AS ?totalAllocationChange) \n       (SUM(?scenarioCnt) AS ?totalScenarioCount)\nWHERE {\n  {\n    SELECT ?investorId ?segment (SUM(xsd:decimal(?amount)) AS ?cashAmt)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:segment ?segment ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?investorId ?segment\n  }\n  {\n    SELECT ?investorId ?segment (SUM(xsd:decimal(?newAllocationPct) - xsd:decimal(?currentAllocationPct)) AS ?allocChange) (COUNT(?scenario) AS ?scenarioCnt)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:segment ?segment ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?newAllocationPct ;\n          wm:currentAllocationPct ?currentAllocationPct ;\n          wm:scenario ?scenario .\n    }\n    GROUP BY ?investorId ?segment\n  }\n}\nGROUP BY ?segment",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment ?totalCashFlow ?totalAllocationChange ?totalScenarioCount\nWHERE {\n  {\n    SELECT ?segment (SUM(xsd:decimal(?amount)) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?segment\n  }\n  {\n    SELECT ?segment (SUM(?allocDiff) AS ?totalAllocationChange) (COUNT(?scenario) AS ?totalScenarioCount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?new ;\n          wm:currentAllocationPct ?cur ;\n          wm:scenario ?scenario .\n      BIND(xsd:decimal(?new) - xsd:decimal(?cur) AS ?allocDiff)\n    }\n    GROUP BY ?segment\n  }\n}",
+        "why_refined": "Rewrite using only valid RDF graph terms. Do not invent predicates or classes.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment ?totalCashFlow ?totalAllocationChange ?totalScenarioCount\nWHERE {\n  {\n    SELECT ?segment (SUM(xsd:decimal(?amount)) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?segment\n  }\n  {\n    SELECT ?segment (SUM(?allocDiff) AS ?totalAllocationChange) (COUNT(?scenario) AS ?totalScenarioCount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?new ;\n          wm:currentAllocationPct ?cur ;\n          wm:scenario ?scenario .\n      BIND(xsd:decimal(?new) - xsd:decimal(?cur) AS ?allocDiff)\n    }\n    GROUP BY ?segment\n  }\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "sparql_error"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment ?totalCashFlow ?totalAllocationChange ?totalScenarioCount\nWHERE {\n  {\n    SELECT ?segment (SUM(xsd:decimal(?amount)) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?segment\n  }\n  {\n    SELECT ?segment (SUM(?allocDiff) AS ?totalAllocationChange) (COUNT(?scenario) AS ?totalScenarioCount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?new ;\n          wm:currentAllocationPct ?cur ;\n          wm:scenario ?scenario .\n      BIND(xsd:decimal(?new) - xsd:decimal(?cur) AS ?allocDiff)\n    }\n    GROUP BY ?segment\n  }\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment ?totalCashFlow ?totalAllocationChange ?totalScenarioCount\nWHERE {\n  {\n    SELECT ?segment (SUM(?amount) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?segment\n  }\n  {\n    SELECT ?segment (SUM(?allocDiff) AS ?totalAllocationChange) (COUNT(?scenario) AS ?totalScenarioCount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?new ;\n          wm:currentAllocationPct ?cur ;\n          wm:scenario ?scenario .\n      BIND(?new - ?cur AS ?allocDiff)\n    }\n    GROUP BY ?segment\n  }\n}",
+        "why_refined": "Rewrite using only valid RDF graph terms. Do not invent predicates or classes.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment ?totalCashFlow ?totalAllocationChange ?totalScenarioCount\nWHERE {\n  {\n    SELECT ?segment (SUM(?amount) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amount .\n    }\n    GROUP BY ?segment\n  }\n  {\n    SELECT ?segment (SUM(?allocDiff) AS ?totalAllocationChange) (COUNT(?scenario) AS ?totalScenarioCount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:segment ?segment ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?new ;\n          wm:currentAllocationPct ?cur ;\n          wm:scenario ?scenario .\n      BIND(?new - ?cur AS ?allocDiff)\n    }\n    GROUP BY ?segment\n  }\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "sparql_error"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output with ground truth. Ground truth is JSON array with multiple objects containing group_value and avg_net_cash_flow etc. Pipeline output: \"A database error prevented data retrieval.\"\n\nGround truth has concrete numbers, so pipeline output does not contain them. According to rule 2, if pipeline says \"database error\", mark MISMATCH. So answer: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "empty_result",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

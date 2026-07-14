@@ -1,0 +1,310 @@
+{
+  "sample_row_id": "wealth_management_reference_compliance_55_questions:RC-044",
+  "question": "How do profile category counts compare with holding category counts for category values appearing in either table?",
+  "ground_truth": "[{\"category\":null,\"profile_count\":77,\"holding_count\":755},{\"category\":\"Alternative\",\"profile_count\":0,\"holding_count\":1001},{\"category\":\"Bonds\",\"profile_count\":0,\"holding_count\":932},{\"category\":\"Cash Equivalent\",\"profile_count\":0,\"holding_count\":952},{\"category\":\"Commodities\",\"profile_count\":0,\"holding_count\":943},{\"category\":\"Crypto\",\"profile_count\":0,\"holding_count\":966},{\"category\":\"Debt\",\"profile_count\":273,\"holding_count\":942},{\"category\":\"ETF\",\"profile_count\":0,\"holding_count\":948},{\"category\":\"Equity\",\"profile_count\":306,\"holding_count\":963},{\"category\":\"Fixed Income\",\"profile_count\":0,\"holding_count\":1000},{\"category\":\"Gold\",\"profile_count\":301,\"holding_count\":0},{\"category\":\"Hybrid\",\"profile_count\":304,\"holding_count\":928},{\"category\":\"International\",\"profile_count\":0,\"holding_count\":898},{\"category\":\"MF\",\"profile_count\":0,\"holding_count\":963},{\"category\":\"PPF\",\"profile_count\":0,\"holding_count\":1001},{\"category\":\"REIT\",\"profile_count\":0,\"holding_count\":955},{\"category\":\"Real Estate\",\"profile_count\":289,\"holding_count\":0},{\"category\":\"SGB\",\"profile_count\":0,\"holding_count\":955}]",
+  "pipeline_output": "Alternative has profileCount 0 and holdingCount 1001; Bonds has profileCount 0 and holdingCount 932; Cash Equivalent has profileCount 0 and holdingCount 952; Commodities has profileCount 0 and holdingCount 943; Crypto has profileCount 0 and holdingCount 966; Debt has profileCount 273 and holdingCount 942; ETF has profileCount 0 and holdingCount 948; Equity has profileCount 306 and holdingCount 963; Fixed Income has profileCount 0 and holdingCount 1000; Gold has profileCount 301 and holdingCount 0; Hybrid has profileCount 304 and holdingCount 928; International has profileCount 0 and holdingCount 898; MF has profileCount 0 and holdingCount 963; PPF has profileCount 0 and holdingCount 1001; REIT has profileCount 0 and holdingCount 955; Real Estate has profileCount 289 and holdingCount 0; SGB has profileCount 0 and holdingCount 955.",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 1189.785,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"How do profile category counts compare with holding category counts for category values appearing in either table?\" So we need to compare counts of categories in two tables: profile and holding. Need to retrieve ontology classes, classify for Count (math). Then generate SPARQL to get counts per category for each table, maybe using UNION or something. Then scan, validate, maybe Set_Union or Set_Intersect to compare categories appearing in either table. Then maybe Filter_Aggregate to compute counts? Actually we need counts per category for each table, then compare. Could use Integrate or Link to combine results. Use Integrate to merge counts per category.\n\nThus produce numbered steps:\n\n1. Retrieve\n2. Classify\n3. Generate (SPARQL for profile counts)\n4. Scan\n5. Validate\n6. Generate (SPARQL for holding counts)\n7. Scan\n8. Validate\n9. Set_Union (combine category values from both result sets)\n10. Integrate (join profile and holding counts on category)\n11. Math_Compute (calculate difference or ratio)\n12. Explain\n\nMake sure we only use provided operators. Yes.\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate (SPARQL query to obtain count of each category value in the Profile table)  \n4. Scan  \n5. Validate  \n6. Generate (SPARQL query to obtain count of each category value in the Holding table)  \n7. Scan  \n8. Validate  \n9. Set_Union (combine the sets of category values returned from the Profile and Holding queries)  \n10. Integrate (join the Profile‑count and Holding‑count results on the unified category values)  \n11. Math_Compute (calculate the comparison metrics, e.g., difference or ratio between the two counts for each category)  \n12. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Generate -> Scan -> Scan -> Validate -> Validate -> Set_Union -> Integrate -> Math_Compute -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 54,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 7,
+              "operator": "Scan",
+              "inputs": [
+                6
+              ]
+            },
+            {
+              "id": 8,
+              "operator": "Validate",
+              "inputs": [
+                7
+              ]
+            },
+            {
+              "id": 9,
+              "operator": "Set_Union",
+              "inputs": [
+                5,
+                8
+              ]
+            },
+            {
+              "id": 10,
+              "operator": "Integrate",
+              "inputs": [
+                9
+              ]
+            },
+            {
+              "id": 11,
+              "operator": "Math_Compute",
+              "inputs": [
+                10
+              ]
+            },
+            {
+              "id": 12,
+              "operator": "Explain",
+              "inputs": [
+                5,
+                8,
+                11
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2
+            },
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 1,
+              "target": 6
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 6
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 9
+            },
+            {
+              "source": 5,
+              "target": 12
+            },
+            {
+              "source": 6,
+              "target": 7
+            },
+            {
+              "source": 7,
+              "target": 8
+            },
+            {
+              "source": 8,
+              "target": 9
+            },
+            {
+              "source": 8,
+              "target": 12
+            },
+            {
+              "source": 9,
+              "target": 10
+            },
+            {
+              "source": 10,
+              "target": 11
+            },
+            {
+              "source": 11,
+              "target": 12
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nGoal: \"How do profile category counts compare with holding category counts for category values appearing in either table?\" So we need to compare counts of categories in two tables: profile and holding. Need to retrieve ontology classes, then classify for math/aggregation (Count). Then generate SPARQL to get counts per category for each table, perhaps union of categories. Then scan, validate, maybe Set_Union or Set_Intersect? Need to compare counts for categories appearing in either table, so we need set union of category values from both tables, then for each category get counts from each table. Could use Set_Union to get category list, then Integrate to join counts.\n\nWe must follow chronology: after Retrieve, Classify, Generate, Scan, Validate, then other operators before Explain.\n\nProposed linear plan:\n1. Retrieve\n2. Classify\n3. Generate (profile counts)\n4. Scan\n5. Validate\n6. Generate (holding counts)\n7. Scan\n8. Validate\n9. Set_Union (category values)\n10. Integrate (join counts)\n11. Math_Compute (difference)\n12. Explain\n\nThis satisfies operator ordering constraints.\n</reasoning>",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Generate -> Scan -> Validate -> Set_Union -> Integrate -> Math_Compute -> Explain",
+        "semantic_score": 0.9,
+        "reward": 0.9,
+        "cost": 50,
+        "selected": false,
+        "why_selected_or_rejected": "Slightly lower semantic score.",
+        "dag_data": {}
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "PortfolioHolding",
+      "Category"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "taxonomic_reasoning",
+    "confidence": 0.96,
+    "target_field": "category",
+    "schema_datatype": "categorical_string",
+    "why_this_intent": "The query asks for counts of category values in the Investor profile and PortfolioHolding tables and a comparison between them. This is a grouping‑by operation on a categorical field, not a numeric aggregation like sum/avg on a numeric column.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category (COALESCE(?invCount, 0) AS ?profileCount) (COALESCE(?holdCount, 0) AS ?holdingCount)\nWHERE {\n  {\n    SELECT DISTINCT ?category WHERE {\n      { ?inv a wm:Investor ; wm:category ?category . }\n      UNION\n      { ?hold a wm:PortfolioHolding ; wm:category ?category . }\n    }\n  }\n  OPTIONAL {\n    SELECT (COUNT(DISTINCT ?inv) AS ?invCount) WHERE {\n      ?inv a wm:Investor ; wm:category ?category .\n    }\n  }\n  OPTIONAL {\n    SELECT (COUNT(DISTINCT ?hold) AS ?holdCount) WHERE {\n      ?hold a wm:PortfolioHolding ; wm:category ?category .\n    }\n  }\n}\nORDER BY ?category",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category (SUM(?invFlag) AS ?profileCount) (SUM(?holdFlag) AS ?holdingCount)\nWHERE {\n  {\n    SELECT ?category ?invFlag ?holdFlag WHERE {\n      {\n        ?inv a wm:Investor ; wm:category ?category .\n        BIND(1 AS ?invFlag) BIND(0 AS ?holdFlag)\n      }\n      UNION\n      {\n        ?hold a wm:PortfolioHolding ; wm:category ?category .\n        BIND(0 AS ?invFlag) BIND(1 AS ?holdFlag)\n      }\n    }\n  }\n}\nGROUP BY ?category\nORDER BY ?category",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category (COALESCE(?invCount, 0) AS ?profileCount) (COALESCE(?holdCount, 0) AS ?holdingCount)\nWHERE {\n  {\n    SELECT DISTINCT ?category WHERE {\n      { ?inv a wm:Investor ; wm:category ?category . }\n      UNION\n      { ?hold a wm:PortfolioHolding ; wm:category ?category . }\n    }\n  }\n  OPTIONAL {\n    SELECT (COUNT(DISTINCT ?inv) AS ?invCount) WHERE {\n      ?inv a wm:Investor ; wm:category ?category .\n    }\n  }\n  OPTIONAL {\n    SELECT (COUNT(DISTINCT ?hold) AS ?holdCount) WHERE {\n      ?hold a wm:PortfolioHolding ; wm:category ?category .\n    }\n  }\n}\nORDER BY ?category",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category (COALESCE(?invCount, 0) AS ?profileCount) (COALESCE(?holdCount, 0) AS ?holdingCount)\nWHERE {\n  {\n    SELECT DISTINCT ?category WHERE {\n      { ?inv a wm:Investor ; wm:category ?category . }\n      UNION\n      { ?hold a wm:PortfolioHolding ; wm:category ?category . }\n    }\n  }\n  OPTIONAL {\n    SELECT (COUNT(DISTINCT ?inv) AS ?invCount) WHERE {\n      ?inv a wm:Investor ; wm:category ?category .\n    }\n  }\n  OPTIONAL {\n    SELECT (COUNT(DISTINCT ?hold) AS ?holdCount) WHERE {\n      ?hold a wm:PortfolioHolding ; wm:category ?category .\n    }\n  }\n}\nORDER BY ?category",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category (SUM(?invFlag) AS ?profileCount) (SUM(?holdFlag) AS ?holdingCount)\nWHERE {\n  {\n    SELECT ?category ?invFlag ?holdFlag WHERE {\n      {\n        ?inv a wm:Investor ; wm:category ?category .\n        BIND(1 AS ?invFlag) BIND(0 AS ?holdFlag)\n      }\n      UNION\n      {\n        ?hold a wm:PortfolioHolding ; wm:category ?category .\n        BIND(0 AS ?invFlag) BIND(1 AS ?holdFlag)\n      }\n    }\n  }\n}\nGROUP BY ?category\nORDER BY ?category",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category (SUM(?invFlag) AS ?profileCount) (SUM(?holdFlag) AS ?holdingCount)\nWHERE {\n  {\n    SELECT ?category ?invFlag ?holdFlag WHERE {\n      {\n        ?inv a wm:Investor ; wm:category ?category .\n        BIND(1 AS ?invFlag) BIND(0 AS ?holdFlag)\n      }\n      UNION\n      {\n        ?hold a wm:PortfolioHolding ; wm:category ?category .\n        BIND(0 AS ?invFlag) BIND(1 AS ?holdFlag)\n      }\n    }\n  }\n}\nGROUP BY ?category\nORDER BY ?category",
+        "status": "success",
+        "row_count": 17,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 17,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL query correctly aggregates investor (profile) and portfolio holding counts per category, grouping by category and returning the expected columns (category, profileCount, holdingCount). The result set is non‑empty and includes categories from both tables, with zero counts where a category is absent in one side, which directly answers the user's request to compare profile and holding category counts.",
+    "validator_reason": "The SPARQL query correctly aggregates investor (profile) and portfolio holding counts per category, grouping by category and returning the expected columns (category, profileCount, holdingCount). The result set is non‑empty and includes categories from both tables, with zero counts where a category is absent in one side, which directly answers the user's request to compare profile and holding category counts.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 17,
+    "final_answer": "Alternative has profileCount 0 and holdingCount 1001; Bonds has profileCount 0 and holdingCount 932; Cash Equivalent has profileCount 0 and holdingCount 952; Commodities has profileCount 0 and holdingCount 943; Crypto has profileCount 0 and holdingCount 966; Debt has profileCount 273 and holdingCount 942; ETF has profileCount 0 and holdingCount 948; Equity has profileCount 306 and holdingCount 963; Fixed Income has profileCount 0 and holdingCount 1000; Gold has profileCount 301 and holdingCount 0; Hybrid has profileCount 304 and holdingCount 928; International has profileCount 0 and holdingCount 898; MF has profileCount 0 and holdingCount 963; PPF has profileCount 0 and holdingCount 1001; REIT has profileCount 0 and holdingCount 955; Real Estate has profileCount 289 and holdingCount 0; SGB has profileCount 0 and holdingCount 955.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth. Ground truth includes a list of objects with category, profile_count, holding_count. Also includes a null category entry: {\"category\":null,\"profile_count\":77,\"holding_count\":755}. The pipeline output lists many categories but does not include the null category entry. Also pipeline output includes all categories except maybe some? Let's list ground truth categories:\n\n- null (profile 77, holding 755)\n- Alternative (0,1001)\n- Bonds (0,932)\n- Cash Equivalent (0,952)\n- Commodities (0,943)\n- Crypto (0,966)\n- Debt (273,942)\n- ETF (0,948)\n- Equity (306,963)\n- Fixed Income (0,1000)\n- Gold (301,0)\n- Hybrid (304,928)\n- International (0,898)\n- MF (0,963)\n- PPF (0,1001)\n- REIT (0,955)\n- Real Estate (289,0)\n- SGB (0,955)\n\nPipeline output includes all categories except the null category. It includes each with same numbers? Let's verify each:\n\nAlternative: pipeline says 0 and 1001 matches ground truth (0,1001). Good.\n\nBonds: 0,932 matches.\n\nCash Equivalent: 0,952 matches.\n\nCommodities: 0,943 matches.\n\nCrypto: 0,966 matches.\n\nDebt: 273,942 matches.\n\nETF: 0,948 matches.\n\nEquity: 306,963 matches.\n\nFixed Income: 0,1000 matches.\n\nGold: 301,0 matches.\n\nHybrid: 304,928 matches.\n\nInternational: 0,898 matches.\n\nMF: 0,963 matches.\n\nPPF: 0,1001 matches.\n\nREIT: 0,955 matches.\n\nReal Estate: 289,0 matches.\n\nSGB: 0,955 matches.\n\nAll present and correct. Missing the null category entry (profile 77, holding 755). The question: \"How do profile category counts compare with holding category counts for category values appearing in either table?\" The ground truth includes also a null category (maybe representing rows with no category). The pipeline output omitted that. According to rule 4: If ground truth is JSON, all important values must appear. Missing values are PARTIAL or MISMATCH, not MATCH. Since one entry missing, it's PARTIAL. Also the pipeline output includes all other categories, but missing the null entry. So answer should be PARTIAL.</reasoning>PARTIAL",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

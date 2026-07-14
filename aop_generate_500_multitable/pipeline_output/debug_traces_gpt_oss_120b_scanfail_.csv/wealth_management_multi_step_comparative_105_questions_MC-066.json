@@ -1,0 +1,410 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-066",
+  "question": "Across time_horizon, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_net_cash_flow\":6285.33,\"avg_scenario_change\":0.63,\"avg_max_allocation_pct\":17.64,\"avg_sector_investment\":893611.59},{\"group_value\":\"Long-term\",\"avg_net_cash_flow\":-313426.35,\"avg_scenario_change\":-1.25,\"avg_max_allocation_pct\":17.11,\"avg_sector_investment\":865360.03},{\"group_value\":\"Medium-term\",\"avg_net_cash_flow\":1614023.15,\"avg_scenario_change\":-0.81,\"avg_max_allocation_pct\":17.43,\"avg_sector_investment\":963853.7},{\"group_value\":\"Short-term\",\"avg_net_cash_flow\":1000147.1,\"avg_scenario_change\":-2.29,\"avg_max_allocation_pct\":15.89,\"avg_sector_investment\":862124.85}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 666.135,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Math_Compute -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Math_Compute -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=32.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nGoal: Query: \"Across time_horizon, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?\"\n\nInterpretation: Need to compare metrics across time_horizon using four related tables. Likely need to retrieve ontology classes, classify numeric aggregations (maybe compare values, maybe need average, sum, etc). The query mentions \"compare\". Could involve aggregation like average cash flow per time_horizon, scenario change, allocation concentration, sector investment. So need classification for numeric aggregation? The words \"compare\" may imply need to compute differences, maybe need to use Math_Compute. Also need to retrieve classes first.\n\nSteps:\n\n1. Retrieve ontology classes relevant: time_horizon, cash_flow, scenario_change, allocation_concentration, sector_investment, and the four tables.\n\n2. Classify for numeric aggregation: Identify that we need to compute comparisons, maybe need average, sum, etc. Use Classify.\n\n3. Generate SPARQL query (or graph query) to extract data from four related tables across time_horizon for those metrics.\n\n4. Scan to execute query.\n\n5. Validate results.\n\n6. Possibly use Math_Compute to compare values across time_horizon (e.g., compute differences, percentages). This would be after Validate.\n\n7. Possibly use Filter_Aggregate or Order_By if needed, but not required.\n\n8. Finally Explain.\n\nWe must follow chronology: Retrieve -> Classify -> Generate -> Scan -> Validate -> (optional other ops) -> Explain.\n\nWe can include Math_Compute after Validate.\n\nThus steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Math_Compute (to compare metrics across time_horizon)\n7. Explain\n\nMake sure each step uses exact operator name.\n\nLet's output numbered steps.</reasoning>1. Retrieve – locate the ontology classes for **time_horizon**, **cash_flow**, **scenario_change**, **allocation_concentration**, **sector_investment**, and the four related tables that store these attributes.  \n\n2. Classify – identify the numeric‑aggregation and comparison operations required (e.g., average, sum, difference, percentage change) for the metrics mentioned in the query.  \n\n3. Generate – write the graph (SPARQL/graph‑query) that pulls cash flow, scenario change, allocation concentration, and sector investment values from the four tables, grouped by **time_horizon**.  \n\n4. Scan – execute the generated query against the knowledge graph to retrieve the raw dataset.  \n\n5. Validate – check the returned data for completeness, correct data types, and alignment with the requested dimensions (time_horizon and the four metrics).  \n\n6. Math_Compute – perform the necessary calculations to compare the metrics across each **time_horizon** (e.g., compute averages, totals, differences, or ratios between successive horizons).  \n\n7. Explain – present the comparative results to the user, describing how cash flow, scenario change, allocation concentration, and sector investment vary across the different time horizons.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Math_Compute -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 32,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=32.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Math_Compute",
+              "inputs": [
+                5
+              ]
+            },
+            {
+              "id": 7,
+              "operator": "Explain",
+              "inputs": [
+                5,
+                6
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            },
+            {
+              "source": 5,
+              "target": 7
+            },
+            {
+              "source": 6,
+              "target": 7
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across time_horizon, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?\" So we need to retrieve ontology classes, then classify for math/aggregation? The query asks to compare across time_horizon, likely need aggregation (maybe average, sum). Words: \"compare\" maybe need numeric comparison, but not explicit aggregation functions. Could be need to retrieve values across time_horizon for those four metrics. Might need classification for numeric-superlative? Not present. But we have \"compare\" which may involve aggregation like average, sum, etc. Probably we need to classify for numeric operations? The rule: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. The query does not contain those words. So we may skip Classify? However \"compare\" may imply some aggregation but not explicit. The rule says only for those words. So we can go from Retrieve to Generate.\n\nWe have four related tables: likely need to Link them? Use 'Link' to join tables. Then maybe 'Extract' to get fields. Then maybe 'Filter_Aggregate' to group by time_horizon. Then 'Order_By' maybe not needed. Then Validate, then Explain.\n\nSequence: 1 Retrieve (ontology classes). 2 Generate (SPARQL to fetch cash flow, scenario change, allocation concentration, sector investment across time_horizon from four tables). 3 Scan (execute query). 4 Link (join tables) maybe before Scan? Actually linking is part of query generation; but operator 'Link' may be used after retrieving data to combine tables. Could be: after Scan we have separate result sets, then Link them. But we can also use Link before Scan as part of query. The chronology: after Scan we can Validate, then Explain. But we need to incorporate Link, Filter_Aggregate, maybe Set_Union etc. The plan must be linear steps using operators.\n\nPotential steps:\n\n1. Retrieve (ontology classes for time_horizon, cash flow, scenario change, allocation concentration, sector investment, tables).\n2. Generate (SPARQL to select those measures from the four related tables, with time_horizon dimension).\n3. Scan (run the SPARQL query).\n4. Link (join the four result sets on time_horizon).\n5. Filter_Aggregate (if needed to compute comparative metrics, maybe compute differences or aggregates across time_horizon).\n6. Validate (ensure data completeness and consistency).\n7. Explain (present comparison to user).\n\nCheck chronology: 'Link' after Scan is okay; 'Filter_Aggregate' after Link is okay; Validate after that; Explain final.\n\nWe didn't use Classify because no explicit aggregation words. That follows rule 2.\n\nThus produce numbered steps.</reasoning>1. Retrieve – obtain the ontology classes for **time_horizon**, **cash flow**, **scenario change**, **allocation concentration**, **sector investment**, and the four related tables.  \n2. Generate – write a SPARQL (or equivalent graph) query that selects the values of cash flow, scenario change, allocation concentration, and sector investment for each **time_horizon** from the four tables.  \n3. Scan – execute the generated query against the knowledge graph to retrieve the raw result sets.  \n4. Link – join the four result sets on the common **time_horizon** attribute, creating a unified table that aligns the four measures side‑by‑side.  \n5. Filter_Aggregate – optionally apply any needed filtering (e.g., specific horizons) and compute comparative statistics (e.g., differences or ratios) across the aligned measures.  \n6. Validate – check the merged and aggregated data for completeness, type consistency, and any anomalies.  \n7. Explain – present to the user a clear comparison of cash flow, scenario change, allocation concentration, and sector investment across the different **time_horizon** values.",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Link -> Filter_Aggregate -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 36,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Link",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Filter_Aggregate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Validate",
+              "inputs": [
+                "n3",
+                "n5"
+              ]
+            },
+            {
+              "id": "n7",
+              "operator": "Explain",
+              "inputs": [
+                "n6"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n3",
+              "target": "n6"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n6",
+              "target": "n7"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across time_horizon, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?\" So need to retrieve ontology classes, then classify for math/aggregation? The query asks to compare across time_horizon for cash flow, scenario change, allocation concentration, sector investment. Likely need aggregation (maybe average, sum). Words like \"compare\" maybe need numeric comparison but not explicit aggregation functions. Might need to compute differences across time_horizon. Could involve math compute. So we need Classify for math/aggregation. Then Retrieve classes. Then Generate SPARQL to pull data from four related tables. Then Scan to execute. Then Validate. Then maybe Math_Compute to compare values across time_horizon. Then maybe Order_By? Not needed. Then Explain final.\n\nWe must follow chronology: Retrieve first. Then Classify (if needed). Then Generate. Then Scan. Then Validate. Then any further operators (Math_Compute, Filter_Aggregate, etc.) before Explain. The order after Validate can be any but must end with Explain.\n\nThus steps:\n\n1. Retrieve ontology classes relevant to time_horizon, cash flow, scenario change, allocation concentration, sector investment, and the four tables.\n2. Classify the query for numeric aggregation/comparison (identify need for aggregation/comparison across time_horizon).\n3. Generate SPARQL query that joins the four related tables on time_horizon and selects cash flow, scenario change, allocation concentration, sector investment.\n4. Scan to execute the generated query and retrieve raw results.\n5. Validate the retrieved data for completeness and consistency across the four tables.\n6. Filter_Aggregate (or Math_Compute) to compute comparative metrics (e.g., differences, percentages) across time_horizon for each measure.\n7. Order_By (optional) to arrange results chronologically by time_horizon.\n8. Explain the comparative findings to the user.\n\nWe must use only provided operators. Use Filter_Aggregate for aggregation/comparison. Could also use Math_Compute for calculations. We'll include both steps.\n\nMake sure each step uses exact operator name.\n\nThus final answer: numbered steps.</reasoning>1. **Retrieve** – Obtain the ontology classes for *time_horizon*, *cash flow*, *scenario change*, *allocation concentration*, *sector investment*, and the four related tables that store these measures.  \n\n2. **Classify** – Identify that the query involves numeric comparison/aggregation across *time_horizon* (e.g., calculating differences, averages, or trends).  \n\n3. **Generate** – Write a SPARQL (or equivalent graph) query that joins the four tables on the *time_horizon* dimension and selects the fields *cash flow*, *scenario change*, *allocation concentration*, and *sector investment*.  \n\n4. **Scan** – Execute the generated query against the knowledge graph to retrieve the raw dataset.  \n\n5. **Validate** – Check the returned data for completeness, type consistency, and alignment across the four tables (e.g., each *time_horizon* has values for all four measures).  \n\n6. **Filter_Aggregate** – Aggregate the data as needed (e.g., compute sums, averages, or percentages for each measure per *time_horizon*).  \n\n7. **Math_Compute** – Perform comparative calculations across *time_horizon* (e.g., growth rates, differences between successive periods, ranking of measures).  \n\n8. **Order_By** – Sort the final comparative results chronologically by *time_horizon* (and optionally by magnitude of change).  \n\n9. **Explain** – Present a clear, step‑by‑step comparison of cash flow, scenario change, allocation concentration, and sector investment across the *time_horizon* dimension, highlighting key trends and differences.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Filter_Aggregate -> Math_Compute -> Order_By -> Explain",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Rejected by Python validator: missing dependency path: Classify -> Generate",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Filter_Aggregate",
+              "inputs": [
+                "n5"
+              ]
+            },
+            {
+              "id": "n7",
+              "operator": "Math_Compute",
+              "inputs": [
+                "n6"
+              ]
+            },
+            {
+              "id": "n8",
+              "operator": "Order_By",
+              "inputs": [
+                "n7"
+              ]
+            },
+            {
+              "id": "n9",
+              "operator": "Explain",
+              "inputs": [
+                "n5",
+                "n8"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n6",
+              "target": "n7"
+            },
+            {
+              "source": "n7",
+              "target": "n8"
+            },
+            {
+              "source": "n5",
+              "target": "n9"
+            },
+            {
+              "source": "n8",
+              "target": "n9"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "TimeHorizon",
+      "CashFlow",
+      "ScenarioRebalancing",
+      "SectorAllocation",
+      "PortfolioHolding",
+      "Sector"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.92,
+    "target_field": "multiple_fields (cash flow amount, scenario allocation change, allocation concentration pct, sector total investment)",
+    "schema_datatype": "numeric",
+    "why_this_intent": "User asks to compare quantitative metrics (cash flow amount, scenario change percentages, allocation concentration, sector investment totals) across the categorical dimension 'time_horizon', which requires numeric aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?timeHorizon\n       (SUM(xsd:decimal(?cashAmount)) AS ?totalCashFlow)\n       (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChange)\n       (AVG(xsd:decimal(?allocPct)) AS ?avgAllocationPct)\n       (SUM(xsd:decimal(?sectorInvest)) AS ?totalSectorInvestment)\nWHERE {\n  # Cash Flow aggregation per investor\n  {\n    SELECT ?timeHorizon ?cashAmount\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cashAmount .\n    }\n  }\n  # Scenario Rebalancing change per investor\n  OPTIONAL {\n    SELECT ?timeHorizon ?scenarioChange\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?newPct ;\n          wm:currentAllocationPct ?curPct .\n      BIND (xsd:decimal(?newPct) - xsd:decimal(?curPct) AS ?scenarioChange)\n    }\n  }\n  # Sector Allocation concentration per investor\n  OPTIONAL {\n    SELECT ?timeHorizon ?allocPct\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasSectorAllocation ?sa .\n      ?sa wm:allocationPct ?allocPct .\n    }\n  }\n  # Sector investment (totalInvestment) per investor\n  OPTIONAL {\n    SELECT ?timeHorizon ?sectorInvest\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasSectorAllocation ?sa .\n      ?sa wm:totalInvestment ?sectorInvest .\n    }\n  }\n}\nGROUP BY ?timeHorizon\nORDER BY ?timeHorizon",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?timeHorizon\n       (SUM(xsd:decimal(?cashAmount)) AS ?totalCashFlow)\n       (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChange)\n       (AVG(xsd:decimal(?allocPct)) AS ?avgAllocationPct)\n       (SUM(xsd:decimal(?sectorInvest)) AS ?totalSectorInvestment)\nWHERE {\n  # Cash Flow aggregation per investor\n  {\n    SELECT ?timeHorizon ?cashAmount\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cashAmount .\n    }\n  }\n  # Scenario Rebalancing change per investor\n  OPTIONAL {\n    SELECT ?timeHorizon ?scenarioChange\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?newPct ;\n          wm:currentAllocationPct ?curPct .\n      BIND (xsd:decimal(?newPct) - xsd:decimal(?curPct) AS ?scenarioChange)\n    }\n  }\n  # Sector Allocation concentration per investor\n  OPTIONAL {\n    SELECT ?timeHorizon ?allocPct\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasSectorAllocation ?sa .\n      ?sa wm:allocationPct ?allocPct .\n    }\n  }\n  # Sector investment (totalInvestment) per investor\n  OPTIONAL {\n    SELECT ?timeHorizon ?sectorInvest\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasSectorAllocation ?sa .\n      ?sa wm:totalInvestment ?sectorInvest .\n    }\n  }\n}\nGROUP BY ?timeHorizon\nORDER BY ?timeHorizon",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?timeHorizon\n       (SUM(xsd:decimal(?cashAmount)) AS ?totalCashFlow)\n       (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChange)\n       (AVG(xsd:decimal(?allocPct)) AS ?avgAllocationPct)\n       (SUM(xsd:decimal(?sectorInvest)) AS ?totalSectorInvestment)\nWHERE {\n  # Cash Flow aggregation per investor\n  {\n    SELECT ?timeHorizon ?cashAmount\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cashAmount .\n    }\n  }\n  # Scenario Rebalancing change per investor\n  OPTIONAL {\n    SELECT ?timeHorizon ?scenarioChange\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasScenarioRebalancing ?sr .\n      ?sr wm:newAllocationPct ?newPct ;\n          wm:currentAllocationPct ?curPct .\n      BIND (xsd:decimal(?newPct) - xsd:decimal(?curPct) AS ?scenarioChange)\n    }\n  }\n  # Sector Allocation concentration per investor\n  OPTIONAL {\n    SELECT ?timeHorizon ?allocPct\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasSectorAllocation ?sa .\n      ?sa wm:allocationPct ?allocPct .\n    }\n  }\n  # Sector investment (totalInvestment) per investor\n  OPTIONAL {\n    SELECT ?timeHorizon ?sectorInvest\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:timeHorizon ?timeHorizon ;\n           wm:hasSectorAllocation ?sa .\n      ?sa wm:totalInvestment ?sectorInvest .\n    }\n  }\n}\nGROUP BY ?timeHorizon\nORDER BY ?timeHorizon",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 600 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "SPARQL execution timed out after 600 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth. Ground truth is JSON array with four objects containing values. Pipeline output: \"A database error prevented data retrieval.\"\n\nThus pipeline did not provide any of the numbers. According to rule 2, if ground truth contains concrete numbers, pipeline must contain same facts. It didn't. So it's MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "scan_timeout",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

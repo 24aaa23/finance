@@ -1,0 +1,361 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-098",
+  "question": "Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_net_cash_flow\":2571277.95,\"avg_rebalance_amount\":442236.74,\"avg_scenario_change\":-10.65,\"avg_risk_score\":56.7,\"avg_goal_match_pct\":48.85},{\"group_value\":\"Debt\",\"avg_net_cash_flow\":700994.54,\"avg_rebalance_amount\":402125.4,\"avg_scenario_change\":-6.64,\"avg_risk_score\":50.32,\"avg_goal_match_pct\":50.54},{\"group_value\":\"Equity\",\"avg_net_cash_flow\":605528.22,\"avg_rebalance_amount\":435689.66,\"avg_scenario_change\":-1.19,\"avg_risk_score\":52.1,\"avg_goal_match_pct\":48.64},{\"group_value\":\"Gold\",\"avg_net_cash_flow\":620118.66,\"avg_rebalance_amount\":404021.82,\"avg_scenario_change\":0.89,\"avg_risk_score\":49.53,\"avg_goal_match_pct\":47.53},{\"group_value\":\"Hybrid\",\"avg_net_cash_flow\":1750813.19,\"avg_rebalance_amount\":397961.76,\"avg_scenario_change\":2.77,\"avg_risk_score\":52.98,\"avg_goal_match_pct\":46.42},{\"group_value\":\"Real Estate\",\"avg_net_cash_flow\":-571663.2,\"avg_rebalance_amount\":383518.43,\"avg_scenario_change\":-2.63,\"avg_risk_score\":50.7,\"avg_goal_match_pct\":45.52}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 296.694,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Filter_Aggregate -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Filter_Aggregate -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=36.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?\"\n\nWe need to find ontology classes first using Retrieve. Then classify for math/aggregation words. The query asks \"compare\". Might need aggregation like average, sum? Not explicit. Could be compare values across profile category. Might need to retrieve data from five related tables. Likely need to use Link or Integrate to combine tables. Steps:\n\n1. Retrieve ontology classes (profile category, cash flow, rebalancing amount, scenario change, risk score, goal match, tables).\n2. Classify for any aggregation: maybe \"compare\" implies need to compute differences, maybe use Math_Compute later. But classification step needed for any math/aggregation words. \"compare\" maybe not a numeric superlative. No explicit \"average\" etc. But we might still classify to see if any numeric operations needed. So step 2: Classify the query to identify any math/aggregation intents (maybe none).\n3. Generate SPARQL (or query) to retrieve relevant data across five related tables linking via profile category. Could involve Link or Integrate. But generate after classify.\n4. Scan to execute query.\n5. Validate results.\n6. Possibly use Filter_Aggregate or Math_Compute if need to compute comparisons; but we didn't have classification of aggregation. Might need to compute differences; could use Math_Compute after Validate.\n7. Explain to user.\n\nBut must follow chronology: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain. Additional operators can be inserted between steps as long as order respects constraints? The critical laws: \"Scan must happen immediately AFTER Generate.\" So no other steps between Generate and Scan. Also Validate after Scan. Explain final. So any other steps must be before Generate or after Validate but before Explain. Could include Filter_Aggregate, Math_Compute, Set_Union etc before Generate? Probably after Retrieve but before Generate? The rule: \"Generate must happen AFTER Classify (or Retrieve).\" So we can have steps between Retrieve and Generate (like Classify). But after Generate, immediate Scan.\n\nThus plan:\n\n1. Retrieve ontology classes.\n2. Classify for math/aggregation.\n3. Generate query (SPARQL) to pull cash flow, rebalancing amount, scenario change, risk score, goal match across profile category from five related tables, using Link/Integrate as needed within query.\n4. Scan to execute.\n5. Validate data integrity.\n6. If needed, use Math_Compute to calculate comparative metrics (e.g., differences, ratios) across profile categories.\n7. Explain results.\n\nBut step 6 after Validate is allowed? No rule forbids. So okay.\n\nThus output numbered steps only.</reasoning>1. Retrieve – obtain the ontology classes for “profile category”, “cash flow”, “rebalancing amount”, “scenario change”, “risk score”, “goal match”, and the five related tables.  \n\n2. Classify – analyze the query to detect any math, aggregation, or numeric‑superlative intent (e.g., comparison, calculation).  \n\n3. Generate – write a SPARQL (or equivalent graph) query that links the five related tables via the “profile category” class and selects the fields cash flow, rebalancing amount, scenario change, risk score, and goal match.  \n\n4. Scan – execute the generated query against the knowledge graph to retrieve the raw data.  \n\n5. Validate – check the returned data for completeness, type correctness, and consistency across the joined tables.  \n\n6. Math_Compute – perform the necessary comparative calculations (e.g., differences, ratios, or other metrics) between the retrieved values for each profile category.  \n\n7. Explain – present the comparative results to the user in a clear, concise format.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?\" Need to find ontology classes first using Retrieve. Then classify math/aggregation words. The query asks to compare across profile category the five metrics using five related tables. Likely need aggregation/comparison (maybe average, sum). Words: \"compare\" maybe need aggregation? Not explicit numeric superlative. But likely need to compute values per profile category across tables. Might need Classify for numeric operations? The rule: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. The query does not contain those words, just \"compare\". Might still need numeric comparison but not explicit. According to rule, only if such words appear. So maybe we can skip Classify and go Retrieve -> Generate -> Scan -> Validate -> Explain. However we have multiple tables; we might need Link, Extract, Filter_Aggregate, Order_By, etc. But the plan must be linear execution steps, could include multiple operators in order respecting chronology: Retrieve first, then maybe Classify (optional). Since no explicit aggregation words, we could skip Classify. But we might still need to classify the query as requiring aggregation? The rule says \"If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'.\" This is not simple lookup; it's a comparative analysis across categories. Might need aggregation. But no explicit words. Could still need Classify to detect need for aggregation. Safer to include Classify step to determine needed math/aggregation. So steps:\n\n1. Retrieve (ontology classes)\n2. Classify (determine that numeric aggregation/comparison needed)\n3. Generate (write SPARQL to pull cash flow, rebalancing amount, scenario change, risk score, goal match from five related tables, grouped by profile category)\n4. Scan (execute query)\n5. Filter_Aggregate (if needed to compute comparisons)\n6. Validate (check results)\n7. Explain (present to user)\n\nBut chronology: after Scan must Validate, then Explain. Filter_Aggregate could be before Validate? It's a processing step; maybe after Scan we can Filter_Aggregate then Validate. The rules don't forbid extra steps. So final plan:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Filter_Aggregate\n6. Validate\n7. Explain\n\nMake sure each step uses exact operator name. Output numbered steps only.</reasoning>1. Retrieve – locate the ontology classes for “profile category”, “cash flow”, “rebalancing amount”, “scenario change”, “risk score”, “goal match”, and the five related tables.  \n2. Classify – determine that the query requires numeric aggregation/comparison across the profile categories.  \n3. Generate – compose a SPARQL (or equivalent graph) query that extracts the five metrics from the five tables, groups them by profile category, and prepares them for comparative analysis.  \n4. Scan – execute the generated query against the knowledge graph to obtain the raw result set.  \n5. Filter_Aggregate – apply aggregation (e.g., average, sum) and comparative calculations to the retrieved data for each profile category.  \n6. Validate – verify that the aggregated and comparative results are complete, consistent, and correctly aligned with the profile categories.  \n7. Explain – present the comparative analysis of cash flow, rebalancing amount, scenario change, risk score, and goal match across profile categories to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Filter_Aggregate -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 36,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=36.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Filter_Aggregate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Validate",
+              "inputs": [
+                4,
+                5
+              ]
+            },
+            {
+              "id": 7,
+              "operator": "Explain",
+              "inputs": [
+                6
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2
+            },
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 4,
+              "target": 6
+            },
+            {
+              "source": 5,
+              "target": 6
+            },
+            {
+              "source": 6,
+              "target": 7
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?\" We need to find ontology classes first using Retrieve. Then classify math/aggregation words: cash flow, rebalancing amount, scenario change, risk score, goal match compare - likely need aggregation/comparison across profile category. So we need Classify for numeric-superlative? \"compare\" maybe requires aggregation? Might need to compute comparisons across categories, maybe need Math_Compute? But classification step for math/aggregation words: \"compare\" maybe not a specific aggregator, but we have numeric fields. Could still classify as numeric. So we will include Classify.\n\nThen Generate SPARQL to retrieve data from five related tables (maybe tables are classes). Then Scan to execute. Then Validate to check data. Then maybe Filter_Aggregate to compute comparisons? Actually after retrieving raw data, we may need to aggregate across profile category. So we might need Filter_Aggregate after Validate. Then maybe Order_By? Not required. Then Explain final.\n\nSequence must respect chronology: Retrieve -> Classify -> Generate -> Scan -> Validate -> (any other operators?) The rules only specify that after Validate we can do other steps before Explain? It says Explain must be final step. So we can include additional steps after Validate before Explain, as long as they follow logical order. There's no rule forbidding extra steps after Validate. So we can add Filter_Aggregate, maybe Set_Union if needed, but not required.\n\nThus steps:\n\n1. Retrieve: get ontology classes for profile category, cash flow, rebalancing amount, scenario change, risk score, goal match, and related tables.\n\n2. Classify: identify numeric/aggregation intent for cash flow, rebalancing amount, scenario change, risk score, goal match, and the comparative operation across profile categories.\n\n3. Generate: construct SPARQL query that joins the five related tables and selects the required metrics grouped by profile category.\n\n4. Scan: execute the generated SPARQL query against the knowledge graph.\n\n5. Validate: verify that the returned data includes all five metrics for each profile category and that joins are correct.\n\n6. Filter_Aggregate: compute comparative statistics (e.g., averages, sums, differences) for each metric across profile categories.\n\n7. Explain: present the comparison results to the user.\n\nMake sure steps are numbered.</reasoning>1. Retrieve – locate the ontology classes for **ProfileCategory**, **CashFlow**, **RebalancingAmount**, **ScenarioChange**, **RiskScore**, **GoalMatch**, and the five related tables that store these attributes.  \n\n2. Classify – identify the numeric/aggregation intent in the query (e.g., “compare” the values of cash flow, rebalancing amount, scenario change, risk score, and goal match across each profile category).  \n\n3. Generate – write a SPARQL query that joins the five related tables, selects the five metrics, and groups the results by **ProfileCategory** (including any needed aggregation functions such as AVG, SUM, etc.).  \n\n4. Scan – execute the generated SPARQL query against the knowledge graph to retrieve the raw dataset.  \n\n5. Validate – check that the result set contains all five metrics for every profile category and that the joins between the tables are correct.  \n\n6. Filter_Aggregate – apply aggregation/comparative calculations (e.g., average, total, min/max, differences) to the validated data so that each profile category’s cash flow, rebalancing amount, scenario change, risk score, and goal match can be directly compared.  \n\n7. Explain – present the comparative analysis to the user in a clear, concise format.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Filter_Aggregate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 36,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Filter_Aggregate",
+              "inputs": [
+                "5"
+              ]
+            },
+            {
+              "id": "7",
+              "operator": "Explain",
+              "inputs": [
+                "5",
+                "6"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            },
+            {
+              "source": "5",
+              "target": "7"
+            },
+            {
+              "source": "6",
+              "target": "7"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Category",
+      "CashFlow",
+      "RebalancingAction",
+      "ScenarioRebalancing",
+      "PortfolioHealth"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "point_lookup",
+    "confidence": 0.0,
+    "target_field": "",
+    "schema_datatype": "",
+    "why_this_intent": "Classifier did not return a JSON object.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId\n       (SUM(xsd:decimal(?cfAmount)) AS ?totalCashFlow)\n       (SUM(xsd:decimal(?raAmount)) AS ?totalRebalancingAmount)\n       (AVG(xsd:decimal(?newAllocPct)) AS ?avgScenarioNewAllocationPct)\n       (xsd:decimal(?riskScore) AS ?riskScore)\n       (xsd:decimal(?goalMatchPct) AS ?goalMatchPct)\nWHERE {\n  # Cash Flow aggregation\n  OPTIONAL {\n    ?cf a wm:CashFlow ;\n        wm:investorId ?investorId ;\n        wm:amount ?cfAmount .\n  }\n  # Rebalancing Action aggregation\n  OPTIONAL {\n    ?ra a wm:RebalancingAction ;\n        wm:investorId ?investorId ;\n        wm:amount ?raAmount .\n  }\n  # Scenario Rebalancing aggregation\n  OPTIONAL {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:investorId ?investorId ;\n        wm:newAllocationPct ?newAllocPct .\n  }\n  # Portfolio Health (risk score & goal match)\n  OPTIONAL {\n    ?ph a wm:PortfolioHealth ;\n        wm:investorId ?investorId ;\n        wm:riskScore ?riskScore ;\n        wm:goalMatchPct ?goalMatchPct .\n  }\n}\nGROUP BY ?investorId ?riskScore ?goalMatchPct",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?totalCashFlow ?totalRebalancingAmount ?avgScenarioNewAllocationPct ?avgRiskScore ?avgGoalMatchPct\nWHERE {\n  {\n    SELECT DISTINCT ?category WHERE {\n      ?inv a wm:Investor ;\n           wm:category ?category .\n    }\n  }\n  OPTIONAL {\n    SELECT ?category (SUM(xsd:decimal(?amt)) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amt .\n    }\n    GROUP BY ?category\n  }\n  OPTIONAL {\n    SELECT ?category (SUM(xsd:decimal(?raAmt)) AS ?totalRebalancingAmount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:amount ?raAmt .\n    }\n    GROUP BY ?category\n  }\n  OPTIONAL {\n    SELECT ?category (AVG(xsd:decimal(?newPct)) AS ?avgScenarioNewAllocationPct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newPct .\n    }\n    GROUP BY ?category\n  }\n  OPTIONAL {\n    SELECT ?category (AVG(xsd:decimal(?rs)) AS ?avgRiskScore) (AVG(xsd:decimal(?gm)) AS ?avgGoalMatchPct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?ph a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?rs ;\n          wm:goalMatchPct ?gm .\n    }\n    GROUP BY ?category\n  }\n}\nORDER BY ?category",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId\n       (SUM(xsd:decimal(?cfAmount)) AS ?totalCashFlow)\n       (SUM(xsd:decimal(?raAmount)) AS ?totalRebalancingAmount)\n       (AVG(xsd:decimal(?newAllocPct)) AS ?avgScenarioNewAllocationPct)\n       (xsd:decimal(?riskScore) AS ?riskScore)\n       (xsd:decimal(?goalMatchPct) AS ?goalMatchPct)\nWHERE {\n  # Cash Flow aggregation\n  OPTIONAL {\n    ?cf a wm:CashFlow ;\n        wm:investorId ?investorId ;\n        wm:amount ?cfAmount .\n  }\n  # Rebalancing Action aggregation\n  OPTIONAL {\n    ?ra a wm:RebalancingAction ;\n        wm:investorId ?investorId ;\n        wm:amount ?raAmount .\n  }\n  # Scenario Rebalancing aggregation\n  OPTIONAL {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:investorId ?investorId ;\n        wm:newAllocationPct ?newAllocPct .\n  }\n  # Portfolio Health (risk score & goal match)\n  OPTIONAL {\n    ?ph a wm:PortfolioHealth ;\n        wm:investorId ?investorId ;\n        wm:riskScore ?riskScore ;\n        wm:goalMatchPct ?goalMatchPct .\n  }\n}\nGROUP BY ?investorId ?riskScore ?goalMatchPct",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId\n       (SUM(xsd:decimal(?cfAmount)) AS ?totalCashFlow)\n       (SUM(xsd:decimal(?raAmount)) AS ?totalRebalancingAmount)\n       (AVG(xsd:decimal(?newAllocPct)) AS ?avgScenarioNewAllocationPct)\n       (xsd:decimal(?riskScore) AS ?riskScore)\n       (xsd:decimal(?goalMatchPct) AS ?goalMatchPct)\nWHERE {\n  # Cash Flow aggregation\n  OPTIONAL {\n    ?cf a wm:CashFlow ;\n        wm:investorId ?investorId ;\n        wm:amount ?cfAmount .\n  }\n  # Rebalancing Action aggregation\n  OPTIONAL {\n    ?ra a wm:RebalancingAction ;\n        wm:investorId ?investorId ;\n        wm:amount ?raAmount .\n  }\n  # Scenario Rebalancing aggregation\n  OPTIONAL {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:investorId ?investorId ;\n        wm:newAllocationPct ?newAllocPct .\n  }\n  # Portfolio Health (risk score & goal match)\n  OPTIONAL {\n    ?ph a wm:PortfolioHealth ;\n        wm:investorId ?investorId ;\n        wm:riskScore ?riskScore ;\n        wm:goalMatchPct ?goalMatchPct .\n  }\n}\nGROUP BY ?investorId ?riskScore ?goalMatchPct",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category\n       (SUM(?cfAmount) AS ?totalCashFlow)\n       (SUM(?raAmount) AS ?totalRebalancingAmount)\n       (AVG(?newAllocPct) AS ?avgScenarioNewAllocationPct)\n       (AVG(?riskScore) AS ?avgRiskScore)\n       (AVG(?goalMatchPct) AS ?avgGoalMatchPct)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:category ?category .\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amt)) AS ?cfAmount)\n    WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amt .\n    }\n    GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amt)) AS ?raAmount)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:amount ?amt .\n    }\n    GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?pct)) AS ?newAllocPct)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?pct .\n    }\n    GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?rs)) AS ?riskScore) (AVG(xsd:decimal(?gm)) AS ?goalMatchPct)\n    WHERE {\n      ?ph a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?rs ;\n          wm:goalMatchPct ?gm .\n    }\n    GROUP BY ?investorId\n  }\n}\nGROUP BY ?category",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category\n       (SUM(?cfAmount) AS ?totalCashFlow)\n       (SUM(?raAmount) AS ?totalRebalancingAmount)\n       (AVG(?newAllocPct) AS ?avgScenarioNewAllocationPct)\n       (AVG(?riskScore) AS ?avgRiskScore)\n       (AVG(?goalMatchPct) AS ?avgGoalMatchPct)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:category ?category .\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amt)) AS ?cfAmount)\n    WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amt .\n    }\n    GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amt)) AS ?raAmount)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:amount ?amt .\n    }\n    GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?pct)) AS ?newAllocPct)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?pct .\n    }\n    GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?rs)) AS ?riskScore) (AVG(xsd:decimal(?gm)) AS ?goalMatchPct)\n    WHERE {\n      ?ph a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?rs ;\n          wm:goalMatchPct ?gm .\n    }\n    GROUP BY ?investorId\n  }\n}\nGROUP BY ?category",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category\n       (SUM(?cfAmount) AS ?totalCashFlow)\n       (SUM(?raAmount) AS ?totalRebalancingAmount)\n       (AVG(?newAllocPct) AS ?avgScenarioNewAllocationPct)\n       (AVG(?riskScore) AS ?avgRiskScore)\n       (AVG(?goalMatchPct) AS ?avgGoalMatchPct)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:category ?category .\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amt)) AS ?cfAmount)\n    WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amt .\n    }\n    GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amt)) AS ?raAmount)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:amount ?amt .\n    }\n    GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?pct)) AS ?newAllocPct)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?pct .\n    }\n    GROUP BY ?investorId\n  }\n\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?rs)) AS ?riskScore) (AVG(xsd:decimal(?gm)) AS ?goalMatchPct)\n    WHERE {\n      ?ph a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?rs ;\n          wm:goalMatchPct ?gm .\n    }\n    GROUP BY ?investorId\n  }\n}\nGROUP BY ?category",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?totalCashFlow ?totalRebalancingAmount ?avgScenarioNewAllocationPct ?avgRiskScore ?avgGoalMatchPct\nWHERE {\n  {\n    SELECT DISTINCT ?category WHERE {\n      ?inv a wm:Investor ;\n           wm:category ?category .\n    }\n  }\n  OPTIONAL {\n    SELECT ?category (SUM(xsd:decimal(?amt)) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amt .\n    }\n    GROUP BY ?category\n  }\n  OPTIONAL {\n    SELECT ?category (SUM(xsd:decimal(?raAmt)) AS ?totalRebalancingAmount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:amount ?raAmt .\n    }\n    GROUP BY ?category\n  }\n  OPTIONAL {\n    SELECT ?category (AVG(xsd:decimal(?newPct)) AS ?avgScenarioNewAllocationPct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newPct .\n    }\n    GROUP BY ?category\n  }\n  OPTIONAL {\n    SELECT ?category (AVG(xsd:decimal(?rs)) AS ?avgRiskScore) (AVG(xsd:decimal(?gm)) AS ?avgGoalMatchPct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?ph a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?rs ;\n          wm:goalMatchPct ?gm .\n    }\n    GROUP BY ?category\n  }\n}\nORDER BY ?category",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?totalCashFlow ?totalRebalancingAmount ?avgScenarioNewAllocationPct ?avgRiskScore ?avgGoalMatchPct\nWHERE {\n  {\n    SELECT DISTINCT ?category WHERE {\n      ?inv a wm:Investor ;\n           wm:category ?category .\n    }\n  }\n  OPTIONAL {\n    SELECT ?category (SUM(xsd:decimal(?amt)) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?amt .\n    }\n    GROUP BY ?category\n  }\n  OPTIONAL {\n    SELECT ?category (SUM(xsd:decimal(?raAmt)) AS ?totalRebalancingAmount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:amount ?raAmt .\n    }\n    GROUP BY ?category\n  }\n  OPTIONAL {\n    SELECT ?category (AVG(xsd:decimal(?newPct)) AS ?avgScenarioNewAllocationPct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:newAllocationPct ?newPct .\n    }\n    GROUP BY ?category\n  }\n  OPTIONAL {\n    SELECT ?category (AVG(xsd:decimal(?rs)) AS ?avgRiskScore) (AVG(xsd:decimal(?gm)) AS ?avgGoalMatchPct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:investorId ?investorId ;\n           wm:category ?category .\n      ?ph a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?rs ;\n          wm:goalMatchPct ?gm .\n    }\n    GROUP BY ?category\n  }\n}\nORDER BY ?category",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "SPARQL execution timed out after 60 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth. Ground truth is JSON array with several objects containing avg values. Pipeline output: \"A database error prevented data retrieval.\"\n\nThus pipeline did not provide any of the required numbers. According to rule 2, if pipeline says \"database error\", mark MISMATCH. So answer: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "scan_timeout",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

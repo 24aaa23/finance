@@ -1,0 +1,490 @@
+{
+  "sample_row_id": "wealth_management_temporal_transaction_65_questions:TT-056",
+  "question": "Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?",
+  "ground_truth": "[{\"investor_id\":\"INV-044\",\"investor_name\":\"Ishita Sharma\"},{\"investor_id\":\"INV-170\",\"investor_name\":\"Meena Reddy\"},{\"investor_id\":\"INV-206\",\"investor_name\":\"Rahul Patel\"},{\"investor_id\":\"INV-369\",\"investor_name\":\"Geeta Sharma\"},{\"investor_id\":\"INV-454\",\"investor_name\":\"Arjun Kulkarni\"},{\"investor_id\":\"INV-549\",\"investor_name\":\"Aishwarya Hegde\"},{\"investor_id\":\"INV-781\",\"investor_name\":\"Dipti Reddy\"},{\"investor_id\":\"INV-798\",\"investor_name\":\"Aishwarya Singh\"},{\"investor_id\":\"INV-809\",\"investor_name\":\"Anjali Chauhan\"},{\"investor_id\":\"INV-890\",\"investor_name\":\"Sunita Deshmukh\"},{\"investor_id\":\"INV-1057\",\"investor_name\":\"Abhishek Iyer\"},{\"investor_id\":\"INV-1074\",\"investor_name\":\"Vivek Pandey\"},{\"investor_id\":\"INV-1083\",\"investor_name\":\"Ishita Arora\"},{\"investor_id\":\"INV-1121\",\"investor_name\":\"Rajesh Arora\"},{\"investor_id\":\"INV-1179\",\"investor_name\":\"Arjun Pandey\"},{\"investor_id\":\"INV-1205\",\"investor_name\":\"Sneha Mehta\"},{\"investor_id\":\"INV-1238\",\"investor_name\":\"Bhavna Bhat\"},{\"investor_id\":\"INV-1345\",\"investor_name\":\"Rajesh Verma\"},{\"investor_id\":\"INV-1347\",\"investor_name\":\"Rohan Hegde\"},{\"investor_id\":\"INV-1448\",\"investor_name\":\"Anjali Mehta\"}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 1353.164,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?\" This is a simple lookup/listing question: we need investors that have all three types of events. Steps: Retrieve ontology classes (Investor, Transaction, Action, Scenario maybe). Then we need to generate SPARQL that selects investors with those three relationships. No classification needed because no math/aggregation. So after Retrieve, go directly to Generate. Then Scan, Validate, Explain. Possibly also need Set_Intersect to intersect sets of investors for each condition, but we can embed in SPARQL. The plan should be linear steps. So steps:\n\n1. Retrieve the relevant ontology classes and properties (Investor, Redemption transaction, Manual Override action, Flash Crash scenario).\n2. Generate a SPARQL query that selects investors who are linked to a Redemption transaction, a Manual Override action, and a Flash Crash scenario.\n3. Scan the knowledge graph using the generated SPARQL query.\n4. Validate the returned results for completeness and correctness.\n5. Explain the answer to the user.\n\nThus 5 steps. Ensure using exact operator names. Provide numbered list.</reasoning>1. Retrieve the ontology classes and properties needed for the query (e.g., **Investor**, **RedemptionTransaction**, **ManualOverrideAction**, **FlashCrashScenario**).  \n2. Generate a SPARQL query that selects all **Investor** entities that are linked to a **RedemptionTransaction**, a **ManualOverrideAction**, and a **FlashCrashScenario**.  \n3. Scan the knowledge graph by executing the generated SPARQL query.  \n4. Validate the returned investor list to ensure each result satisfies all three conditions.  \n5. Explain the final list of investors to the user.",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?\" So we need to find investors that have three types of events: Redemption transactions, Manual Override actions, Flash Crash scenarios. This is a set intersection across three categories.\n\nWe need to start by finding ontology classes using Retrieve. Then we need to see if any classification needed: The query is a simple lookup/listing, no aggregation or numeric superlative. So per rule 2, we can go straight from Retrieve to Generate.\n\nBut we also need to get three sets: investors with Redemption transactions, investors with Manual Override actions, investors with Flash Crash scenarios. Then intersect them. So after scanning each query, we may need Set_Intersect.\n\nThus steps:\n\n1. Retrieve ontology classes relevant: Investor, Transaction, Action, Scenario, Redemption, Manual Override, Flash Crash.\n\n2. Classify? Not needed because no aggregation.\n\n3. Generate SPARQL for investors with Redemption transactions.\n\n4. Scan.\n\n5. Validate.\n\n6. Generate SPARQL for investors with Manual Override actions.\n\n7. Scan.\n\n8. Validate.\n\n9. Generate SPARQL for investors with Flash Crash scenarios.\n\n10. Scan.\n\n11. Validate.\n\n12. Set_Intersect of the three result sets.\n\n13. Validate (maybe after intersect).\n\n14. Explain.\n\nBut we must follow chronology: Retrieve first, then Generate after Retrieve (or after Classify). For each set we need Generate then Scan then Validate. After we have three validated sets, we can use Set_Intersect. Then maybe Validate again. Then Explain.\n\nWe must not use extra operators.\n\nThus produce numbered steps.\n\nLet's list:\n\n1. Retrieve (ontology classes: Investor, Redemption, Manual Override, Flash Crash, Transaction, Action, Scenario).\n\n2. Generate (SPARQL query to select investors linked to Redemption transactions).\n\n3. Scan (execute the SPARQL).\n\n4. Validate (check results).\n\n5. Generate (SPARQL query to select investors linked to Manual Override actions).\n\n6. Scan.\n\n7. Validate.\n\n8. Generate (SPARQL query to select investors linked to Flash Crash scenarios).\n\n9. Scan.\n\n10. Validate.\n\n11. Set_Intersect (intersect the three validated result sets).\n\n12. Validate (ensure intersected set is correct).\n\n13. Explain (present the final list to user).\n\nMake sure steps are linear.\n\nThus output only numbered steps.</reasoning>1. Retrieve – obtain the ontology classes relevant to the query (e.g., **Investor**, **Redemption**, **Manual Override**, **Flash Crash**, **Transaction**, **Action**, **Scenario**).  \n2. Generate – write a SPARQL query that returns all **Investor** entities that have a **Redemption** transaction.  \n3. Scan – execute the SPARQL query from step 2 against the knowledge graph.  \n4. Validate – verify the returned set of investors from step 3 is correct and complete.  \n5. Generate – write a SPARQL query that returns all **Investor** entities that have a **Manual Override** action.  \n6. Scan – execute the SPARQL query from step 5.  \n7. Validate – verify the returned set of investors from step 6.  \n8. Generate – write a SPARQL query that returns all **Investor** entities that are involved in a **Flash Crash** scenario.  \n9. Scan – execute the SPARQL query from step 8.  \n10. Validate – verify the returned set of investors from step 9.  \n11. Set_Intersect – compute the intersection of the three validated investor sets (Redemption, Manual Override, Flash Crash).  \n12. Validate – confirm that the intersected result set accurately reflects investors meeting all three criteria.  \n13. Explain – present the final list of investors who have Redemption transactions, Manual Override actions, and Flash Crash scenarios.",
+        "dag_sequence": "Retrieve -> Generate -> Generate -> Generate -> Scan -> Scan -> Scan -> Validate -> Validate -> Validate -> Set_Intersect -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 53,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Scan",
+              "inputs": [
+                "n5"
+              ]
+            },
+            {
+              "id": "n7",
+              "operator": "Validate",
+              "inputs": [
+                "n6"
+              ]
+            },
+            {
+              "id": "n8",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n9",
+              "operator": "Scan",
+              "inputs": [
+                "n8"
+              ]
+            },
+            {
+              "id": "n10",
+              "operator": "Validate",
+              "inputs": [
+                "n9"
+              ]
+            },
+            {
+              "id": "n11",
+              "operator": "Set_Intersect",
+              "inputs": [
+                "n4",
+                "n7",
+                "n10"
+              ]
+            },
+            {
+              "id": "n12",
+              "operator": "Validate",
+              "inputs": [
+                "n11"
+              ]
+            },
+            {
+              "id": "n13",
+              "operator": "Explain",
+              "inputs": [
+                "n12"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n1",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n6",
+              "target": "n7"
+            },
+            {
+              "source": "n1",
+              "target": "n8"
+            },
+            {
+              "source": "n8",
+              "target": "n9"
+            },
+            {
+              "source": "n9",
+              "target": "n10"
+            },
+            {
+              "source": "n4",
+              "target": "n11"
+            },
+            {
+              "source": "n7",
+              "target": "n11"
+            },
+            {
+              "source": "n10",
+              "target": "n11"
+            },
+            {
+              "source": "n11",
+              "target": "n12"
+            },
+            {
+              "source": "n12",
+              "target": "n13"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?\" This is a simple lookup/listing question, but we need to find investors that have three conditions: Redemption transactions, Manual Override actions, and Flash Crash scenarios. This involves set intersection of three sets: investors with Redemption transactions, investors with Manual Override actions, investors with Flash Crash scenarios. So we need to retrieve ontology classes, then maybe classify? There's no math/aggregation. But we need to intersect sets, so we need Set_Intersect operator.\n\nChronology: start with Retrieve to find ontology classes. Then we need to generate SPARQL queries for each condition? Possibly we need to generate three queries, then scan each, then intersect results.\n\nSteps:\n\n1. Retrieve (ontology classes) – find classes like Investor, Transaction, Action, Scenario, etc.\n\n2. Generate (SPARQL query for investors with Redemption transactions).\n\n3. Scan (execute that query).\n\n4. Validate (check data).\n\n5. Generate (SPARQL query for investors with Manual Override actions).\n\n6. Scan.\n\n7. Validate.\n\n8. Generate (SPARQL query for investors with Flash Crash scenarios).\n\n9. Scan.\n\n10. Validate.\n\n11. Set_Intersect (intersect the three result sets to get investors satisfying all three).\n\n12. Explain (present answer).\n\nWe must ensure chronology: after Retrieve we can go to Generate. No need for Classify because no numeric. Use Set_Intersect after we have result sets.\n\nThus steps numbered.\n\nLet's output only numbered steps.</reasoning>1. Retrieve – obtain the ontology classes relevant to investors, transactions, actions, and scenarios.  \n2. Generate – write a SPARQL query to list investors that have Redemption transactions.  \n3. Scan – execute the Redemption‑transaction query against the knowledge graph.  \n4. Validate – confirm the returned investor list is correct and complete.  \n5. Generate – write a SPARQL query to list investors that have Manual Override actions.  \n6. Scan – execute the Manual‑Override‑action query.  \n7. Validate – verify the accuracy of this investor list.  \n8. Generate – write a SPARQL query to list investors that are involved in Flash Crash scenarios.  \n9. Scan – execute the Flash‑Crash‑scenario query.  \n10. Validate – ensure the Flash Crash investor list is valid.  \n11. Set_Intersect – intersect the three validated result sets (Redemption, Manual Override, Flash Crash) to obtain investors that satisfy all three conditions.  \n12. Explain – present the final list of investors to the user.",
+        "dag_sequence": "Retrieve -> Generate -> Generate -> Generate -> Scan -> Scan -> Scan -> Validate -> Validate -> Validate -> Set_Intersect -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 48,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Generate",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Scan",
+              "inputs": [
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Validate",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Generate",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Scan",
+              "inputs": [
+                5
+              ]
+            },
+            {
+              "id": 7,
+              "operator": "Validate",
+              "inputs": [
+                6
+              ]
+            },
+            {
+              "id": 8,
+              "operator": "Generate",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 9,
+              "operator": "Scan",
+              "inputs": [
+                8
+              ]
+            },
+            {
+              "id": 10,
+              "operator": "Validate",
+              "inputs": [
+                9
+              ]
+            },
+            {
+              "id": 11,
+              "operator": "Set_Intersect",
+              "inputs": [
+                4,
+                7,
+                10
+              ]
+            },
+            {
+              "id": 12,
+              "operator": "Explain",
+              "inputs": [
+                11
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2
+            },
+            {
+              "source": 1,
+              "target": 5
+            },
+            {
+              "source": 1,
+              "target": 8
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 5,
+              "target": 6
+            },
+            {
+              "source": 8,
+              "target": 9
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 6,
+              "target": 7
+            },
+            {
+              "source": 9,
+              "target": 10
+            },
+            {
+              "source": 4,
+              "target": 11
+            },
+            {
+              "source": 7,
+              "target": 11
+            },
+            {
+              "source": 10,
+              "target": 11
+            },
+            {
+              "source": 11,
+              "target": 12
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "CashFlow",
+      "RebalancingAction",
+      "MarketScenario"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "",
+    "confidence": null,
+    "target_field": "",
+    "schema_datatype": "",
+    "why_this_intent": "",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    ?cf a wm:CashFlow ;\n        wm:investorId ?investorId ;\n        wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(?cfType), \"redemption\"))\n  }\n\n  FILTER EXISTS {\n    ?ra a wm:RebalancingAction ;\n        wm:investorId ?investorId ;\n        wm:action ?raAction .\n    FILTER(CONTAINS(LCASE(?raAction), \"manual override\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasScenarioRebalancing ?scenario .\n    ?scenario a wm:MarketScenario ;\n              rdfs:label ?msLabel .\n    FILTER(CONTAINS(LCASE(?msLabel), \"flash crash\"))\n  }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    ?cf a wm:CashFlow ;\n        wm:investorId ?investorId ;\n        wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(?cfType), \"redemption\"))\n  }\n\n  FILTER EXISTS {\n    ?ra a wm:RebalancingAction ;\n        wm:investorId ?investorId ;\n        wm:action ?raAction .\n    FILTER(CONTAINS(LCASE(?raAction), \"manual override\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasScenarioRebalancing ?scenario .\n    ?scenario a wm:MarketScenario ;\n              rdfs:label ?msLabel .\n    FILTER(CONTAINS(LCASE(?msLabel), \"flash crash\"))\n  }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    ?cf a wm:CashFlow ;\n        wm:investorId ?investorId ;\n        wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(?cfType), \"redemption\"))\n  }\n\n  FILTER EXISTS {\n    ?ra a wm:RebalancingAction ;\n        wm:investorId ?investorId ;\n        wm:action ?raAction .\n    FILTER(CONTAINS(LCASE(?raAction), \"manual override\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasScenarioRebalancing ?scenario .\n    ?scenario a wm:MarketScenario ;\n              rdfs:label ?msLabel .\n    FILTER(CONTAINS(LCASE(?msLabel), \"flash crash\"))\n  }\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 600 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "SPARQL execution timed out after 600 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to decide if pipeline output matches ground truth. Question: \"Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?\" Ground truth is a list of many investors (IDs and names). Pipeline output: \"A database error prevented data retrieval.\"\n\nAccording to rules, if ground truth has concrete data, pipeline must contain same facts. Here pipeline says error, not containing any. So it's MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "scan_timeout",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

@@ -1,0 +1,283 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-098",
+  "question": "Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_net_cash_flow\":2571277.95,\"avg_rebalance_amount\":442236.74,\"avg_scenario_change\":-10.65,\"avg_risk_score\":56.7,\"avg_goal_match_pct\":48.85},{\"group_value\":\"Debt\",\"avg_net_cash_flow\":700994.54,\"avg_rebalance_amount\":402125.4,\"avg_scenario_change\":-6.64,\"avg_risk_score\":50.32,\"avg_goal_match_pct\":50.54},{\"group_value\":\"Equity\",\"avg_net_cash_flow\":605528.22,\"avg_rebalance_amount\":435689.66,\"avg_scenario_change\":-1.19,\"avg_risk_score\":52.1,\"avg_goal_match_pct\":48.64},{\"group_value\":\"Gold\",\"avg_net_cash_flow\":620118.66,\"avg_rebalance_amount\":404021.82,\"avg_scenario_change\":0.89,\"avg_risk_score\":49.53,\"avg_goal_match_pct\":47.53},{\"group_value\":\"Hybrid\",\"avg_net_cash_flow\":1750813.19,\"avg_rebalance_amount\":397961.76,\"avg_scenario_change\":2.77,\"avg_risk_score\":52.98,\"avg_goal_match_pct\":46.42},{\"group_value\":\"Real Estate\",\"avg_net_cash_flow\":-571663.2,\"avg_rebalance_amount\":383518.43,\"avg_scenario_change\":-2.63,\"avg_risk_score\":50.7,\"avg_goal_match_pct\":45.52}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 641.7,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan to answer the query using only provided operators, following chronology.\n\nQuery: \"Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?\"\n\nWe need to find ontology classes first using Retrieve. Then classify math/aggregation words: cash flow, rebalancing amount, scenario change, risk score, goal match compare. Words like \"compare\" maybe need aggregation? Might need classification for numeric-superlative? Not exactly. But we need to follow rule: Use Classify for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. The query doesn't contain those specific words. However \"compare\" could be considered a numeric operation? Might not need Classify. But we can still include Classify step to be safe? The rule says if the query is only a simple lookup/listing question, go straight from Retrieve to Generate. This is not simple listing; it's a comparative analysis across profile category using five related tables. Might need classification for numeric operations? Not explicit. Probably we need to use Classify to identify that we need aggregation/comparison. So steps:\n\n1. Retrieve: get ontology classes (profile category, cash flow, rebalancing amount, scenario change, risk score, goal match, tables).\n2. Classify: identify numeric/aggregation aspects (compare, maybe need aggregation like average per profile category).\n3. Generate: write SPARQL query that joins five related tables, selects cash flow, rebalancing amount, scenario change, risk score, goal match, groups by profile category, maybe compute comparative metrics.\n4. Scan: execute the SPARQL query.\n5. Validate: check results for completeness, consistency.\n6. Explain: present comparison to user.\n\nThus output only numbered steps.</reasoning>1. Retrieve – Obtain the ontology classes relevant to the query (e.g., ProfileCategory, CashFlow, RebalancingAmount, ScenarioChange, RiskScore, GoalMatch, and the five related tables).  \n\n2. Classify – Identify the numeric/comparative elements in the request (cash flow, rebalancing amount, scenario change, risk score, goal match) and determine that aggregation/comparison across ProfileCategory is required.  \n\n3. Generate – Write a SPARQL (or equivalent graph) query that links the five related tables, selects the five metrics, groups the results by ProfileCategory, and includes the necessary comparative calculations (e.g., averages, totals, differences).  \n\n4. Scan – Execute the generated query against the knowledge graph to retrieve the comparative data.  \n\n5. Validate – Verify that the returned dataset contains all five metrics for each ProfileCategory, that no tables are missing, and that the aggregations are correct.  \n\n6. Explain – Present the user with a clear comparison of cash flow, rebalancing amount, scenario change, risk score, and goal match across each profile category.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?\" So we need to retrieve ontology classes, classify for math/aggregation? The query asks to compare metrics across profile category using five related tables. Likely need aggregation (maybe average, sum). The words \"compare\" suggests maybe need to compute comparative stats. So we need Classify for math/aggregation. Steps:\n\n1. Retrieve: find ontology classes (profile category, cash flow, rebalancing amount, scenario change, risk score, goal match, tables).\n2. Classify: identify aggregation/comparison needed (maybe average, sum, etc). Could be \"compare\" but not explicit numeric superlative. Might still need aggregation. We'll include Classify to detect numeric operations.\n3. Generate: write SPARQL query linking five tables, selecting metrics grouped by profile category.\n4. Scan: execute query.\n5. Validate: check results for completeness/consistency.\n6. Explain: present results to user.\n\nWe may need additional operators like Filter_Aggregate, Order_By, Link, Extract? But we must keep linear execution plan; can include multiple steps. The chronology: after Retrieve, we can do Classify, then Generate, then Scan, then Validate, then Explain. If need extra steps like Filter_Aggregate before Generate? The rule: Generate must happen after Classify (or Retrieve). So we can include Filter_Aggregate before Generate? Not required but could be after Retrieve. However chronology says Scan must happen immediately after Generate. So no other steps between Generate and Scan. So any other processing must be before Generate or after Validate. So we could have Retrieve, Classify, Generate, Scan, Validate, Explain. That's fine.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the ontology classes for “profile category”, “cash flow”, “rebalancing amount”, “scenario change”, “risk score”, “goal match”, and the five related tables.  \n2. Classify – identify the need for numeric aggregation/comparison (e.g., average, sum, min, max) across the selected metrics.  \n3. Generate – compose a SPARQL (or equivalent graph) query that links the five tables, selects the five metrics, groups the results by profile category, and applies the required aggregations.  \n4. Scan – execute the generated query against the knowledge graph to obtain the aggregated comparison data.  \n5. Validate – verify that the returned dataset includes all five metrics for each profile category and that the aggregations are correct.  \n6. Explain – present the comparative results to the user in a clear, organized format.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?\" So we need to retrieve ontology classes, classify for math/aggregation? The query asks to compare across profile category these metrics using five related tables. Likely need aggregation (maybe average, sum). Words: \"compare\" could imply maybe compute differences, but not explicit aggregation words like average, sum, min, max. However \"compare\" may involve numeric comparison, maybe need classification for numeric-superlative? The law says use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. Since query does not contain those words, maybe we can skip Classify? But we might still need to aggregate across tables. The instruction: \"If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'.\" This is not a simple lookup; it's a comparative analysis across categories using five tables. Likely need aggregation, but not explicit. Might still need classification to identify that we need numeric operations. Safer to include Classify step to identify needed operations (maybe \"compare\" triggers classification). So steps:\n\n1. Retrieve: find ontology classes (profile category, cash flow, rebalancing amount, scenario change, risk score, goal match, tables).\n2. Classify: identify that the query involves numeric comparison/aggregation across categories.\n3. Generate: write SPARQL query linking the five related tables, selecting metrics per profile category.\n4. Scan: execute the query.\n5. Validate: check results for completeness and correctness.\n6. Explain: present comparison results to user.\n\nWe may need additional operators like Filter_Aggregate, Order_By, Link, Extract? But plan must be linear, using only provided operators, but we can include multiple steps. However we must follow chronology: Retrieve, then Classify, then Generate, then Scan, then Validate, then Explain. We can include extra steps between but must respect ordering: after Retrieve we could do Classify, then maybe Link, Extract, Filter_Aggregate, etc before Generate? But rule says 'Generate' must happen AFTER 'Classify' (or 'Retrieve'). It doesn't forbid other steps before Generate? It says \"If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve').\" So we could do Retrieve, Classify, then maybe Link, Extract, Filter_Aggregate, then Generate. But typical flow: Retrieve classes, Classify, Generate SPARQL, Scan, Validate, Explain. Simpler.\n\nThus output numbered steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nWe may add sub-steps like \"Link\" to join tables, but not required. The question: \"using five related tables\" suggests need to link them. Could incorporate Link step after Generate? But Link is for linking data sources maybe before Generate. However we can incorporate within Generate SPARQL. So keep simple.\n\nThus final answer: numbered steps.</reasoning>1. Retrieve – locate the ontology classes for “profile category”, “cash flow”, “rebalancing amount”, “scenario change”, “risk score”, “goal match”, and the five related tables.  \n2. Classify – determine that the query requires numeric comparison/aggregation across the identified classes and tables.  \n3. Generate – compose a SPARQL (or equivalent graph) query that links the five tables, groups results by profile category, and extracts the values for cash flow, rebalancing amount, scenario change, risk score, and goal match for comparison.  \n4. Scan – execute the generated query against the knowledge graph to obtain the result set.  \n5. Validate – verify that the returned data includes all five metrics for each profile category and that the joins across the five tables are correct.  \n6. Explain – present the comparative analysis of the five metrics across profile categories to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "CashFlow",
+      "RebalancingAction",
+      "ScenarioRebalancing",
+      "PortfolioHealth",
+      "Category"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.96,
+    "target_field": "cash flow amount, rebalancing amount, scenario change (allocation pct), risk score, goal match pct",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks to compare numeric metrics (CashFlow.amount, RebalancingAction.amount, ScenarioRebalancing allocation percentages, PortfolioHealth.riskScore, PortfolioHealth.goalMatchPct) across the 'profile category' dimension; all referenced fields are defined as numeric in the schema.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId\n       (SUM(xsd:decimal(?cfAmount)) AS ?totalCashFlow)\n       (SUM(xsd:decimal(?raAmount)) AS ?totalRebalancingAmount)\n       (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChange)\n       ?riskScore\n       ?goalMatchPct\nWHERE {\n  # Cash Flow per investor\n  {\n    SELECT ?investorId ?cfAmount\n    WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?cfAmount .\n    }\n  }\n  # Rebalancing Action per investor\n  {\n    SELECT ?investorId ?raAmount\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:amount ?raAmount .\n    }\n  }\n  # Scenario Rebalancing change per investor\n  {\n    SELECT ?investorId ( (xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?scenarioChange )\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:currentAllocationPct ?currAlloc ;\n          wm:newAllocationPct ?newAlloc .\n    }\n  }\n  # Portfolio Health metrics (unique per investor)\n  {\n    SELECT ?investorId ?riskScore ?goalMatchPct\n    WHERE {\n      ?ph a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?riskScore ;\n          wm:goalMatchPct ?goalMatchPct .\n    }\n  }\n}\nGROUP BY ?investorId ?riskScore ?goalMatchPct\nORDER BY ?investorId",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId\n       (SUM(xsd:decimal(?cfAmount)) AS ?totalCashFlow)\n       (SUM(xsd:decimal(?raAmount)) AS ?totalRebalancingAmount)\n       (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChange)\n       ?riskScore\n       ?goalMatchPct\nWHERE {\n  # Cash Flow per investor\n  {\n    SELECT ?investorId ?cfAmount\n    WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?cfAmount .\n    }\n  }\n  # Rebalancing Action per investor\n  {\n    SELECT ?investorId ?raAmount\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:amount ?raAmount .\n    }\n  }\n  # Scenario Rebalancing change per investor\n  {\n    SELECT ?investorId ( (xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?scenarioChange )\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:currentAllocationPct ?currAlloc ;\n          wm:newAllocationPct ?newAlloc .\n    }\n  }\n  # Portfolio Health metrics (unique per investor)\n  {\n    SELECT ?investorId ?riskScore ?goalMatchPct\n    WHERE {\n      ?ph a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?riskScore ;\n          wm:goalMatchPct ?goalMatchPct .\n    }\n  }\n}\nGROUP BY ?investorId ?riskScore ?goalMatchPct\nORDER BY ?investorId",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId\n       (SUM(xsd:decimal(?cfAmount)) AS ?totalCashFlow)\n       (SUM(xsd:decimal(?raAmount)) AS ?totalRebalancingAmount)\n       (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChange)\n       ?riskScore\n       ?goalMatchPct\nWHERE {\n  # Cash Flow per investor\n  {\n    SELECT ?investorId ?cfAmount\n    WHERE {\n      ?cf a wm:CashFlow ;\n          wm:investorId ?investorId ;\n          wm:amount ?cfAmount .\n    }\n  }\n  # Rebalancing Action per investor\n  {\n    SELECT ?investorId ?raAmount\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:amount ?raAmount .\n    }\n  }\n  # Scenario Rebalancing change per investor\n  {\n    SELECT ?investorId ( (xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?scenarioChange )\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:currentAllocationPct ?currAlloc ;\n          wm:newAllocationPct ?newAlloc .\n    }\n  }\n  # Portfolio Health metrics (unique per investor)\n  {\n    SELECT ?investorId ?riskScore ?goalMatchPct\n    WHERE {\n      ?ph a wm:PortfolioHealth ;\n          wm:investorId ?investorId ;\n          wm:riskScore ?riskScore ;\n          wm:goalMatchPct ?goalMatchPct .\n    }\n  }\n}\nGROUP BY ?investorId ?riskScore ?goalMatchPct\nORDER BY ?investorId",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 600 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "SPARQL execution timed out after 600 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output: \"A database error prevented data retrieval.\" with ground truth which is a JSON array with data. The pipeline output does not contain any of those numbers; it's a database error. According to rule 2, if ground truth has concrete numbers, pipeline must contain same facts; otherwise mark MISMATCH. So answer is MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "scan_timeout",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

@@ -1,0 +1,433 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-016",
+  "question": "Across rebalance logic, how do scenario change compare using two related tables?",
+  "ground_truth": "[{\"logic\":null,\"avg_rebalance_gap\":-3.3,\"avg_scenario_change\":1.1},{\"logic\":\"Automated Trigger\",\"avg_rebalance_gap\":-1.37,\"avg_scenario_change\":1.72},{\"logic\":\"Calendar-based\",\"avg_rebalance_gap\":-1.7,\"avg_scenario_change\":1.27},{\"logic\":\"Manual Override\",\"avg_rebalance_gap\":-1.41,\"avg_scenario_change\":-2.99},{\"logic\":\"Mean-reversion\",\"avg_rebalance_gap\":-2.85,\"avg_scenario_change\":-0.98},{\"logic\":\"Momentum-driven\",\"avg_rebalance_gap\":2.36,\"avg_scenario_change\":0.63},{\"logic\":\"Risk-parity\",\"avg_rebalance_gap\":-1.9,\"avg_scenario_change\":-2.89},{\"logic\":\"Scenario-based\",\"avg_rebalance_gap\":1.83,\"avg_scenario_change\":-4.41},{\"logic\":\"Tactical\",\"avg_rebalance_gap\":-1.08,\"avg_scenario_change\":-0.69},{\"logic\":\"Threshold-based\",\"avg_rebalance_gap\":-5.78,\"avg_scenario_change\":-0.38},{\"logic\":\"Valuation-based\",\"avg_rebalance_gap\":3.29,\"avg_scenario_change\":-2.71}]",
+  "pipeline_output": "Logic counts – Valuation-based 594, Tactical 584, Manual Override 658, Automated Trigger 538, Momentum-driven 589, Calendar-based 592, Mean-reversion 586, Threshold-based 585, Scenario-based 584, Risk-parity 573; Scenario counts – Economic Growth 133, Geopolitical Tension 112, Sector Rotation 126, Market Volatility 114, Approaching Goal 142, Flash Crash 119, Interest Rate Hike 129, Currency Depreciation 115, Bull Market 114, Inflation Surge 121, Interest Rate Cut 112, Bear Market 135.",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 477.964,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan -> Validate",
+    "failure_stage": "Validate",
+    "short_circuit_stage": "Validate"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan to answer the query using only provided operators, following chronology.\n\nQuery: \"Across rebalance logic, how do scenario change compare using two related tables?\"\n\nWe need to interpret: They want to compare scenario changes across rebalance logic using two related tables. Likely need to retrieve ontology classes, classify for math/aggregation? The query mentions \"compare\", \"scenario change\", maybe need to compute differences. Could involve numeric comparison, maybe need Set_Intersect, Set_Difference, etc. But we must follow rules: start with Retrieve to find ontology classes. Then Classify if there are math/aggregation words. The query includes \"compare\", \"change\". Not explicit math functions like sum, average. Might still need numeric comparison; but classification rule says for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. Not present. So maybe we can skip Classify? However we might still need to compute differences; but classification is only required for those words. So we can go from Retrieve to Generate.\n\nBut we need to compare scenario change using two related tables. That may involve linking tables, maybe Set_Intersect or Set_Difference. However the execution chronology: Retrieve, then maybe Classify (optional), then Generate (SPARQL), then Scan, then Validate, then Explain. Additional operators like Link, Set_Intersect, etc. can be used after Validate? The chronology only mandates order for those core steps, but we can insert other operators between? The rules: \"CRITICAL LAWS OF EXECUTION (YOU MUST FOLLOW THIS CHRONOLOGY): 1. You must start by finding the ontology classes. Use 'Retrieve'. 2. CRITICAL: Use 'Classify' for math... 3. If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve'). 4. 'Scan' (executing Graph query) must happen immediately AFTER 'Generate'. 5. 'Validate' (checking data) must happen AFTER 'Scan'. 6. 'Explain' ... final step.\"\n\nThus we can insert other operators between steps as long as order respects these constraints? For example, after Retrieve we could use Link to connect tables before Generate? But Generate writes SPARQL; linking may be part of query. Probably we can incorporate linking within SPARQL. So we may not need extra steps.\n\nThus steps:\n\n1. Retrieve (ontology classes related to rebalance logic, scenario, tables)\n2. Generate (SPARQL to fetch scenario change data from two related tables, perhaps using joins)\n3. Scan (execute the query)\n4. Validate (ensure data completeness, compare values)\n5. Explain (provide answer)\n\nIf classification needed? Not needed.\n\nThus output numbered steps.\n\nLet's produce:\n\n1. Retrieve\n2. Generate\n3. Scan\n4. Validate\n5. Explain\n\nMake sure to mention purpose in each step.\n\n</reasoning>1. **Retrieve** – Locate the ontology classes for “rebalance logic”, “scenario”, and the two related tables that store scenario change data.  \n\n2. **Generate** – Write a SPARQL (or equivalent graph) query that links the two tables via their relationship, extracts the scenario change metrics for each rebalance logic, and prepares them for comparison.  \n\n3. **Scan** – Execute the generated query against the knowledge graph to obtain the raw comparison data.  \n\n4. **Validate** – Check the returned data for completeness and consistency (e.g., matching scenario identifiers, no missing values) and confirm that the comparison is accurate.  \n\n5. **Explain** – Present the user with a clear explanation of how the scenario changes compare across the rebalance logic using the two related tables.",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across rebalance logic, how do scenario change compare using two related tables?\" Need to interpret: likely need to compare scenario changes across rebalance logic using two related tables. This involves classification of math/aggregation? Words: \"compare\", \"scenario change\". Might involve numeric comparison. Might need to classify for aggregation? Possibly need to compute differences between scenarios across tables. So we need to use Classify for math/aggregation words. The query includes \"compare\" which may imply difference, maybe Set_Difference? But classification for numeric-superlative words: not present. However \"compare\" might involve set operations. Could use Set_Intersect, Set_Difference, Set_Union. But we must follow rules: start with Retrieve to find ontology classes. Then Classify for math, aggregation, numeric-superlatives. Since there is no explicit such words, but we might still need classification for comparison? The rule says use Classify for math, aggregation, or numeric-superlative words. Since none present, maybe we can skip Classify? But the query involves scenario change compare, which is a comparison, maybe numeric. Safer to include Classify to detect any hidden numeric operation. So steps:\n\n1. Retrieve (ontology classes related to rebalance logic, scenario, tables)\n2. Classify (determine if query involves math/aggregation/comparison)\n3. Generate (write SPARQL to fetch data from two related tables, maybe join)\n4. Scan (execute graph query)\n5. Validate (check data integrity, ensure both tables retrieved)\n6. Possibly use Set_Intersect/Set_Difference to compare scenario changes across tables. But we need to include those operators as separate steps after Validate? The chronology: after Validate we could do Set_Intersect or Set_Difference, then maybe Explain. The rules don't forbid extra steps after Validate before Explain. So we can include Set_Intersect or Set_Difference to compute comparison. Let's choose Set_Intersect to find common scenario changes, and Set_Difference to find differences. Could be two steps.\n\nThus plan:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Set_Intersect (or Set_Difference) - maybe both: first intersect then difference.\n7. Explain\n\nWe need linear execution plan, numbered steps. Provide only steps.\n\nLet's craft:\n\n1. Retrieve – locate ontology classes for \"rebalance logic\", \"scenario\", and the two related tables.\n2. Classify – identify any mathematical or aggregation intent (e.g., comparison of scenario changes) in the query.\n3. Generate – compose a SPARQL query that extracts scenario change data from both tables and links them via the common rebalance logic identifier.\n4. Scan – execute the generated SPARQL query against the knowledge graph.\n5. Validate – verify that results contain matching scenario identifiers from both tables and that change values are present.\n6. Set_Difference – compute the differences in scenario change values between the two tables to show how they compare.\n7. Explain – present the comparison results to the user.\n\nThat follows chronology: Retrieve, Classify, Generate, Scan, Validate, Set_Difference, Explain. Use only allowed operators. Good.</reasoning>1. Retrieve – locate the ontology classes for “rebalance logic”, “scenario”, and the two related tables.  \n2. Classify – determine whether the query involves mathematical or aggregation intent (e.g., comparison of scenario‑change values).  \n3. Generate – write a SPARQL query that extracts the scenario‑change data from both tables and links them via the common rebalance‑logic identifier.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – check that the returned results contain matching scenario identifiers from both tables and that the change metrics are present.  \n6. Set_Difference – compute the differences in scenario‑change values between the two tables to show how the scenarios compare.  \n7. Explain – present the comparison results to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Set_Difference -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 32,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Set_Difference",
+              "inputs": [
+                5
+              ]
+            },
+            {
+              "id": 7,
+              "operator": "Explain",
+              "inputs": [
+                5,
+                6
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 7
+            },
+            {
+              "source": 5,
+              "target": 6
+            },
+            {
+              "source": 6,
+              "target": 7
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across rebalance logic, how do scenario change compare using two related tables?\" Need to interpret: They want to compare scenario changes across rebalance logic using two related tables. Likely need to retrieve ontology classes, classify math/aggregation terms (maybe \"compare\", \"change\", maybe numeric). Then generate SPARQL, scan, validate, explain.\n\nSteps:\n\n1. Retrieve (ontology classes) for \"rebalance logic\", \"scenario\", \"change\", \"table\".\n2. Classify (detect math/aggregation terms). The query involves comparison, maybe \"change compare\" which may involve numeric difference. So we classify for numeric comparison.\n3. Generate (write SPARQL query) to fetch data from two related tables, compare scenario changes across rebalance logic.\n4. Scan (execute the query).\n5. Validate (check results, ensure consistency).\n6. Explain (present answer to user).\n\nThus 6 steps.\n\nMake sure order: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain.\n\nReturn only numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "RebalancingLogic",
+      "ScenarioRebalancing",
+      "RebalancingAction",
+      "MarketScenario"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "",
+    "confidence": null,
+    "target_field": "",
+    "schema_datatype": "",
+    "why_this_intent": "",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?scenario ?avgNewAllocationPct ?avgTargetAllocationPct\nWHERE {\n  {\n    SELECT ?investorId ?scenario (AVG(xsd:decimal(?newAllocationPct)) AS ?avgNewAllocationPct)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:scenario ?scenario ;\n          wm:newAllocationPct ?newAllocationPct .\n    }\n    GROUP BY ?investorId ?scenario\n  }\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?targetAllocationPct)) AS ?avgTargetAllocationPct)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:targetAllocationPct ?targetAllocationPct .\n    }\n    GROUP BY ?investorId\n  }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?type ?label ?count WHERE {\n  {\n    SELECT ( \"Logic\" AS ?type ) ?logic ?logicLabel (COUNT(?ra) AS ?count)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:hasRebalancingLogic ?logic .\n      OPTIONAL { ?logic rdfs:label ?logicLabel . }\n    }\n    GROUP BY ?logic ?logicLabel\n  }\n  UNION\n  {\n    SELECT ( \"Scenario\" AS ?type ) ?scenario ?scenarioLabel (COUNT(?sr) AS ?count)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:hasMarketScenario ?scenario .\n      OPTIONAL { ?scenario rdfs:label ?scenarioLabel . }\n    }\n    GROUP BY ?scenario ?scenarioLabel\n  }\n  BIND(COALESCE(?logicLabel, ?scenarioLabel) AS ?label)\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 4,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?scenario ?avgNewAllocationPct ?avgTargetAllocationPct\nWHERE {\n  {\n    SELECT ?investorId ?scenario (AVG(xsd:decimal(?newAllocationPct)) AS ?avgNewAllocationPct)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:scenario ?scenario ;\n          wm:newAllocationPct ?newAllocationPct .\n    }\n    GROUP BY ?investorId ?scenario\n  }\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?targetAllocationPct)) AS ?avgTargetAllocationPct)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:targetAllocationPct ?targetAllocationPct .\n    }\n    GROUP BY ?investorId\n  }\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investorId ?scenario ?avgNewAllocationPct ?avgTargetAllocationPct\nWHERE {\n  {\n    SELECT ?investorId ?scenario (AVG(xsd:decimal(?newAllocationPct)) AS ?avgNewAllocationPct)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:scenario ?scenario ;\n          wm:newAllocationPct ?newAllocationPct .\n    }\n    GROUP BY ?investorId ?scenario\n  }\n  {\n    SELECT ?investorId (AVG(xsd:decimal(?targetAllocationPct)) AS ?avgTargetAllocationPct)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:targetAllocationPct ?targetAllocationPct .\n    }\n    GROUP BY ?investorId\n  }\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?logic ?scenario (AVG(xsd:decimal(?newAvg)) AS ?avgNewAllocationPct) (AVG(xsd:decimal(?targetAvg)) AS ?avgTargetAllocationPct)\nWHERE {\n  {\n    SELECT ?investorId ?scenario (AVG(xsd:decimal(?newAllocationPct)) AS ?newAvg)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:scenario ?scenario ;\n          wm:newAllocationPct ?newAllocationPct .\n    }\n    GROUP BY ?investorId ?scenario\n  }\n  {\n    SELECT ?investorId ?logic (AVG(xsd:decimal(?targetAllocationPct)) AS ?targetAvg)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:targetAllocationPct ?targetAllocationPct ;\n          wm:logic ?logic .\n    }\n    GROUP BY ?investorId ?logic\n  }\n}\nGROUP BY ?logic ?scenario",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": "Refine was too similar to timed-out SPARQL, so Generate rewrote with stronger feedback."
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?logic ?scenario (AVG(xsd:decimal(?newAvg)) AS ?avgNewAllocationPct) (AVG(xsd:decimal(?targetAvg)) AS ?avgTargetAllocationPct)\nWHERE {\n  {\n    SELECT ?investorId ?scenario (AVG(xsd:decimal(?newAllocationPct)) AS ?newAvg)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:scenario ?scenario ;\n          wm:newAllocationPct ?newAllocationPct .\n    }\n    GROUP BY ?investorId ?scenario\n  }\n  {\n    SELECT ?investorId ?logic (AVG(xsd:decimal(?targetAllocationPct)) AS ?targetAvg)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:targetAllocationPct ?targetAllocationPct ;\n          wm:logic ?logic .\n    }\n    GROUP BY ?investorId ?logic\n  }\n}\nGROUP BY ?logic ?scenario",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?logic ?scenario (AVG(xsd:decimal(?newAvg)) AS ?avgNewAllocationPct) (AVG(xsd:decimal(?targetAvg)) AS ?avgTargetAllocationPct)\nWHERE {\n  {\n    SELECT ?investorId ?scenario (AVG(xsd:decimal(?newAllocationPct)) AS ?newAvg)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:investorId ?investorId ;\n          wm:scenario ?scenario ;\n          wm:newAllocationPct ?newAllocationPct .\n    }\n    GROUP BY ?investorId ?scenario\n  }\n  {\n    SELECT ?investorId ?logic (AVG(xsd:decimal(?targetAllocationPct)) AS ?targetAvg)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:investorId ?investorId ;\n          wm:targetAllocationPct ?targetAllocationPct ;\n          wm:logic ?logic .\n    }\n    GROUP BY ?investorId ?logic\n  }\n}\nGROUP BY ?logic ?scenario",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?key (AVG(xsd:decimal(?pct)) AS ?avgPct)\nWHERE {\n  {\n    SELECT (\"scenario\" AS ?category) ( ?scenario AS ?key ) ( wm:newAllocationPct AS ?pct )\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:scenario ?scenario ;\n          wm:newAllocationPct ?pct .\n    }\n  }\n  UNION\n  {\n    SELECT (\"logic\" AS ?category) ( ?logic AS ?key ) ( wm:targetAllocationPct AS ?pct )\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:logic ?logic ;\n          wm:targetAllocationPct ?pct .\n    }\n  }\n}\nGROUP BY ?category ?key",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?key (AVG(xsd:decimal(?pct)) AS ?avgPct)\nWHERE {\n  {\n    SELECT (\"scenario\" AS ?category) ( ?scenario AS ?key ) ( wm:newAllocationPct AS ?pct )\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:scenario ?scenario ;\n          wm:newAllocationPct ?pct .\n    }\n  }\n  UNION\n  {\n    SELECT (\"logic\" AS ?category) ( ?logic AS ?key ) ( wm:targetAllocationPct AS ?pct )\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:logic ?logic ;\n          wm:targetAllocationPct ?pct .\n    }\n  }\n}\nGROUP BY ?category ?key",
+        "status": "success",
+        "row_count": 22,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      },
+      {
+        "attempt": 1,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?key (AVG(xsd:decimal(?pct)) AS ?avgPct)\nWHERE {\n  {\n    SELECT (\"scenario\" AS ?category) ( ?scenario AS ?key ) ( wm:newAllocationPct AS ?pct )\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:scenario ?scenario ;\n          wm:newAllocationPct ?pct .\n    }\n  }\n  UNION\n  {\n    SELECT (\"logic\" AS ?category) ( ?logic AS ?key ) ( wm:targetAllocationPct AS ?pct )\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:logic ?logic ;\n          wm:targetAllocationPct ?pct .\n    }\n  }\n}\nGROUP BY ?category ?key",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?logicLabel ?logicCount ?scenarioLabel ?scenarioCount\nWHERE {\n  {\n    SELECT ?logic (COUNT(?ra) AS ?logicCount)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:hasRebalancingLogic ?logic .\n    }\n    GROUP BY ?logic\n  }\n  {\n    SELECT ?scenario (COUNT(?sr) AS ?scenarioCount)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:hasMarketScenario ?scenario .\n    }\n    GROUP BY ?scenario\n  }\n  OPTIONAL { ?logic rdfs:label ?logicLabel . }\n  OPTIONAL { ?scenario rdfs:label ?scenarioLabel . }\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?logicLabel ?logicCount ?scenarioLabel ?scenarioCount\nWHERE {\n  {\n    SELECT ?logic (COUNT(?ra) AS ?logicCount)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:hasRebalancingLogic ?logic .\n    }\n    GROUP BY ?logic\n  }\n  {\n    SELECT ?scenario (COUNT(?sr) AS ?scenarioCount)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:hasMarketScenario ?scenario .\n    }\n    GROUP BY ?scenario\n  }\n  OPTIONAL { ?logic rdfs:label ?logicLabel . }\n  OPTIONAL { ?scenario rdfs:label ?scenarioLabel . }\n}",
+        "status": "success",
+        "row_count": 120,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      },
+      {
+        "attempt": 2,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?logicLabel ?logicCount ?scenarioLabel ?scenarioCount\nWHERE {\n  {\n    SELECT ?logic (COUNT(?ra) AS ?logicCount)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:hasRebalancingLogic ?logic .\n    }\n    GROUP BY ?logic\n  }\n  {\n    SELECT ?scenario (COUNT(?sr) AS ?scenarioCount)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:hasMarketScenario ?scenario .\n    }\n    GROUP BY ?scenario\n  }\n  OPTIONAL { ?logic rdfs:label ?logicLabel . }\n  OPTIONAL { ?scenario rdfs:label ?scenarioLabel . }\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?type ?label ?count WHERE {\n  {\n    SELECT ( \"Logic\" AS ?type ) ?logic ?logicLabel (COUNT(?ra) AS ?count)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:hasRebalancingLogic ?logic .\n      OPTIONAL { ?logic rdfs:label ?logicLabel . }\n    }\n    GROUP BY ?logic ?logicLabel\n  }\n  UNION\n  {\n    SELECT ( \"Scenario\" AS ?type ) ?scenario ?scenarioLabel (COUNT(?sr) AS ?count)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:hasMarketScenario ?scenario .\n      OPTIONAL { ?scenario rdfs:label ?scenarioLabel . }\n    }\n    GROUP BY ?scenario ?scenarioLabel\n  }\n  BIND(COALESCE(?logicLabel, ?scenarioLabel) AS ?label)\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?type ?label ?count WHERE {\n  {\n    SELECT ( \"Logic\" AS ?type ) ?logic ?logicLabel (COUNT(?ra) AS ?count)\n    WHERE {\n      ?ra a wm:RebalancingAction ;\n          wm:hasRebalancingLogic ?logic .\n      OPTIONAL { ?logic rdfs:label ?logicLabel . }\n    }\n    GROUP BY ?logic ?logicLabel\n  }\n  UNION\n  {\n    SELECT ( \"Scenario\" AS ?type ) ?scenario ?scenarioLabel (COUNT(?sr) AS ?count)\n    WHERE {\n      ?sr a wm:ScenarioRebalancing ;\n          wm:hasMarketScenario ?scenario .\n      OPTIONAL { ?scenario rdfs:label ?scenarioLabel . }\n    }\n    GROUP BY ?scenario ?scenarioLabel\n  }\n  BIND(COALESCE(?logicLabel, ?scenarioLabel) AS ?label)\n}",
+        "status": "success",
+        "row_count": 22,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 22,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 22,
+    "final_answer": "Logic counts – Valuation-based 594, Tactical 584, Manual Override 658, Automated Trigger 538, Momentum-driven 589, Calendar-based 592, Mean-reversion 586, Threshold-based 585, Scenario-based 584, Risk-parity 573; Scenario counts – Economic Growth 133, Geopolitical Tension 112, Sector Rotation 126, Market Volatility 114, Approaching Goal 142, Flash Crash 119, Interest Rate Hike 129, Currency Depreciation 115, Bull Market 114, Inflation Surge 121, Interest Rate Cut 112, Bear Market 135.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth. Question: \"Across rebalance logic, how do scenario change compare using two related tables?\" Ground truth is a JSON array of objects each with logic, avg_rebalance_gap, avg_scenario_change. So answer should include those values. Pipeline output gave \"Logic counts – Valuation-based 594, Tactical 584, Manual Override 658, Automated Trigger 538, Momentum-driven 589, Calendar-based 592, Mean-reversion 586, Threshold-based 585, Scenario-based 584, Risk-parity 573; Scenario counts – Economic Growth 133, Geopolitical Tension 112, ...\". This does not contain the avg_rebalance_gap or avg_scenario_change numbers. So missing values. According to rule 4, missing values => PARTIAL or MISMATCH. Since none of the required values appear, it's a mismatch. Not partial because none of the required values are present. So output MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "scan_timeout",
+    "failure_stage": "Validate",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

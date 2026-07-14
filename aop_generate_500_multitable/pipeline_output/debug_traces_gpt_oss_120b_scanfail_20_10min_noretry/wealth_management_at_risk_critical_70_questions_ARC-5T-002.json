@@ -1,0 +1,343 @@
+{
+  "sample_row_id": "wealth_management_at_risk_critical_70_questions:ARC-5T-002",
+  "question": "Which investors have Withdrawal cash flows, negative-return holdings, allocation_pct above 30, and liquidity_score below 30?",
+  "ground_truth": "[{\"investor_id\":\"INV-067\",\"investor_name\":\"Vikram Iyer\"},{\"investor_id\":\"INV-1096\",\"investor_name\":\"Amrita Sharma\"},{\"investor_id\":\"INV-167\",\"investor_name\":\"Priyanka Reddy\"},{\"investor_id\":\"INV-515\",\"investor_name\":\"Rahul Verma\"},{\"investor_id\":\"INV-554\",\"investor_name\":\"Geeta Bhat\"}]",
+  "pipeline_output": "The investors are Vikram Iyer (INV-067), Geeta Bhat (INV-554), Priyanka Reddy (INV-167), Amrita Sharma (INV-1096) and Rahul Verma (INV-515).",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 165.894,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest reward dynamic DAG: reward=0.5, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following the chronology.\n\nWe have a query: \"Which investors have Withdrawal cash flows, negative-return holdings, allocation_pct above 30, and liquidity_score below 30?\"\n\nWe need to retrieve ontology classes, then classify numeric comparisons (above 30, below 30) maybe also \"negative-return holdings\" is a condition but not numeric. We need to classify for math/aggregation words: \"above\", \"below\" are numeric comparisons, but the rule says use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. So we should use Classify for the numeric comparisons (above 30, below 30). So steps:\n\n1. Retrieve (ontology classes) - maybe retrieve Investor, CashFlow, Holding, Allocation, LiquidityScore etc.\n\n2. Classify (identify numeric constraints: allocation_pct > 30, liquidity_score < 30, and maybe \"Withdrawal cash flows\" and \"negative-return holdings\" as types). So step 2: Classify.\n\n3. Generate (write SPARQL query) using retrieved classes and classification.\n\n4. Scan (execute query).\n\n5. Validate (check results).\n\n6. Explain (present answer).\n\nThus 6 steps.\n\nMake sure to follow chronology: start with Retrieve, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve – Obtain the relevant ontology classes (e.g., Investor, CashFlow, Holding, Allocation, LiquidityScore).  \n2. Classify – Identify and label the numeric‑comparison elements in the query (“allocation_pct above 30” and “liquidity_score below 30”) as mathematical constraints.  \n3. Generate – Write a SPARQL (or equivalent graph) query that selects investors who have a Withdrawal cash‑flow, hold negative‑return holdings, satisfy allocation_pct > 30, and liquidity_score < 30.  \n4. Scan – Execute the generated query against the knowledge graph.  \n5. Validate – Verify that the returned investors meet all four specified conditions.  \n6. Explain – Present the final list of investors that satisfy the query to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest reward dynamic DAG: reward=0.5, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have Withdrawal cash flows, negative-return holdings, allocation_pct above 30, and liquidity_score below 30?\" This involves filtering investors based on multiple conditions: cash flow type Withdrawal, holdings with negative return, allocation_pct >30, liquidity_score <30. Likely need to retrieve ontology classes, classify numeric comparisons, generate SPARQL, scan, validate, explain.\n\nSteps:\n\n1. Retrieve ontology classes (Investor, CashFlow, Holding, etc.)\n2. Classify numeric comparisons (allocation_pct above 30, liquidity_score below 30) and negative-return holdings (maybe classification of \"negative-return\" as numeric condition)\n3. Generate SPARQL query using classes and filters.\n4. Scan to execute query.\n5. Validate results.\n6. Explain answer.\n\nThus 6 steps. Ensure order: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain.\n\nWe must output only numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Rejected by Python validator: missing dependency path: Classify -> Generate",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have Withdrawal cash flows, negative-return holdings, allocation_pct above 30, and liquidity_score below 30?\"\n\nWe need to retrieve ontology classes first. Then classify numeric comparisons (above 30, below 30) and negative-return holdings (maybe classification for numeric). Since there are numeric conditions, we need to use Classify for math/aggregation. Then Generate SPARQL query. Then Scan to execute. Then Validate. Then Explain.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify numeric and comparison operators: \"allocation_pct above 30\", \"liquidity_score below 30\", \"negative-return holdings\")\n3. Generate (write SPARQL query to select investors with those conditions)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nMake sure order matches rules: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the ontology classes relevant to investors, cash‑flow types, holdings, allocation_pct, and liquidity_score.  \n2. Classify – identify and label the numeric/comparative elements in the query (e.g., “allocation_pct above 30”, “liquidity_score below 30”, “negative‑return holdings”, “Withdrawal cash flows”).  \n3. Generate – construct a SPARQL query that selects investors who have a Withdrawal cash‑flow, hold assets with negative return, allocation_pct > 30, and liquidity_score < 30.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned data satisfy all specified conditions and contain no errors.  \n6. Explain – present the list of investors that meet the criteria to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "CashFlow",
+      "PortfolioHolding",
+      "SectorAllocation",
+      "PortfolioHealth"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "point_lookup",
+    "confidence": 0.97,
+    "target_field": "investorId",
+    "schema_datatype": "categorical_string",
+    "why_this_intent": "The query requests a list of investors that satisfy several filter conditions (withdrawal cash flows, negative returns, allocation_pct > 30, liquidity_score < 30). This is a retrieval of specific entities, not a numeric aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    ?inv wm:hasCashFlow ?cf .\n    ?cf wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(STR(?cfType)), \"withdrawal\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasHolding ?hold .\n    ?hold wm:returnsPct ?ret .\n    FILTER(xsd:decimal(?ret) < 0)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasSectorAllocation ?alloc .\n    ?alloc wm:allocationPct ?allocPct .\n    FILTER(xsd:decimal(?allocPct) > 30)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasPortfolioHealth ?ph .\n    ?ph wm:liquidityScore ?liq .\n    FILTER(xsd:decimal(?liq) < 30)\n  }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    ?inv wm:hasCashFlow ?cf .\n    ?cf wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(STR(?cfType)), \"withdrawal\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasHolding ?hold .\n    ?hold wm:returnsPct ?ret .\n    FILTER(xsd:decimal(?ret) < 0)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasSectorAllocation ?alloc .\n    ?alloc wm:allocationPct ?allocPct .\n    FILTER(xsd:decimal(?allocPct) > 30)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasPortfolioHealth ?ph .\n    ?ph wm:liquidityScore ?liq .\n    FILTER(xsd:decimal(?liq) < 30)\n  }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    ?inv wm:hasCashFlow ?cf .\n    ?cf wm:type ?cfType .\n    FILTER(CONTAINS(LCASE(STR(?cfType)), \"withdrawal\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasHolding ?hold .\n    ?hold wm:returnsPct ?ret .\n    FILTER(xsd:decimal(?ret) < 0)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasSectorAllocation ?alloc .\n    ?alloc wm:allocationPct ?allocPct .\n    FILTER(xsd:decimal(?allocPct) > 30)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasPortfolioHealth ?ph .\n    ?ph wm:liquidityScore ?liq .\n    FILTER(xsd:decimal(?liq) < 30)\n  }\n}",
+        "status": "success",
+        "row_count": 5,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 5,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query returns non‑empty results with the expected columns (investorId, investorName) that directly answer the request for the investors meeting all specified criteria. No aggregation or ranking was required, and the SPARQL correctly applies the required filters.",
+    "validator_reason": "The query returns non‑empty results with the expected columns (investorId, investorName) that directly answer the request for the investors meeting all specified criteria. No aggregation or ranking was required, and the SPARQL correctly applies the required filters.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 5,
+    "final_answer": "The investors are Vikram Iyer (INV-067), Geeta Bhat (INV-554), Priyanka Reddy (INV-167), Amrita Sharma (INV-1096) and Rahul Verma (INV-515).",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth list of investors (5 entries) with pipeline output list. Ground truth: [{\"investor_id\":\"INV-067\",\"investor_name\":\"Vikram Iyer\"},{\"investor_id\":\"INV-1096\",\"investor_name\":\"Amrita Sharma\"},{\"investor_id\":\"INV-167\",\"investor_name\":\"Priyanka Reddy\"},{\"investor_id\":\"INV-515\",\"investor_name\":\"Rahul Verma\"},{\"investor_id\":\"INV-554\",\"investor_name\":\"Geeta Bhat\"}]\n\nPipeline Output: \"The investors are Vikram Iyer (INV-067), Geeta Bhat (INV-554), Priyanka Reddy (INV-167), Amrita Sharma (INV-1096) and Rahul Verma (INV-515).\"\n\nIt includes all five names and IDs, just order different. All present. So matches all facts. Therefore MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

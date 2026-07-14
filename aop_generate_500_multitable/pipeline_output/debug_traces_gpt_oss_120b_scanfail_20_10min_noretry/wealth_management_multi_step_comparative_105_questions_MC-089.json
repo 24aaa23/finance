@@ -1,0 +1,365 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-089",
+  "question": "Across time_horizon, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_net_cash_flow\":1305239.48,\"avg_progress_pct\":42.13,\"avg_holding_gain\":4781952.94,\"avg_risk_score\":46.33},{\"group_value\":\"Long-term\",\"avg_net_cash_flow\":1029435.71,\"avg_progress_pct\":40.22,\"avg_holding_gain\":3694674.33,\"avg_risk_score\":48.98},{\"group_value\":\"Medium-term\",\"avg_net_cash_flow\":1649318.64,\"avg_progress_pct\":39.98,\"avg_holding_gain\":3182292.25,\"avg_risk_score\":51.61},{\"group_value\":\"Short-term\",\"avg_net_cash_flow\":1415496.47,\"avg_progress_pct\":39.66,\"avg_holding_gain\":3621147.02,\"avg_risk_score\":51.08}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 175.755,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across time_horizon, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?\" So we need to retrieve ontology classes, classify math/aggregation words (maybe compare across time_horizon implies maybe need aggregation like average, sum, etc). Words: \"compare\" maybe need aggregation? Could be need to compute differences across time_horizon. Might need classification for numeric-superlative? Not explicit. But we have numeric fields: net cash flow, goal progress, holding gain, risk score, allocation concentration. Likely need to aggregate per time_horizon. So we need to classify for aggregation (maybe \"Average\" or \"Sum\"? Not in query). However \"compare\" suggests we might need to compute differences or maybe just list values across time_horizon. Could still need classification for numeric fields. According to rule: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. The query doesn't contain those words. So maybe we can skip Classify? But rule says if query is only simple lookup/listing, go straight from Retrieve to Generate. This is more complex: comparing across time_horizon across five tables. Might need classification? Not explicit. Might still need to classify the numeric fields? The rule says Classify for math, aggregation, or numeric-superlative words. No such words. So we can go Retrieve -> Generate. However we have multiple tables (five related tables). Might need to Link or Integrate. But the plan must be linear steps using operators. Likely steps:\n\n1. Retrieve ontology classes (tables, fields).\n2. Generate SPARQL query to pull net cash flow, goal progress, holding gain, risk score, allocation concentration across time_horizon from five related tables, possibly using Link/Integrate to join.\n3. Scan to execute query.\n4. Validate results.\n5. Explain to user.\n\nBut we might need to use Link or Integrate to combine five tables. The operators include Link, Integrate. Could be after Generate we need to Link tables? However the chronology: Generate must happen after Retrieve (or Classify). Scan must happen immediately after Generate. So linking must be part of Generate (the SPARQL includes joins). So we don't need separate Link step. So steps:\n\n1. Retrieve\n2. Generate\n3. Scan\n4. Validate\n5. Explain\n\nIf classification needed, insert step after Retrieve before Generate. But not needed. Let's produce steps.\n\nThus output only numbered steps.</reasoning>1. Retrieve – locate and list the ontology classes representing the five related tables, the “time_horizon” dimension, and the metrics: net cash flow, goal progress, holding gain, risk score, and allocation concentration.  \n\n2. Generate – write a SPARQL (or equivalent graph) query that links the five tables on the common “time_horizon” attribute and selects the five metrics for each time horizon, arranging the results so they can be compared across horizons.  \n\n3. Scan – execute the generated query against the knowledge graph to obtain the raw comparison data.  \n\n4. Validate – check the returned data for completeness, correct data types, and consistency across the joined tables.  \n\n5. Explain – present the comparison of net cash flow, goal progress, holding gain, risk score, and allocation concentration across the different time horizons to the user.",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Generate",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Scan",
+              "inputs": [
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Validate",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Explain",
+              "inputs": [
+                "4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across time_horizon, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?\" So need to retrieve ontology classes, classify math/aggregation words (maybe compare across time_horizon implies maybe need aggregation like average, sum, compare). So we need to use Retrieve, Classify, Generate, Scan, Validate, Explain. Possibly also need Filter_Aggregate, Order_By, etc. But the chronology: start with Retrieve to find ontology classes. Then Classify for math/aggregation words. Then Generate (SPARQL) after Classify. Then Scan. Then Validate. Then Explain final.\n\nWe might need additional operators between Generate and Scan? No, Scan must happen immediately after Generate. So we cannot insert anything else. After Validate we can maybe do other steps before Explain? Chronology says Explain must be final step, but doesn't forbid other steps after Validate before Explain? It says Explain must be the absolute final step. So any other steps must be before Explain. But after Validate we could do maybe Filter_Aggregate? But chronology doesn't mention ordering of those relative to Validate. However we must follow critical laws: start with Retrieve, then Classify, then Generate, then Scan, then Validate, then Explain. It doesn't forbid adding extra steps in between, but must respect that order: e.g., you cannot do Filter_Aggregate before Scan because that would be after Generate but before Scan, violating \"Scan must happen immediately AFTER Generate\". So no extra steps between Generate and Scan. Also after Scan, Validate must happen. Could we add steps after Validate before Explain? Possibly, but not needed. The plan likely just includes those steps.\n\nThus steps:\n\n1. Retrieve ontology classes relevant to time_horizon, net cash flow, goal progress, holding gain, risk score, allocation concentration, and related tables.\n2. Classify the query terms to identify any mathematical or aggregation operations (e.g., compare, average, sum) across time_horizon.\n3. Generate a SPARQL (or appropriate graph query) that joins the five related tables and selects net cash flow, goal progress, holding gain, risk score, allocation concentration grouped or ordered by time_horizon for comparison.\n4. Scan the knowledge graph using the generated query to retrieve the data.\n5. Validate the returned dataset for completeness (all five metrics present for each time_horizon) and consistency.\n6. Explain the comparative results to the user.\n\nThus output numbered steps.</reasoning>1. **Retrieve** the ontology classes for *time_horizon*, *net cash flow*, *goal progress*, *holding gain*, *risk score*, *allocation concentration*, and the five related tables that store these metrics.  \n\n2. **Classify** the query to detect mathematical/aggregation intent (e.g., “compare across time_horizon” implies grouping, aggregation, or ranking of the five numeric measures).  \n\n3. **Generate** a graph query (e.g., SPARQL) that joins the five related tables, selects the five metrics, and groups or orders the results by *time_horizon* to enable comparison (including any needed aggregation functions identified in step 2).  \n\n4. **Scan** the knowledge graph with the generated query to retrieve the comparative dataset.  \n\n5. **Validate** the retrieved data to ensure each *time_horizon* entry contains values for all five metrics and that the data types are correct.  \n\n6. **Explain** the comparison of *net cash flow*, *goal progress*, *holding gain*, *risk score*, and *allocation concentration* across the different *time_horizon* periods, highlighting any notable trends or differences.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across time_horizon, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?\" So we need to retrieve ontology classes, classify math/aggregation terms (maybe compare across time_horizon implies maybe need aggregation like average, sum, etc). Terms: net cash flow, goal progress, holding gain, risk score, allocation concentration. Likely need to compare across time_horizon, maybe need to compute values per time_horizon. So classification: we have numeric metrics, maybe need aggregation like average or sum across time_horizon. The query is about comparison across time_horizon, so likely need to retrieve data from five related tables, then maybe join/link them, then aggregate per time_horizon.\n\nThus steps:\n\n1. Retrieve ontology classes (tables, attributes).\n2. Classify for math/aggregation: identify that we need to compare numeric metrics across time_horizon, maybe need aggregation like average, sum, etc. So use Classify.\n3. Generate SPARQL (or query) to link the five related tables, select time_horizon, net cash flow, goal progress, holding gain, risk score, allocation concentration.\n4. Scan to execute query.\n5. Validate results (check completeness, data types).\n6. Possibly Filter_Aggregate to compute comparisons (e.g., compute aggregates per time_horizon).\nBut we need to follow chronology: after Validate, we can do further operations? The chronology says after Scan must Validate, then final is Explain. But we can have intermediate steps before Explain? The rules only specify order constraints, not that we cannot have extra steps after Validate before Explain. So we can include Filter_Aggregate, Order_By, etc after Validate, before Explain.\n\nThus plan:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Link (if needed to join tables) maybe before Generate? Actually linking is part of query generation. Could be separate after Validate? But linking likely part of query building. However we can include Link after Retrieve to identify relationships between tables. But chronology: after Retrieve we could Link before Generate. Not prohibited. So include.\n\nSequence: Retrieve -> Classify -> Link -> Generate -> Scan -> Validate -> Filter_Aggregate (to compute comparisons) -> Order_By (maybe sort by time_horizon) -> Explain.\n\nMake sure each step uses only allowed operators.\n\nLet's craft steps:\n\n1. Retrieve: get ontology classes for tables containing time_horizon, net cash flow, goal progress, holding gain, risk score, allocation concentration.\n2. Classify: identify numeric and aggregation intents (e.g., need to compare values across time_horizon, possibly compute average or sum).\n3. Link: determine relationships among the five related tables (foreign keys, joins) based on ontology.\n4. Generate: write a query (e.g., SPARQL or SQL-like) that selects time_horizon and the five metrics from the linked tables, grouping by time_horizon.\n5. Scan: execute the generated query to retrieve raw data.\n6. Validate: check that each metric is present for each time_horizon and data types are numeric.\n7. Filter_Aggregate: compute comparative statistics (e.g., average, min, max) for each metric across time_horizon.\n8. Order_By: arrange the output by time_horizon (or by a chosen metric).\n9. Explain: present the comparison results to the user.\n\nThus 9 steps. Provide numbered list.</reasoning>1. **Retrieve** – Obtain the ontology classes for the five related tables that contain the attributes *time_horizon*, *net cash flow*, *goal progress*, *holding gain*, *risk score*, and *allocation concentration*.  \n\n2. **Classify** – Identify the numeric‑aggregation intent of the query (comparison of metric values across *time_horizon*; possible operations such as average, sum, min, max).  \n\n3. **Link** – Determine and record the relationships (foreign‑key or semantic links) among the five tables so they can be joined on common identifiers (e.g., portfolio ID, account ID).  \n\n4. **Generate** – Write a graph‑query (e.g., SPARQL) that selects *time_horizon* together with the five metrics from the linked tables and groups the results by *time_horizon*.  \n\n5. **Scan** – Execute the generated query against the knowledge graph to retrieve the raw metric values per *time_horizon*.  \n\n6. **Validate** – Verify that the returned rows contain all five metrics for each *time_horizon* and that the values are of numeric type and within expected ranges.  \n\n7. **Filter_Aggregate** – Apply aggregation functions (e.g., AVG, SUM, MIN, MAX) to each metric across the *time_horizon* groups to produce comparative statistics.  \n\n8. **Order_By** – Sort the aggregated comparison results by *time_horizon* (or by a chosen metric) to present a clear chronological view.  \n\n9. **Explain** – Communicate the final comparative analysis of net cash flow, goal progress, holding gain, risk score, and allocation concentration across the different *time_horizon* values.",
+        "dag_sequence": "Retrieve -> Classify -> Link -> Generate -> Scan -> Validate -> Filter_Aggregate -> Order_By -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 40,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": 3,
+              "operator": "Link",
+              "inputs": []
+            },
+            {
+              "id": 4,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2,
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Scan",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Validate",
+              "inputs": [
+                5
+              ]
+            },
+            {
+              "id": 7,
+              "operator": "Filter_Aggregate",
+              "inputs": [
+                6
+              ]
+            },
+            {
+              "id": 8,
+              "operator": "Order_By",
+              "inputs": [
+                7
+              ]
+            },
+            {
+              "id": 9,
+              "operator": "Explain",
+              "inputs": [
+                6,
+                8
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 4
+            },
+            {
+              "source": 2,
+              "target": 4
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            },
+            {
+              "source": 6,
+              "target": 7
+            },
+            {
+              "source": 7,
+              "target": 8
+            },
+            {
+              "source": 6,
+              "target": 9
+            },
+            {
+              "source": 8,
+              "target": 9
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "TimeHorizon",
+      "CashFlow",
+      "InvestmentGoal",
+      "PortfolioHolding",
+      "PortfolioHealth",
+      "SectorAllocation"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "",
+    "confidence": null,
+    "target_field": "",
+    "schema_datatype": "",
+    "why_this_intent": "",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?timeHorizon\n       (SUM(xsd:decimal(?netCashFlow)) AS ?totalNetCashFlow)\n       (AVG(xsd:decimal(?goalProgress)) AS ?avgGoalProgress)\n       (SUM(xsd:decimal(?holdingGain)) AS ?totalHoldingGain)\n       (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore)\n       (AVG(xsd:decimal(?allocationPct)) AS ?avgAllocationPct)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:timeHorizon ?timeHorizon .\n\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?inv ;\n          wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?progressPct)) AS ?goalProgress) WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:belongsToInvestor ?inv ;\n            wm:progressPct ?progressPct .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {\n      ?hold a wm:PortfolioHolding ;\n            wm:heldByInvestor ?inv ;\n            wm:currentValue ?cv ;\n            wm:cost ?cost .\n      BIND ((xsd:decimal(?cv) - xsd:decimal(?cost)) AS ?gain)\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (MAX(xsd:decimal(?riskScore)) AS ?riskScore) WHERE {\n      ?ph a wm:PortfolioHealth ;\n          wm:healthOfInvestor ?inv ;\n          wm:riskScore ?riskScore .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?allocationPct)) AS ?allocationPct) WHERE {\n      ?alloc a wm:SectorAllocation ;\n             wm:allocationOfInvestor ?inv ;\n             wm:allocationPct ?allocationPct .\n    } GROUP BY ?inv\n  }\n}\nGROUP BY ?timeHorizon\nORDER BY ?timeHorizon",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?timeHorizon\n       (SUM(xsd:decimal(?netCashFlow)) AS ?totalNetCashFlow)\n       (AVG(xsd:decimal(?goalProgress)) AS ?avgGoalProgress)\n       (SUM(xsd:decimal(?holdingGain)) AS ?totalHoldingGain)\n       (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore)\n       (AVG(xsd:decimal(?allocationPct)) AS ?avgAllocationPct)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:timeHorizon ?timeHorizon .\n\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?inv ;\n          wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?progressPct)) AS ?goalProgress) WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:belongsToInvestor ?inv ;\n            wm:progressPct ?progressPct .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {\n      ?hold a wm:PortfolioHolding ;\n            wm:heldByInvestor ?inv ;\n            wm:currentValue ?cv ;\n            wm:cost ?cost .\n      BIND ((xsd:decimal(?cv) - xsd:decimal(?cost)) AS ?gain)\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (MAX(xsd:decimal(?riskScore)) AS ?riskScore) WHERE {\n      ?ph a wm:PortfolioHealth ;\n          wm:healthOfInvestor ?inv ;\n          wm:riskScore ?riskScore .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?allocationPct)) AS ?allocationPct) WHERE {\n      ?alloc a wm:SectorAllocation ;\n             wm:allocationOfInvestor ?inv ;\n             wm:allocationPct ?allocationPct .\n    } GROUP BY ?inv\n  }\n}\nGROUP BY ?timeHorizon\nORDER BY ?timeHorizon",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?timeHorizon\n       (SUM(xsd:decimal(?netCashFlow)) AS ?totalNetCashFlow)\n       (AVG(xsd:decimal(?goalProgress)) AS ?avgGoalProgress)\n       (SUM(xsd:decimal(?holdingGain)) AS ?totalHoldingGain)\n       (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore)\n       (AVG(xsd:decimal(?allocationPct)) AS ?avgAllocationPct)\nWHERE {\n  ?inv a wm:Investor ;\n       wm:timeHorizon ?timeHorizon .\n\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?cf a wm:CashFlow ;\n          wm:cashFlowOfInvestor ?inv ;\n          wm:amount ?amount .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?progressPct)) AS ?goalProgress) WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:belongsToInvestor ?inv ;\n            wm:progressPct ?progressPct .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {\n      ?hold a wm:PortfolioHolding ;\n            wm:heldByInvestor ?inv ;\n            wm:currentValue ?cv ;\n            wm:cost ?cost .\n      BIND ((xsd:decimal(?cv) - xsd:decimal(?cost)) AS ?gain)\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (MAX(xsd:decimal(?riskScore)) AS ?riskScore) WHERE {\n      ?ph a wm:PortfolioHealth ;\n          wm:healthOfInvestor ?inv ;\n          wm:riskScore ?riskScore .\n    } GROUP BY ?inv\n  }\n\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?allocationPct)) AS ?allocationPct) WHERE {\n      ?alloc a wm:SectorAllocation ;\n             wm:allocationOfInvestor ?inv ;\n             wm:allocationPct ?allocationPct .\n    } GROUP BY ?inv\n  }\n}\nGROUP BY ?timeHorizon\nORDER BY ?timeHorizon",
+        "status": "error",
+        "row_count": null,
+        "error": "'NotBoundError' object has no attribute 'datatype'",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "sparql_error"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "'NotBoundError' object has no attribute 'datatype'"
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth. Ground truth is JSON array with four objects: overall (group_value null) and three groups: Long-term, Medium-term, Short-term, each with avg_net_cash_flow, avg_progress_pct, avg_holding_gain, avg_risk_score.\n\nPipeline output: \"A database error prevented data retrieval.\"\n\nThus pipeline did not provide any of the numbers. According to rule 2, if ground truth contains concrete numbers, pipeline must contain same facts. It didn't. So it's MISMATCH.\n\nThus answer: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "empty_result",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

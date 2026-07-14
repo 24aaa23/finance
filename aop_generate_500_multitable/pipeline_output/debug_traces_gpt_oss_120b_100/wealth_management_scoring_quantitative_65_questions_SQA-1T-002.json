@@ -1,0 +1,268 @@
+{
+  "sample_row_id": "wealth_management_scoring_quantitative_65_questions:SQA-1T-002",
+  "question": "What are the average risk_score, liquidity_score, diversification_score, and goal_match_pct across all portfolio-health records?",
+  "ground_truth": "[{\"avg_risk_score\":50.33,\"avg_liquidity_score\":49.58,\"avg_diversification_score\":50.0,\"avg_goal_match_pct\":48.28}]",
+  "pipeline_output": "The average risk_score is 50.33492753144486919959266802, liquidity_score is 49.57653071259087097793618466, diversification_score is 50.00432469056965839035980991, and goal_match_pct is 48.28131334350506060420909708.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 83.675,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: average risk_score, liquidity_score, diversification_score, goal_match_pct across all portfolio-health records.\n\nWe must start with Retrieve to find ontology classes. Then Classify for math/aggregation (average). Then Generate (write SPARQL). Then Scan. Then Validate. Then Explain.\n\nPotentially also need Filter_Aggregate? But we can compute averages via SPARQL with aggregation; classification identifies need for aggregation. The plan steps: 1 Retrieve (ontology classes). 2 Classify (identify aggregation). 3 Generate (SPARQL query to compute averages). 4 Scan (execute query). 5 Validate (ensure results). 6 Explain (present to user). That's it.\n\nWe must output only numbered steps. So:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nBut maybe need to specify purpose in each step? The instruction: Output ONLY the numbered steps. Likely just list steps with operator names. Could include brief description? It says \"Write a step-by-step, linear execution plan to answer this query using ONLY the provided operators.\" Could include description after each step. Usually they want something like \"1. Retrieve: ...\". Provide description. We'll include description after colon.\n\nLet's produce.</reasoning>1. Retrieve – locate the ontology classes relevant to “portfolio‑health” records and the properties risk_score, liquidity_score, diversification_score, goal_match_pct.  \n2. Classify – identify that the query requires a mathematical aggregation (“Average”) on numeric fields.  \n3. Generate – construct a SPARQL query that selects all portfolio‑health instances and computes the average of each of the four scores.  \n4. Scan – execute the generated SPARQL query against the knowledge graph to obtain the aggregated results.  \n5. Validate – check that the returned values are numeric, correspond to the correct properties, and that no records were omitted.  \n6. Explain – present the user with the average risk_score, liquidity_score, diversification_score, and goal_match_pct across all portfolio‑health records.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Explain",
+              "inputs": [
+                5
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nGoal: average risk_score, liquidity_score, diversification_score, goal_match_pct across all portfolio-health records.\n\nSteps:\n\n1. Retrieve: find ontology classes (likely PortfolioHealth or similar). Use Retrieve.\n\n2. Classify: identify that we need average aggregation for numeric fields.\n\n3. Generate: write SPARQL query to compute averages of those four fields across all records.\n\n4. Scan: execute the query.\n\n5. Validate: check results.\n\n6. Explain: present answer.\n\nThus list steps numbered.\n\nMake sure to include only operators in order.\n\nThus output:\n\n1. Retrieve ...\n\n2. Classify ...\n\n3. Generate ...\n\n4. Scan ...\n\n5. Validate ...\n\n6. Explain ...\n\nThat's it.</reasoning>1. Retrieve – locate the ontology class (e.g., PortfolioHealth) that contains the fields risk_score, liquidity_score, diversification_score, and goal_match_pct.  \n\n2. Classify – identify the query’s numeric‑aggregation intent (“average”) for the four numeric attributes.  \n\n3. Generate – compose a SPARQL query that selects the AVG(risk_score), AVG(liquidity_score), AVG(diversification_score), and AVG(goal_match_pct) over all instances of the PortfolioHealth class.  \n\n4. Scan – execute the generated SPARQL query against the knowledge graph to obtain the aggregated values.  \n\n5. Validate – verify that the returned results are non‑null, correctly typed as numeric averages, and correspond to the full set of PortfolioHealth records.  \n\n6. Explain – present the user with the average risk_score, liquidity_score, diversification_score, and goal_match_pct across all portfolio‑health records.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: average of four fields across all portfolio-health records.\n\nSteps:\n\n1. Retrieve ontology classes (likely PortfolioHealth or similar). Use Retrieve.\n\n2. Classify for math aggregation \"average\". Use Classify.\n\n3. Generate SPARQL query to compute averages of those fields across all records. Use Generate.\n\n4. Scan to execute query. Use Scan.\n\n5. Validate results. Use Validate.\n\n6. Explain answer. Use Explain.\n\nWe might also need Filter_Aggregate? But we are aggregating across all records, no filter needed. Use Filter_Aggregate? Not necessary; Generate can include aggregation.\n\nThus steps:\n\n1. Retrieve\n\n2. Classify\n\n3. Generate\n\n4. Scan\n\n5. Validate\n\n6. Explain\n\nNumbered list.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "PortfolioHealth"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.99,
+    "target_field": "riskScore, liquidityScore, diversificationScore, goalMatchPct",
+    "schema_datatype": "numeric",
+    "why_this_intent": "All requested fields (riskScore, liquidityScore, diversificationScore, goalMatchPct) exist in the PortfolioHealth class and are defined as numeric, so computing their averages is a valid numeric aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT \n  (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore)\n  (AVG(xsd:decimal(?liquidityScore)) AS ?avgLiquidityScore)\n  (AVG(xsd:decimal(?diversificationScore)) AS ?avgDiversificationScore)\n  (AVG(xsd:decimal(?goalMatchPct)) AS ?avgGoalMatchPct)\nWHERE {\n  ?ph a wm:PortfolioHealth .\n  OPTIONAL { ?ph wm:riskScore ?riskScore . }\n  OPTIONAL { ?ph wm:liquidityScore ?liquidityScore . }\n  OPTIONAL { ?ph wm:diversificationScore ?diversificationScore . }\n  OPTIONAL { ?ph wm:goalMatchPct ?goalMatchPct . }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT \n  (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore)\n  (AVG(xsd:decimal(?liquidityScore)) AS ?avgLiquidityScore)\n  (AVG(xsd:decimal(?diversificationScore)) AS ?avgDiversificationScore)\n  (AVG(xsd:decimal(?goalMatchPct)) AS ?avgGoalMatchPct)\nWHERE {\n  ?ph a wm:PortfolioHealth .\n  OPTIONAL { ?ph wm:riskScore ?riskScore . }\n  OPTIONAL { ?ph wm:liquidityScore ?liquidityScore . }\n  OPTIONAL { ?ph wm:diversificationScore ?diversificationScore . }\n  OPTIONAL { ?ph wm:goalMatchPct ?goalMatchPct . }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT \n  (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore)\n  (AVG(xsd:decimal(?liquidityScore)) AS ?avgLiquidityScore)\n  (AVG(xsd:decimal(?diversificationScore)) AS ?avgDiversificationScore)\n  (AVG(xsd:decimal(?goalMatchPct)) AS ?avgGoalMatchPct)\nWHERE {\n  ?ph a wm:PortfolioHealth .\n  OPTIONAL { ?ph wm:riskScore ?riskScore . }\n  OPTIONAL { ?ph wm:liquidityScore ?liquidityScore . }\n  OPTIONAL { ?ph wm:diversificationScore ?diversificationScore . }\n  OPTIONAL { ?ph wm:goalMatchPct ?goalMatchPct . }\n}",
+        "status": "success",
+        "row_count": 1,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 1,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL query correctly computes the AVG of riskScore, liquidityScore, diversificationScore, and goalMatchPct across all wm:PortfolioHealth instances, and the returned single row contains those four aggregated fields with appropriate values. The column names match the requested metrics and no entity filtering is required.",
+    "validator_reason": "The SPARQL query correctly computes the AVG of riskScore, liquidityScore, diversificationScore, and goalMatchPct across all wm:PortfolioHealth instances, and the returned single row contains those four aggregated fields with appropriate values. The column names match the requested metrics and no entity filtering is required.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 1,
+    "final_answer": "The average risk_score is 50.33492753144486919959266802, liquidity_score is 49.57653071259087097793618466, diversification_score is 50.00432469056965839035980991, and goal_match_pct is 48.28131334350506060420909708.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth JSON: {\"avg_risk_score\":50.33,\"avg_liquidity_score\":49.58,\"avg_diversification_score\":50.0,\"avg_goal_match_pct\":48.28}\n\nPipeline Output: \"The average risk_score is 50.33492753144486919959266802, liquidity_score is 49.57653071259087097793618466, diversification_score is 50.00432469056965839035980991, and goal_match_pct is 48.28131334350506060420909708.\"\n\nWe need to see if all values match. Ground truth numbers are 50.33, 49.58, 50.0, 48.28. Pipeline gives more precise numbers: 50.3349..., 49.5765..., 50.0043..., 48.2813... These are close but not exactly same. The rule: If Ground Truth contains a concrete number, the Pipeline Output must contain the same facts. Does \"same facts\" require exact equality? Usually they require same numeric value within tolerance? Not specified. The pipeline numbers are slightly different (e.g., 50.3349 vs 50.33). That's a difference of 0.0049, which is not exactly same. According to rule 2: \"If Ground Truth contains a concrete number, JSON value, category, investor ID, or name, the Pipeline Output must contain the same facts.\" So the numbers must match exactly? Probably yes. Since they differ, it's a mismatch. However, sometimes they accept rounding differences? Not specified. The ground truth is 50.33, pipeline 50.3349... That's not exactly same but could be considered same to two decimal places. But rule says treat numbers as equivalent if formatting differences like commas, but not rounding differences. So likely MISMATCH.\n\nThus output MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

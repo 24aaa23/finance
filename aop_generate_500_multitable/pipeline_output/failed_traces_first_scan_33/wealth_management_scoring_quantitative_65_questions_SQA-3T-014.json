@@ -1,0 +1,364 @@
+{
+  "sample_row_id": "wealth_management_scoring_quantitative_65_questions:SQA-3T-014",
+  "question": "Which investors have holdings with returns_pct below 0 and goals with shortfall above 1000000?",
+  "ground_truth": "[{\"investor_id\":\"INV-001\",\"investor_name\":\"Arjun Iyer\"},{\"investor_id\":\"INV-003\",\"investor_name\":\"Siddharth Sharma\"},{\"investor_id\":\"INV-011\",\"investor_name\":\"Bhavna Verma\"},{\"investor_id\":\"INV-014\",\"investor_name\":\"Rohan Chauhan\"},{\"investor_id\":\"INV-018\",\"investor_name\":\"Meena Rao\"},{\"investor_id\":\"INV-019\",\"investor_name\":\"Siddharth Mishra\"},{\"investor_id\":\"INV-020\",\"investor_name\":\"Rajesh Kulkarni\"},{\"investor_id\":\"INV-022\",\"investor_name\":\"Rohan Rao\"},{\"investor_id\":\"INV-027\",\"investor_name\":\"Sneha Verma\"},{\"investor_id\":\"INV-029\",\"investor_name\":\"Vikram Reddy\"},{\"investor_id\":\"INV-031\",\"investor_name\":\"Meena Rao\"},{\"investor_id\":\"INV-036\",\"investor_name\":\"Suresh Pandey\"},{\"investor_id\":\"INV-037\",\"investor_name\":\"Chetan Sharma\"},{\"investor_id\":\"INV-041\",\"investor_name\":\"Sneha Nair\"},{\"investor_id\":\"INV-043\",\"investor_name\":\"Kavita Gupta\"},{\"investor_id\":\"INV-044\",\"investor_name\":\"Ishita Sharma\"},{\"investor_id\":\"INV-049\",\"investor_name\":\"Deepak Mehta\"},{\"investor_id\":\"INV-054\",\"investor_name\":\"Rohan Patel\"},{\"investor_id\":\"INV-055\",\"investor_name\":\"Ramesh Bhat\"},{\"investor_id\":\"INV-056\",\"investor_name\":\"Amrita Hegde\"},{\"investor_id\":\"INV-061\",\"investor_name\":\"Kavita Sharma\"},{\"investor_id\":\"INV-062\",\"investor_name\":\"Siddharth Iyer\"},{\"investor_id\":\"INV-065\",\"investor_name\":\"Ankita Rao\"},{\"investor_id\":\"INV-067\",\"investor_name\":\"Vikram Iyer\"},{\"investor_id\":\"INV-091\",\"investor_name\":\"Akshay Iyer\"},{\"investor_id\":\"INV-094\",\"investor_name\":\"Anita Bhat\"},{\"investor_id\":\"INV-097\",\"investor_name\":\"Rajesh Patel\"},{\"investor_id\":\"INV-098\",\"investor_name\":\"Arvind Singh\"},{\"investor_id\":\"INV-100\",\"investor_name\":\"Bhavna Mishra\"},{\"investor_id\":\"INV-1002\",\"investor_name\":\"Anjali Sharma\"},{\"investor_id\":\"INV-1003\",\"investor_name\":\"Vikram Verma\"},{\"investor_id\":\"INV-1009\",\"investor_name\":\"Siddharth Hegde\"},{\"investor_id\":\"INV-1010\",\"investor_name\":\"Sunita Patel\"},{\"investor_id\":\"INV-1012\",\"investor_name\":\"Amrita Iyer\"},{\"investor_id\":\"INV-1014\",\"investor_name\":\"Sneha Hegde\"},{\"investor_id\":\"INV-1018\",\"investor_name\":\"Kavita Hegde\"},{\"investor_id\":\"INV-1021\",\"investor_name\":\"Amit Joshi\"},{\"investor_id\":\"INV-1029\",\"investor_name\":\"Abhishek Hegde\"},{\"investor_id\":\"INV-103\",\"investor_name\":\"Aishwarya Rao\"},{\"investor_id\":\"INV-1030\",\"investor_name\":\"Akshay Mehta\"},{\"investor_id\":\"INV-1032\",\"investor_name\":\"Anjali Gupta\"},{\"investor_id\":\"INV-1035\",\"investor_name\":\"Arjun Verma\"},{\"investor_id\":\"INV-1048\",\"investor_name\":\"Geeta Pandey\"},{\"investor_id\":\"INV-1051\",\"investor_name\":\"Rahul Reddy\"},{\"investor_id\":\"INV-1053\",\"investor_name\":\"Anita Patel\"},{\"investor_id\":\"INV-1056\",\"investor_name\":\"Geeta Deshmukh\"},{\"investor_id\":\"INV-1060\",\"investor_name\":\"Amit Reddy\"},{\"investor_id\":\"INV-1061\",\"investor_name\":\"Vikram Verma\"},{\"investor_id\":\"INV-1062\",\"investor_name\":\"Rahul Joshi\"},{\"investor_id\":\"INV-1068\",\"investor_name\":\"Rahul Bhat\"},{\"investor_id\":\"INV-1070\",\"investor_name\":\"Ishita Chauhan\"},{\"investor_id\":\"INV-1072\",\"investor_name\":\"Amrita Kulkarni\"},{\"investor_id\":\"INV-1073\",\"investor_name\":\"Rahul Iyer\"},{\"investor_id\":\"INV-1078\",\"investor_name\":\"Akshay Joshi\"},{\"investor_id\":\"INV-1079\",\"investor_name\":\"Amit Reddy\"},{\"investor_id\":\"INV-1088\",\"investor_name\":\"Ishita Chauhan\"},{\"investor_id\":\"INV-1094\",\"investor_name\":\"Vivek Hegde\"},{\"investor_id\":\"INV-1096\",\"investor_name\":\"Amrita Sharma\"},{\"investor_id\":\"INV-1097\",\"investor_name\":\"Anjali Bhat\"},{\"investor_id\":\"INV-1098\",\"investor_name\":\"Arvind Iyer\"},{\"investor_id\":\"INV-1102\",\"investor_name\":\"Deepak Gupta\"},{\"investor_id\":\"INV-1111\",\"investor_name\":\"Rajesh Sharma\"},{\"investor_id\":\"INV-1112\",\"investor_name\":\"Anand Verma\"},{\"investor_id\":\"INV-1113\",\"investor_name\":\"Suresh Rao\"},{\"investor_id\":\"INV-1115\",\"investor_name\":\"Akshay Chauhan\"},{\"investor_id\":\"INV-1117\",\"investor_name\":\"Arvind Kulkarni\"},{\"investor_id\":\"INV-1119\",\"investor_name\":\"Ishita Nair\"},{\"investor_id\":\"INV-1121\",\"investor_name\":\"Rajesh Arora\"},{\"investor_id\":\"INV-1124\",\"investor_name\":\"Arvind Mishra\"},{\"investor_id\":\"INV-1127\",\"investor_name\":\"Bhavna Bhat\"},{\"investor_id\":\"INV-1128\",\"investor_name\":\"Rajesh Arora\"},{\"investor_id\":\"INV-1131\",\"investor_name\":\"Rajesh Deshmukh\"},{\"investor_id\":\"INV-1139\",\"investor_name\":\"Rahul Chauhan\"},{\"investor_id\":\"INV-1141\",\"investor_name\":\"Ankita Iyer\"},{\"investor_id\":\"INV-1143\",\"investor_name\":\"Priyanka Yadav\"},{\"investor_id\":\"INV-1144\",\"investor_name\":\"Deepak Reddy\"},{\"investor_id\":\"INV-1146\",\"investor_name\":\"Geeta Iyer\"},{\"investor_id\":\"INV-1150\",\"investor_name\":\"Sunita Deshmukh\"},{\"investor_id\":\"INV-1152\",\"investor_name\":\"Anita Chauhan\"},{\"investor_id\":\"INV-1153\",\"investor_name\":\"Arvind Sharma\"},{\"investor_id\":\"INV-1158\",\"investor_name\":\"Arjun Singh\"},{\"investor_id\":\"INV-1159\",\"investor_name\":\"Anand Sharma\"},{\"investor_id\":\"INV-116\",\"investor_name\":\"Ankita Deshmukh\"},{\"investor_id\":\"INV-1163\",\"investor_name\":\"Ankita Deshmukh\"},{\"investor_id\":\"INV-1164\",\"investor_name\":\"Sneha Singh\"},{\"investor_id\":\"INV-1167\",\"investor_name\":\"Geeta Reddy\"},{\"investor_id\":\"INV-117\",\"investor_name\":\"Akshay Patel\"},{\"investor_id\":\"INV-1170\",\"investor_name\":\"Akshay Patel\"},{\"investor_id\":\"INV-1171\",\"investor_name\":\"Anjali Iyer\"},{\"investor_id\":\"INV-1173\",\"investor_name\":\"Bhavna Kulkarni\"},{\"investor_id\":\"INV-1175\",\"investor_name\":\"Rohan Hegde\"},{\"investor_id\":\"INV-1177\",\"investor_name\":\"Chetan Mehta\"},{\"investor_id\":\"INV-1179\",\"investor_name\":\"Arjun Pandey\"},{\"investor_id\":\"INV-1181\",\"investor_name\":\"Amit Mehta\"},{\"investor_id\":\"INV-1182\",\"investor_name\":\"Priyanka Singh\"},{\"investor_id\":\"INV-1188\",\"investor_name\":\"Anjali Bhat\"},{\"investor_id\":\"INV-1194\",\"investor_name\":\"Chetan Rao\"},{\"investor_id\":\"INV-1198\",\"investor_name\":\"Anita Verma\"},{\"investor_id\":\"INV-1201\",\"investor_name\":\"Ankita Gupta\"},{\"investor_id\":\"INV-1204\",\"investor_name\":\"Ramesh Chauhan\"},{\"investor_id\":\"INV-121\",\"investor_name\":\"Anita Hegde\"},{\"investor_id\":\"INV-1212\",\"investor_name\":\"Sneha Iyer\"},{\"investor_id\":\"INV-1214\",\"investor_name\":\"Meena Rao\"},{\"investor_id\":\"INV-1215\",\"investor_name\":\"Geeta Patel\"},{\"investor_id\":\"INV-1217\",\"investor_name\":\"Siddharth Mehta\"},{\"investor_id\":\"INV-122\",\"investor_name\":\"Dipti Gupta\"},{\"investor_id\":\"INV-1221\",\"investor_name\":\"Aishwarya Kulkarni\"},{\"investor_id\":\"INV-1228\",\"investor_name\":\"Geeta Iyer\"},{\"investor_id\":\"INV-1231\",\"investor_name\":\"Aishwarya Gupta\"},{\"investor_id\":\"INV-1236\",\"investor_name\":\"Dipti Yadav\"},{\"investor_id\":\"INV-1237\",\"investor_name\":\"Rajesh Kulkarni\"},{\"investor_id\":\"INV-1245\",\"investor_name\":\"Amit Patel\"},{\"investor_id\":\"INV-1247\",\"investor_name\":\"Ramesh Verma\"},{\"investor_id\":\"INV-1254\",\"investor_name\":\"Vikram Patel\"},{\"investor_id\":\"INV-1261\",\"investor_name\":\"Ishita Arora\"},{\"investor_id\":\"INV-1268\",\"investor_name\":\"Ankita Nair\"},{\"investor_id\":\"INV-1280\",\"investor_name\":\"Ishita Joshi\"},{\"investor_id\":\"INV-1281\",\"investor_name\":\"Ankita Rao\"},{\"investor_id\":\"INV-1287\",\"investor_name\":\"Ishita Mehta\"},{\"investor_id\":\"INV-129\",\"investor_name\":\"Sneha Bhat\"},{\"investor_id\":\"INV-1290\",\"investor_name\":\"Abhishek Joshi\"},{\"investor_id\":\"INV-1294\",\"investor_name\":\"Vikram Gupta\"},{\"investor_id\":\"INV-1296\",\"investor_name\":\"Amit Chauhan\"},{\"investor_id\":\"INV-1297\",\"investor_name\":\"Akshay Rao\"},{\"investor_id\":\"INV-1299\",\"investor_name\":\"Geeta Chauhan\"},{\"investor_id\":\"INV-1309\",\"investor_name\":\"Anjali Rao\"},{\"investor_id\":\"INV-131\",\"investor_name\":\"Priyanka Sharma\"},{\"investor_id\":\"INV-1310\",\"investor_name\":\"Sneha Iyer\"},{\"investor_id\":\"INV-1312\",\"investor_name\":\"Amit Verma\"},{\"investor_id\":\"INV-1315\",\"investor_name\":\"Priyanka Hegde\"},{\"investor_id\":\"INV-1317\",\"investor_name\":\"Siddharth Yadav\"},{\"investor_id\":\"INV-1319\",\"investor_name\":\"Kavita Verma\"},{\"investor_id\":\"INV-1321\",\"investor_name\":\"Sunita Verma\"},{\"investor_id\":\"INV-1327\",\"investor_name\":\"Priyanka Gupta\"},{\"investor_id\":\"INV-1328\",\"investor_name\":\"Aishwarya Rao\"},{\"investor_id\":\"INV-1329\",\"investor_name\":\"Akshay Hegde\"},{\"investor_id\":\"INV-1336\",\"investor_name\":\"Vikram Kulkarni\"},{\"investor_id\":\"INV-1337\",\"investor_name\":\"Ramesh Chauhan\"},{\"investor_id\":\"INV-1338\",\"investor_name\":\"Abhishek Singh\"},{\"investor_id\":\"INV-134\",\"investor_name\":\"Deepak Iyer\"},{\"investor_id\":\"INV-1345\",\"investor_name\":\"Rajesh Verma\"},{\"investor_id\":\"INV-1347\",\"investor_name\":\"Rohan Hegde\"},{\"investor_id\":\"INV-1348\",\"investor_name\":\"Anand Deshmukh\"},{\"investor_id\":\"INV-1349\",\"investor_name\":\"Dipti Pandey\"},{\"investor_id\":\"INV-1350\",\"investor_name\":\"Siddharth Bhat\"},{\"investor_id\":\"INV-1351\",\"investor_name\":\"Geeta Deshmukh\"},{\"investor_id\":\"INV-1354\",\"investor_name\":\"Dipti Verma\"},{\"investor_id\":\"INV-1355\",\"investor_name\":\"Vivek Verma\"},{\"investor_id\":\"INV-1357\",\"investor_name\":\"Priyanka Joshi\"},{\"investor_id\":\"INV-1358\",\"investor_name\":\"Akshay Mishra\"},{\"investor_id\":\"INV-1361\",\"investor_name\":\"Anand Iyer\"},{\"investor_id\":\"INV-1363\",\"investor_name\":\"Dipti Singh\"},{\"investor_id\":\"INV-1367\",\"investor_name\":\"Amrita Joshi\"},{\"investor_id\":\"INV-1372\",\"investor_name\":\"Anand Singh\"},{\"investor_id\":\"INV-1377\",\"investor_name\":\"Arvind Deshmukh\"},{\"investor_id\":\"INV-1378\",\"investor_name\":\"Anjali Joshi\"},{\"investor_id\":\"INV-139\",\"investor_name\":\"Anita Iyer\"},{\"investor_id\":\"INV-1392\",\"investor_name\":\"Anand Mishra\"},{\"investor_id\":\"INV-1397\",\"investor_name\":\"Rajesh Kulkarni\"},{\"investor_id\":\"INV-1403\",\"investor_name\":\"Arjun Iyer\"},{\"investor_id\":\"INV-1405\",\"investor_name\":\"Vivek Bhat\"},{\"investor_id\":\"INV-1406\",\"investor_name\":\"Meena Sharma\"},{\"investor_id\":\"INV-1408\",\"investor_name\":\"Ishita Bhat\"},{\"investor_id\":\"INV-1410\",\"investor_name\":\"Deepak Iyer\"},{\"investor_id\":\"INV-1411\",\"investor_name\":\"Chetan Iyer\"},{\"investor_id\":\"INV-1425\",\"investor_name\":\"Geeta Iyer\"},{\"investor_id\":\"INV-1430\",\"investor_name\":\"Abhishek Arora\"},{\"investor_id\":\"INV-1433\",\"investor_name\":\"Vivek Bhat\"},{\"investor_id\":\"INV-1434\",\"investor_name\":\"Arjun Mishra\"},{\"investor_id\":\"INV-1436\",\"investor_name\":\"Dipti Mehta\"},{\"investor_id\":\"INV-1441\",\"investor_name\":\"Rahul Chauhan\"},{\"investor_id\":\"INV-1450\",\"investor_name\":\"Anand Patel\"},{\"investor_id\":\"INV-1453\",\"investor_name\":\"Ishita Rao\"},{\"investor_id\":\"INV-1456\",\"investor_name\":\"Ankita Verma\"},{\"investor_id\":\"INV-1459\",\"investor_name\":\"Arjun Iyer\"},{\"investor_id\":\"INV-1460\",\"investor_name\":\"Priyanka Iyer\"},{\"investor_id\":\"INV-1461\",\"investor_name\":\"Amit Yadav\"},{\"investor_id\":\"INV-1464\",\"investor_name\":\"Arjun Sharma\"},{\"investor_id\":\"INV-1466\",\"investor_name\":\"Ankita Mehta\"},{\"investor_id\":\"INV-1471\",\"investor_name\":\"Siddharth Iyer\"},{\"investor_id\":\"INV-1472\",\"investor_name\":\"Ishita Rao\"},{\"investor_id\":\"INV-1473\",\"investor_name\":\"Rohan Patel\"},{\"investor_id\":\"INV-1474\",\"investor_name\":\"Amrita Yadav\"},{\"investor_id\":\"INV-1475\",\"investor_name\":\"Aishwarya Bhat\"},{\"investor_id\":\"INV-1481\",\"investor_name\":\"Amit Mishra\"},{\"investor_id\":\"INV-1487\",\"investor_name\":\"Aishwarya Chauhan\"},{\"investor_id\":\"INV-1491\",\"investor_name\":\"Anjali Deshmukh\"},{\"investor_id\":\"INV-1493\",\"investor_name\":\"Abhishek Nair\"},{\"investor_id\":\"INV-1494\",\"investor_name\":\"Chetan Reddy\"},{\"investor_id\":\"INV-1501\",\"investor_name\":\"Priyanka Singh\"},{\"investor_id\":\"INV-1503\",\"investor_name\":\"Chetan Sharma\"},{\"investor_id\":\"INV-1509\",\"investor_name\":\"Arjun Rao\"},{\"investor_id\":\"INV-151\",\"investor_name\":\"Rahul Kulkarni\"},{\"investor_id\":\"INV-1515\",\"investor_name\":\"Abhishek Nair\"},{\"investor_id\":\"INV-152\",\"investor_name\":\"Ramesh Gupta\"},{\"investor_id\":\"INV-1522\",\"investor_name\":\"Sunita Kulkarni\"},{\"investor_id\":\"INV-1526\",\"investor_name\":\"Siddharth Deshmukh\"},{\"investor_id\":\"INV-1529\",\"investor_name\":\"Meena Sharma\"},{\"investor_id\":\"INV-1530\",\"investor_name\":\"Anjali Deshmukh\"},{\"investor_id\":\"INV-1536\",\"investor_name\":\"Suresh Joshi\"},{\"investor_id\":\"INV-1538\",\"investor_name\":\"Priyanka Joshi\"},{\"investor_id\":\"INV-154\",\"investor_name\":\"Ishita Arora\"},{\"investor_id\":\"INV-1544\",\"investor_name\":\"Chetan Rao\"},{\"investor_id\":\"INV-1546\",\"investor_name\":\"Sunita Hegde\"},{\"investor_id\":\"INV-1547\",\"investor_name\":\"Deepak Kulkarni\"},{\"investor_id\":\"INV-1550\",\"investor_name\":\"Siddharth Yadav\"},{\"investor_id\":\"INV-163\",\"investor_name\":\"Suresh Verma\"},{\"investor_id\":\"INV-164\",\"investor_name\":\"Rahul Hegde\"},{\"investor_id\":\"INV-165\",\"investor_name\":\"Meena Mishra\"},{\"investor_id\":\"INV-167\",\"investor_name\":\"Priyanka Reddy\"},{\"investor_id\":\"INV-172\",\"investor_name\":\"Dipti Gupta\"},{\"investor_id\":\"INV-176\",\"investor_name\":\"Anjali Arora\"},{\"investor_id\":\"INV-178\",\"investor_name\":\"Arjun Nair\"},{\"investor_id\":\"INV-180\",\"investor_name\":\"Ankita Bhat\"},{\"investor_id\":\"INV-181\",\"investor_name\":\"Suresh Reddy\"},{\"investor_id\":\"INV-189\",\"investor_name\":\"Meena Hegde\"},{\"investor_id\":\"INV-193\",\"investor_name\":\"Dipti Gupta\"},{\"investor_id\":\"INV-196\",\"investor_name\":\"Amit Rao\"},{\"investor_id\":\"INV-202\",\"investor_name\":\"Chetan Patel\"},{\"investor_id\":\"INV-203\",\"investor_name\":\"Siddharth Arora\"},{\"investor_id\":\"INV-205\",\"investor_name\":\"Kavita Deshmukh\"},{\"investor_id\":\"INV-211\",\"investor_name\":\"Amrita Reddy\"},{\"investor_id\":\"INV-215\",\"investor_name\":\"Anita Deshmukh\"},{\"investor_id\":\"INV-217\",\"investor_name\":\"Rohan Reddy\"},{\"investor_id\":\"INV-224\",\"investor_name\":\"Anand Yadav\"},{\"investor_id\":\"INV-229\",\"investor_name\":\"Kavita Pandey\"},{\"investor_id\":\"INV-230\",\"investor_name\":\"Dipti Rao\"},{\"investor_id\":\"INV-236\",\"investor_name\":\"Suresh Iyer\"},{\"investor_id\":\"INV-238\",\"investor_name\":\"Kavita Pandey\"},{\"investor_id\":\"INV-239\",\"investor_name\":\"Anita Chauhan\"},{\"investor_id\":\"INV-241\",\"investor_name\":\"Vivek Rao\"},{\"investor_id\":\"INV-245\",\"investor_name\":\"Chetan Patel\"},{\"investor_id\":\"INV-252\",\"investor_name\":\"Vikram Singh\"},{\"investor_id\":\"INV-254\",\"investor_name\":\"Rajesh Hegde\"},{\"investor_id\":\"INV-255\",\"investor_name\":\"Rahul Singh\"},{\"investor_id\":\"INV-256\",\"investor_name\":\"Amrita Verma\"},{\"investor_id\":\"INV-257\",\"investor_name\":\"Chetan Kulkarni\"},{\"investor_id\":\"INV-258\",\"investor_name\":\"Anita Rao\"},{\"investor_id\":\"INV-263\",\"investor_name\":\"Kavita Deshmukh\"},{\"investor_id\":\"INV-268\",\"investor_name\":\"Meena Verma\"},{\"investor_id\":\"INV-273\",\"investor_name\":\"Ankita Yadav\"},{\"investor_id\":\"INV-275\",\"investor_name\":\"Sneha Sharma\"},{\"investor_id\":\"INV-285\",\"investor_name\":\"Meena Reddy\"},{\"investor_id\":\"INV-286\",\"investor_name\":\"Amit Mishra\"},{\"investor_id\":\"INV-294\",\"investor_name\":\"Anita Nair\"},{\"investor_id\":\"INV-296\",\"investor_name\":\"Akshay Sharma\"},{\"investor_id\":\"INV-301\",\"investor_name\":\"Dipti Reddy\"},{\"investor_id\":\"INV-304\",\"investor_name\":\"Ishita Nair\"},{\"investor_id\":\"INV-314\",\"investor_name\":\"Siddharth Sharma\"},{\"investor_id\":\"INV-317\",\"investor_name\":\"Rohan Verma\"},{\"investor_id\":\"INV-326\",\"investor_name\":\"Rohan Sharma\"},{\"investor_id\":\"INV-327\",\"investor_name\":\"Anjali Sharma\"},{\"investor_id\":\"INV-329\",\"investor_name\":\"Geeta Patel\"},{\"investor_id\":\"INV-330\",\"investor_name\":\"Amit Kulkarni\"},{\"investor_id\":\"INV-331\",\"investor_name\":\"Vivek Rao\"},{\"investor_id\":\"INV-334\",\"investor_name\":\"Chetan Verma\"},{\"investor_id\":\"INV-340\",\"investor_name\":\"Rajesh Deshmukh\"},{\"investor_id\":\"INV-349\",\"investor_name\":\"Arvind Kulkarni\"},{\"investor_id\":\"INV-352\",\"investor_name\":\"Kavita Nair\"},{\"investor_id\":\"INV-354\",\"investor_name\":\"Meena Iyer\"},{\"investor_id\":\"INV-355\",\"investor_name\":\"Amit Singh\"},{\"investor_id\":\"INV-361\",\"investor_name\":\"Sunita Kulkarni\"},{\"investor_id\":\"INV-375\",\"investor_name\":\"Akshay Kulkarni\"},{\"investor_id\":\"INV-377\",\"investor_name\":\"Anita Singh\"},{\"investor_id\":\"INV-381\",\"investor_name\":\"Priyanka Deshmukh\"},{\"investor_id\":\"INV-384\",\"investor_name\":\"Sneha Gupta\"},{\"investor_id\":\"INV-386\",\"investor_name\":\"Siddharth Iyer\"},{\"investor_id\":\"INV-390\",\"investor_name\":\"Deepak Reddy\"},{\"investor_id\":\"INV-391\",\"investor_name\":\"Vivek Kulkarni\"},{\"investor_id\":\"INV-393\",\"investor_name\":\"Amrita Pandey\"},{\"investor_id\":\"INV-397\",\"investor_name\":\"Anand Yadav\"},{\"investor_id\":\"INV-398\",\"investor_name\":\"Kavita Gupta\"},{\"investor_id\":\"INV-399\",\"investor_name\":\"Amrita Singh\"},{\"investor_id\":\"INV-410\",\"investor_name\":\"Vikram Bhat\"},{\"investor_id\":\"INV-415\",\"investor_name\":\"Aishwarya Gupta\"},{\"investor_id\":\"INV-421\",\"investor_name\":\"Kavita Rao\"},{\"investor_id\":\"INV-426\",\"investor_name\":\"Suresh Reddy\"},{\"investor_id\":\"INV-430\",\"investor_name\":\"Abhishek Verma\"},{\"investor_id\":\"INV-431\",\"investor_name\":\"Abhishek Bhat\"},{\"investor_id\":\"INV-434\",\"investor_name\":\"Siddharth Reddy\"},{\"investor_id\":\"INV-436\",\"investor_name\":\"Akshay Bhat\"},{\"investor_id\":\"INV-440\",\"investor_name\":\"Sneha Yadav\"},{\"investor_id\":\"INV-441\",\"investor_name\":\"Ramesh Patel\"},{\"investor_id\":\"INV-444\",\"investor_name\":\"Meena Verma\"},{\"investor_id\":\"INV-451\",\"investor_name\":\"Deepak Nair\"},{\"investor_id\":\"INV-461\",\"investor_name\":\"Amrita Arora\"},{\"investor_id\":\"INV-462\",\"investor_name\":\"Sneha Rao\"},{\"investor_id\":\"INV-467\",\"investor_name\":\"Ankita Chauhan\"},{\"investor_id\":\"INV-473\",\"investor_name\":\"Rohan Rao\"},{\"investor_id\":\"INV-475\",\"investor_name\":\"Meena Iyer\"},{\"investor_id\":\"INV-476\",\"investor_name\":\"Vikram Nair\"},{\"investor_id\":\"INV-481\",\"investor_name\":\"Rajesh Joshi\"},{\"investor_id\":\"INV-482\",\"investor_name\":\"Deepak Mishra\"},{\"investor_id\":\"INV-489\",\"investor_name\":\"Sneha Mishra\"},{\"investor_id\":\"INV-492\",\"investor_name\":\"Ramesh Patel\"},{\"investor_id\":\"INV-493\",\"investor_name\":\"Ramesh Arora\"},{\"investor_id\":\"INV-497\",\"investor_name\":\"Ramesh Patel\"},{\"investor_id\":\"INV-500\",\"investor_name\":\"Aishwarya Hegde\"},{\"investor_id\":\"INV-501\",\"investor_name\":\"Aishwarya Deshmukh\"},{\"investor_id\":\"INV-503\",\"investor_name\":\"Sunita Rao\"},{\"investor_id\":\"INV-511\",\"investor_name\":\"Arjun Mehta\"},{\"investor_id\":\"INV-515\",\"investor_name\":\"Rahul Verma\"},{\"investor_id\":\"INV-516\",\"investor_name\":\"Chetan Mishra\"},{\"investor_id\":\"INV-518\",\"investor_name\":\"Arjun Kulkarni\"},{\"investor_id\":\"INV-523\",\"investor_name\":\"Vikram Mehta\"},{\"investor_id\":\"INV-534\",\"investor_name\":\"Ishita Nair\"},{\"investor_id\":\"INV-542\",\"investor_name\":\"Priyanka Singh\"},{\"investor_id\":\"INV-545\",\"investor_name\":\"Anjali Arora\"},{\"investor_id\":\"INV-546\",\"investor_name\":\"Anand Mishra\"},{\"investor_id\":\"INV-550\",\"investor_name\":\"Vikram Sharma\"},{\"investor_id\":\"INV-553\",\"investor_name\":\"Rohan Nair\"},{\"investor_id\":\"INV-554\",\"investor_name\":\"Geeta Bhat\"},{\"investor_id\":\"INV-559\",\"investor_name\":\"Sneha Joshi\"},{\"investor_id\":\"INV-560\",\"investor_name\":\"Kavita Patel\"},{\"investor_id\":\"INV-561\",\"investor_name\":\"Ishita Kulkarni\"},{\"investor_id\":\"INV-563\",\"investor_name\":\"Sunita Mishra\"},{\"investor_id\":\"INV-571\",\"investor_name\":\"Arvind Yadav\"},{\"investor_id\":\"INV-575\",\"investor_name\":\"Vikram Sharma\"},{\"investor_id\":\"INV-579\",\"investor_name\":\"Sneha Kulkarni\"},{\"investor_id\":\"INV-580\",\"investor_name\":\"Anita Patel\"},{\"investor_id\":\"INV-581\",\"investor_name\":\"Siddharth Pandey\"},{\"investor_id\":\"INV-584\",\"investor_name\":\"Kavita Chauhan\"},{\"investor_id\":\"INV-586\",\"investor_name\":\"Ramesh Rao\"},{\"investor_id\":\"INV-597\",\"investor_name\":\"Suresh Rao\"},{\"investor_id\":\"INV-603\",\"investor_name\":\"Meena Yadav\"},{\"investor_id\":\"INV-607\",\"investor_name\":\"Vivek Gupta\"},{\"investor_id\":\"INV-613\",\"investor_name\":\"Sunita Mishra\"},{\"investor_id\":\"INV-625\",\"investor_name\":\"Ishita Sharma\"},{\"investor_id\":\"INV-631\",\"investor_name\":\"Dipti Gupta\"},{\"investor_id\":\"INV-633\",\"investor_name\":\"Kavita Iyer\"},{\"investor_id\":\"INV-636\",\"investor_name\":\"Meena Verma\"},{\"investor_id\":\"INV-637\",\"investor_name\":\"Priyanka Deshmukh\"},{\"investor_id\":\"INV-640\",\"investor_name\":\"Vivek Bhat\"},{\"investor_id\":\"INV-641\",\"investor_name\":\"Suresh Iyer\"},{\"investor_id\":\"INV-643\",\"investor_name\":\"Arjun Mishra\"},{\"investor_id\":\"INV-647\",\"investor_name\":\"Anjali Singh\"},{\"investor_id\":\"INV-649\",\"investor_name\":\"Suresh Nair\"},{\"investor_id\":\"INV-652\",\"investor_name\":\"Geeta Pandey\"},{\"investor_id\":\"INV-654\",\"investor_name\":\"Geeta Rao\"},{\"investor_id\":\"INV-655\",\"investor_name\":\"Anita Reddy\"},{\"investor_id\":\"INV-656\",\"investor_name\":\"Ishita Joshi\"},{\"investor_id\":\"INV-658\",\"investor_name\":\"Ankita Gupta\"},{\"investor_id\":\"INV-660\",\"investor_name\":\"Amrita Mishra\"},{\"investor_id\":\"INV-664\",\"investor_name\":\"Anjali Reddy\"},{\"investor_id\":\"INV-665\",\"investor_name\":\"Vikram Singh\"},{\"investor_id\":\"INV-668\",\"investor_name\":\"Ishita Joshi\"},{\"investor_id\":\"INV-670\",\"investor_name\":\"Ankita Chauhan\"},{\"investor_id\":\"INV-681\",\"investor_name\":\"Vikram Arora\"},{\"investor_id\":\"INV-686\",\"investor_name\":\"Bhavna Patel\"},{\"investor_id\":\"INV-691\",\"investor_name\":\"Dipti Mishra\"},{\"investor_id\":\"INV-699\",\"investor_name\":\"Deepak Sharma\"},{\"investor_id\":\"INV-705\",\"investor_name\":\"Anjali Iyer\"},{\"investor_id\":\"INV-706\",\"investor_name\":\"Vikram Deshmukh\"},{\"investor_id\":\"INV-707\",\"investor_name\":\"Siddharth Bhat\"},{\"investor_id\":\"INV-708\",\"investor_name\":\"Sneha Mishra\"},{\"investor_id\":\"INV-723\",\"investor_name\":\"Aishwarya Joshi\"},{\"investor_id\":\"INV-724\",\"investor_name\":\"Akshay Verma\"},{\"investor_id\":\"INV-725\",\"investor_name\":\"Ishita Patel\"},{\"investor_id\":\"INV-728\",\"investor_name\":\"Sneha Sharma\"},{\"investor_id\":\"INV-729\",\"investor_name\":\"Anand Gupta\"},{\"investor_id\":\"INV-730\",\"investor_name\":\"Rajesh Verma\"},{\"investor_id\":\"INV-739\",\"investor_name\":\"Suresh Yadav\"},{\"investor_id\":\"INV-740\",\"investor_name\":\"Arvind Patel\"},{\"investor_id\":\"INV-741\",\"investor_name\":\"Vivek Kulkarni\"},{\"investor_id\":\"INV-742\",\"investor_name\":\"Rahul Deshmukh\"},{\"investor_id\":\"INV-743\",\"investor_name\":\"Vikram Chauhan\"},{\"investor_id\":\"INV-746\",\"investor_name\":\"Ankita Reddy\"},{\"investor_id\":\"INV-749\",\"investor_name\":\"Rahul Pandey\"},{\"investor_id\":\"INV-750\",\"investor_name\":\"Suresh Verma\"},{\"investor_id\":\"INV-751\",\"investor_name\":\"Rahul Sharma\"},{\"investor_id\":\"INV-754\",\"investor_name\":\"Ramesh Deshmukh\"},{\"investor_id\":\"INV-758\",\"investor_name\":\"Vivek Yadav\"},{\"investor_id\":\"INV-761\",\"investor_name\":\"Meena Gupta\"},{\"investor_id\":\"INV-763\",\"investor_name\":\"Anita Mishra\"},{\"investor_id\":\"INV-768\",\"investor_name\":\"Amrita Reddy\"},{\"investor_id\":\"INV-773\",\"investor_name\":\"Arvind Joshi\"},{\"investor_id\":\"INV-781\",\"investor_name\":\"Dipti Reddy\"},{\"investor_id\":\"INV-786\",\"investor_name\":\"Rahul Joshi\"},{\"investor_id\":\"INV-787\",\"investor_name\":\"Bhavna Kulkarni\"},{\"investor_id\":\"INV-806\",\"investor_name\":\"Vikram Rao\"},{\"investor_id\":\"INV-808\",\"investor_name\":\"Kavita Hegde\"},{\"investor_id\":\"INV-809\",\"investor_name\":\"Anjali Chauhan\"},{\"investor_id\":\"INV-811\",\"investor_name\":\"Siddharth Hegde\"},{\"investor_id\":\"INV-812\",\"investor_name\":\"Aishwarya Singh\"},{\"investor_id\":\"INV-829\",\"investor_name\":\"Priyanka Yadav\"},{\"investor_id\":\"INV-833\",\"investor_name\":\"Rajesh Iyer\"},{\"investor_id\":\"INV-839\",\"investor_name\":\"Anita Iyer\"},{\"investor_id\":\"INV-841\",\"investor_name\":\"Priyanka Reddy\"},{\"investor_id\":\"INV-842\",\"investor_name\":\"Akshay Iyer\"},{\"investor_id\":\"INV-847\",\"investor_name\":\"Chetan Joshi\"},{\"investor_id\":\"INV-849\",\"investor_name\":\"Arvind Bhat\"},{\"investor_id\":\"INV-852\",\"investor_name\":\"Bhavna Yadav\"},{\"investor_id\":\"INV-854\",\"investor_name\":\"Akshay Pandey\"},{\"investor_id\":\"INV-855\",\"investor_name\":\"Priyanka Verma\"},{\"investor_id\":\"INV-860\",\"investor_name\":\"Ankita Patel\"},{\"investor_id\":\"INV-862\",\"investor_name\":\"Aishwarya Rao\"},{\"investor_id\":\"INV-870\",\"investor_name\":\"Bhavna Yadav\"},{\"investor_id\":\"INV-878\",\"investor_name\":\"Vikram Kulkarni\"},{\"investor_id\":\"INV-884\",\"investor_name\":\"Chetan Mehta\"},{\"investor_id\":\"INV-887\",\"investor_name\":\"Deepak Mishra\"},{\"investor_id\":\"INV-893\",\"investor_name\":\"Anita Singh\"},{\"investor_id\":\"INV-894\",\"investor_name\":\"Rahul Kulkarni\"},{\"investor_id\":\"INV-895\",\"investor_name\":\"Dipti Verma\"},{\"investor_id\":\"INV-899\",\"investor_name\":\"Ankita Rao\"},{\"investor_id\":\"INV-901\",\"investor_name\":\"Geeta Patel\"},{\"investor_id\":\"INV-906\",\"investor_name\":\"Dipti Verma\"},{\"investor_id\":\"INV-907\",\"investor_name\":\"Anand Sharma\"},{\"investor_id\":\"INV-913\",\"investor_name\":\"Chetan Mehta\"},{\"investor_id\":\"INV-914\",\"investor_name\":\"Rohan Pandey\"},{\"investor_id\":\"INV-916\",\"investor_name\":\"Anand Hegde\"},{\"investor_id\":\"INV-920\",\"investor_name\":\"Arjun Sharma\"},{\"investor_id\":\"INV-923\",\"investor_name\":\"Siddharth Reddy\"},{\"investor_id\":\"INV-929\",\"investor_name\":\"Priyanka Rao\"},{\"investor_id\":\"INV-930\",\"investor_name\":\"Ramesh Deshmukh\"},{\"investor_id\":\"INV-931\",\"investor_name\":\"Anand Iyer\"},{\"investor_id\":\"INV-933\",\"investor_name\":\"Amrita Reddy\"},{\"investor_id\":\"INV-934\",\"investor_name\":\"Ankita Gupta\"},{\"investor_id\":\"INV-936\",\"investor_name\":\"Amrita Joshi\"},{\"investor_id\":\"INV-937\",\"investor_name\":\"Vikram Singh\"},{\"investor_id\":\"INV-938\",\"investor_name\":\"Vikram Gupta\"},{\"investor_id\":\"INV-939\",\"investor_name\":\"Suresh Singh\"},{\"investor_id\":\"INV-942\",\"investor_name\":\"Dipti Reddy\"},{\"investor_id\":\"INV-946\",\"investor_name\":\"Chetan Iyer\"},{\"investor_id\":\"INV-949\",\"investor_name\":\"Deepak Hegde\"},{\"investor_id\":\"INV-953\",\"investor_name\":\"Chetan Reddy\"},{\"investor_id\":\"INV-966\",\"investor_name\":\"Siddharth Verma\"},{\"investor_id\":\"INV-968\",\"investor_name\":\"Deepak Mehta\"},{\"investor_id\":\"INV-969\",\"investor_name\":\"Vikram Mishra\"},{\"investor_id\":\"INV-972\",\"investor_name\":\"Aishwarya Kulkarni\"},{\"investor_id\":\"INV-974\",\"investor_name\":\"Ramesh Pandey\"},{\"investor_id\":\"INV-985\",\"investor_name\":\"Arjun Rao\"},{\"investor_id\":\"INV-993\",\"investor_name\":\"Arvind Rao\"},{\"investor_id\":\"INV-995\",\"investor_name\":\"Ramesh Singh\"},{\"investor_id\":\"INV-996\",\"investor_name\":\"Rahul Verma\"},{\"investor_id\":\"INV-998\",\"investor_name\":\"Anita Mehta\"}]",
+  "pipeline_output": "The investors are INV-1201 Ankita Gupta, INV-451 Deepak Nair, INV-1051 Rahul Reddy, INV-1411 Chetan Iyer, INV-1501 Priyanka Singh, INV-151 Rahul Kulkarni, INV-751 Rahul Sharma, INV-1053 Anita Patel, INV-1181 Amit Mehta, INV-1317 Siddharth Yadav, INV-534 Ishita Nair, INV-633 Kavita Iyer, INV-067 Vikram Iyer, INV-1060 Amit Reddy, INV-1124 Arvind Mishra, INV-1175 Rohan Hegde, INV-1177 Chetan Mehta, INV-1351 Geeta Deshmukh, INV-1471 Siddharth Iyer, INV-475 Meena Iyer, INV-699 Deepak Sharma, INV-933 Amrita Reddy, INV-091 Akshay Iyer, INV-1460 Priyanka Iyer, INV-1538 Priyanka Joshi, INV-1546 Sunita Hegde, INV-255 Rahul Singh, INV-296 Akshay Sharma, INV-055 Ramesh Bhat, INV-117 Akshay Patel, INV-1231 Aishwarya Gupta, INV-129 Sneha Bhat, INV-1526 Siddharth Deshmukh, INV-196 Amit Rao, INV-329 Geeta Patel, INV-390 Deepak Reddy, INV-421 Kavita Rao, INV-426 Suresh Reddy, INV-493 Ramesh Arora, INV-681 Vikram Arora, INV-743 Vikram Chauhan, INV-746 Ankita Reddy, INV-001 Arjun Iyer, INV-018 Meena Rao, INV-1030 Akshay Mehta, INV-224 Anand Yadav, INV-375 Akshay Kulkarni, INV-399 Amrita Singh, INV-462 Sneha Rao, INV-500 Aishwarya Hegde, INV-501 Aishwarya Deshmukh, INV-561 Ishita Kulkarni, INV-581 Siddharth Pandey, INV-654 Geeta Rao, INV-708 Sneha Mishra, INV-901 Geeta Patel, INV-937 Vikram Singh, INV-953 Chetan Reddy, INV-968 Deepak Mehta, INV-969 Vikram Mishra, INV-019 Siddharth Mishra, INV-098 Arvind Singh, INV-1214 Meena Rao, INV-1236 Dipti Yadav, INV-1245 Amit Patel, INV-1299 Geeta Chauhan, INV-1354 Dipti Verma, INV-139 Anita Iyer, INV-1433 Vivek Bhat, INV-1461 Amit Yadav, INV-1466 Ankita Mehta, INV-1475 Aishwarya Bhat, INV-1494 Chetan Reddy, INV-1509 Arjun Rao, INV-273 Ankita Yadav, INV-301 Dipti Reddy, INV-503 Sunita Rao, INV-545 Anjali Arora, INV-579 Sneha Kulkarni, INV-643 Arjun Mishra, INV-706 Vikram Deshmukh, INV-811 Siddharth Hegde, INV-842 Akshay Iyer, INV-862 Aishwarya Rao, INV-974 Ramesh Pandey, INV-1173 Bhavna Kulkarni, INV-1261 Ishita Arora, INV-1487 Aishwarya Chauhan, INV-1536 Suresh Joshi, INV-268 Meena Verma, INV-361 Sunita Kulkarni, INV-384 Sneha Gupta, INV-398 Kavita Gupta, INV-415 Aishwarya Gupta, INV-436 Akshay Bhat, INV-440 Sneha Yadav, INV-511 Arjun Mehta, INV-554 Geeta Bhat, INV-707 Siddharth Bhat, INV-739 Suresh Yadav, INV-887 Deepak Mishra, INV-906 Dipti Verma, INV-966 Siddharth Verma, INV-029 Vikram Reddy, INV-097 Rajesh Patel, INV-1032 Anjali Gupta, INV-1056 Geeta Deshmukh, INV-1078 Akshay Joshi, INV-1098 Arvind Iyer, INV-1254 Vikram Patel, INV-131 Priyanka Sharma, INV-1312 Amit Verma, INV-1459 Arjun Iyer, INV-211 Amrita Reddy, INV-252 Vikram Singh, INV-257 Chetan Kulkarni, INV-352 Kavita Nair, INV-391 Vivek Kulkarni, INV-430 Abhishek Verma, INV-461 Amrita Arora, INV-473 Rohan Rao, INV-481 Rajesh Joshi, INV-518 Arjun Kulkarni, INV-584 Kavita Chauhan, INV-613 Sunita Mishra, INV-637 Priyanka Deshmukh, INV-668 Ishita Joshi, INV-812 Aishwarya Singh, INV-847 Chetan Joshi, INV-899 Ankita Rao, INV-929 Priyanka Rao, INV-938 Vikram Gupta, INV-946 Chetan Iyer, INV-972 Aishwarya Kulkarni, INV-056 Amrita Hegde, INV-094 Anita Bhat, INV-1003 Vikram Verma, INV-1021 Amit Joshi, INV-1035 Arjun Verma, INV-1048 Geeta Pandey, INV-1094 Vivek Hegde, INV-1112 Anand Verma, INV-1144 Deepak Reddy, INV-1212 Sneha Iyer, INV-1217 Siddharth Mehta, INV-1309 Anjali Rao, INV-1357 Priyanka Joshi, INV-1464 Arjun Sharma, INV-1474 Amrita Yadav, INV-167 Priyanka Reddy, INV-178 Arjun Nair, INV-229 Kavita Pandey, INV-241 Vivek Rao, INV-254 Rajesh Hegde, INV-286 Amit Mishra, INV-304 Ishita Nair, INV-393 Amrita Pandey, INV-476 Vikram Nair, INV-497 Ramesh Patel, INV-542 Priyanka Singh, INV-749 Rahul Pandey, INV-754 Ramesh Deshmukh, INV-860 Ankita Patel, INV-893 Anita Singh, INV-936 Amrita Joshi, INV-014 Rohan Chauhan, INV-031 Meena Rao, INV-065 Ankita Rao, INV-1102 Deepak Gupta, INV-1146 Geeta Iyer, INV-1159 Anand Sharma, INV-1290 Abhishek Joshi, INV-1350 Siddharth Bhat, INV-1410 Deepak Iyer, INV-1430 Abhishek Arora, INV-1529 Meena Sharma, INV-1547 Deepak Kulkarni, INV-163 Suresh Verma, INV-180 Ankita Bhat, INV-202 Chetan Patel, INV-236 Suresh Iyer, INV-263 Kavita Deshmukh, INV-294 Anita Nair, INV-314 Siddharth Sharma, INV-330 Amit Kulkarni, INV-377 Anita Singh, INV-386 Siddharth Iyer, INV-410 Vikram Bhat, INV-492 Ramesh Patel, INV-575 Vikram Sharma, INV-597 Suresh Rao, INV-723 Aishwarya Joshi, INV-740 Arvind Patel, INV-758 Vivek Yadav, INV-761 Meena Gupta, INV-786 Rahul Joshi, INV-829 Priyanka Yadav, INV-841 Priyanka Reddy, INV-854 Akshay Pandey, INV-913 Chetan Mehta, INV-036 Suresh Pandey, INV-100 Bhavna Mishra, INV-103 Aishwarya Rao, INV-1121 Rajesh Arora, INV-1139 Rahul Chauhan, INV-1163 Ankita Deshmukh, INV-1198 Anita Verma, INV-122 Dipti Gupta, INV-1237 Rajesh Kulkarni, INV-1247 Ramesh Verma, INV-1268 Ankita Nair, INV-1287 Ishita Mehta, INV-1397 Rajesh Kulkarni, INV-1405 Vivek Bhat, INV-1425 Geeta Iyer, INV-1434 Arjun Mishra, INV-1441 Rahul Chauhan, INV-1453 Ishita Rao, INV-1503 Chetan Sharma, INV-1522 Sunita Kulkarni, INV-154 Ishita Arora, INV-165 Meena Mishra, INV-181 Suresh Reddy, INV-205 Kavita Deshmukh, INV-355 Amit Singh, INV-467 Ankita Chauhan, INV-553 Rohan Nair, INV-636 Meena Verma, INV-647 Anjali Singh, INV-655 Anita Reddy, INV-691 Dipti Mishra, INV-768 Amrita Reddy, INV-849 Arvind Bhat, INV-855 Priyanka Verma, INV-949 Deepak Hegde, INV-985 Arjun Rao, INV-995 Ramesh Singh, INV-996 Rahul Verma, INV-011 Bhavna Verma, INV-1009 Siddharth Hegde, INV-1010 Sunita Patel, INV-1018 Kavita Hegde, INV-1072 Amrita Kulkarni, INV-1073 Rahul Iyer, INV-1096 Amrita Sharma, INV-1097 Anjali Bhat, INV-1152 Anita Chauhan, INV-1194 Chetan Rao, INV-1204 Ramesh Chauhan, INV-1228 Geeta Iyer, INV-1280 Ishita Joshi, INV-1321 Sunita Verma, INV-1328 Aishwarya Rao, INV-1329 Akshay Hegde, INV-1337 Ramesh Chauhan, INV-1363 Dipti Singh, INV-1456 Ankita Verma, INV-1472 Ishita Rao, INV-1550 Siddharth Yadav, INV-215 Anita Deshmukh, INV-239 Anita Chauhan, INV-327 Anjali Sharma, INV-334 Chetan Verma, INV-354 Meena Iyer, INV-431 Abhishek Bhat, INV-516 Chetan Mishra, INV-523 Vikram Mehta, INV-550 Vikram Sharma, INV-580 Anita Patel, INV-631 Dipti Gupta, INV-641 Suresh Iyer, INV-649 Suresh Nair, INV-660 Amrita Mishra, INV-686 Bhavna Patel, INV-724 Akshay Verma, INV-741 Vivek Kulkarni, INV-787 Bhavna Kulkarni, INV-833 Rajesh Iyer, INV-907 Anand Sharma, INV-920 Arjun Sharma, INV-993 Arvind Rao, INV-020 Rajesh Kulkarni, INV-1012 Amrita Iyer, INV-1014 Sneha Hegde, INV-1068 Rahul Bhat, INV-1111 Rajesh Sharma, INV-1141 Ankita Iyer, INV-1150 Sunita Deshmukh, INV-121 Anita Hegde, INV-1296 Amit Chauhan, INV-1355 Vivek Verma, INV-1361 Anand Iyer, INV-1372 Anand Singh, INV-1377 Arvind Deshmukh, INV-1392 Anand Mishra, INV-1406 Meena Sharma, INV-1481 Amit Mishra, INV-1493 Abhishek Nair, INV-152 Ramesh Gupta, INV-172 Dipti Gupta, INV-193 Dipti Gupta, INV-217 Rohan Reddy, INV-331 Vivek Rao, INV-489 Sneha Mishra, INV-515 Rahul Verma, INV-559 Sneha Joshi, INV-607 Vivek Gupta, INV-656 Ishita Joshi, INV-658 Ankita Gupta, INV-664 Anjali Reddy, INV-665 Vikram Singh, INV-670 Ankita Chauhan, INV-705 Anjali Iyer, INV-870 Bhavna Yadav, INV-878 Vikram Kulkarni, INV-895 Dipti Verma, INV-923 Siddharth Reddy, INV-930 Ramesh Deshmukh, INV-939 Suresh Singh, INV-1002 Anjali Sharma, INV-1029 Abhishek Hegde, INV-1115 Akshay Chauhan, INV-1127 Bhavna Bhat, INV-1128 Rajesh Arora, INV-1158 Arjun Singh, INV-1171 Anjali Iyer, INV-1221 Aishwarya Kulkarni, INV-1319 Kavita Verma, INV-1345 Rajesh Verma, INV-1403 Arjun Iyer, INV-1408 Ishita Bhat, INV-1436 Dipti Mehta, INV-1491 Anjali Deshmukh, INV-1530 Anjali Deshmukh, INV-1544 Chetan Rao, INV-285 Meena Reddy, INV-317 Rohan Verma, INV-397 Anand Yadav, INV-434 Siddharth Reddy, INV-441 Ramesh Patel, INV-560 Kavita Patel, INV-586 Ramesh Rao, INV-603 Meena Yadav, INV-652 Geeta Pandey, INV-728 Sneha Sharma, INV-730 Rajesh Verma, INV-742 Rahul Deshmukh, INV-763 Anita Mishra, INV-808 Kavita Hegde, INV-894 Rahul Kulkarni, INV-934 Ankita Gupta, INV-998 Anita Mehta, INV-054 Rohan Patel, INV-062 Siddharth Iyer, INV-1061 Vikram Verma, INV-1062 Rahul Joshi, INV-1070 Ishita Chauhan, INV-1281 Ankita Rao, INV-1294 Vikram Gupta, INV-1310 Sneha Iyer, INV-1315 Priyanka Hegde, INV-1336 Vikram Kulkarni, INV-134 Deepak Iyer, INV-189 Meena Hegde, INV-238 Kavita Pandey, INV-245 Chetan Patel, INV-256 Amrita Verma, INV-258 Anita Rao, INV-482 Deepak Mishra, INV-729 Anand Gupta, INV-781 Dipti Reddy, INV-884 Chetan Mehta, INV-942 Dipti Reddy, INV-043 Kavita Gupta, INV-1079 Amit Reddy, INV-1088 Ishita Chauhan, INV-1117 Arvind Kulkarni, INV-1143 Priyanka Yadav, INV-1167 Geeta Reddy, INV-1170 Akshay Patel, INV-1182 Priyanka Singh, INV-1188 Anjali Bhat, INV-1348 Anand Deshmukh, INV-1349 Dipti Pandey, INV-1473 Rohan Patel, INV-230 Dipti Rao, INV-340 Rajesh Deshmukh, INV-349 Arvind Kulkarni, INV-381 Priyanka Deshmukh, INV-444 Meena Verma, INV-571 Arvind Yadav, INV-725 Ishita Patel, INV-750 Suresh Verma, INV-839 Anita Iyer, INV-852 Bhavna Yadav, INV-914 Rohan Pandey, INV-931 Anand Iyer, INV-003 Siddharth Sharma, INV-061 Kavita Sharma, INV-1113 Suresh Rao, INV-116 Ankita Deshmukh, INV-1164 Sneha Singh, INV-1297 Akshay Rao, INV-1358 Akshay Mishra, INV-1367 Amrita Joshi, INV-203 Siddharth Arora, INV-275 Sneha Sharma, INV-546 Anand Mishra, INV-563 Sunita Mishra, INV-625 Ishita Sharma, INV-640 Vivek Bhat, INV-773 Arvind Joshi, INV-809 Anjali Chauhan, INV-027 Sneha Verma, INV-041 Sneha Nair, INV-1119 Ishita Nair, INV-1179 Arjun Pandey, INV-1327 Priyanka Gupta, INV-1347 Rohan Hegde, INV-1378 Anjali Joshi, INV-1450 Anand Patel, INV-1515 Abhishek Nair, INV-164 Rahul Hegde, INV-806 Vikram Rao, INV-916 Anand Hegde, INV-1131 Rajesh Deshmukh, INV-1153 Arvind Sharma, INV-1215 Geeta Patel, INV-1338 Abhishek Singh, INV-176 Anjali Arora, INV-326 Rohan Sharma, INV-022 Rohan Rao, INV-037 Chetan Sharma, INV-044 Ishita Sharma, INV-049 Deepak Mehta.",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 194.664,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have holdings with returns_pct below 0 and goals with shortfall above 1000000?\" This involves two conditions: holdings returns_pct < 0, and goals shortfall > 1000000. Need to retrieve ontology classes, classify numeric comparisons? The query includes numeric comparisons (below, above) but not aggregation functions like average. However \"Classify\" is required for math, aggregation, or numeric-superlative words. The rule says: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. The query includes numeric comparisons (below, above) which are math. So we should include a Classify step to identify numeric conditions. Steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify numeric conditions: returns_pct < 0, shortfall > 1000000)\n3. Generate (write SPARQL query to get investors meeting both conditions)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nThus 6 steps. Ensure ordering: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nOutput only numbered steps.</reasoning>1. Retrieve – locate the ontology classes for **Investor**, **Holding**, and **Goal**.  \n2. Classify – identify the numeric constraints in the query: `returns_pct` < 0 and `shortfall` > 1,000,000.  \n3. Generate – compose a SPARQL query that selects investors who have a holding with `returns_pct` below 0 **and** a goal with `shortfall` above 1,000,000.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned investors satisfy both numeric conditions.  \n6. Explain – present the list of qualifying investors to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nGoal: \"Which investors have holdings with returns_pct below 0 and goals with shortfall above 1000000?\"\n\nWe need to retrieve ontology classes, classify numeric conditions (returns_pct below 0, shortfall above 1000000) -> classification for math.\n\nThen generate SPARQL query after classify, then scan, validate, explain.\n\nPotential steps:\n\n1. Retrieve (ontology classes) – maybe retrieve classes like Investor, Holding, Goal.\n\n2. Classify (identify numeric comparison operations: returns_pct < 0, shortfall > 1000000). Also maybe identify that we need to filter.\n\n3. Generate (write SPARQL query that selects investors where exists holding with returns_pct < 0 and exists goal with shortfall > 1000000). Use filters.\n\n4. Scan (execute query).\n\n5. Validate (check results).\n\n6. Explain (present answer).\n\nThus 6 steps.\n\nMake sure to follow chronology: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Generate -> Classify -> Scan -> Validate -> Explain",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Rejected by Python validator: Classify must run before Generate when present",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Explain",
+              "inputs": [
+                5
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            },
+            {
+              "source": 1,
+              "target": 2
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have holdings with returns_pct below 0 and goals with shortfall above 1000000?\" This involves two conditions: holdings returns_pct < 0, goals shortfall > 1,000,000. Need to retrieve ontology classes, classify numeric comparison words (below, above). Then generate SPARQL, scan, validate, explain.\n\nSteps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify numeric comparison operators: \"below\", \"above\" and numeric thresholds)\n3. Generate (SPARQL query that selects investors where exists holdings with returns_pct < 0 and exists goals with shortfall > 1000000)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (return answer)\n\nMake sure order correct. Also maybe need Filter_Aggregate? Not needed because just filter. But we could include Filter_Aggregate after Scan? According to chronology, after Scan we must Validate then Explain. No extra steps allowed? Could include Filter_Aggregate before Generate? Not needed. The rules: after Retrieve, you may Classify, then Generate, then Scan, then Validate, then Explain. So steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Explain",
+              "inputs": [
+                5
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2
+            },
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "PortfolioHolding",
+      "InvestmentGoal"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "boolean_comparison",
+    "confidence": 0.97,
+    "target_field": "returnsPct, shortfall",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query filters investors based on numeric comparisons (returnsPct < 0 and shortfall > 1000000), which is a boolean condition rather than an aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    ?holding a wm:PortfolioHolding ;\n             wm:heldByInvestor ?inv ;\n             wm:returnsPct ?ret .\n    FILTER(xsd:decimal(?ret) < 0)\n  }\n\n  FILTER EXISTS {\n    ?goal a wm:InvestmentGoal ;\n          wm:belongsToInvestor ?inv ;\n          wm:shortfall ?sf .\n    FILTER(xsd:decimal(?sf) > 1000000)\n  }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    SELECT ?inv WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:returnsPct ?ret .\n      FILTER(?ret < 0)\n    } LIMIT 1\n  }\n\n  FILTER EXISTS {\n    SELECT ?inv WHERE {\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:shortfall ?sf .\n      FILTER(?sf > 1000000)\n    } LIMIT 1\n  }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    ?holding a wm:PortfolioHolding ;\n             wm:heldByInvestor ?inv ;\n             wm:returnsPct ?ret .\n    FILTER(xsd:decimal(?ret) < 0)\n  }\n\n  FILTER EXISTS {\n    ?goal a wm:InvestmentGoal ;\n          wm:belongsToInvestor ?inv ;\n          wm:shortfall ?sf .\n    FILTER(xsd:decimal(?sf) > 1000000)\n  }\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    ?holding a wm:PortfolioHolding ;\n             wm:heldByInvestor ?inv ;\n             wm:returnsPct ?ret .\n    FILTER(xsd:decimal(?ret) < 0)\n  }\n\n  FILTER EXISTS {\n    ?goal a wm:InvestmentGoal ;\n          wm:belongsToInvestor ?inv ;\n          wm:shortfall ?sf .\n    FILTER(xsd:decimal(?sf) > 1000000)\n  }\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    SELECT ?inv WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:returnsPct ?ret .\n      FILTER(?ret < 0)\n    } LIMIT 1\n  }\n\n  FILTER EXISTS {\n    SELECT ?inv WHERE {\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:shortfall ?sf .\n      FILTER(?sf > 1000000)\n    } LIMIT 1\n  }\n}",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId ;\n       wm:investorName ?investorName .\n\n  FILTER EXISTS {\n    SELECT ?inv WHERE {\n      ?inv wm:hasHolding ?holding .\n      ?holding wm:returnsPct ?ret .\n      FILTER(?ret < 0)\n    } LIMIT 1\n  }\n\n  FILTER EXISTS {\n    SELECT ?inv WHERE {\n      ?inv wm:hasInvestmentGoal ?goal .\n      ?goal wm:shortfall ?sf .\n      FILTER(?sf > 1000000)\n    } LIMIT 1\n  }\n}",
+        "status": "success",
+        "row_count": 435,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 435,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL correctly selects investors that have at least one holding with returns_pct < 0 and at least one goal with shortfall > 1,000,000. The returned columns (investorId, investorName) appropriately answer the question \"Which investors...\" and the result set is non‑empty.",
+    "validator_reason": "The SPARQL correctly selects investors that have at least one holding with returns_pct < 0 and at least one goal with shortfall > 1,000,000. The returned columns (investorId, investorName) appropriately answer the question \"Which investors...\" and the result set is non‑empty.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 435,
+    "final_answer": "The investors are INV-1201 Ankita Gupta, INV-451 Deepak Nair, INV-1051 Rahul Reddy, INV-1411 Chetan Iyer, INV-1501 Priyanka Singh, INV-151 Rahul Kulkarni, INV-751 Rahul Sharma, INV-1053 Anita Patel, INV-1181 Amit Mehta, INV-1317 Siddharth Yadav, INV-534 Ishita Nair, INV-633 Kavita Iyer, INV-067 Vikram Iyer, INV-1060 Amit Reddy, INV-1124 Arvind Mishra, INV-1175 Rohan Hegde, INV-1177 Chetan Mehta, INV-1351 Geeta Deshmukh, INV-1471 Siddharth Iyer, INV-475 Meena Iyer, INV-699 Deepak Sharma, INV-933 Amrita Reddy, INV-091 Akshay Iyer, INV-1460 Priyanka Iyer, INV-1538 Priyanka Joshi, INV-1546 Sunita Hegde, INV-255 Rahul Singh, INV-296 Akshay Sharma, INV-055 Ramesh Bhat, INV-117 Akshay Patel, INV-1231 Aishwarya Gupta, INV-129 Sneha Bhat, INV-1526 Siddharth Deshmukh, INV-196 Amit Rao, INV-329 Geeta Patel, INV-390 Deepak Reddy, INV-421 Kavita Rao, INV-426 Suresh Reddy, INV-493 Ramesh Arora, INV-681 Vikram Arora, INV-743 Vikram Chauhan, INV-746 Ankita Reddy, INV-001 Arjun Iyer, INV-018 Meena Rao, INV-1030 Akshay Mehta, INV-224 Anand Yadav, INV-375 Akshay Kulkarni, INV-399 Amrita Singh, INV-462 Sneha Rao, INV-500 Aishwarya Hegde, INV-501 Aishwarya Deshmukh, INV-561 Ishita Kulkarni, INV-581 Siddharth Pandey, INV-654 Geeta Rao, INV-708 Sneha Mishra, INV-901 Geeta Patel, INV-937 Vikram Singh, INV-953 Chetan Reddy, INV-968 Deepak Mehta, INV-969 Vikram Mishra, INV-019 Siddharth Mishra, INV-098 Arvind Singh, INV-1214 Meena Rao, INV-1236 Dipti Yadav, INV-1245 Amit Patel, INV-1299 Geeta Chauhan, INV-1354 Dipti Verma, INV-139 Anita Iyer, INV-1433 Vivek Bhat, INV-1461 Amit Yadav, INV-1466 Ankita Mehta, INV-1475 Aishwarya Bhat, INV-1494 Chetan Reddy, INV-1509 Arjun Rao, INV-273 Ankita Yadav, INV-301 Dipti Reddy, INV-503 Sunita Rao, INV-545 Anjali Arora, INV-579 Sneha Kulkarni, INV-643 Arjun Mishra, INV-706 Vikram Deshmukh, INV-811 Siddharth Hegde, INV-842 Akshay Iyer, INV-862 Aishwarya Rao, INV-974 Ramesh Pandey, INV-1173 Bhavna Kulkarni, INV-1261 Ishita Arora, INV-1487 Aishwarya Chauhan, INV-1536 Suresh Joshi, INV-268 Meena Verma, INV-361 Sunita Kulkarni, INV-384 Sneha Gupta, INV-398 Kavita Gupta, INV-415 Aishwarya Gupta, INV-436 Akshay Bhat, INV-440 Sneha Yadav, INV-511 Arjun Mehta, INV-554 Geeta Bhat, INV-707 Siddharth Bhat, INV-739 Suresh Yadav, INV-887 Deepak Mishra, INV-906 Dipti Verma, INV-966 Siddharth Verma, INV-029 Vikram Reddy, INV-097 Rajesh Patel, INV-1032 Anjali Gupta, INV-1056 Geeta Deshmukh, INV-1078 Akshay Joshi, INV-1098 Arvind Iyer, INV-1254 Vikram Patel, INV-131 Priyanka Sharma, INV-1312 Amit Verma, INV-1459 Arjun Iyer, INV-211 Amrita Reddy, INV-252 Vikram Singh, INV-257 Chetan Kulkarni, INV-352 Kavita Nair, INV-391 Vivek Kulkarni, INV-430 Abhishek Verma, INV-461 Amrita Arora, INV-473 Rohan Rao, INV-481 Rajesh Joshi, INV-518 Arjun Kulkarni, INV-584 Kavita Chauhan, INV-613 Sunita Mishra, INV-637 Priyanka Deshmukh, INV-668 Ishita Joshi, INV-812 Aishwarya Singh, INV-847 Chetan Joshi, INV-899 Ankita Rao, INV-929 Priyanka Rao, INV-938 Vikram Gupta, INV-946 Chetan Iyer, INV-972 Aishwarya Kulkarni, INV-056 Amrita Hegde, INV-094 Anita Bhat, INV-1003 Vikram Verma, INV-1021 Amit Joshi, INV-1035 Arjun Verma, INV-1048 Geeta Pandey, INV-1094 Vivek Hegde, INV-1112 Anand Verma, INV-1144 Deepak Reddy, INV-1212 Sneha Iyer, INV-1217 Siddharth Mehta, INV-1309 Anjali Rao, INV-1357 Priyanka Joshi, INV-1464 Arjun Sharma, INV-1474 Amrita Yadav, INV-167 Priyanka Reddy, INV-178 Arjun Nair, INV-229 Kavita Pandey, INV-241 Vivek Rao, INV-254 Rajesh Hegde, INV-286 Amit Mishra, INV-304 Ishita Nair, INV-393 Amrita Pandey, INV-476 Vikram Nair, INV-497 Ramesh Patel, INV-542 Priyanka Singh, INV-749 Rahul Pandey, INV-754 Ramesh Deshmukh, INV-860 Ankita Patel, INV-893 Anita Singh, INV-936 Amrita Joshi, INV-014 Rohan Chauhan, INV-031 Meena Rao, INV-065 Ankita Rao, INV-1102 Deepak Gupta, INV-1146 Geeta Iyer, INV-1159 Anand Sharma, INV-1290 Abhishek Joshi, INV-1350 Siddharth Bhat, INV-1410 Deepak Iyer, INV-1430 Abhishek Arora, INV-1529 Meena Sharma, INV-1547 Deepak Kulkarni, INV-163 Suresh Verma, INV-180 Ankita Bhat, INV-202 Chetan Patel, INV-236 Suresh Iyer, INV-263 Kavita Deshmukh, INV-294 Anita Nair, INV-314 Siddharth Sharma, INV-330 Amit Kulkarni, INV-377 Anita Singh, INV-386 Siddharth Iyer, INV-410 Vikram Bhat, INV-492 Ramesh Patel, INV-575 Vikram Sharma, INV-597 Suresh Rao, INV-723 Aishwarya Joshi, INV-740 Arvind Patel, INV-758 Vivek Yadav, INV-761 Meena Gupta, INV-786 Rahul Joshi, INV-829 Priyanka Yadav, INV-841 Priyanka Reddy, INV-854 Akshay Pandey, INV-913 Chetan Mehta, INV-036 Suresh Pandey, INV-100 Bhavna Mishra, INV-103 Aishwarya Rao, INV-1121 Rajesh Arora, INV-1139 Rahul Chauhan, INV-1163 Ankita Deshmukh, INV-1198 Anita Verma, INV-122 Dipti Gupta, INV-1237 Rajesh Kulkarni, INV-1247 Ramesh Verma, INV-1268 Ankita Nair, INV-1287 Ishita Mehta, INV-1397 Rajesh Kulkarni, INV-1405 Vivek Bhat, INV-1425 Geeta Iyer, INV-1434 Arjun Mishra, INV-1441 Rahul Chauhan, INV-1453 Ishita Rao, INV-1503 Chetan Sharma, INV-1522 Sunita Kulkarni, INV-154 Ishita Arora, INV-165 Meena Mishra, INV-181 Suresh Reddy, INV-205 Kavita Deshmukh, INV-355 Amit Singh, INV-467 Ankita Chauhan, INV-553 Rohan Nair, INV-636 Meena Verma, INV-647 Anjali Singh, INV-655 Anita Reddy, INV-691 Dipti Mishra, INV-768 Amrita Reddy, INV-849 Arvind Bhat, INV-855 Priyanka Verma, INV-949 Deepak Hegde, INV-985 Arjun Rao, INV-995 Ramesh Singh, INV-996 Rahul Verma, INV-011 Bhavna Verma, INV-1009 Siddharth Hegde, INV-1010 Sunita Patel, INV-1018 Kavita Hegde, INV-1072 Amrita Kulkarni, INV-1073 Rahul Iyer, INV-1096 Amrita Sharma, INV-1097 Anjali Bhat, INV-1152 Anita Chauhan, INV-1194 Chetan Rao, INV-1204 Ramesh Chauhan, INV-1228 Geeta Iyer, INV-1280 Ishita Joshi, INV-1321 Sunita Verma, INV-1328 Aishwarya Rao, INV-1329 Akshay Hegde, INV-1337 Ramesh Chauhan, INV-1363 Dipti Singh, INV-1456 Ankita Verma, INV-1472 Ishita Rao, INV-1550 Siddharth Yadav, INV-215 Anita Deshmukh, INV-239 Anita Chauhan, INV-327 Anjali Sharma, INV-334 Chetan Verma, INV-354 Meena Iyer, INV-431 Abhishek Bhat, INV-516 Chetan Mishra, INV-523 Vikram Mehta, INV-550 Vikram Sharma, INV-580 Anita Patel, INV-631 Dipti Gupta, INV-641 Suresh Iyer, INV-649 Suresh Nair, INV-660 Amrita Mishra, INV-686 Bhavna Patel, INV-724 Akshay Verma, INV-741 Vivek Kulkarni, INV-787 Bhavna Kulkarni, INV-833 Rajesh Iyer, INV-907 Anand Sharma, INV-920 Arjun Sharma, INV-993 Arvind Rao, INV-020 Rajesh Kulkarni, INV-1012 Amrita Iyer, INV-1014 Sneha Hegde, INV-1068 Rahul Bhat, INV-1111 Rajesh Sharma, INV-1141 Ankita Iyer, INV-1150 Sunita Deshmukh, INV-121 Anita Hegde, INV-1296 Amit Chauhan, INV-1355 Vivek Verma, INV-1361 Anand Iyer, INV-1372 Anand Singh, INV-1377 Arvind Deshmukh, INV-1392 Anand Mishra, INV-1406 Meena Sharma, INV-1481 Amit Mishra, INV-1493 Abhishek Nair, INV-152 Ramesh Gupta, INV-172 Dipti Gupta, INV-193 Dipti Gupta, INV-217 Rohan Reddy, INV-331 Vivek Rao, INV-489 Sneha Mishra, INV-515 Rahul Verma, INV-559 Sneha Joshi, INV-607 Vivek Gupta, INV-656 Ishita Joshi, INV-658 Ankita Gupta, INV-664 Anjali Reddy, INV-665 Vikram Singh, INV-670 Ankita Chauhan, INV-705 Anjali Iyer, INV-870 Bhavna Yadav, INV-878 Vikram Kulkarni, INV-895 Dipti Verma, INV-923 Siddharth Reddy, INV-930 Ramesh Deshmukh, INV-939 Suresh Singh, INV-1002 Anjali Sharma, INV-1029 Abhishek Hegde, INV-1115 Akshay Chauhan, INV-1127 Bhavna Bhat, INV-1128 Rajesh Arora, INV-1158 Arjun Singh, INV-1171 Anjali Iyer, INV-1221 Aishwarya Kulkarni, INV-1319 Kavita Verma, INV-1345 Rajesh Verma, INV-1403 Arjun Iyer, INV-1408 Ishita Bhat, INV-1436 Dipti Mehta, INV-1491 Anjali Deshmukh, INV-1530 Anjali Deshmukh, INV-1544 Chetan Rao, INV-285 Meena Reddy, INV-317 Rohan Verma, INV-397 Anand Yadav, INV-434 Siddharth Reddy, INV-441 Ramesh Patel, INV-560 Kavita Patel, INV-586 Ramesh Rao, INV-603 Meena Yadav, INV-652 Geeta Pandey, INV-728 Sneha Sharma, INV-730 Rajesh Verma, INV-742 Rahul Deshmukh, INV-763 Anita Mishra, INV-808 Kavita Hegde, INV-894 Rahul Kulkarni, INV-934 Ankita Gupta, INV-998 Anita Mehta, INV-054 Rohan Patel, INV-062 Siddharth Iyer, INV-1061 Vikram Verma, INV-1062 Rahul Joshi, INV-1070 Ishita Chauhan, INV-1281 Ankita Rao, INV-1294 Vikram Gupta, INV-1310 Sneha Iyer, INV-1315 Priyanka Hegde, INV-1336 Vikram Kulkarni, INV-134 Deepak Iyer, INV-189 Meena Hegde, INV-238 Kavita Pandey, INV-245 Chetan Patel, INV-256 Amrita Verma, INV-258 Anita Rao, INV-482 Deepak Mishra, INV-729 Anand Gupta, INV-781 Dipti Reddy, INV-884 Chetan Mehta, INV-942 Dipti Reddy, INV-043 Kavita Gupta, INV-1079 Amit Reddy, INV-1088 Ishita Chauhan, INV-1117 Arvind Kulkarni, INV-1143 Priyanka Yadav, INV-1167 Geeta Reddy, INV-1170 Akshay Patel, INV-1182 Priyanka Singh, INV-1188 Anjali Bhat, INV-1348 Anand Deshmukh, INV-1349 Dipti Pandey, INV-1473 Rohan Patel, INV-230 Dipti Rao, INV-340 Rajesh Deshmukh, INV-349 Arvind Kulkarni, INV-381 Priyanka Deshmukh, INV-444 Meena Verma, INV-571 Arvind Yadav, INV-725 Ishita Patel, INV-750 Suresh Verma, INV-839 Anita Iyer, INV-852 Bhavna Yadav, INV-914 Rohan Pandey, INV-931 Anand Iyer, INV-003 Siddharth Sharma, INV-061 Kavita Sharma, INV-1113 Suresh Rao, INV-116 Ankita Deshmukh, INV-1164 Sneha Singh, INV-1297 Akshay Rao, INV-1358 Akshay Mishra, INV-1367 Amrita Joshi, INV-203 Siddharth Arora, INV-275 Sneha Sharma, INV-546 Anand Mishra, INV-563 Sunita Mishra, INV-625 Ishita Sharma, INV-640 Vivek Bhat, INV-773 Arvind Joshi, INV-809 Anjali Chauhan, INV-027 Sneha Verma, INV-041 Sneha Nair, INV-1119 Ishita Nair, INV-1179 Arjun Pandey, INV-1327 Priyanka Gupta, INV-1347 Rohan Hegde, INV-1378 Anjali Joshi, INV-1450 Anand Patel, INV-1515 Abhishek Nair, INV-164 Rahul Hegde, INV-806 Vikram Rao, INV-916 Anand Hegde, INV-1131 Rajesh Deshmukh, INV-1153 Arvind Sharma, INV-1215 Geeta Patel, INV-1338 Abhishek Singh, INV-176 Anjali Arora, INV-326 Rohan Sharma, INV-022 Rohan Rao, INV-037 Chetan Sharma, INV-044 Ishita Sharma, INV-049 Deepak Mehta.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth. The question: \"Which investors have holdings with returns_pct below 0 and goals with shortfall above 1000000?\" Ground truth is a JSON list of many investor_id and investor_name entries (a long list). The pipeline output is a huge list of investors (IDs and names) but likely not matching exactly the ground truth list. Need to see if pipeline output includes exactly all those in ground truth, and no extra? The rule: If ground truth is JSON, all important values must appear in pipeline output. Missing values are PARTIAL or MISMATCH, not MATCH. Also extra values? The rule doesn't explicitly say extra values cause mismatch, but likely if pipeline output includes extra not in ground truth, it's not matching the exact answer. The ground truth list is specific set of investors meeting criteria. The pipeline output includes many IDs, likely many not in ground truth. So it's not matching. Also many ground truth entries likely missing. So result is MISMATCH or PARTIAL? Since many missing and many extra, it's not a partial correct subset? The ground truth list is long (maybe 70+). The pipeline output includes many more, but does it include all ground truth? Hard to verify fully, but likely not all. Even if includes many, extra ones cause mismatch? The instruction: \"If Ground Truth is JSON, all important values in the JSON must appear in the Pipeline Output. Missing values are PARTIAL or MISMATCH, not MATCH.\" It doesn't say extra values cause mismatch, but the answer wouldn't be considered correct if extra irrelevant entries are present. Usually they'd consider mismatch. I'd say MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "scan_timeout",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

@@ -1,0 +1,2000 @@
+Question,Ground Truth,New Pipeline Result,New Status,Old Status,Comparison / Comments,DAG Sequence,AOP Operator Sequence,Retrieved Classes,Generated SPARQL,Scan Status,Scan Row Count,Scan Error,Scan Raw Rows,Unknown Terms,Term Suggestions,Refine Reason,Validation Is Valid,Validation Reason,Self Heal Attempts,Short Circuit Stage,Failure Stage
+"Given all the data available, which investment type has the lowest average cost basis?","{""investment_type"": ""Global Equity"", ""average_cost_basis"": 601230}",The investment type with the lowest average cost basis is Global Equity at 601230.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestmentType"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentTypeName (AVG(xsd:decimal(?cost)) AS ?avgCost)
+WHERE {
+  ?holding ex:hasInvestmentType ?type .
+  ?type ex:investmentTypeName ?investmentTypeName .
+  ?holding ex:cost ?cost .
+}
+GROUP BY ?investmentTypeName
+ORDER BY ASC(?avgCost)
+LIMIT 1",success,1,,"[{""investmentTypeName"": ""Global Equity"", ""avgCost"": ""601230""}]",[],{},,True,,0,,
+"Out of all options, which sector has the highest total taxes paid across all investors?","{""sector"": ""Technology"", ""total_taxes_paid"": 5789}",The Technology sector has the highest total taxes paid at 5789.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (?sectorName AS ?sector) (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxes)
+WHERE {
+  ?holding ex:hasSector ?sector .
+  ?holding ex:taxesPaid ?taxesPaid .
+  ?holding ex:sectorLiteral ?sectorName .
+}
+GROUP BY ?sectorName
+ORDER BY DESC(?totalTaxes)
+LIMIT 1",success,1,,"[{""sector"": ""Technology"", ""totalTaxes"": ""5789""}]",[],{},,True,,0,,
+"For investors pursuing 'Growth' goals, what is the total amount currently recommended for 'Buy' rebalancing actions?",50000,The total amount currently recommended for 'Buy' rebalancing actions for investors pursuing 'Growth' goals is 0.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestmentGoal"", ""RebalancingAction"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?amount)) AS ?totalAmount)
+WHERE {
+  ?rebalance a ex:RebalancingAction ;
+             ex:action ?action ;
+             ex:amount ?amount ;
+             ex:hasInvestor ?investor .
+  ?investor ex:hasInvestmentGoal ?goal .
+  ?goal ex:investmentGoalLabel ?goalLabel .
+  FILTER(LCASE(STR(?action)) = ""buy"")
+  FILTER(LCASE(STR(?goalLabel)) = ""growth"")
+}",success,1,,"[{""totalAmount"": ""0""}]",[],{},,True,The returned data contains the correct column ('totalAmount') representing the requested aggregation and provides a specific value that answers the user's query.,0,,
+"Considering all investors in the system, which investor bought the most holdings in 2023?",(no rows returned),No data was found.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]",,error,0,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,1,,
+Display the number of holdings purchased per year per investor.?,"[{""investor_id"": ""INV-001"", ""purchase_year"": 2022, ""holding_count"": 10}]",Deepak Sharma purchased 10 holdings in 2022.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName ?year (COUNT(?holding) AS ?numHoldings)
+WHERE {
+  ?holding rdf:type ex:PortfolioHolding ;
+           ex:hasInvestor ?investor ;
+           ex:purchaseDate ?purchaseDate .
+  ?investor rdf:type ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  BIND(SUBSTR(STR(?purchaseDate), 1, 4) AS ?year)
+}
+GROUP BY ?investorName ?year",success,1,,"[{""investorName"": ""Deepak Sharma"", ""year"": ""2022"", ""numHoldings"": ""10""}]",[],{},,True,,0,,
+Display the count and total amount of Dividend transactions per investor.?,"[{""investor_id"": ""INV-002"", ""dividend_transaction_count"": 1, ""total_dividend_amount"": 2000}]",Neha Sharma 2 has 1 dividend transaction with a total amount of 2000.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (COUNT(?cf) AS ?transactionCount) (SUM(xsd:decimal(?amount)) AS ?totalAmount)
+WHERE {
+  ?cf a ex:CashFlow ;
+     ex:cashFlowType ?type ;
+     ex:amount ?amount ;
+     ex:hasInvestor ?investor .
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER(LCASE(STR(?type)) = ""dividend"")
+}
+GROUP BY ?investorName",success,1,,"[{""investorName"": ""Neha Sharma 2"", ""transactionCount"": ""1"", ""totalAmount"": ""2000""}]",[],{},,True,"The returned columns ('investorName', 'transactionCount', and 'totalAmount') directly correspond to the requirements of the query (count, total amount, and per investor), and the data provides the requested aggregations.",0,,
+Provide the count of investors have a portfolio diversification score below 50?,There is no business rule/data to calculate this from raw_data_sample.,The count of investors with a portfolio diversification score below 50 is 0.,MISMATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHealth""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investor) AS ?count)
+WHERE {
+  ?health ex:hasInvestor ?investor .
+  ?health ex:diversificationScore ?scoreStr .
+  FILTER(xsd:decimal(?scoreStr) < 50)
+}",success,1,,"[{""count"": ""0""}]",[],{},,True,,0,,
+What would be the average dividend cash flow amount per investor?,"[{""investor_id"": ""INV-002"", ""average_dividend_cash_flow_amount"": 2000}]",The average dividend cash flow amount for investor http://example.org/kg#INV002 is 2000.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""CashFlow_Amount"", ""CashFlow_Type"", ""CashFlow_InvestorId""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investor (AVG(xsd:decimal(?amount)) AS ?avgDividendAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:amount ?amount ;
+            ex:cashFlowType ?type ;
+            ex:hasInvestor ?investor .
+  FILTER(CONTAINS(LCASE(STR(?type)), ""dividend""))
+}
+GROUP BY ?investor",success,1,,"[{""investor"": ""http://example.org/kg#INV002"", ""avgDividendAmount"": ""2000""}]",[],{},,True,The returned columns 'investor' and 'avgDividendAmount' directly address the user's request for the average dividend amount per investor.,0,,
+Which investor has paid the highest total taxes across all holdings?,"{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma"", ""total_taxes_paid"": 24539}",Deepak Sharma has paid the highest total taxes of 24539.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxes)
+WHERE {
+  ?investor ex:hasHolding ?holding .
+  ?holding ex:taxesPaid ?taxesPaid .
+  ?investor ex:investorName ?investorName .
+}
+GROUP BY ?investorName
+ORDER BY DESC(?totalTaxes)
+LIMIT 1",success,1,,"[{""investorName"": ""Deepak Sharma"", ""totalTaxes"": ""24539""}]",[],{},,True,"The returned data correctly identifies an investor and their total taxes, providing a specific answer to the query for the highest taxpayer.",0,,
+"Given all the data available, which investment type has the lowest average taxes paid per holding?","{""investment_type"": ""Equity"", ""average_taxes_paid"": 1998}","The investment type with the lowest average taxes paid per holding is Equity, with an average tax of 1998.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestmentType"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentTypeName (AVG(xsd:decimal(?taxesPaid)) AS ?avgTaxes)
+WHERE {
+  ?holding ex:hasInvestmentType ?invType .
+  ?invType ex:investmentTypeName ?investmentTypeName .
+  ?holding ex:taxesPaid ?taxesPad .
+  BIND(xsd:decimal(?taxesPad) AS ?taxesPaid)
+}
+GROUP BY ?investmentTypeName
+ORDER BY ASC(?avgTaxes)
+LIMIT 1",success,1,,"[{""investmentTypeName"": ""Equity"", ""avgTaxes"": ""1998""}]",[],{},,True,,0,,
+"Across the portfolio database, what was the total cash inflow from deposits and sip contributions in the last 12 months?",0,The total cash inflow from deposits and sip contributions in the last 12 months was 10000.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""CashFlow_Amount"", ""CashFlow_Type"", ""CashFlow_Date"", ""CashFlow_IsInflow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?amount)) AS ?totalCashInflow)
+WHERE {
+  ?cf a ex:CashFlow ;
+      ex:amount ?amount ;
+      ex:cashFlowType ?type .
+  FILTER (CONTAINS(LCASE(STR(?type)), ""deposit"") || CONTAINS(LCASE(STR(?type)), ""sip""))
+}",success,1,,"[{""totalCashInflow"": ""10000""}]",[],{},,True,,0,,
+What is the average dividend cash flow amount per investor?,"[{""investor_id"": ""INV-002"", ""average_dividend_cash_flow_amount"": 2000}]",The average dividend cash flow amount for Neha Sharma 2 is 2000.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (AVG(xsd:decimal(?amount)) AS ?avgDividendAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:amount ?amount ;
+            ex:cashFlowType ?type ;
+            ex:hasInvestor ?investor .
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER(CONTAINS(LCASE(STR(?type)), ""dividend""))
+}
+GROUP BY ?investorName",success,1,,"[{""investorName"": ""Neha Sharma 2"", ""avgDividendAmount"": ""2000""}]",[],{},,True,,0,,
+Can you tell me what the total taxes paid per sector for all investors combined?,"[{""sector"": ""Technology"", ""total_taxes_paid"": 5789}, {""sector"": ""Government"", ""total_taxes_paid"": 4105}, {""sector"": ""Healthcare"", ""total_taxes_paid"": 3352}, {""sector"": ""Infrastructure"", ""total_taxes_paid"": 3253}, {""sector"": ""Banking"", ""total_taxes_paid"": 3144}, {""sector"": ""Private Equity"", ""total_taxes_paid"": 2017}, {""sector"": ""Automobile"", ""total_taxes_paid"": 1607}, {""sector"": ""Corporate"", ""total_taxes_paid"": 1272}]","The total taxes paid per sector are: Government (4105), Banking (3144), Private Equity (2017), Automobile (1607), Technology (5789), Infrastructure (3253), Healthcare (3352), and Corporate (1272).",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""PortfolioHolding_TaxesPaid"", ""PortfolioHolding_Sector""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxesPaid) ?sectorName
+WHERE {
+  ?holding ex:taxesPaid ?taxesPaid ;
+           ex:sectorLiteral ?sectorName .
+}
+GROUP BY ?sectorName",success,8,,"[{""totalTaxesPaid"": ""4105"", ""sectorName"": ""Government""}, {""totalTaxesPaid"": ""3144"", ""sectorName"": ""Banking""}, {""totalTaxesPaid"": ""2017"", ""sectorName"": ""Private Equity""}, {""totalTaxesPaid"": ""1607"", ""sectorName"": ""Automobile""}, {""totalTaxesPaid"": ""5789"", ""sectorName"": ""Technology""}, {""totalTaxesPaid"": ""3253"", ""sectorName"": ""Infrastructure""}, {""totalTaxesPaid"": ""3352"", ""sectorName"": ""Healthcare""}, {""totalTaxesPaid"": ""1272"", ""sectorName"": ""Corporate""}]",[],{},,True,,0,,
+"From the complete wealth management dataset, for investor inv002, what is the total transaction amount processed for each type of cash flow?","[{""type"": ""Dividend"", ""total_amount"": 2000}]",No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?cashFlowType (SUM(xsd:decimal(?amount)) AS ?totalAmount)
+WHERE {
+  ?cashFlow ex:hasInvestor ?investor .
+  ?investor ex:investorId ?investorId .
+  ?cashFlow ex:amount ?amount .
+  ?cashFlow ex:cashFlowType ?cashFlowType .
+  FILTER(CONTAINS(LCASE(STR(?investorId)), ""INV002""))
+}
+GROUP BY ?cashFlowType",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+"Out of all options, which investment category holds the highest total portfolio value?","{""category"": ""Private Equity"", ""total_portfolio_value"": 15028100}","The investment category with the highest total portfolio value is Private Equity, with a value of 15028100.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (?categoryLiteral AS ?investmentCategory) (SUM(xsd:decimal(?currentValue)) AS ?totalPortfolioValue)
+WHERE {
+  ?holding ex:categoryLiteral ?categoryLiteral ;
+           ex:currentValue ?currentValue .
+}
+GROUP BY ?categoryLiteral
+ORDER BY DESC(?totalPortfolioValue)
+LIMIT 1",success,1,,"[{""investmentCategory"": ""Private Equity"", ""totalPortfolioValue"": ""15028100""}]",[],{},,True,,0,,
+"Given all the data available, which payment source channel handles the highest number of cash flow transactions?","[{""source"": ""Gov Bond"", ""transaction_count"": 1}, {""source"": ""Tech Innovators Ltd"", ""transaction_count"": 1}, {""source"": ""Urban REIT"", ""transaction_count"": 1}]",Gov Bond handles the highest number of cash flow transactions with a count of 1.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?source (COUNT(?cf) AS ?transactionCount)
+WHERE {
+  ?cf a ex:CashFlow ;
+      ex:source ?source .
+}
+GROUP BY ?source
+ORDER BY DESC(?transactionCount)
+LIMIT 1",success,1,,"[{""source"": ""Gov Bond"", ""transactionCount"": ""1""}]",[],{},,True,,0,,
+Can you tell me what the average cost basis per investment type across the entire database?,"[{""investment_type"": ""Alternative Investment Funds (AIF - Cat I)"", ""average_cost_basis"": 11019100}, {""investment_type"": ""REIT"", ""average_cost_basis"": 5229947}, {""investment_type"": ""Equity"", ""average_cost_basis"": 2121621}, {""investment_type"": ""Corporate Bond"", ""average_cost_basis"": 2111945}, {""investment_type"": ""Certificates of Deposit (CDs)"", ""average_cost_basis"": 1000000}, {""investment_type"": ""Global Equity"", ""average_cost_basis"": 601230}]","The average cost basis per investment type is: Corporate Bond (2111945), Certificates of Deposit (CDs) (1000000), Alternative Investment Funds (AIF - Cat I) (11019100), Equity (2121621), REIT (5229947), and Global Equity (601230).",MATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentType (AVG(xsd:decimal(?cost)) AS ?averageCostBasis)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentTypeLiteral ?investmentType ;
+           ex:cost ?cost .
+}
+GROUP BY ?investmentType",success,6,,"[{""investmentType"": ""Corporate Bond"", ""averageCostBasis"": ""2111945""}, {""investmentType"": ""Certificates of Deposit (CDs)"", ""averageCostBasis"": ""1000000""}, {""investmentType"": ""Alternative Investment Funds (AIF - Cat I)"", ""averageCostBasis"": ""11019100""}, {""investmentType"": ""Equity"", ""averageCostBasis"": ""2121621""}, {""investmentType"": ""REIT"", ""averageCostBasis"": ""5229947""}, {""investmentType"": ""Global Equity"", ""averageCostBasis"": ""601230""}]",[],{},,True,,0,,
+What is the total count of distinct investment types does investor INV-005 hold?,There is no data in raw_data_sample to answer this query.,Investor INV-005 holds a total count of 0 distinct investment types.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investmentType) AS ?totalCount)
+WHERE {
+  ?investor ex:investorId ?investorId .
+  FILTER(CONTAINS(LCASE(STR(?investorId)), ""inv-005""))
+  ?holding ex:hasInvestor ?investor ;
+           ex:investmentTypeLiteral ?investmentType .
+}",success,1,,"[{""totalCount"": ""0""}]",[],{},,True,,0,,
+"Considering all investors in the system, which investors have zero dividend income from their holdings?","[{""investor_id"": ""INV-002"", ""investor_name"": ""Neha Sharma 2""}, {""investor_id"": ""INV-003"", ""investor_name"": ""Rajesh Iyer""}, {""investor_id"": ""INV-004"", ""investor_name"": ""Elon Musk""}]",No data was found.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]",,error,0,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,2,,
+Provide the count of dividend transactions has investor INV-001 made?,0,Investor INV-001 has made 0 dividend transactions.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?cashFlow) AS ?dividendTransactionCount)
+WHERE {
+  ?cashFlow ex:hasInvestor ?investor .
+  ?investor ex:investorId ?investorId .
+  ?cashFlow ex:cashFlowType ?type .
+  FILTER(CONTAINS(LCASE(STR(?investorId)), ""INV001""))
+  FILTER(CONTAINS(LCASE(STR(?type)), ""dividend""))
+}",success,1,,"[{""dividendTransactionCount"": ""0""}]",[],{},,True,,0,,
+"Given all the data available, which investment category has the highest average taxes paid?","{""category"": ""REIT"", ""average_taxes_paid"": 3253}","The investment category with the highest average taxes paid is REIT, with an average tax of 3253.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?category (AVG(xsd:decimal(?taxesPaid)) AS ?avgTaxes)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:taxesPaid ?taxesPaid ;
+           ex:categoryLiteral ?category .
+}
+GROUP BY ?category
+ORDER BY DESC(?avgTaxes)
+LIMIT 1",success,1,,"[{""category"": ""REIT"", ""avgTaxes"": ""3253""}]",[],{},,True,"The returned data provides the specific investment category and its corresponding average taxes, which directly answers the user's question regarding which category has the highest average taxes paid.",0,,
+What is the average new allocation percentage for Increase scenario rebalancing changes?,61.25,The average new allocation percentage for Increase scenario rebalancing changes is 0.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""ScenarioRebalancing""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?newAllocationPct)) AS ?averageNewAllocationPercentage)
+WHERE {
+  ?rebalance a ex:ScenarioRebalancing ;
+             ex:newAllocationPct ?newAllocationPct ;
+             ex:scenario ?scenario .
+  FILTER(LCASE(STR(?scenario)) = ""increase"")
+}",success,1,,"[{""averageNewAllocationPercentage"": ""0""}]",[],{},,True,The returned data contains the specific aggregated metric requested ('averageNewAllocationPercentage') and matches the query requirements.,0,,
+"Please display the number of rebalancing actions recorded, categorised by how much each sector deviates from its target allocation.?","[{""drift_direction"": ""Overweight"", ""rebalancing_action_count"": 2}, {""drift_direction"": ""Underweight"", ""rebalancing_action_count"": 1}]",There were 2 rebalancing actions with an allocation drift of 5 and 1 rebalancing action with an allocation drift of -10.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""RebalancingAction"", ""RebalancingAction_Sector"", ""RebalancingAction_AllocationDrift""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?action) AS ?numberOfActions) (?drift AS ?allocationDrift)
+WHERE {
+  ?action a ex:RebalancingAction ;
+          ex:currentAllocationPct ?current ;
+          ex:targetAllocationPct ?target .
+  BIND(xsd:decimal(?current) - xsd:decimal(?target) AS ?drift)
+}
+GROUP BY ?drift",success,2,,"[{""numberOfActions"": ""2"", ""allocationDrift"": ""5""}, {""numberOfActions"": ""1"", ""allocationDrift"": ""-10""}]","[""sector""]","{""sector"": [""sectorId"", ""Sector"", ""hasSector"", ""sectorName"", ""sectorFocus""]}",Unknown RDF terms before Scan,True,,2,,
+"Given all the data available, which market scenario triggered the fewest scenario-based rebalancing events?","[{""scenario"": ""Approaching Goal"", ""rebalance_event_count"": 1}, {""scenario"": ""Bull Market"", ""rebalance_event_count"": 1}, {""scenario"": ""Interest Rate Hike"", ""rebalance_event_count"": 1}, {""scenario"": ""Job Loss"", ""rebalance_event_count"": 1}, {""scenario"": ""Market Crash"", ""rebalance_event_count"": 1}, {""scenario"": ""Real Estate Boom"", ""rebalance_event_count"": 1}]",The Market Crash scenario triggered the fewest scenario-based rebalancing events.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""ScenarioRebalancing""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?scenario
+WHERE {
+  ?rebalance a ex:ScenarioRebalancing ;
+             ex:scenario ?scenario .
+}
+GROUP BY ?scenario
+ORDER BY ASC(COUNT(?rebalance))
+LIMIT 1",success,1,,"[{""scenario"": ""Market Crash""}]",[],{},,True,,2,,
+Which investment category holds the lowest total portfolio value?,"{""category"": ""Debt"", ""total_portfolio_value"": 1030000}","The Debt category holds the lowest total portfolio value of 1,030,000.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?categoryLiteral (SUM(xsd:decimal(?currentValue)) AS ?totalPortfolioValue)
+WHERE {
+  ?holding ex:categoryLiteral ?categoryLiteral ;
+           ex:currentValue ?currentValue .
+}
+GROUP BY ?categoryLiteral
+ORDER BY ?totalPortfolioValue
+LIMIT 1",success,1,,"[{""categoryLiteral"": ""Debt"", ""totalPortfolioValue"": ""1030000""}]",[],{},,True,,0,,
+What is the average dividend cash flow amount per investor?,"[{""investor_id"": ""INV-002"", ""average_dividend_cash_flow_amount"": 2000}]",The average dividend cash flow amount for Neha Sharma 2 is 2000.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (AVG(xsd:decimal(?amount)) AS ?avgDividendAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:amount ?amount ;
+            ex:cashFlowType ?type ;
+            ex:hasInvestor ?investor .
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER(CONTAINS(LCASE(STR(?type)), ""dividend""))
+}
+GROUP BY ?investorName",success,1,,"[{""investorName"": ""Neha Sharma 2"", ""avgDividendAmount"": ""2000""}]",[],{},,True,,0,,
+What is the earliest purchase date of any holding across all investors?,"{""purchase_date"": ""2022-01-19"", ""investment_name"": ""Persistent Systems Ltd."", ""holding_id"": ""69530831-f9e0-40f8-bcdc-5505b5a3b3e7""}",The earliest purchase date of any holding across all investors is 2022-01-19.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""PortfolioHolding_PurchaseDate""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (MIN(?date) AS ?earliestPurchaseDate)
+WHERE {
+  ?holding ex:purchaseDate ?date .
+}",success,1,,"[{""earliestPurchaseDate"": ""2022-01-19""}]",[],{},,True,,0,,
+"Among all investors, who has the longest average holding duration across all investors?","{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma"", ""average_holding_duration_days"": 1359.1}",A database error prevented data retrieval.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName
+WHERE {
+  ?investor ex:hasHolding ?holding .
+  ?holding ex:hasInvestor ?investor .
+  ?investor ex:investorName ?investorName .
+  ?holding ex:purchaseDate ?purchaseDate .
+}
+GROUP BY ?investorName
+ORDER BY AVG(xsd:decimal(?purchaseDate)) ASC
+LIMIT 1",error,,"Expected end of text, found 'ASC'  (at char 437), (line:14, col:42)",,[],{},,,,2,Scan,Scan
+"In which of the years 2022, 2023, or 2024 was the total investment (cost) highest?","{""purchase_year"": 2022, ""total_investment_cost"": 30560651}",The total investment (cost) was highest in 2022 with 30560651.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?year (SUM(xsd:decimal(?cost)) AS ?totalCost)
+WHERE {
+  ?holding a ex:PortfolioHolding .
+  ?holding ex:cost ?cost .
+  ?holding ex:purchaseDate ?date .
+  FILTER (CONTAINS(STR(?date), ""2022"") || CONTAINS(STR(?date), ""2023"") || CONTAINS(STR(?date), ""2024""))
+  BIND(SUBSTR(STR(?date), 1, 4) AS ?year)
+}
+GROUP BY ?year
+ORDER BY DESC(?totalCost)
+LIMIT 1",success,1,,"[{""year"": ""2022"", ""totalCost"": ""30560651""}]",[],{},Validation failed or zero rows,,,2,Validate,Validate
+What would be the total current portfolio value for all Conservative risk profile investors?,There is no data in raw_data_sample to answer this query.,The total current portfolio value for all Conservative risk profile investors is 0.,MISMATCH,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentPortfolioValue)
+WHERE {
+  ?investor ex:riskTolerance ?riskTolerance ;
+            ex:hasHolding ?holding .
+  ?holding ex:currentValue ?currentValue .
+  FILTER(LCASE(STR(?riskTolerance)) = ""conservative"")
+}",success,1,,"[{""totalCurrentPortfolioValue"": ""0""}]",[],{},,True,,0,,
+Identify the risk profile group has the highest average investment goal target amount?,"{""risk_tolerance"": ""High"", ""average_target_amount"": 1500000}","The High risk tolerance group has the highest average investment goal target amount of 1,500,000.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""InvestmentGoal""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskTolerance (AVG(xsd:decimal(?targetAmount)) AS ?avgTargetAmount)
+WHERE {
+  ?investor ex:riskTolerance ?riskTolerance ;
+            ex:hasInvestmentGoal ?goal .
+  ?goal ex:targetAmount ?targetAmount .
+}
+GROUP BY ?riskTolerance
+ORDER BY DESC(?avgTargetAmount)
+LIMIT 1",success,1,,"[{""riskTolerance"": ""High"", ""avgTargetAmount"": ""1500000""}]",[],{},,True,,0,,
+Display the average taxes paid per category of investment.?,"[{""category"": ""REIT"", ""average_taxes_paid"": 3253}, {""category"": ""Debt"", ""average_taxes_paid"": 3144}, {""category"": ""Bond"", ""average_taxes_paid"": 2688.5}, {""category"": ""Equity"", ""average_taxes_paid"": 2149.6}, {""category"": ""Private Equity"", ""average_taxes_paid"": 2017}]","The average taxes paid per category of investment are: Bond: 2688.5, Debt: 3144, Private Equity: 2017, Equity: 2149.6, and REIT: 3253.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?taxesPaid)) AS ?avgTaxesPaid) ?category
+WHERE {
+  ?holding ex:taxesPaid ?taxesPaid ;
+           ex:categoryLiteral ?category .
+}
+GROUP BY ?category",success,5,,"[{""avgTaxesPaid"": ""2688.5"", ""category"": ""Bond""}, {""avgTaxesPaid"": ""3144"", ""category"": ""Debt""}, {""avgTaxesPaid"": ""2017"", ""category"": ""Private Equity""}, {""avgTaxesPaid"": ""2149.6"", ""category"": ""Equity""}, {""avgTaxesPaid"": ""3253"", ""category"": ""REIT""}]",[],{},,True,The returned data correctly provides the average taxes paid for each investment category as requested by the query.,0,,
+Can you tell me what the total current value of ETF holdings for investor INV-010?,There is no data in raw_data_sample to answer this query.,The total current value of ETF holdings for investor INV-010 is 0.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentValue)
+WHERE {
+  ?investor ex:investorId ?id .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""inv-010""))
+  ?holding ex:hasInvestor ?investor ;
+           ex:currentValue ?currentValue ;
+           ex:investmentTypeLiteral ?type .
+  FILTER(CONTAINS(LCASE(STR(?type)), ""etf""))
+}",success,1,,"[{""totalCurrentValue"": ""0""}]",[],{},,True,,0,,
+I need to find out how many Gold holdings does investor INV-005 hold?,There is no data in raw_data_sample to answer this query.,Investor INV-005 holds 0 Gold holdings.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?holding) AS ?goldHoldingsCount)
+WHERE {
+  ?investor ex:investorId ?id .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""inv-005""))
+  ?investor ex:hasHolding ?holding .
+  {
+    ?holding ex:investmentName ?name .
+    FILTER(CONTAINS(LCASE(STR(?name)), ""gold""))
+  }
+  UNION
+  {
+    ?holding ex:categoryLiteral ?cat .
+    FILTER(CONTAINS(LCASE(STR(?cat)), ""gold""))
+  }
+}",success,1,,"[{""goldHoldingsCount"": ""0""}]",[],{},,True,,0,,
+"Considering all investors in the system, which investors have received dividend cash flows from HDFC Bank as source?",(no rows returned),No data was found in the knowledge graph. The requested entity may not exist.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""InvestorProfile"", ""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investorName
+WHERE {
+  ?cashFlow ex:hasInvestor ?investor .
+  ?investor ex:investorName ?investorName .
+  ?cashFlow ex:cashFlowType ?type .
+  ?cashFlow ex:source ?source .
+  FILTER(CONTAINS(LCASE(STR(?type)), ""dividend""))
+  FILTER(CONTAINS(LCASE(STR(?source)), ""hdfc bank""))
+}",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+How many holdings does investor INV-015 have in total?,There is no data in raw_data_sample to answer this query.,Investor INV-015 has 0 holdings in total.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?totalHoldings)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:investorId ?id .
+  ?investor ex:hasHolding ?holding .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""inv-015""))
+}",success,1,,"[{""totalHoldings"": ""0""}]",[],{},,True,,0,,
+I need to find out how many distinct investment types does investor INV-005 hold?,There is no data in raw_data_sample to answer this query.,Investor INV-005 holds 0 distinct investment types.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?type) AS ?distinctInvestmentTypes)
+WHERE {
+  ?investor ex:investorId ?id .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""inv-005""))
+  ?holding ex:hasInvestor ?investor ;
+           ex:investmentTypeLiteral ?type .
+}",success,1,,"[{""distinctInvestmentTypes"": ""0""}]",[],{},,True,,0,,
+"Across the portfolio database, list all redemption events for investor inv-008 with dates and amounts.?",There is no data in raw_data_sample to answer this query.,No data was found.,MATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]",,error,0,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,2,,
+I want to know which investor has paid the highest total taxes across all holdings?,"{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma"", ""total_taxes_paid"": 24539}",Deepak Sharma has paid the highest total taxes of 24539.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxes)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName ;
+            ex:hasHolding ?holding .
+  ?holding ex:taxesPaid ?taxesPaid .
+}
+GROUP BY ?investorName
+ORDER BY DESC(?totalTaxes)
+LIMIT 1",success,1,,"[{""investorName"": ""Deepak Sharma"", ""totalTaxes"": ""24539""}]",[],{},,True,"The data correctly returns the investor name and the aggregated total taxes, which directly answers the query for the investor with the highest total taxes.",0,,
+"Could you show me the number of rebalancing actions recorded, categorised by how much each sector deviates from its target allocation.?","[{""drift_direction"": ""Overweight"", ""rebalancing_action_count"": 2}, {""drift_direction"": ""Underweight"", ""rebalancing_action_count"": 1}]",A database error prevented data retrieval.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""RebalancingAction"", ""RebalancingAction_Sector"", ""RebalancingAction_AllocationDrift""]",,error,,No SPARQL provided to Scan operator.,,"[""allocationDrift"", ""driftValue"", ""sector""]","{""allocationDrift"": [""allocationPct"", ""targetAllocationPct"", ""newAllocationPct"", ""SectorAllocation"", ""currentAllocationPct""], ""driftValue"": [""currentValue""], ""sector"": [""sectorId"", ""Sector"", ""hasSector"", ""sectorName"", ""sectorFocus""]}",Unknown RDF terms before Scan,,,2,Scan,Scan
+What is the total current market value of all holdings owned by Aggressive risk profile investors?,There is no data in raw_data_sample to answer this query.,The total current market value of all holdings owned by Aggressive risk profile investors is 0.,MISMATCH,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentMarketValue)
+WHERE {
+  ?holding ex:hasInvestor ?investor .
+  ?investor ex:riskTolerance ?riskTolerance .
+  ?holding ex:currentValue ?currentValue .
+  FILTER(CONTAINS(LCASE(STR(?riskTolerance)), ""aggressive""))
+}",success,1,,"[{""totalCurrentMarketValue"": ""0""}]",[],{},,True,"The returned column 'totalCurrentMarketValue' directly matches the user's request for the total current market value, and the data provides a single aggregated value as requested by the query.",0,,
+What are the monthly cash flow totals for investor INV-003?,"[{""transaction_month"": ""2023-04"", ""total_cash_flow"": 5000}]",No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?date (SUM(xsd:decimal(?amount)) AS ?totalAmount)
+WHERE {
+  ?cashFlow ex:hasInvestor ?investor .
+  ?investor ex:investorId ?id .
+  ?cashFlow ex:amount ?amount .
+  ?cashFlow ex:date ?date .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""INV003""))
+}
+GROUP BY ?date",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+"Looking at all available records, what is the risk-adjusted performance ratio for investment goal G003?",2.24,No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""InvestmentGoal""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskAdjustedPerformanceRatio
+WHERE {
+  ?goal ex:goalId ?goalId .
+  FILTER(LCASE(STR(?goalId)) = ""G003"")
+  {
+    ?goal ex:avgSharpeRatio ?ratio .
+    BIND(xsd:decimal(?ratio) AS ?riskAdjustedPerformanceRatio)
+  }
+  UNION
+  {
+    ?goal ex:hasInvestmentGoal ?target .
+    ?target ex:avgSharpeRatio ?ratio .
+    BIND(xsd:decimal(?ratio) AS ?riskAdjustedPerformanceRatio)
+  }
+}",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+Could you show me total Lump Sum investments made per investor across all time.?,(no rows returned),No data was found in the knowledge graph. The requested entity may not exist.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?amount)) AS ?totalLumpSum)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:hasInvestor ?investor ;
+            ex:amount ?amount ;
+            ex:cashFlowType ?cashFlowType .
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER(CONTAINS(LCASE(STR(?cashFlowType)), ""lump sum""))
+}
+GROUP BY ?investorName",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+What is the average cost basis per investment type across the entire database?,"[{""investment_type"": ""Alternative Investment Funds (AIF - Cat I)"", ""average_cost_basis"": 11019100}, {""investment_type"": ""REIT"", ""average_cost_basis"": 5229947}, {""investment_type"": ""Equity"", ""average_cost_basis"": 2121621}, {""investment_type"": ""Corporate Bond"", ""average_cost_basis"": 2111945}, {""investment_type"": ""Certificates of Deposit (CDs)"", ""average_cost_basis"": 1000000}, {""investment_type"": ""Global Equity"", ""average_cost_basis"": 601230}]","The average cost basis per investment type is as follows: Corporate Bond: 2111945, Certificates of Deposit (CDs): 1000000, Alternative Investment Funds (AIF - Cat I): 11019100, Equity: 2121621, REIT: 5229947, and Global Equity: 601230.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentType (AVG(xsd:decimal(?cost)) AS ?averageCostBasis)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:cost ?cost ;
+           ex:investmentTypeLiteral ?investmentType .
+}
+GROUP BY ?investmentType",success,6,,"[{""investmentType"": ""Corporate Bond"", ""averageCostBasis"": ""2111945""}, {""investmentType"": ""Certificates of Deposit (CDs)"", ""averageCostBasis"": ""1000000""}, {""investmentType"": ""Alternative Investment Funds (AIF - Cat I)"", ""averageCostBasis"": ""11019100""}, {""investmentType"": ""Equity"", ""averageCostBasis"": ""2121621""}, {""investmentType"": ""REIT"", ""averageCostBasis"": ""5229947""}, {""investmentType"": ""Global Equity"", ""averageCostBasis"": ""601230""}]",[],{},,True,The returned data correctly provides the average cost basis grouped by investment type as requested in the query.,0,,
+"Across the entire investor database, how many Gold holdings does investor INV-005 hold?",There is no data in raw_data_sample to answer this query.,Investor INV-005 holds 0 Gold holdings.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?goldHoldingsCount)
+WHERE {
+  ?investor ex:investorId ?id ;
+            ex:hasHolding ?holding .
+  ?holding ex:investmentName ?name .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""inv-005""))
+  FILTER(CONTAINS(LCASE(STR(?name)), ""gold""))
+}",success,1,,"[{""goldHoldingsCount"": ""0""}]",[],{},,True,,0,,
+"From the complete wealth management dataset, group the holdings of investor inv001 by investment type and show the count for each category.?","[{""investment_type"": ""Equity"", ""holding_count"": 4}, {""investment_type"": ""Corporate Bond"", ""holding_count"": 2}, {""investment_type"": ""Alternative Investment Funds (AIF - Cat I)"", ""holding_count"": 1}, {""investment_type"": ""Certificates of Deposit (CDs)"", ""holding_count"": 1}, {""investment_type"": ""Global Equity"", ""holding_count"": 1}, {""investment_type"": ""REIT"", ""holding_count"": 1}]",No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""PortfolioHolding"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentType (COUNT(?holding) AS ?count)
+WHERE {
+  ?holding ex:hasInvestor ?investor .
+  ?investor ex:investorId ?investorId .
+  ?holding ex:investmentTypeLiteral ?investmentType .
+  FILTER(CONTAINS(LCASE(STR(?investorId)), ""INV001""))
+}
+GROUP BY ?investmentType",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+Could you show me the breakdown of investment types held by investor INV-010?,There is no data in raw_data_sample to answer this query.,No data was found in the knowledge graph. The requested entity may not exist.,MATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentType (COUNT(?holding) AS ?count)
+WHERE {
+  ?holding ex:hasInvestor ?investor .
+  ?investor ex:investorId ?id .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""inv-010""))
+  ?holding ex:investmentTypeLiteral ?investmentType .
+}
+GROUP BY ?investmentType",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+"Calculate the average liquidity rating for investors whose total withdrawal transactions exceed 50,000.?",There is no business rule/data to calculate this from raw_data_sample.,"The average liquidity rating for investors whose total withdrawal transactions exceed 50,000 is 0.",MISMATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHealth"", ""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?liquidityScore)) AS ?avgLiquidityRating)
+WHERE {
+  {
+    SELECT ?investor
+    WHERE {
+      ?cf ex:hasInvestor ?investor ;
+          ex:amount ?amount ;
+          ex:cashFlowType ?type .
+      FILTER(CONTAINS(LCASE(STR(?type)), ""withdrawal""))
+    }
+    GROUP BY ?investor
+    HAVING (SUM(xsd:decimal(?amount)) > 50000)
+  }
+  ?health ex:hasInvestor ?investor ;
+          ex:liquidityScore ?liquidityScore .
+}",success,1,,"[{""avgLiquidityRating"": ""0""}]",[],{},,True,,0,,
+Could you show me all holdings purchased in 2024 and their current returns.?,(no rows returned),No data was found in the knowledge graph. The requested entity may not exist.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentName ?returnsPct
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentName ?investmentName ;
+           ex:returnsPct ?returnsPct ;
+           ex:purchaseDate ?purchaseDate .
+  FILTER(CONTAINS(LCASE(STR(?purchaseDate)), ""2024""))
+}",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+What would be the earliest purchase date of any holding across all investors?,"{""purchase_date"": ""2022-01-19"", ""investment_name"": ""Persistent Systems Ltd."", ""holding_id"": ""69530831-f9e0-40f8-bcdc-5505b5a3b3e7""}",The earliest purchase date of any holding across all investors is 2022-01-19.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (MIN(?purchaseDate) AS ?earliestPurchaseDate)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:purchaseDate ?purchaseDate .
+}",success,1,,"[{""earliestPurchaseDate"": ""2022-01-19""}]",[],{},,True,,0,,
+Summarise the total cash flow amount for each month for investor INV003.?,"[{""transaction_month"": ""2023-04"", ""total_cash_flow"": 5000}]",No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?month (SUM(xsd:decimal(?amount)) AS ?totalAmount)
+WHERE {
+  ?cashFlow ex:hasInvestor ?investor .
+  ?investor ex:investorId ?investorId .
+  FILTER(CONTAINS(LCASE(STR(?investorId)), ""INV003""))
+  ?cashFlow ex:amount ?amount .
+  ?cashFlow ex:date ?date .
+  BIND(SUBSTR(STR(?date), 1, 7) AS ?month)
+}
+GROUP BY ?month",success,0,,[],[],{},Validation failed or zero rows,,,4,Validate,Validate
+"Considering all investors in the system, which investor has the shortest average holding duration across all investors?","{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma"", ""average_holding_duration_days"": 1359.1}",A database error prevented data retrieval.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""InvestorProfile"", ""PortfolioHolding""]",,error,,No SPARQL provided to Scan operator.,,[],{},,,,2,Scan,Scan
+Identify the investment type generates the most dividends on average?,"{""investment_type"": ""Corporate Bond"", ""average_dividends"": 7290}","The investment type that generates the most dividends on average is Coporate Bond, with 7290.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""InvestmentType""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentTypeName (AVG(xsd:decimal(?dividends)) AS ?avgDividends)
+WHERE {
+  ?holding ex:hasInvestmentType ?type .
+  ?type ex:investmentTypeName ?investmentTypeName .
+  ?holding ex:dividends ?dividends .
+}
+GROUP BY ?investmentTypeName
+ORDER BY DESC(?avgDividends)
+LIMIT 1",success,1,,"[{""investmentTypeName"": ""Coporate Bond"", ""avgDividends"": ""7290""}]",[],{},,True,,0,,
+Could you show me the number of holdings purchased per year per investor.?,"[{""investor_id"": ""INV-001"", ""purchase_year"": 2022, ""holding_count"": 10}]",Deepak Sharma purchased 10 holdings in 2022.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""InvestorProfile"", ""PortfolioHolding_PurchaseDate"", ""InvestorProfile_InvestorId""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName ?year (COUNT(?holding) AS ?numHoldings)
+WHERE {
+  ?holding ex:hasInvestor ?investor .
+  ?investor ex:investorName ?investorName .
+  ?holding ex:purchaseDate ?purchaseDate .
+  BIND(SUBSTR(STR(?purchaseDate), 1, 4) AS ?year)
+}
+GROUP BY ?investorName ?year",success,1,,"[{""investorName"": ""Deepak Sharma"", ""year"": ""2022"", ""numHoldings"": ""10""}]",[],{},Validation failed or zero rows,True,,1,,
+Do you know which payment source channel handles the highest number of cash flow transactions?,"[{""source"": ""Gov Bond"", ""transaction_count"": 1}, {""source"": ""Tech Innovators Ltd"", ""transaction_count"": 1}, {""source"": ""Urban REIT"", ""transaction_count"": 1}]",The Gov Bond payment source channel handles the highest number of cash flow transactions with a count of 1.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""CashFlow_Source""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?source (COUNT(?cf) AS ?transactionCount)
+WHERE {
+  ?cf rdf:type ex:CashFlow ;
+     ex:source ?source .
+}
+GROUP BY ?source
+ORDER BY DESC(?transactionCount)
+LIMIT 1",success,1,,"[{""source"": ""Gov Bond"", ""transactionCount"": ""1""}]",[],{},,True,,0,,
+How many Redemption transactions has investor INV-008 made?,There is no data in raw_data_sample to answer this query.,Investor INV-008 has made 0 Redemption transactions.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?cashFlow) AS ?redemptionTransactionCount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:cashFlowType ?type ;
+            ex:hasInvestor ?investor .
+  ?investor ex:investorId ?investorId .
+  FILTER(CONTAINS(LCASE(STR(?type)), ""redemption""))
+  FILTER(CONTAINS(LCASE(STR(?investorId)), ""inv-008""))
+}",success,1,,"[{""redemptionTransactionCount"": ""0""}]",[],{},,True,,0,,
+"Among all investors, who has paid the highest total taxes across all holdings?","{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma"", ""total_taxes_paid"": 24539}",Deepak Sharma has paid the highest total taxes of 24539.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxes)
+WHERE {
+  ?investor ex:hasHolding ?holding .
+  ?investor ex:investorName ?investorName .
+  ?holding ex:taxesPaid ?taxesPaid .
+}
+GROUP BY ?investorName
+ORDER BY DESC(?totalTaxes)
+LIMIT 1",success,1,,"[{""investorName"": ""Deepak Sharma"", ""totalTaxes"": ""24539""}]",[],{},,True,,0,,
+"From the complete wealth management dataset, does investor inv-001's highest allocated sector match their stated sector focus?",No,No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""InvestorProfile"", ""SectorAllocation""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorId ?sectorFocus ?highestSectorName ?matches
+WHERE {
+  ?investor ex:investorId ?investorId .
+  FILTER(CONTAINS(LCASE(STR(?investorId)), ""INV001""))
+
+  OPTIONAL { ?investor ex:sectorFocus ?sectorFocus }
+
+  ?allocation ex:hasInvestor ?investor ;
+              ex:sectorName ?highestSectorName ;
+              ex:allocationPct ?pct .
+
+  BIND(IF(LCASE(STR(?sectorFocus)) = LCASE(STR(?highestSectorName)), ""Yes"", ""No"") AS ?matches)
+}
+ORDER BY DESC(xsd:decimal(?pct))
+LIMIT 1",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+What are all the 5 oldest holdings (by purchase date) across all investors.?,"[{""holding_id"": ""69530831-f9e0-40f8-bcdc-5505b5a3b3e7"", ""investor_id"": ""INV-001"", ""investment_name"": ""Persistent Systems Ltd."", ""purchase_date"": ""2022-01-19""}, {""holding_id"": ""89a14ab4-cc6e-41db-a9d8-84e398176e22"", ""investor_id"": ""INV-001"", ""investment_name"": ""Hinduja Leyland Finance Limited"", ""purchase_date"": ""2022-04-26""}, {""holding_id"": ""1ff23dce-e8b8-4f2c-9a2f-809436240818"", ""investor_id"": ""INV-001"", ""investment_name"": ""Tata Motors Passenger Vehicles Ltd"", ""purchase_date"": ""2022-05-19""}, {""holding_id"": ""c9148ad6-cbbc-4182-ab70-5f5d7d366487"", ""investor_id"": ""INV-001"", ""investment_name"": ""Brookfield India Real Estate Trust"", ""purchase_date"": ""2022-07-04""}, {""holding_id"": ""0e5c7ae5-05cd-42e1-8568-4d8953b05b7f"", ""investor_id"": ""INV-001"", ""investment_name"": ""Apple Inc"", ""purchase_date"": ""2022-07-06""}]","The five oldest holdings are Persistent Systems Ltd. (2022-01-19), Hinduja Leyland Finance Limited (2022-04-26), Tata Motors Passenger Vehicles Ltd (2022-05-19), Brookfield India Real Estate Trust (2022-07-04), and Apple Inc (2022-07-06).",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentName ?purchaseDate
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentName ?investmentName ;
+           ex:purchaseDate ?purchaseDate .
+}
+ORDER BY ASC(?purchaseDate)
+LIMIT 5",success,5,,"[{""investmentName"": ""Persistent Systems Ltd."", ""purchaseDate"": ""2022-01-19""}, {""investmentName"": ""Hinduja Leyland Finance Limited"", ""purchaseDate"": ""2022-04-26""}, {""investmentName"": ""Tata Motors Passenger Vehicles Ltd"", ""purchaseDate"": ""2022-05-19""}, {""investmentName"": ""Brookfield India Real Estate Trust"", ""purchaseDate"": ""2022-07-04""}, {""investmentName"": ""Apple Inc"", ""purchaseDate"": ""2022-07-06""}]",[],{},,True,"The data correctly returns exactly 5 records, sorted by purchase date in ascending order (oldest first), which directly answers the user's request for the 5 oldest holdings.",0,,
+"From the complete wealth management dataset, list 'mutual fund' holdings for investors who have never recorded a 'redemption' type cash flow.?",(no rows returned),No data was found.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""CashFlow"", ""InvestorProfile""]",,error,0,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,1,,
+Please display the count and total amount of Dividend transactions per investor.?,"[{""investor_id"": ""INV-002"", ""dividend_transaction_count"": 1, ""total_dividend_amount"": 2000}]",Neha Sharma 2 has 1 dividend transaction with a total amount of 2000.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (COUNT(?cf) AS ?transactionCount) (SUM(xsd:decimal(?amount)) AS ?totalAmount)
+WHERE {
+  ?cf a ex:CashFlow ;
+      ex:cashFlowType ?type ;
+      ex:amount ?amount ;
+      ex:hasInvestor ?investor .
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER(LCASE(STR(?type)) = ""dividend"")
+}
+GROUP BY ?investorName",success,1,,"[{""investorName"": ""Neha Sharma 2"", ""transactionCount"": ""1"", ""totalAmount"": ""2000""}]",[],{},,True,"The returned columns 'investorName', 'transactionCount', and 'totalAmount' directly correspond to the user's request for count and total amount per investor.",0,,
+Can you tell me what the average new allocation percentage for Increase scenario rebalancing changes?,61.25,The average new allocation percentage for Increase scenario rebalancing changes is 0.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""ScenarioRebalancing"", ""ScenarioRebalancing_NewAllocationPct"", ""ScenarioRebalancing_Scenario""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?newAllocationPct)) AS ?avgNewAllocationPct)
+WHERE {
+  ?rebalance a ex:ScenarioRebalancing ;
+             ex:newAllocationPct ?newAllocationPct ;
+             ex:scenario ?scenario .
+  FILTER(LCASE(STR(?scenario)) = ""increase"")
+}",success,1,,"[{""avgNewAllocationPct"": ""0""}]",[],{},,True,,0,,
+I need to find out how many Redemption transactions has investor INV-008 made?,There is no data in raw_data_sample to answer this query.,Investor INV-008 has made 0 Redemption transactions.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?cashFlow) AS ?redemptionCount)
+WHERE {
+  ?cashFlow rdf:type ex:CashFlow ;
+            ex:cashFlowType ?cashFlowType ;
+            ex:hasInvestor ?investor .
+  ?investor rdf:type ex:InvestorProfile ;
+            ex:investorId ?investorId .
+  FILTER(LCASE(STR(?cashFlowType)) = ""redemption"")
+  FILTER(LCASE(STR(?investorId)) = ""inv-008"")
+}",success,1,,"[{""redemptionCount"": ""0""}]",[],{},,True,,0,,
+How many total holdings do Conservative risk profile investors hold?,There is no data in raw_data_sample to answer this query.,Conservative risk profile investors hold 0 total holdings.,MISMATCH,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?totalHoldings)
+WHERE {
+  ?investor ex:riskTolerance ?risk .
+  FILTER(CONTAINS(LCASE(STR(?risk)), ""conservative""))
+  ?investor ex:hasHolding ?holding .
+}",success,1,,"[{""totalHoldings"": ""0""}]",[],{},,True,,0,,
+"Looking at all available records, what is the average dividend cash flow amount per investor?","[{""investor_id"": ""INV-002"", ""average_dividend_cash_flow_amount"": 2000}]",The average dividend cash flow amount for Neha Sharma 2 is 2000.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (AVG(xsd:decimal(?amount)) AS ?avgDividendAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:amount ?amount ;
+            ex:cashFlowType ?type ;
+            ex:hasInvestor ?investor .
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER(CONTAINS(LCASE(STR(?type)), ""dividend""))
+}
+GROUP BY ?investorName",success,1,,"[{""investorName"": ""Neha Sharma 2"", ""avgDividendAmount"": ""2000""}]",[],{},,True,,0,,
+"Looking at all available records, what is the dividend amount for the 5th highest dividend-earning holding?",6407,The dividend amount is 6407.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?dividends
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:dividends ?dividends .
+}
+ORDER BY DESC(xsd:decimal(?dividends))
+LIMIT 1
+OFFSET 4",success,1,,"[{""dividends"": ""6407""}]",[],{},,True,,0,,
+What would be the average investment goal target amount for Aggressive risk profile investors?,There is no data in raw_data_sample to answer this query.,The average investment goal target amount for Aggressive risk profile investors is 0.,MISMATCH,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""InvestmentGoal_TargetAmount"", ""InvestorProfile_RiskTolerance""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?amount)) AS ?averageTargetAmount)
+WHERE {
+  ?item ex:description ?v1 .
+  ?item ex:notes ?v2 .
+  FILTER(CONTAINS(LCASE(STR(?v1)), ""aggressive"") || CONTAINS(LCASE(STR(?v2)), ""aggressive""))
+  BIND(IF(CONTAINS(LCASE(STR(?v1)), ""aggressive""), ?v2, ?v1) AS ?amount)
+}",success,1,,"[{""averageTargetAmount"": ""0""}]",[],{},Validation failed or zero rows,,,2,Validate,Validate
+How many investors have a portfolio diversification score below 50?,There is no business rule/data to calculate this from raw_data_sample.,0 investors have a portfolio diversification score below 50.,MISMATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHealth""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investor) AS ?count)
+WHERE {
+  ?health a ex:PortfolioHealth ;
+          ex:diversificationScore ?score ;
+          ex:hasInvestor ?investor .
+  FILTER(xsd:decimal(?score) < 50)
+}",success,1,,"[{""count"": ""0""}]",[],{},,True,The returned data provides the specific aggregated count requested by the user query.,0,,
+What would be the average dividend cash flow amount per investor?,"[{""investor_id"": ""INV-002"", ""average_dividend_cash_flow_amount"": 2000}]",The average dividend cash flow amount for investor http://example.org/kg#INV002 is 2000.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""CashFlow_Amount"", ""CashFlow_Type"", ""CashFlow_InvestorId""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investor (AVG(xsd:decimal(?amount)) AS ?avgDividendAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:amount ?amount ;
+            ex:cashFlowType ?type ;
+            ex:hasInvestor ?investor .
+  FILTER(CONTAINS(LCASE(STR(?type)), ""dividend""))
+}
+GROUP BY ?investor",success,1,,"[{""investor"": ""http://example.org/kg#INV002"", ""avgDividendAmount"": ""2000""}]",[],{},,True,The returned columns 'investor' and 'avgDividendAmount' directly address the user's request for the average dividend amount per investor.,0,,
+"Display total portfolio value grouped by category (Equity, Debt, Hybrid etc.).?","[{""category"": ""Private Equity"", ""total_portfolio_value"": 15028100}, {""category"": ""Equity"", ""total_portfolio_value"": 11703296}, {""category"": ""REIT"", ""total_portfolio_value"": 6269835}, {""category"": ""Bond"", ""total_portfolio_value"": 4616900}, {""category"": ""Debt"", ""total_portfolio_value"": 1030000}]","The total portfolio value by category is: Bond: 4,616,900, Debt: 1,030,000, Private Equity: 15,028,100, Equity: 11,703,296, and REIT: 6,269,835.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?currentValue)) AS ?totalPortfolioValue) ?category
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:currentValue ?currentValue ;
+           ex:categoryLiteral ?category .
+}
+GROUP BY ?category",success,5,,"[{""totalPortfolioValue"": ""4616900"", ""category"": ""Bond""}, {""totalPortfolioValue"": ""1030000"", ""category"": ""Debt""}, {""totalPortfolioValue"": ""15028100"", ""category"": ""Private Equity""}, {""totalPortfolioValue"": ""11703296"", ""category"": ""Equity""}, {""totalPortfolioValue"": ""6269835"", ""category"": ""REIT""}]",[],{},,True,,0,,
+How many investors affected by the Interest Rate Hike scenario have an At Risk portfolio health status?,There is no business rule/data to calculate this from raw_data_sample.,Zero investors affected by the Interest Rate Hike scenario have an At Risk portfolio health status.,MISMATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""ScenarioRebalancing"", ""PortfolioHealth"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investor) AS ?count)
+WHERE {
+  ?rebalance a ex:ScenarioRebalancing ;
+             ex:scenario ?scenario ;
+             ex:hasInvestor ?investor .
+  
+  ?health a ex:PortfolioHealth ;
+          ex:riskScore ?riskScore ;
+          ex:hasInvestor ?investor .
+
+  FILTER(CONTAINS(LCASE(STR(?scenario)), ""interest rate hike""))
+  FILTER(CONTAINS(LCASE(STR(?riskScore)), ""at risk""))
+}",success,1,,"[{""count"": ""0""}]",[],{},,True,,0,,
+"Among all investors, which ones have not purchased any new holdings in the last 12 months?","[{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma""}, {""investor_id"": ""INV-002"", ""investor_name"": ""Neha Sharma 2""}, {""investor_id"": ""INV-003"", ""investor_name"": ""Rajesh Iyer""}, {""investor_id"": ""INV-004"", ""investor_name"": ""Elon Musk""}]","The investors who have not purchased any new holdings in the last 12 months are Deepak Sharma, Neha Sharma 2, Rajesh Iyer, and Elon Musk.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER NOT EXISTS {
+    ?holding ex:hasInvestor ?investor ;
+             ex:purchaseDate ?date .
+    FILTER(?date >= ""2023-05-15""^^xsd:date)
+  }
+}",success,4,,"[{""investorName"": ""Deepak Sharma""}, {""investorName"": ""Neha Sharma 2""}, {""investorName"": ""Rajesh Iyer""}, {""investorName"": ""Elon Musk""}]",[],{},,True,The returned column 'investorName' correctly identifies the entities requested in the query ('which ones').,0,,
+"What is the total current value of holdings across the platform, broken down by asset category?","[{""category"": ""Private Equity"", ""total_current_value"": 15028100}, {""category"": ""Equity"", ""total_current_value"": 11703296}, {""category"": ""REIT"", ""total_current_value"": 6269835}, {""category"": ""Bond"", ""total_current_value"": 4616900}, {""category"": ""Debt"", ""total_current_value"": 1030000}]",A database error prevented data retrieval.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""PortfolioHolding"", ""AssetClass""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?categoryName (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentValue)
+WHERE {
+  ?holding ex:hasAssetClass ?assetClass .
+  ?holding ex:currentValue ?currentValue .
+  ?assetClass ex:categoryLiteralName ?categoryName .
+}
+GROUP BY ?categoryName",error,,SPARQL uses terms that do not exist in the RDF graph.,,"[""categoryLiteralName""]","{""categoryLiteralName"": [""categoryLiteral"", ""categoryName"", ""sectorLiteral"", ""categoryId""]}",Unknown RDF terms before Scan,,,2,Scan,Scan
+"Given all the data available, which sector has the lowest total taxes paid across all investors?","{""sector"": ""Corporate"", ""total_taxes_paid"": 1272}",The Corporate sector has the lowest total taxes paid at 1272.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxes)
+WHERE {
+  ?holding ex:taxesPaid ?taxesPaid ;
+           ex:sectorLiteral ?sectorName .
+}
+GROUP BY ?sectorName
+ORDER BY ASC(?totalTaxes)
+LIMIT 1",success,1,,"[{""sectorName"": ""Corporate"", ""totalTaxes"": ""1272""}]",[],{},,True,,0,,
+"Out of all options, which investment category holds the lowest total portfolio value?","{""category"": ""Debt"", ""total_portfolio_value"": 1030000}","The investment category with the lowest total portfolio value is Debt, with a value of 1030000.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""SectorAllocation""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?category (SUM(xsd:decimal(?value)) AS ?totalPortfolioValue)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:categoryLiteral ?category ;
+           ex:currentValue ?value .
+}
+GROUP BY ?category
+ORDER BY ?totalPortfolioValue
+LIMIT 1",success,1,,"[{""category"": ""Debt"", ""totalPortfolioValue"": ""1030000""}]",[],{},,True,"The returned data provides the specific category and its corresponding total portfolio value, which directly answers the user's query to identify the category with the lowest value.",0,,
+Identify the holding has the highest dividend amount across all investors?,"{""investment_name"": ""Hinduja Leyland Finance Limited"", ""dividends"": 9192}",The holding with the highest dividend amount is Hinduja Leyland Finance Limited with an amount of 9192.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentName (xsd:decimal(?dividends) AS ?highestDividendAmount)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentName ?investmentName ;
+           ex:dividends ?dividends .
+}
+ORDER BY DESC(xsd:decimal(?dividends))
+LIMIT 1",success,1,,"[{""investmentName"": ""Hinduja Leyland Finance Limited"", ""highestDividendAmount"": ""9192""}]",[],{},,True,The data correctly identifies the specific holding ('investmentName') and provides the corresponding 'highestDividendAmount' as requested by the query.,0,,
+What would be the average investment goal target amount for Aggressive risk profile investors?,There is no data in raw_data_sample to answer this query.,The average investment goal target amount for Aggressive risk profile investors is 0.,MISMATCH,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""InvestmentGoal_TargetAmount"", ""InvestorProfile_RiskTolerance""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?amount)) AS ?averageTargetAmount)
+WHERE {
+  ?item ex:description ?v1 .
+  ?item ex:notes ?v2 .
+  FILTER(CONTAINS(LCASE(STR(?v1)), ""aggressive"") || CONTAINS(LCASE(STR(?v2)), ""aggressive""))
+  BIND(IF(CONTAINS(LCASE(STR(?v1)), ""aggressive""), ?v2, ?v1) AS ?amount)
+}",success,1,,"[{""averageTargetAmount"": ""0""}]",[],{},Validation failed or zero rows,,,2,Validate,Validate
+"List all scenario-based rebalancing events grouped by whether the allocation was increased or decreased, and show the average revised allocation percentage.?","[{""change_direction"": ""Decrease"", ""scenario_rebalance_count"": 2, ""average_new_allocation_pct"": 40}, {""change_direction"": ""Increase"", ""scenario_rebalance_count"": 4, ""average_new_allocation_pct"": 61.25}]","Increased allocations have an average revised allocation percentage of 61.25%, and decreased allocations have an average revised allocation percentage of 40%.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""ScenarioRebalancing"", ""ScenarioRebalancing_ChangeDirection"", ""ScenarioRebalancing_NewAllocationPct""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?direction (AVG(xsd:decimal(?newAllocationPct)) AS ?avgRevisedAllocationPct)
+WHERE {
+  ?event a ex:ScenarioRebalancing ;
+         ex:currentAllocationPct ?currentAllocationPct ;
+         ex:newAllocationPct ?newAllocationPct .
+  BIND(IF(xsd:decimal(?newAllocationPct) > xsd:decimal(?currentAllocationPct), ""increased"", ""decreased"") AS ?direction)
+}
+GROUP BY ?direction",success,2,,"[{""direction"": ""increased"", ""avgRevisedAllocationPct"": ""61.25""}, {""direction"": ""decreased"", ""avgRevisedAllocationPct"": ""40""}]",[],{},,True,,0,,
+Provide the count of distinct investment types does investor INV-005 hold?,There is no data in raw_data_sample to answer this query.,Investor INV-005 holds 0 distinct investment types.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?type) AS ?count)
+WHERE {
+  ?investor ex:investorId ?id .
+  ?holding ex:hasInvestor ?investor .
+  ?holding ex:investmentTypeLiteral ?type .
+  FILTER(LCASE(STR(?id)) = ""inv-005"")
+}",success,1,,"[{""count"": ""0""}]",[],{},,True,"The returned data correctly provides the requested aggregation (count) using the appropriate column name, and the result is not empty.",0,,
+Find the maximum total investment amount recorded for each sector in the sector allocation records.?,"[{""sector"": ""Private Equity"", ""max_total_investment"": 15028100}, {""sector"": ""Technology"", ""max_total_investment"": 6917749}, {""sector"": ""Infrastructure"", ""max_total_investment"": 6269835}, {""sector"": ""Automobile"", ""max_total_investment"": 2793077}, {""sector"": ""Healthcare"", ""max_total_investment"": 1992470}, {""sector"": ""Government"", ""max_total_investment"": 1150000}, {""sector"": ""Banking"", ""max_total_investment"": 1030000}, {""sector"": ""Corporate"", ""max_total_investment"": 475621}]","The maximum total investment amounts for each sector are: Government: 1150000, Technology: 6917749, Corporate: 475621, Automobile: 2793077, Private Equity: 15028100, Infrastructure: 6269835, Healthcare: 1992470, and Banking: 1030000.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""SectorAllocation""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName (MAX(xsd:decimal(?totalInvestment)) AS ?maxTotalInvestment)
+WHERE {
+  ?allocation a ex:SectorAllocation ;
+              ex:sectorName ?sectorName ;
+              ex:totalInvestment ?totalInvestment .
+}
+GROUP BY ?sectorName",success,8,,"[{""sectorName"": ""Government"", ""maxTotalInvestment"": ""1150000""}, {""sectorName"": ""Technology"", ""maxTotalInvestment"": ""6917749""}, {""sectorName"": ""Corporate"", ""maxTotalInvestment"": ""475621""}, {""sectorName"": ""Automobile"", ""maxTotalInvestment"": ""2793077""}, {""sectorName"": ""Private Equity"", ""maxTotalInvestment"": ""15028100""}, {""sectorName"": ""Infrastructure"", ""maxTotalInvestment"": ""6269835""}, {""sectorName"": ""Healthcare"", ""maxTotalInvestment"": ""1992470""}, {""sectorName"": ""Banking"", ""maxTotalInvestment"": ""1030000""}]",[],{},,True,,0,,
+Group the holdings of investor INV001 by investment type and show the count for each category.?,"[{""investment_type"": ""Equity"", ""holding_count"": 4}, {""investment_type"": ""Corporate Bond"", ""holding_count"": 2}, {""investment_type"": ""Alternative Investment Funds (AIF - Cat I)"", ""holding_count"": 1}, {""investment_type"": ""Certificates of Deposit (CDs)"", ""holding_count"": 1}, {""investment_type"": ""Global Equity"", ""holding_count"": 1}, {""investment_type"": ""REIT"", ""holding_count"": 1}]",No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentType (COUNT(?holding) AS ?count)
+WHERE {
+  ?investor ex:investorId ?id .
+  ?holding ex:hasInvestor ?investor .
+  ?holding ex:investmentTypeLiteral ?investmentType .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""INV001""))
+}
+GROUP BY ?investmentType",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+"In which of the years 2022, 2023, or 2024 was the total investment (cost) highest?","{""purchase_year"": 2022, ""total_investment_cost"": 30560651}",The total investment (cost) was highest in 2022 with 30560651.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?year (SUM(xsd:decimal(?cost)) AS ?totalCost)
+WHERE {
+  ?holding a ex:PortfolioHolding .
+  ?holding ex:cost ?cost .
+  ?holding ex:purchaseDate ?date .
+  FILTER (CONTAINS(STR(?date), ""2022"") || CONTAINS(STR(?date), ""2023"") || CONTAINS(STR(?date), ""2024""))
+  BIND(SUBSTR(STR(?date), 1, 4) AS ?year)
+}
+GROUP BY ?year
+ORDER BY DESC(?totalCost)
+LIMIT 1",success,1,,"[{""year"": ""2022"", ""totalCost"": ""30560651""}]",[],{},Validation failed or zero rows,,,2,Validate,Validate
+"Considering all investors in the system, which investor holds the lowest total Gold investment value?",(no rows returned),no data was found,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""SectorAllocation""]",,error,0,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,2,,
+Find the maximum total investment amount recorded for each sector in the sector allocation records.?,"[{""sector"": ""Private Equity"", ""max_total_investment"": 15028100}, {""sector"": ""Technology"", ""max_total_investment"": 6917749}, {""sector"": ""Infrastructure"", ""max_total_investment"": 6269835}, {""sector"": ""Automobile"", ""max_total_investment"": 2793077}, {""sector"": ""Healthcare"", ""max_total_investment"": 1992470}, {""sector"": ""Government"", ""max_total_investment"": 1150000}, {""sector"": ""Banking"", ""max_total_investment"": 1030000}, {""sector"": ""Corporate"", ""max_total_investment"": 475621}]","The maximum total investment amounts for each sector are: Government: 1,150,000; Technology: 6,917,749; Corporate: 475,621; Automobile: 2,793,077; Private Equity: 15,028,100; Infrastructure: 6,269,835; Healthcare: 1,992,470; and Banking: 1,030,000.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""SectorAllocation""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName (MAX(xsd:decimal(?totalInvestment)) AS ?maxTotalInvestment)
+WHERE {
+  ?allocation a ex:SectorAllocation ;
+              ex:sectorName ?sectorName ;
+              ex:totalInvestment ?totalInvestment .
+}
+GROUP BY ?sectorName",success,8,,"[{""sectorName"": ""Government"", ""maxTotalInvestment"": ""1150000""}, {""sectorName"": ""Technology"", ""maxTotalInvestment"": ""6917749""}, {""sectorName"": ""Corporate"", ""maxTotalInvestment"": ""475621""}, {""sectorName"": ""Automobile"", ""maxTotalInvestment"": ""2793077""}, {""sectorName"": ""Private Equity"", ""maxTotalInvestment"": ""15028100""}, {""sectorName"": ""Infrastructure"", ""maxTotalInvestment"": ""6269835""}, {""sectorName"": ""Healthcare"", ""maxTotalInvestment"": ""1992470""}, {""sectorName"": ""Banking"", ""maxTotalInvestment"": ""1030000""}]",[],{},,True,,0,,
+Provide the count of investors hold Gold investments in their portfolio?,0,0 investors hold Gold investments in their portfolio.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investor) AS ?count)
+WHERE {
+  ?holding ex:hasInvestor ?investor .
+  ?holding ex:investmentName ?investmentName .
+  FILTER(CONTAINS(LCASE(STR(?investmentName)), ""gold""))
+}",success,1,,"[{""count"": ""0""}]",[],{},,True,The returned data provides the requested aggregation (count) in the correct format and directly addresses the user's query for a specific count.,0,,
+"Given all the data available, which payment source channel handles the highest number of cash flow transactions?","[{""source"": ""Gov Bond"", ""transaction_count"": 1}, {""source"": ""Tech Innovators Ltd"", ""transaction_count"": 1}, {""source"": ""Urban REIT"", ""transaction_count"": 1}]",Gov Bond handles the highest number of cash flow transactions with a count of 1.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?source (COUNT(?cf) AS ?transactionCount)
+WHERE {
+  ?cf rdf:type ex:CashFlow ;
+     ex:source ?source .
+}
+GROUP BY ?source
+ORDER BY DESC(?transactionCount)
+LIMIT 1",success,1,,"[{""source"": ""Gov Bond"", ""transactionCount"": ""1""}]",[],{},,True,,0,,
+Can you tell me what the average holding duration in days for investor INV-012?,There is no data in raw_data_sample to answer this query.,A database error prevented data retrieval.,MISMATCH,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""InvestorProfile_InvestorId"", ""PortfolioHolding_HoldingPeriodDays""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?days)) AS ?averageHoldingDuration)
+WHERE {
+  ?holding ex:InvestorProfile ?id ;
+           ex:PortfolioHolding_HoldingPeriodDays ?days .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""inv-012""))
+}",error,,SPARQL uses terms that do not exist in the RDF graph.,,"[""PortfolioHolding_HoldingPeriodDays""]","{""PortfolioHolding_HoldingPeriodDays"": [""PortfolioHolding""]}",Unknown RDF terms before Scan,,,2,Scan,Scan
+"Looking at all available records, what is the average holding duration (in days from purchase date to today) per investor?","[{""investor_id"": ""INV-001"", ""average_holding_duration_days"": 1359.1}]",The average holding duration for Deepak Sharma is 0 days.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (AVG(xsd:decimal(?duration)) AS ?avgHoldingDuration)
+WHERE {
+  ?holding ex:hasInvestor ?investor .
+  ?investor ex:investorName ?investorName .
+  ?holding ex:purchaseDate ?purchaseDateStr .
+  BIND(xsd:date(?purchaseDateStr) AS ?pDate)
+  BIND(xsd:dateTime(""now"") AS ?today)
+  # Calculating the difference in days using day-of-month subtraction as a standard SPARQL 1.1 approach
+  BIND(xsd:decimal(day(?today) - day(?pDate)) AS ?duration)
+}
+GROUP BY ?investorName",success,1,,"[{""investorName"": ""Deepak Sharma"", ""avgHoldingDuration"": ""0""}]",[],{},,True,,0,,
+Identify the investment type holds the highest total current portfolio value?,"{""investment_type"": ""Alternative Investment Funds (AIF - Cat I)"", ""total_current_value"": 15028100}",The investment type that holds the highest total current portfolio value is Alternative Investment Funds (AIF - Cat I) with a value of 15028100.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""InvestmentType""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentTypeName (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentPortfolioValue)
+WHERE {
+  ?holding ex:hasInvestmentType ?invType ;
+           ex:currentValue ?currentValue .
+  ?invType ex:investmentTypeName ?investmentTypeName .
+}
+GROUP BY ?investmentTypeName
+ORDER BY DESC(?totalCurrentPortfolioValue)
+LIMIT 1",success,1,,"[{""investmentTypeName"": ""Alternative Investment Funds (AIF - Cat I)"", ""totalCurrentPortfolioValue"": ""15028100""}]",[],{},,True,"The returned columns 'investmentTypeName' and 'totalCurrentPortfolioValue' directly correspond to the user's request to identify an investment type and its value, and the data provides a specific instance that answers the query.",0,,
+What is the average investment goal target amount for Aggressive risk profile investors?,There is no data in raw_data_sample to answer this query.,A database error prevented data retrieval.,MISMATCH,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""InvestmentGoal_TargetAmount"", ""InvestorProfile_RiskTolerance""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?targetAmount)) AS ?averageTargetAmount)
+WHERE {
+  ?investor ex:riskTolerance ?risk .
+  ?risk schema1:name ?riskName ;
+        rdf:type ex:InvestorProfile .
+  FILTER(LCASE(STR(?riskName)) = ""aggressive"")
+  ?investor ex:hasTargetAmount ?targetAmount .
+}",error,,SPARQL uses terms that do not exist in the RDF graph.,,"[""hasTargetAmount""]","{""hasTargetAmount"": [""targetAmount"", ""amount"", ""hasSegment""]}",Unknown RDF terms before Scan,,,2,Scan,Scan
+How many total holdings do Moderate risk profile investors hold?,10,Moderate risk profile investors hold a total of 10 holdings.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?totalHoldings)
+WHERE {
+  ?profile ex:riskTolerance ?risk .
+  FILTER(LCASE(STR(?risk)) = ""moderate"")
+  ?profile ex:hasHolding ?holding .
+}",success,1,,"[{""totalHoldings"": ""10""}]",[],{},,True,,0,,
+What does the system show for holdings purchased in the last 12 months with negative returns.?,(no rows returned),no data was found,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]",,error,0,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,1,,
+"Looking at all available records, what is the total taxes paid per sector for all investors combined?","[{""sector"": ""Technology"", ""total_taxes_paid"": 5789}, {""sector"": ""Government"", ""total_taxes_paid"": 4105}, {""sector"": ""Healthcare"", ""total_taxes_paid"": 3352}, {""sector"": ""Infrastructure"", ""total_taxes_paid"": 3253}, {""sector"": ""Banking"", ""total_taxes_paid"": 3144}, {""sector"": ""Private Equity"", ""total_taxes_paid"": 2017}, {""sector"": ""Automobile"", ""total_taxes_paid"": 1607}, {""sector"": ""Corporate"", ""total_taxes_paid"": 1272}]","The total taxes paid per sector are: Government: 4105, Banking: 3144, Private Equity: 2017, Automobile: 1607, Technology: 5789, Infrastructure: 3253, Healthcare: 3352, and Corporate: 1272.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxesPaid)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:taxesPaid ?taxesPaid ;
+           ex:sectorLiteral ?sectorName .
+}
+GROUP BY ?sectorName",success,8,,"[{""sectorName"": ""Government"", ""totalTaxesPaid"": ""4105""}, {""sectorName"": ""Banking"", ""totalTaxesPaid"": ""3144""}, {""sectorName"": ""Private Equity"", ""totalTaxesPaid"": ""2017""}, {""sectorName"": ""Automobile"", ""totalTaxesPaid"": ""1607""}, {""sectorName"": ""Technology"", ""totalTaxesPaid"": ""5789""}, {""sectorName"": ""Infrastructure"", ""totalTaxesPaid"": ""3253""}, {""sectorName"": ""Healthcare"", ""totalTaxesPaid"": ""3352""}, {""sectorName"": ""Corporate"", ""totalTaxesPaid"": ""1272""}]","[""label""]","{""label"": []}",Unknown RDF terms before Scan,True,,2,,
+"Looking at all available records, what is the withdrawal to deposit ratio for all investors?",There is no business rule/data to calculate this from raw_data_sample.,No data was found in the knowledge graph. The requested entity may not exist.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?withdrawalAmount)) / SUM(xsd:decimal(?depositAmount)) AS ?withdrawalToDepositRatio)
+WHERE {
+  ?cf a ex:CashFlow .
+  OPTIONAL { ?cf ex:amount ?amount }
+  OPTIONAL { ?cf ex:cashFlowType ?type }
+  BIND(IF(CONTAINS(LCASE(STR(?type)), ""withdrawal"") && BOUND(?amount), xsd:decimal(?amount), 0.0) AS ?withdrawalAmount)
+  BIND(IF(CONTAINS(LCASE(STR(?type)), ""deposit"") && BOUND(?amount), xsd:decimal(?amount), 0.0) AS ?depositAmount)
+}",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+"Out of all options, which investment type generates the lowest average dividend income?","{""investment_type"": ""Alternative Investment Funds (AIF - Cat I)"", ""average_dividends"": 2753}",No data was found.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""InvestmentType""]",,error,1,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,2,,
+What was the total investment cost made in 2022?,30560651,The total investment cost made in 2022 was 30560651.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?amount)) AS ?totalInvestmentCost)
+WHERE {
+  {
+    ?holding a ex:PortfolioHolding ;
+             ex:cost ?amount ;
+             ex:purchaseDate ?date .
+    FILTER(CONTAINS(LCASE(STR(?date)), ""2022""))
+  }
+  UNION
+  {
+    ?cf a ex:CashFlow ;
+        ex:amount ?amount ;
+        ex:date ?date .
+    FILTER(CONTAINS(LCASE(STR(?date)), ""2022""))
+  }
+}",success,1,,"[{""totalInvestmentCost"": ""30560651""}]",[],{},,True,,0,,
+Which investors have zero dividend income from all their holdings?,"[{""investor_id"": ""INV-002"", ""investor_name"": ""Neha Sharma 2""}, {""investor_id"": ""INV-003"", ""investor_name"": ""Rajesh Iyer""}, {""investor_id"": ""INV-004"", ""investor_name"": ""Elon Musk""}]",The investors with zero dividend income from all their holdings are Neha Sharma 2 and Rajesh Iyer.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investorName
+WHERE {
+  ?investor ex:investorName ?investorName .
+  # Ensure the investor has at least one holding to evaluate ""all their holdings""
+  ?holding ex:hasInvestor ?investor .
+  # Exclude any investor who has even one holding with dividends greater than zero
+  FILTER NOT EXISTS {
+    ?anyHolding ex:hasInvestor ?investor .
+    ?anyHolding ex:dividends ?div .
+    FILTER(xsd:decimal(?div) > 0)
+  }
+}",success,2,,"[{""investorName"": ""Neha Sharma 2""}, {""investorName"": ""Rajesh Iyer""}]",[],{},Validation failed or zero rows,True,,2,,
+I need to find out how many investors have received dividend cash flows sourced from HDFC Bank?,0,0 investors have received dividend cash flows sourced from HDFC Bank.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investor) AS ?investorCount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:source ?source ;
+            ex:cashFlowType ?cashFlowType ;
+            ex:hasInvestor ?investor .
+  FILTER(CONTAINS(LCASE(STR(?source)), ""hdfc bank""))
+  FILTER(CONTAINS(LCASE(STR(?cashFlowType)), ""dividend""))
+}",success,1,,"[{""investorCount"": ""0""}]",[],{},,True,,0,,
+"Identify the segment (Large Cap, Mid Cap etc.) has the most total invested amount?","{""segment"": ""Private Equity"", ""total_invested_amount"": 11019100}",The Large Cap segment has the most total invested amount of 8822850.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""Segment""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?segmentName (SUM(xsd:decimal(?cost)) AS ?totalInvestedAmount)
+WHERE {
+  ?holding ex:hasSegment ?segment .
+  ?segment ex:segmentName ?segmentName .
+  ?holding ex:cost ?cost .
+}
+GROUP BY ?segmentName
+ORDER BY DESC(?totalInvestedAmount)
+LIMIT 1",success,1,,"[{""segmentName"": ""Large Cap"", ""totalInvestedAmount"": ""8822850""}]",[],{},,True,"The data correctly identifies the specific segment ('Large Cap') and provides its corresponding 'totalInvestedAmount', directly answering the user's query for the segment with the most invested amount.",0,,
+Could you show me the total SWP (Systematic Withdrawal Plan) amount per investor.?,"[{""investor_id"": ""INV-003"", ""total_swp_amount"": 5000}]",The total SWP amount for Rajesh Iyer is 5000.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?amount)) AS ?totalSWPAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:amount ?amount ;
+            ex:cashFlowType ?cashFlowType ;
+            ex:hasInvestor ?investor .
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER(CONTAINS(LCASE(STR(?cashFlowType)), ""swp""))
+}
+GROUP BY ?investorName",success,1,,"[{""investorName"": ""Rajesh Iyer"", ""totalSWPAmount"": ""5000""}]",[],{},,True,,0,,
+Identify the sector earned the highest total dividends across all investors?,"{""sector"": ""Technology"", ""total_dividends"": 17084}",The Technology sector earned the highest total dividends of 17084.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sector (SUM(xsd:decimal(?dividends)) AS ?totalDividends)
+WHERE {
+  ?holding ex:dividends ?dividends ;
+           ex:sectorLiteral ?sector .
+}
+GROUP BY ?sector
+ORDER BY DESC(?totalDividends)
+LIMIT 1",success,1,,"[{""sector"": ""Technology"", ""totalDividends"": ""17084""}]",[],{},,True,"The returned data correctly identifies a specific sector and its corresponding total dividends, directly answering the user's query for the sector with the highest total dividends.",0,,
+"Given all the data available, which sector focus combination is the most common among investors?","[{""sector_focus"": ""Government, Gold, Debt"", ""investor_count"": 1}, {""sector_focus"": ""Real Estate, Banking, Corporate"", ""investor_count"": 1}, {""sector_focus"": ""Technology, Pharma, Infra"", ""investor_count"": 1}]","The most common sector focus combination is Government, Gold, Debt, with a count of 1.",PARTIAL,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorFocus (COUNT(?investor) AS ?count)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:sectorFocus ?sectorFocus .
+}
+GROUP BY ?sectorFocus
+ORDER BY DESC(?count)
+LIMIT 1",success,1,,"[{""sectorFocus"": ""Government, Gold, Debt"", ""count"": ""1""}]",[],{},,True,,0,,
+"Out of all options, which risk profile group has the highest average investment goal target amount?","{""risk_tolerance"": ""High"", ""average_target_amount"": 1500000}","The High risk tolerance group has the highest average investment goal target amount of 1,500,000.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""InvestmentGoal""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskTolerance (AVG(xsd:decimal(?targetAmount)) AS ?avgTargetAmount)
+WHERE {
+  ?investor ex:hasInvestmentGoal ?goal .
+  ?investor ex:riskTolerance ?riskTolerance .
+  ?goal ex:targetAmount ?targetAmount .
+}
+GROUP BY ?riskTolerance
+ORDER BY DESC(?avgTargetAmount)
+LIMIT 1",success,1,,"[{""riskTolerance"": ""High"", ""avgTargetAmount"": ""1500000""}]",[],{},,True,"The returned columns 'riskTolerance' and 'avgTargetAmount' correctly match the requirements of the query, providing both the grouping identifier and the aggregated metric needed to identify the highest average amount.",0,,
+Provide the count of Gold holdings does investor INV-005 hold?,There is no data in raw_data_sample to answer this query.,Investor INV-005 holds 0 gold holdings.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?goldHoldingCount)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:investorId ?id .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""inv-005""))
+  ?holding ex:hasInvestor ?investor ;
+           ex:investmentName ?name .
+  FILTER(CONTAINS(LCASE(STR(?name)), ""gold""))
+}",success,1,,"[{""goldHoldingCount"": ""0""}]",[],{},,True,,0,,
+What does the system show for holdings purchased in the last 12 months with negative returns.?,(no rows returned),no data was found,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]",,error,0,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,1,,
+What are all the 5 oldest holdings (by purchase date) across all investors.?,"[{""holding_id"": ""69530831-f9e0-40f8-bcdc-5505b5a3b3e7"", ""investor_id"": ""INV-001"", ""investment_name"": ""Persistent Systems Ltd."", ""purchase_date"": ""2022-01-19""}, {""holding_id"": ""89a14ab4-cc6e-41db-a9d8-84e398176e22"", ""investor_id"": ""INV-001"", ""investment_name"": ""Hinduja Leyland Finance Limited"", ""purchase_date"": ""2022-04-26""}, {""holding_id"": ""1ff23dce-e8b8-4f2c-9a2f-809436240818"", ""investor_id"": ""INV-001"", ""investment_name"": ""Tata Motors Passenger Vehicles Ltd"", ""purchase_date"": ""2022-05-19""}, {""holding_id"": ""c9148ad6-cbbc-4182-ab70-5f5d7d366487"", ""investor_id"": ""INV-001"", ""investment_name"": ""Brookfield India Real Estate Trust"", ""purchase_date"": ""2022-07-04""}, {""holding_id"": ""0e5c7ae5-05cd-42e1-8568-4d8953b05b7f"", ""investor_id"": ""INV-001"", ""investment_name"": ""Apple Inc"", ""purchase_date"": ""2022-07-06""}]","The five oldest holdings are Persistent Systems Ltd. (2022-01-19), Hinduja Leyland Finance Limited (2022-04-26), Tata Motors Passenger Vehicles Ltd (2022-05-19), Brookfield India Real Estate Trust (2022-07-04), and Apple Inc (2022-07-06).",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentName ?purchaseDate
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentName ?investmentName ;
+           ex:purchaseDate ?purchaseDate .
+}
+ORDER BY ASC(?purchaseDate)
+LIMIT 5",success,5,,"[{""investmentName"": ""Persistent Systems Ltd."", ""purchaseDate"": ""2022-01-19""}, {""investmentName"": ""Hinduja Leyland Finance Limited"", ""purchaseDate"": ""2022-04-26""}, {""investmentName"": ""Tata Motors Passenger Vehicles Ltd"", ""purchaseDate"": ""2022-05-19""}, {""investmentName"": ""Brookfield India Real Estate Trust"", ""purchaseDate"": ""2022-07-04""}, {""investmentName"": ""Apple Inc"", ""purchaseDate"": ""2022-07-06""}]",[],{},,True,"The data correctly returns exactly 5 records, sorted by purchase date in ascending order (oldest first), which directly answers the user's request for the 5 oldest holdings.",0,,
+Please display total dividends earned per sector across all investors.?,"[{""sector"": ""Technology"", ""total_dividends"": 17084}, {""sector"": ""Corporate"", ""total_dividends"": 9192}, {""sector"": ""Healthcare"", ""total_dividends"": 8456}, {""sector"": ""Automobile"", ""total_dividends"": 6508}, {""sector"": ""Banking"", ""total_dividends"": 6407}, {""sector"": ""Infrastructure"", ""total_dividends"": 5632}, {""sector"": ""Government"", ""total_dividends"": 5388}, {""sector"": ""Private Equity"", ""total_dividends"": 2753}]","The total dividends earned per sector are: Technology: 17084, Corporate: 9192, Healthcare: 8456, Automobile: 6508, Banking: 6407, Infrastructure: 5632, Government: 5388, and Private Equity: 2753.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName (SUM(xsd:decimal(?dividends)) AS ?totalDividends)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:dividends ?dividends ;
+           ex:sectorLiteral ?sectorName .
+}
+GROUP BY ?sectorName",success,8,,"[{""sectorName"": ""Government"", ""totalDividends"": ""5388""}, {""sectorName"": ""Banking"", ""totalDividends"": ""6407""}, {""sectorName"": ""Private Equity"", ""totalDividends"": ""2753""}, {""sectorName"": ""Automobile"", ""totalDividends"": ""6508""}, {""sectorName"": ""Technology"", ""totalDividends"": ""17084""}, {""sectorName"": ""Infrastructure"", ""totalDividends"": ""5632""}, {""sectorName"": ""Healthcare"", ""totalDividends"": ""8456""}, {""sectorName"": ""Corporate"", ""totalDividends"": ""9192""}]",[],{},,True,The returned data correctly provides the total dividends aggregated by sector as requested in the query.,0,,
+"Among all investors, who has paid the highest total taxes, and what is that amount?","{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma"", ""total_taxes_paid"": 24539}","Deepak Sharma has paid the highest total taxes, which is 24539.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxes)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  ?holding ex:hasInvestor ?investor ;
+           ex:taxesPaid ?taxesPaid .
+}
+GROUP BY ?investorName
+ORDER BY DESC(?totalTaxes)
+LIMIT 1",success,1,,"[{""investorName"": ""Deepak Sharma"", ""totalTaxes"": ""24539""}]",[],{},,True,"The returned data provides both the name of the investor and the total tax amount, which directly answers the user's query for the highest payer.",0,,
+I need to find out how many rebalancing actions have an Overweight drift direction?,2,A database error prevented data retrieval.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""RebalancingAction"", ""RebalancingAction_DriftDirection""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?rebalancingAction) AS ?count)
+WHERE {
+  ?rebalancingAction rdf:type ex:RebalancingAction .
+  ?rebalancingAction ex:driftDirection ?driftDirection .
+  FILTER(LCASE(STR(?driftDirection)) = ""overweight"")
+}",error,,SPARQL uses terms that do not exist in the RDF graph.,,"[""driftDirection""]","{""driftDirection"": [""triggeredAction"", ""diversificationScore"", ""description""]}",Unknown RDF terms before Scan,,,2,Scan,Scan
+Can you list all 5 oldest holdings (by purchase date) across all investors.?,"[{""holding_id"": ""69530831-f9e0-40f8-bcdc-5505b5a3b3e7"", ""investor_id"": ""INV-001"", ""investment_name"": ""Persistent Systems Ltd."", ""purchase_date"": ""2022-01-19""}, {""holding_id"": ""89a14ab4-cc6e-41db-a9d8-84e398176e22"", ""investor_id"": ""INV-001"", ""investment_name"": ""Hinduja Leyland Finance Limited"", ""purchase_date"": ""2022-04-26""}, {""holding_id"": ""1ff23dce-e8b8-4f2c-9a2f-809436240818"", ""investor_id"": ""INV-001"", ""investment_name"": ""Tata Motors Passenger Vehicles Ltd"", ""purchase_date"": ""2022-05-19""}, {""holding_id"": ""c9148ad6-cbbc-4182-ab70-5f5d7d366487"", ""investor_id"": ""INV-001"", ""investment_name"": ""Brookfield India Real Estate Trust"", ""purchase_date"": ""2022-07-04""}, {""holding_id"": ""0e5c7ae5-05cd-42e1-8568-4d8953b05b7f"", ""investor_id"": ""INV-001"", ""investment_name"": ""Apple Inc"", ""purchase_date"": ""2022-07-06""}]","The five oldest holdings are:
+1. Persistent Systems Ltd. (purchased 2022-01-19 by Deepak Sharma)
+2. Hinduja Leyland Finance Limited (purchased 2022-04-26 by Deepak Sharma)
+3. Tata Motors Passenger Vehicles Ltd (purchased 2022-05-19 by Deepak Sharma)
+4. Brookfield India Real Estate Trust (purchased 2022-07-04 by Deepak Sharma)
+5. Apple Inc (purchased 2022-07-06 by Deepak Sharma)",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentName ?purchaseDate ?investorName
+WHERE {
+  ?holding rdf:type ex:PortfolioHolding ;
+           ex:investmentName ?investmentName ;
+           ex:purchaseDate ?purchaseDate ;
+           ex:hasInvestor ?investor .
+  ?investor rdf:type ex:InvestorProfile ;
+             ex:investorName ?investorName .
+}
+ORDER BY ASC(?purchaseDate)
+LIMIT 5",success,5,,"[{""investmentName"": ""Persistent Systems Ltd."", ""purchaseDate"": ""2022-01-19"", ""investorName"": ""Deepak Sharma""}, {""investmentName"": ""Hinduja Leyland Finance Limited"", ""purchaseDate"": ""2022-04-26"", ""investorName"": ""Deepak Sharma""}, {""investmentName"": ""Tata Motors Passenger Vehicles Ltd"", ""purchaseDate"": ""2022-05-19"", ""investorName"": ""Deepak Sharma""}, {""investmentName"": ""Brookfield India Real Estate Trust"", ""purchaseDate"": ""2022-07-04"", ""investorName"": ""Deepak Sharma""}, {""investmentName"": ""Apple Inc"", ""purchaseDate"": ""2022-07-06"", ""investorName"": ""Deepak Sharma""}]",[],{},,True,"The data correctly returns exactly 5 records, sorted by purchase date from oldest to newest, and includes the necessary columns (investmentName, purchaseDate, and investorName) to satisfy the query.",0,,
+"Considering all investors in the system, which investors have zero dividend income from their holdings?","[{""investor_id"": ""INV-002"", ""investor_name"": ""Neha Sharma 2""}, {""investor_id"": ""INV-003"", ""investor_name"": ""Rajesh Iyer""}, {""investor_id"": ""INV-004"", ""investor_name"": ""Elon Musk""}]",No data was found.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]",,error,0,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,2,,
+Could you show me all Dividend cash flow events in the last 6 months.?,(no rows returned),No data was found in the knowledge graph. The requested entity may not exist.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?cashFlowId ?date ?amount ?cashFlowType
+WHERE {
+  ?cf a ex:CashFlow ;
+      ex:cashFlowType ?cashFlowType .
+  OPTIONAL { ?cf ex:cashFlowId ?cashFlowID }
+  OPTIONAL { ?cf ex:date ?date }
+  OPTIONAL { ?cf ex:amount ?amount }
+
+  FILTER(CONTAINS(LCASE(STR(?cashFlowType)), ""dividend""))
+  FILTER(!BOUND(?date) || xsd:dateTime(?date) >= (NOW() - ""P6M""^^xsd:duration))
+}",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+"What is the total count of investors have total taxes paid above 500,000?",0,"The total count of investors who have total taxes paid above 500,000 is 0.",MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?investor) AS ?totalCount)
+WHERE {
+  {
+    SELECT ?investor
+    WHERE {
+      ?holding ex:hasInvestor ?investor .
+      ?holding ex:taxesPaid ?taxesPaid .
+    }
+    GROUP BY ?investor
+    HAVING (SUM(xsd:decimal(?taxesPaid)) > 500000)
+  }
+}",success,1,,"[{""totalCount"": ""0""}]",[],{},,True,,0,,
+"Across the portfolio database, summarise the total cash flow amount for each month for investor inv003.?","[{""transaction_month"": ""2023-04"", ""total_cash_flow"": 5000}]",No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUBSTR(?date, 1, 7) AS ?month) (SUM(xsd:decimal(?amount)) AS ?totalCashFlow)
+WHERE {
+  ?cashflow ex:hasInvestor ?investor .
+  ?investor ex:investorId ?id .
+  ?cashflow ex:amount ?amount ;
+            ex:date ?date .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""INV003""))
+}
+GROUP BY SUBSTR(?date, 1, 7)",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+Identify the investment type generates the lowest average dividend income?,"{""investment_type"": ""Alternative Investment Funds (AIF - Cat I)"", ""average_dividends"": 2753}",Alternative Investment Funds (AIF - Cat I) generates the lowest average dividend income of 2753.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""InvestmentType""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentTypeName (AVG(xsd:decimal(?dividends)) AS ?avgDividends)
+WHERE {
+  ?holding ex:hasInvestmentType ?type .
+  ?type ex:investmentTypeName ?investmentTypeName .
+  ?holding ex:dividends ?dividends .
+}
+GROUP BY ?investmentTypeName
+ORDER BY ?avgDividends
+LIMIT 1",success,1,,"[{""investmentTypeName"": ""Alternative Investment Funds (AIF - Cat I)"", ""avgDividends"": ""2753""}]",[],{},,True,,0,,
+Identify the investor whos have not purchased any new holdings in the last 12 months?,"[{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma""}, {""investor_id"": ""INV-002"", ""investor_name"": ""Neha Sharma 2""}, {""investor_id"": ""INV-003"", ""investor_name"": ""Rajesh Iyer""}, {""investor_id"": ""INV-004"", ""investor_name"": ""Elon Musk""}]","The investors who have not purchased any new holdings in the last 12 months are Deepak Sharma, Neha Sharma 2, Rajesh Iyer, and Elon Musk.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER NOT EXISTS {
+    ?holding ex:hasInvestor ?investor ;
+             ex:purchaseDate ?dateStr .
+    FILTER(xsd:date(?dateStr) >= (NOW() - ""P1Y""^^xsd:duration))
+  }
+}",success,4,,"[{""investorName"": ""Deepak Sharma""}, {""investorName"": ""Neha Sharma 2""}, {""investorName"": ""Rajesh Iyer""}, {""investorName"": ""Elon Musk""}]",[],{},,True,"The returned data provides a list of investor names, which directly answers the user's request to identify specific investors.",0,,
+Can you tell me what the average holding duration in days for investor INV-012?,There is no data in raw_data_sample to answer this query.,A database error prevented data retrieval.,MISMATCH,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""InvestorProfile_InvestorId"", ""PortfolioHolding_HoldingPeriodDays""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?days)) AS ?averageHoldingDuration)
+WHERE {
+  ?holding ex:InvestorProfile ?id ;
+           ex:PortfolioHolding_HoldingPeriodDays ?days .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""inv-012""))
+}",error,,SPARQL uses terms that do not exist in the RDF graph.,,"[""PortfolioHolding_HoldingPeriodDays""]","{""PortfolioHolding_HoldingPeriodDays"": [""PortfolioHolding""]}",Unknown RDF terms before Scan,,,2,Scan,Scan
+Identify the investor who holds the highest total Gold investment value?,(no rows returned),No data was found in the knowledge graph. The requested entity may not exist.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""InvestorProfile"", ""SectorAllocation""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName
+WHERE {
+  ?allocation ex:hasInvestor ?investor ;
+              ex:sectorName ?sectorName ;
+              ex:totalInvestment ?totalInvestment .
+  ?investor ex:investorName ?investorName .
+  FILTER(CONTAINS(LCASE(STR(?sectorName)), ""gold""))
+}
+ORDER BY DESC(xsd:decimal(?totalInvestment))
+LIMIT 1",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+"Across the entire investor database, how many investors affected by the Interest Rate Hike scenario have an At Risk portfolio health status?",There is no business rule/data to calculate this from raw_data_sample.,Zero investors affected by the Interest Rate Hike scenario have an At Risk portfolio health status.,MISMATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""ScenarioRebalancing"", ""PortfolioHealth"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investor) AS ?count)
+WHERE {
+  ?rebalance ex:hasInvestor ?investor ;
+             ex:scenario ?scenario .
+  ?health ex:hasInvestor ?investor ;
+          ex:riskScore ?riskScore .
+  FILTER(LCASE(STR(?scenario)) = ""interest rate hike"")
+  FILTER(LCASE(STR(?riskScore)) = ""at risk"")
+}",success,1,,"[{""count"": ""0""}]",[],{},,True,,0,,
+"Do you know which cash flow source (Bank Transfer, UPI, Cheque etc.) handles the most transactions?","[{""source"": ""Gov Bond"", ""transaction_count"": 1}, {""source"": ""Tech Innovators Ltd"", ""transaction_count"": 1}, {""source"": ""Urban REIT"", ""transaction_count"": 1}]",No data was found.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""CashFlow_Source""]",,error,1,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,1,,
+Show the monthly total cash inflows (deposits and SIP) for the last 12 months.?,(no rows returned),The total cash inflow for 2023-04 was 10000.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUBSTR(STR(?date), 1, 7) AS ?month) (SUM(xsd:decimal(?amount)) AS ?totalAmount)
+WHERE {
+  ?cf a ex:CashFlow ;
+      ex:date ?date ;
+      ex:amount ?amount ;
+      ex:cashFlowType ?type .
+  FILTER (CONTAINS(LCASE(STR(?type)), ""deposit"") || CONTAINS(LCASE(STR(?type)), ""sip""))
+}
+GROUP BY ?month
+ORDER BY ?month",success,1,,"[{""month"": ""2023-04"", ""totalAmount"": ""10000""}]",[],{},,True,"The returned columns 'month' and 'totalAmount' logically match the user's request for monthly totals of cash inflows, and the data provided is not empty.",2,,
+What is the total count of rebalancing actions have an Overweight drift direction?,2,A database error prevented data retrieval.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""RebalancingAction"", ""RebalancingAction_DriftDirection""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?rebalancingAction) AS ?totalCount)
+WHERE {
+  ?rebalancingAction rdf:type ex:RebalancingAction .
+  ?rebalancingAction ex:driftDirection ?driftDirection .
+  ?driftDirection rdf:type ex:RebalancingAction_DriftDirection .
+  FILTER(LCASE(STR(?driftDirection)) = ""overweight"")
+}",error,,SPARQL uses terms that do not exist in the RDF graph.,,"[""RebalancingAction_DriftDirection"", ""driftDirection""]","{""RebalancingAction_DriftDirection"": [""RebalancingAction""], ""driftDirection"": [""triggeredAction"", ""diversificationScore"", ""description""]}",Unknown RDF terms before Scan,,,2,Scan,Scan
+"List all scenario-based rebalancing events grouped by whether the allocation was increased or decreased, and show the average revised allocation percentage.?","[{""change_direction"": ""Decrease"", ""scenario_rebalance_count"": 2, ""average_new_allocation_pct"": 40}, {""change_direction"": ""Increase"", ""scenario_rebalance_count"": 4, ""average_new_allocation_pct"": 61.25}]","Increased allocations have an average revised allocation percentage of 61.25%, and decreased allocations have an average revised allocation percentage of 40%.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""ScenarioRebalancing"", ""ScenarioRebalancing_ChangeDirection"", ""ScenarioRebalancing_NewAllocationPct""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?direction (AVG(xsd:decimal(?newAllocationPct)) AS ?avgRevisedAllocationPct)
+WHERE {
+  ?event a ex:ScenarioRebalancing ;
+         ex:currentAllocationPct ?currentAllocationPct ;
+         ex:newAllocationPct ?newAllocationPct .
+  BIND(IF(xsd:decimal(?newAllocationPct) > xsd:decimal(?currentAllocationPct), ""increased"", ""decreased"") AS ?direction)
+}
+GROUP BY ?direction",success,2,,"[{""direction"": ""increased"", ""avgRevisedAllocationPct"": ""61.25""}, {""direction"": ""decreased"", ""avgRevisedAllocationPct"": ""40""}]",[],{},,True,,0,,
+Identify the market scenario triggered the most scenario-based rebalancing events?,"[{""scenario"": ""Approaching Goal"", ""rebalance_event_count"": 1}, {""scenario"": ""Bull Market"", ""rebalance_event_count"": 1}, {""scenario"": ""Interest Rate Hike"", ""rebalance_event_count"": 1}, {""scenario"": ""Job Loss"", ""rebalance_event_count"": 1}, {""scenario"": ""Market Crash"", ""rebalance_event_count"": 1}, {""scenario"": ""Real Estate Boom"", ""rebalance_event_count"": 1}]",The Market Crash scenario triggered 1 scenario-based rebalancing event.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""ScenarioRebalancing"", ""ScenarioRebalancing_Scenario""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?scenario (COUNT(?rebalanceId) AS ?eventCount)
+WHERE {
+  ?rebalance ex:scenario ?scenario ;
+             ex:scenarioRebalanceId ?rebalanceId .
+}
+GROUP BY ?scenario
+ORDER BY DESC(?eventCount)
+LIMIT 1",success,1,,"[{""scenario"": ""Market Crash"", ""eventCount"": ""1""}]",[],{},,True,,0,,
+What would be the total investment (cost) made in 2022 vs 2023 vs 2024?,"[{""purchase_year"": 2022, ""total_investment_cost"": 30560651}, {""purchase_year"": 2023, ""total_investment_cost"": 0}, {""purchase_year"": 2024, ""total_investment_cost"": 0}]",no data was found,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""PortfolioHolding""]",,error,2,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,2,,
+Show the average time horizon for investors grouped by their risk tolerance level.?,There is no business rule/data to calculate this from raw_data_sample.,The average time horizon is 0 for Moderate risk tolerance and 0 for High risk tolerance.,MISMATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskTolerance (AVG(xsd:decimal(?timeHorizon)) AS ?avgTimeHorizon)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:riskTolerance ?riskTolerance ;
+            ex:timeHorizon ?timeHorizon .
+}
+GROUP BY ?riskTolerance",success,2,,"[{""riskTolerance"": ""Moderate"", ""avgTimeHorizon"": ""0""}, {""riskTolerance"": ""High"", ""avgTimeHorizon"": ""0""}]",[],{},,True,,0,,
+Identify the sector focus combination is the most common among investors?,"[{""sector_focus"": ""Government, Gold, Debt"", ""investor_count"": 1}, {""sector_focus"": ""Real Estate, Banking, Corporate"", ""investor_count"": 1}, {""sector_focus"": ""Technology, Pharma, Infra"", ""investor_count"": 1}]","The most common sector focus combination among investors is Government, Gold, and Debt with a preferred segment of Large Cap, with a count of 1.",PARTIAL,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorFocus ?preferredSegment (COUNT(*) AS ?count)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:sectorFocus ?sectorFocus ;
+            ex:preferredSegment ?preferredSegment .
+}
+GROUP BY ?sectorFocus ?preferredSegment
+ORDER BY DESC(?count)
+LIMIT 1",success,1,,"[{""sectorFocus"": ""Government, Gold, Debt"", ""preferredSegment"": ""Large Cap"", ""count"": ""1""}]",[],{},,True,"The data provides a specific combination of 'sectorFocus' and 'preferredSegment' along with a 'count', which directly addresses the user's request to identify the most common combination of focus areas.",0,,
+What is the total count of dividend transactions has investor INV-001 made?,0,Investor INV-001 has made a total count of 0 dividend transactions.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""CashFlow"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?cf) AS ?totalCount)
+WHERE {
+  ?cf ex:hasInvestor ?investor .
+  ?investor ex:investorId ?id .
+  ?cf ex:cashFlowType ?type .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""INV001""))
+  FILTER(CONTAINS(LCASE(STR(?type)), ""dividend""))
+}",success,1,,"[{""totalCount"": ""0""}]",[],{},,True,,0,,
+Please display the total SWP (Systematic Withdrawal Plan) amount per investor.?,"[{""investor_id"": ""INV-003"", ""total_swp_amount"": 5000}]",The total SWP amount for Rajesh Iyer is 5000.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?amount)) AS ?totalSWPAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:amount ?amount ;
+            ex:cashFlowType ?type ;
+            ex:hasInvestor ?investor .
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER(CONTAINS(LCASE(STR(?type)), ""swp""))
+}
+GROUP BY ?investorName",success,1,,"[{""investorName"": ""Rajesh Iyer"", ""totalSWPAmount"": ""5000""}]",[],{},,True,"The returned columns 'investorName' and 'totalSWPAmount' directly correspond to the user's request for total SWP amount per investor, and the data provides the necessary aggregated information.",0,,
+"Across the entire investor database, how many rebalancing actions have an Underweight drift direction?",1,A database error prevented data retrieval.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""RebalancingAction"", ""RebalancingAction_DriftDirection""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?rebalanceAction) AS ?count)
+WHERE {
+  ?rebalanceAction rdf:type ex:RebalancingAction .
+  ?rebalanceAction ex:action ?direction .
+  ?direction rdf:type ex:RebalancingAction_DriftDirection .
+  ?direction schema1:name ?directionName .
+  FILTER(LCASE(STR(?directionName)) = ""underweight"")
+}",error,,SPARQL uses terms that do not exist in the RDF graph.,,"[""RebalancingAction_DriftDirection""]","{""RebalancingAction_DriftDirection"": [""RebalancingAction""]}",Unknown RDF terms before Scan,,,2,Scan,Scan
+"List all scenario-based rebalancing events grouped by whether the allocation was increased or decreased, and show the average revised allocation percentage.?","[{""change_direction"": ""Decrease"", ""scenario_rebalance_count"": 2, ""average_new_allocation_pct"": 40}, {""change_direction"": ""Increase"", ""scenario_rebalance_count"": 4, ""average_new_allocation_pct"": 61.25}]","Increased allocations have an average revised allocation percentage of 61.25%, and decreased allocations have an average revised allocation percentage of 40%.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""ScenarioRebalancing"", ""ScenarioRebalancing_ChangeDirection"", ""ScenarioRebalancing_NewAllocationPct""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?direction (AVG(xsd:decimal(?newAllocationPct)) AS ?avgRevisedAllocationPct)
+WHERE {
+  ?event a ex:ScenarioRebalancing ;
+         ex:currentAllocationPct ?currentAllocationPct ;
+         ex:newAllocationPct ?newAllocationPct .
+  BIND(IF(xsd:decimal(?newAllocationPct) > xsd:decimal(?currentAllocationPct), ""increased"", ""decreased"") AS ?direction)
+}
+GROUP BY ?direction",success,2,,"[{""direction"": ""increased"", ""avgRevisedAllocationPct"": ""61.25""}, {""direction"": ""decreased"", ""avgRevisedAllocationPct"": ""40""}]",[],{},,True,,0,,
+What is the total count of investors affected by the Interest Rate Hike scenario have an At Risk portfolio health status?,There is no business rule/data to calculate this from raw_data_sample.,The total count of investors affected by the Interest Rate Hike scenario who have an At Risk portfolio health status is 0.,MISMATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""ScenarioRebalancing"", ""PortfolioHealth""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investor) AS ?totalCount)
+WHERE {
+  ?rebalance ex:scenario ?scenario ;
+             ex:hasInvestor ?investor .
+  FILTER(CONTAINS(LCASE(STR(?scenario)), ""interest rate hike""))
+
+  ?health ex:hasInvestor ?investor ;
+          ex:riskScore ?riskScore .
+  FILTER(CONTAINS(LCASE(STR(?riskScore)), ""at risk""))
+}",success,1,,"[{""totalCount"": ""0""}]",[],{},,True,,0,,
+Which sector has the highest maximum total investment amount in sector allocation records?,"{""sector"": ""Private Equity"", ""max_total_investment"": 15028100}",Private Equity has the highest maximum total investment amount.,PARTIAL,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""SectorAllocation"", ""SectorAllocation_TotalInvestment"", ""SectorAllocation_Sector""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName
+WHERE {
+  ?allocation a ex:SectorAllocation ;
+              ex:totalInvestment ?investment ;
+              ex:sectorName ?sectorName .
+}
+GROUP BY ?sectorName
+ORDER BY DESC(MAX(xsd:decimal(?investment)))
+LIMIT 1",success,1,,"[{""sectorName"": ""Private Equity""}]",[],{},,True,"The query asks 'Which sector', and the returned data provides the 'sectorName'. Although the value of the investment amount is not included, the user did not explicitly ask for the amount to be returned, only for the identity of the sector. The single-row result implies that the aggregation and sorting (to find the highest) were performed correctly.",0,,
+"Considering all investors in the system, which investors have not purchased any new holdings in the last 12 months?","[{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma""}, {""investor_id"": ""INV-002"", ""investor_name"": ""Neha Sharma 2""}, {""investor_id"": ""INV-003"", ""investor_name"": ""Rajesh Iyer""}, {""investor_id"": ""INV-004"", ""investor_name"": ""Elon Musk""}]","The investors who have not purchased any new holdings in the last 12 months are Deepak Sharma, Neha Sharma 2, Rajesh Iyer, and Elon Musk.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName
+WHERE {
+  ?investor rdf:type ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER NOT EXISTS {
+    ?holding ex:hasInvestor ?investor ;
+             ex:purchaseDate ?purchaseDateStr .
+    FILTER (xsd:date(?purchaseDateStr) >= (xsd:date(NOW()) - ""P1Y""^^xsd:duration))
+  }
+}",success,4,,"[{""investorName"": ""Deepak Sharma""}, {""investorName"": ""Neha Sharma 2""}, {""investorName"": ""Rajesh Iyer""}, {""investorName"": ""Elon Musk""}]",[],{},,True,,0,,
+Could you show me the liquidity rating for investors who have allocated more than 40% of their portfolio to the 'Technology' sector.?,(no rows returned),No data was found.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHealth"", ""SectorAllocation"", ""InvestorProfile""]",,error,0,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,2,,
+"Out of all options, which market scenario triggered the fewest scenario-based rebalancing events?","[{""scenario"": ""Approaching Goal"", ""rebalance_event_count"": 1}, {""scenario"": ""Bull Market"", ""rebalance_event_count"": 1}, {""scenario"": ""Interest Rate Hike"", ""rebalance_event_count"": 1}, {""scenario"": ""Job Loss"", ""rebalance_event_count"": 1}, {""scenario"": ""Market Crash"", ""rebalance_event_count"": 1}, {""scenario"": ""Real Estate Boom"", ""rebalance_event_count"": 1}]",Market Crash triggered the fewest scenario-based rebalancing events.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""ScenarioRebalancing""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?scenario
+WHERE {
+  ?rebalance a ex:ScenarioRebalancing ;
+             ex:scenario ?scenario .
+}
+GROUP BY ?scenario
+ORDER BY ASC(COUNT(?rebalance))
+LIMIT 1",success,1,,"[{""scenario"": ""Market Crash""}]",[],{},,True,The returned data provides the specific market scenario requested by the user's query ('which market scenario'). The column name matches the subject of the query.,0,,
+I want to know which investor bought the most holdings in 2023?,(no rows returned),Deepak Sharma bought 1 holding.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (COUNT(?holding) AS ?numHoldings)
+WHERE {
+  ?holding ex:hasInvestor ?investor .
+  ?investor ex:investorName ?investorName .
+  ?holding ex:date ?purchaseDate .
+  FILTER(CONTAINS(LCASE(STR(?purchaseDate)), ""2023""))
+}
+GROUP BY ?investorName
+ORDER BY DESC(?numHoldings)
+LIMIT 1",success,1,,"[{""investorName"": ""Deepak Sharma"", ""numHoldings"": ""1""}]",[],{},Validation failed or zero rows,True,,1,,
+Provide the count of holdings were purchased before 2022 and are still held by investors?,0,The count of holdings purchased before 2022 and still held by investors is 0.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?count)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:purchaseDate ?date ;
+           ex:hasInvestor ?investor .
+  FILTER(xsd:integer(SUBSTR(STR(?date), 1, 4)) < 2022)
+}",success,1,,"[{""count"": ""0""}]",[],{},,True,,0,,
+Show total Lump Sum investments made per investor across all time.?,(no rows returned),No data was found in the knowledge graph. The requested entity may not exist.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?amount)) AS ?totalLumpSum)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:hasInvestor ?investor ;
+            ex:amount ?amount ;
+            ex:cashFlowType ?type .
+  ?investor a ex:InvestorProfile ;
+            ex:investorName ?investorName .
+  FILTER(CONTAINS(LCASE(STR(?type)), ""lump sum""))
+}
+GROUP BY ?investorName",success,0,,[],[],{},Validation failed or zero rows,,,2,Validate,Validate
+"Across the entire investor database, how many holdings were purchased before 2022 and are still held by investors?",0,There are 0 holdings purchased before 2022 that are still held by investors.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?holdingsCount)
+WHERE {
+  ?holding rdf:type ex:PortfolioHolding ;
+           ex:purchaseDate ?purchaseDate ;
+           ex:hasInvestor ?investor .
+  FILTER(xsd:date(STR(?purchaseDate)) < ""2022-01-01""^^xsd:date)
+}",success,1,,"[{""holdingsCount"": ""0""}]",[],{},,True,,0,,
+Categorize all investment goals by their type and show the average progress for each.?,"[{""investment_goal"": ""Growth"", ""average_progress_pct"": 89.7}, {""investment_goal"": ""Income Generation"", ""average_progress_pct"": 126.605}]","Income Generation has an average progress of 126.605, and Growth has an average progress of 89.7.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestmentGoal"", ""InvestmentGoalContext_GoalTypeId"", ""InvestmentGoal_ProgressPct""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?type (AVG(xsd:decimal(?progress)) AS ?avgProgress)
+WHERE {
+  ?goal a ex:InvestmentGoal ;
+        ex:investmentGoalLabel ?type ;
+        ex:progressPct ?progress .
+}
+GROUP BY ?type",success,2,,"[{""type"": ""Income Generation"", ""avgProgress"": ""126.605""}, {""type"": ""Growth"", ""avgProgress"": ""89.7""}]",[],{},,True,,0,,
+What is the total count of investors hold Gold investments in their portfolio?,0,The total count of investors holding Gold investments in their portfolio is 0.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investor) AS ?totalInvestors)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:hasHolding ?holding .
+  ?holding ex:investmentName ?investmentName .
+  FILTER(CONTAINS(LCASE(STR(?investmentName)), ""gold""))
+}",success,1,,"[{""totalInvestors"": ""0""}]",[],{},,True,The returned data correctly provides an aggregated count ('totalInvestors') that matches the user's request for a 'total count'. The column name is logically consistent with the query.,0,,
+Do you know which investment category has the lowest average taxes paid?,"{""category"": ""Private Equity"", ""average_taxes_paid"": 2017}","The investment category with the lowest average taxes paid is Private Equity, with an average tax of 2017.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?category (AVG(xsd:decimal(?taxesPaid)) AS ?avgTaxes)
+WHERE {
+  ?holding ex:categoryLiteral ?category .
+  ?holding ex:taxesPaid ?taxesPaid .
+}
+GROUP BY ?category
+ORDER BY ?avgTaxes
+LIMIT 1",success,1,,"[{""category"": ""Private Equity"", ""avgTaxes"": ""2017""}]",[],{},,True,"The returned data contains the 'category' and the 'avgTaxes', which directly answers the user's question regarding which investment category has the lowest average taxes paid.",0,,
+Display the average taxes paid per category of investment.?,"[{""category"": ""REIT"", ""average_taxes_paid"": 3253}, {""category"": ""Debt"", ""average_taxes_paid"": 3144}, {""category"": ""Bond"", ""average_taxes_paid"": 2688.5}, {""category"": ""Equity"", ""average_taxes_paid"": 2149.6}, {""category"": ""Private Equity"", ""average_taxes_paid"": 2017}]","The average taxes paid per category of investment are: Bond: 2688.5, Debt: 3144, Private Equity: 2017, Equity: 2149.6, and REIT: 3253.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?taxesPaid)) AS ?avgTaxesPaid) ?category
+WHERE {
+  ?holding ex:taxesPaid ?taxesPaid ;
+           ex:categoryLiteral ?category .
+}
+GROUP BY ?category",success,5,,"[{""avgTaxesPaid"": ""2688.5"", ""category"": ""Bond""}, {""avgTaxesPaid"": ""3144"", ""category"": ""Debt""}, {""avgTaxesPaid"": ""2017"", ""category"": ""Private Equity""}, {""avgTaxesPaid"": ""2149.6"", ""category"": ""Equity""}, {""avgTaxesPaid"": ""3253"", ""category"": ""REIT""}]",[],{},,True,The returned data correctly provides the average taxes paid for each investment category as requested by the query.,0,,
+"Across the entire investor database, how many total holdings do Conservative risk profile investors hold?",There is no data in raw_data_sample to answer this query.,Conservative risk profile investors hold 0 total holdings.,MISMATCH,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?totalHoldings)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:riskTolerance ?risk .
+  FILTER(CONTAINS(LCASE(STR(?risk)), ""conservative""))
+  ?investor ex:hasHolding ?holding .
+}",success,1,,"[{""totalHoldings"": ""0""}]",[],{},,True,,0,,
+Please provide the total number of investors in the wealth management database?,4,There are 4 total investors in the wealth management database.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?investor) AS ?totalInvestors)
+WHERE {
+  ?investor rdf:type ex:InvestorProfile .
+}",success,1,,"[{""totalInvestors"": ""4""}]",[],{},,True,The returned data contains the 'totalInvestors' column which directly answers the user's request for the total number of investors.,0,,
+"Show the number of rebalancing actions recorded, categorised by how much each sector deviates from its target allocation.?","[{""drift_direction"": ""Overweight"", ""rebalancing_action_count"": 2}, {""drift_direction"": ""Underweight"", ""rebalancing_action_count"": 1}]",There are 2 rebalancing actions with a deviation of 5 and 1 rebalancing action with a deviation of -10.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""RebalancingAction"", ""RebalancingAction_Sector"", ""RebalancingAction_AllocationDrift""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?action) AS ?rebalancingActionCount) ?deviation
+WHERE {
+  ?action rdf:type ex:RebalancingAction .
+  ?action ex:currentAllocationPct ?current ;
+          ex:targetAllocationPct ?target .
+  BIND(xsd:decimal(?current) - xsd:decimal(?target) AS ?deviation)
+}
+GROUP BY ?deviation",success,2,,"[{""rebalancingActionCount"": ""2"", ""deviation"": ""5""}, {""rebalancingActionCount"": ""1"", ""deviation"": ""-10""}]","[""label""]","{""label"": []}",Unknown RDF terms before Scan,True,,2,,
+Do you know which portfolio segment has the highest total invested amount across all investors?,"{""segment"": ""Private Equity"", ""total_invested_amount"": 11019100}",A database error prevented data retrieval.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan,"[""PortfolioHolding_Segment"", ""SectorAllocation_TotalInvestment""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?segmentName (SUM(xsd:decimal(?amount)) AS ?totalAmount)
+WHERE {
+  ?investment a ex:SectorAllocation_TotalInvestment ;
+              ex:totalInvestment ?amount ;
+              ex:segment ?segment .
+  ?segment a ex:PortfolioHolding_Segment ;
+           schema1:name ?segmentName .
+}
+GROUP BY ?segmentName
+ORDER BY DESC(?totalAmount)
+LIMIT 1",error,,SPARQL uses terms that do not exist in the RDF graph.,,"[""PortfolioHolding_Segment"", ""SectorAllocation_TotalInvestment"", ""segment""]","{""PortfolioHolding_Segment"": [""PortfolioHolding"", ""PortfolioHealth""], ""SectorAllocation_TotalInvestment"": [""SectorAllocation"", ""sectorAllocationId"", ""totalInvestment""], ""segment"": [""segmentId"", ""Segment"", ""hasSegment"", ""segmentName"", ""segmentLiteral""]}",Unknown RDF terms before Scan,,,2,Scan,Scan
+What is the total dividend cash flow amount for investor INV-049?,There is no data in raw_data_sample to answer this query.,The total dividend cash flow amount for investor INV-049 is 0.,MISMATCH,NO_ANSWER,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?amount)) AS ?totalDividendAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:amount ?amount ;
+            ex:hasInvestor ?investor ;
+            ex:cashFlowType ?type .
+  ?investor a ex:InvestorProfile ;
+            ex:investorId ?investorId .
+  FILTER(CONTAINS(LCASE(STR(?investorId)), ""inv-049""))
+  FILTER(CONTAINS(LCASE(STR(?type)), ""dividend""))
+}",success,1,,"[{""totalDividendAmount"": ""0""}]",[],{},,True,,0,,
+"Calculate the average target amount for investment goals, grouped by the investor's risk profile.?","[{""risk_tolerance"": ""High"", ""average_target_amount"": 1500000}, {""risk_tolerance"": ""Moderate"", ""average_target_amount"": 900000}]","The average target amount is 900,000 for the Moderate risk profile and 1,500,000 for the High risk profile.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestmentGoal"", ""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?targetAmount)) AS ?avgTargetAmount) ?riskTolerance
+WHERE {
+  ?goal ex:targetAmount ?targetAmount ;
+        ex:hasInvestor ?investor .
+  ?investor ex:riskTolerance ?riskTolerance .
+}
+GROUP BY ?riskTolerance",success,2,,"[{""avgTargetAmount"": ""900000"", ""riskTolerance"": ""Moderate""}, {""avgTargetAmount"": ""1500000"", ""riskTolerance"": ""High""}]","[""riskTokens""]","{""riskTokens"": [""riskTolerance"", ""riskScore""]}",Unknown RDF terms before Scan,True,,2,,
+Do you know which investment category holds the lowest total portfolio value?,"{""category"": ""Debt"", ""total_portfolio_value"": 1030000}","The investment category with the lowest total portfolio value is Debt, with a value of 1030000.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?category (SUM(xsd:decimal(?currentValue)) AS ?totalPortfolioValue)
+WHERE {
+  ?holding rdf:type ex:PortfolioHolding ;
+           ex:categoryLiteral ?category ;
+           ex:currentValue ?currentValue .
+}
+GROUP BY ?category
+ORDER BY ?totalPortfolioValue
+LIMIT 1",success,1,,"[{""category"": ""Debt"", ""totalPortfolioValue"": ""1030000""}]",[],{},,True,"The returned data provides the specific category and its corresponding total portfolio value, which directly answers the user's question about which category holds the lowest value.",0,,
+Can you tell me √¢¬Ä¬î what was the total cash inflow from deposits and sip contributions in the last 12 months?,0,The total cash inflow from deposits and sip contributions in the last 12 months was 0.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?amount)) AS ?totalCashInflow)
+WHERE {
+  ?cf a ex:CashFlow ;
+      ex:amount ?amount ;
+      ex:source ?source .
+  OPTIONAL { ?cf ex:cashFlowType ?type }
+  FILTER (LCASE(STR(?source)) = ""deposits"" || LCASE(STR(?source)) = ""sip contributions"" || LCASE(STR(?type)) = ""deposits"" || LCASE(STR(?type)) = ""sip contributions"")
+}",success,1,,"[{""totalCashInflow"": ""0""}]",[],{},,True,,0,,
+What is the total count of holdings were purchased before 2022 and are still held by investors?,0,The total count of holdings purchased before 2022 and still held by investors is 10.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?totalHoldings)
+WHERE {
+  ?holding rdf:type ex:PortfolioHolding ;
+           ex:purchaseDate ?purchaseDate ;
+           ex:hasInvestor ?investor .
+  FILTER(?purchaseDate < ""2022-01-01"")
+}",success,1,,"[{""totalHoldings"": ""10""}]",[],{},,True,"The returned data provides the 'totalHoldings' as requested by the query, representing the aggregated count.",0,,
+"Considering all investors in the system, which investor has paid the highest total taxes across all holdings?","{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma"", ""total_taxes_paid"": 24539}",Deepak Sharma has paid the highest total taxes of 24539.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxes)
+WHERE {
+  ?investor ex:investorName ?investorName .
+  ?holding ex:hasInvestor ?investor ;
+           ex:taxesPaid ?taxesPaid .
+}
+GROUP BY ?investor ?investorName
+ORDER BY DESC(?totalTaxes)
+LIMIT 1",success,1,,"[{""investorName"": ""Deepak Sharma"", ""totalTaxes"": ""24539""}]",[],{},,True,,0,,
+What is the total count of Conservative risk profile investors have a portfolio diversification score below 50?,There is no business rule/data to calculate this from raw_data_sample.,The total count of Conservative risk profile investors with a portfolio diversification score below 50 is 0.,MISMATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHealth""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investor) AS ?totalCount)
+WHERE {
+  ?health ex:hasInvestor ?investor .
+  ?investor ex:riskTolerance ?risk .
+  ?health ex:diversificationScore ?scoreStr .
+  FILTER(LCASE(STR(?risk)) = ""conservative"")
+  FILTER(xsd:decimal(STR(?scoreStr)) < 50)
+}",success,1,,"[{""totalCount"": ""0""}]",[],{},,True,,0,,
+"Considering all investors in the system, which investor has the longest average holding duration across all investors?","{""investor_id"": ""INV-001"", ""investor_name"": ""Deepak Sharma"", ""average_holding_duration_days"": 1359.1}",Deepak Sharma has the longest average holding duration.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHolding""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName
+WHERE {
+  ?investor ex:hasHolding ?holding .
+  ?investor ex:investorName ?investorName .
+  ?holding ex:purchaseDate ?pDateStr .
+  BIND(xsd:date(?pDateStr) AS ?pDate)
+  BIND(xsd:integer(year(?pDate) * 10000 + month(?pDate) * 100 + day(?pDate)) AS ?dateValue)
+}
+GROUP BY ?investorName
+ORDER BY ASC(AVG(xsd:decimal(?dateValue)))
+LIMIT 1",success,1,,"[{""investorName"": ""Deepak Sharma""}]",[],{},,True,,0,,
+"From the complete wealth management dataset, what was the total investment cost made in 2022?",30560651,"The total investment cost made in 2022 was 30,560,651.",MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""PortfolioHolding"", ""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?cost)) AS ?totalInvestmentCost)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:cost ?cost ;
+           ex:purchaseDate ?date .
+  FILTER(CONTAINS(STR(?date), ""2022""))
+}",success,1,,"[{""totalInvestmentCost"": ""30560651""}]",[],{},,True,The returned data provides the specific aggregated value ('totalInvestmentCost') requested in the user query.,0,,
+What is the ratio of total withdrawals to total deposits for each investor?,There is no business rule/data to calculate this from raw_data_sample.,no data was found,MATCH,PARTIAL,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow"", ""InvestorProfile""]",,error,0,No SPARQL provided to Scan operator.,[],[],{},Validation failed or zero rows,,,1,,
+"Looking at all available records, what is the total number of investors in the wealth management database?",4,The total number of investors in the wealth management database is 4.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?investor) AS ?totalInvestors)
+WHERE {
+  ?investor rdf:type ex:InvestorProfile .
+}",success,1,,"[{""totalInvestors"": ""4""}]",[],{},,True,The returned data provides the specific aggregate value ('totalInvestors': '4') requested by the user query.,0,,

@@ -1,0 +1,282 @@
+{
+  "sample_row_id": "wealth_management_scoring_quantitative_65_questions:SQA-4T-005",
+  "question": "How do average returns_pct, avg_sharpe_ratio, and risk_score compare by profile category?",
+  "ground_truth": "[{\"category\":\"Hybrid\",\"avg_returns_pct\":102.17,\"avg_sharpe_ratio\":0.01,\"avg_risk_score\":50.23},{\"category\":null,\"avg_returns_pct\":40.42,\"avg_sharpe_ratio\":0.06,\"avg_risk_score\":51.49},{\"category\":\"Real Estate\",\"avg_returns_pct\":51.62,\"avg_sharpe_ratio\":0.03,\"avg_risk_score\":50.97},{\"category\":\"Equity\",\"avg_returns_pct\":60.24,\"avg_sharpe_ratio\":-0.05,\"avg_risk_score\":51.53},{\"category\":\"Debt\",\"avg_returns_pct\":76.83,\"avg_sharpe_ratio\":0.05,\"avg_risk_score\":47.47},{\"category\":\"Gold\",\"avg_returns_pct\":79.3,\"avg_sharpe_ratio\":0.02,\"avg_risk_score\":47.0}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 699.723,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"How do average returns_pct, avg_sharpe_ratio, and risk_score compare by profile category?\" So we need to retrieve ontology classes, classify math/aggregation terms (average). Then generate SPARQL, scan, validate, explain. Possibly also need Filter_Aggregate, Order_By? But steps must be linear and use operators. The plan: 1 Retrieve (ontology classes). 2 Classify (identify average, numeric aggregation). 3 Generate (SPARQL query to compute average returns_pct, avg_sharpe_ratio, risk_score grouped by profile category). 4 Scan (execute query). 5 Validate (check results). 6 Explain (present to user). Could also include Filter_Aggregate? But not required; classification covers aggregation. The plan should be numbered steps only.\n\nThus output:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nBut maybe need to be more descriptive: \"Retrieve ontology classes for profile category, returns_pct, avg_sharpe_ratio, risk_score.\" etc. Provide step descriptions. The instruction: \"Output ONLY the numbered steps.\" So each step should be a line with number and description. Provide detailed step description using operators.\n\nLet's craft:\n\n1. Retrieve: fetch ontology classes relevant to the query (ProfileCategory, returns_pct, avg_sharpe_ratio, risk_score).\n2. Classify: identify that the query involves aggregation (average) and numeric comparison.\n3. Generate: construct a SPARQL query that groups by profile category and computes AVG(returns_pct), AVG(avg_sharpe_ratio), AVG(risk_score).\n4. Scan: execute the generated SPARQL query against the knowledge graph.\n5. Validate: verify that the result set contains the expected columns and no errors.\n6. Explain: present the comparative averages per profile category to the user.\n\nYes.</reasoning>1. **Retrieve** – Pull the ontology classes needed for the query (e.g., `ProfileCategory`, `returns_pct`, `avg_sharpe_ratio`, `risk_score`).  \n2. **Classify** – Detect that the request involves numeric aggregation (“average”) and comparative analysis across categories.  \n3. **Generate** – Write a SPARQL query that groups data by `ProfileCategory` and computes `AVG(returns_pct)`, `AVG(avg_sharpe_ratio)`, and `AVG(risk_score)`.  \n4. **Scan** – Execute the generated SPARQL query on the knowledge graph to obtain the result set.  \n5. **Validate** – Check that the query returned the expected columns and that the values are valid (no nulls or errors).  \n6. **Explain** – Present the averaged `returns_pct`, `avg_sharpe_ratio`, and `risk_score` for each profile category, highlighting how they compare.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Explain",
+              "inputs": [
+                5
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2
+            },
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"How do average returns_pct, avg_sharpe_ratio, and risk_score compare by profile category?\" So we need to retrieve ontology classes, classify math/aggregation terms (average). Then generate SPARQL, scan, validate, explain. Possibly also need Filter_Aggregate, Order_By? But the plan should be linear steps, each a numbered step with operator name and brief description. Must follow chronology: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain. Could include additional steps like Filter_Aggregate after Scan? But chronology says after Scan must Validate then Explain. So we cannot insert extra steps after Validate before Explain. So we must embed any needed processing within those steps. So plan:\n\n1. Retrieve: get ontology classes related to profile category, returns_pct, avg_sharpe_ratio, risk_score.\n2. Classify: identify aggregation (average) and numeric terms.\n3. Generate: write SPARQL query to compute average returns_pct, avg_sharpe_ratio, risk_score grouped by profile category.\n4. Scan: execute the SPARQL query against KG.\n5. Validate: check results for completeness and correctness.\n6. Explain: present comparison results to user.\n\nThus output only numbered steps.</reasoning>1. **Retrieve** – Locate and load the ontology classes for *profile category*, *returns_pct*, *avg_sharpe_ratio*, and *risk_score* from the knowledge graph.  \n\n2. **Classify** – Identify the mathematical/aggregation terms in the query (“average”, “compare”) and tag the relevant properties (*returns_pct*, *avg_sharpe_ratio*, *risk_score*) as numeric fields requiring aggregation.  \n\n3. **Generate** – Compose a SPARQL query that groups data by *profile category* and computes the average of *returns_pct*, the average of *avg_sharpe_ratio*, and the average of *risk_score* for each category.  \n\n4. **Scan** – Execute the generated SPARQL query against the knowledge graph and retrieve the result set.  \n\n5. **Validate** – Verify that the returned rows contain a *profile category* and the three averaged metrics, checking for missing values or anomalies.  \n\n6. **Explain** – Summarize and present to the user how the average *returns_pct*, *avg_sharpe_ratio*, and *risk_score* differ across the various profile categories.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"How do average returns_pct, avg_sharpe_ratio, and risk_score compare by profile category?\" So need to retrieve ontology classes, classify math/aggregation words (average). Then generate SPARQL, scan, validate, explain.\n\nSteps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify that we need average aggregation for returns_pct, avg_sharpe_ratio, risk_score, and grouping by profile category)\n3. Generate (SPARQL query to compute average returns_pct, avg_sharpe_ratio, risk_score grouped by profile category)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present comparison)\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the ontology classes relevant to “profile category”, “returns_pct”, “avg_sharpe_ratio”, and “risk_score”.  \n2. Classify – identify the mathematical/aggregation intent (average) and the grouping dimension (by profile category).  \n3. Generate – write a SPARQL query that computes the average of returns_pct, avg_sharpe_ratio, and risk_score for each profile category.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the query returned valid, non‑empty results and that the averages are correctly calculated.  \n6. Explain – present the user with a clear comparison of the average returns_pct, avg_sharpe_ratio, and risk_score across the different profile categories.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "PortfolioHolding",
+      "InvestmentGoal",
+      "PortfolioHealth",
+      "Category"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.97,
+    "target_field": "returnsPct, avgSharpeRatio, riskScore",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query requests average values for returnsPct (numeric in PortfolioHolding), avgSharpeRatio (numeric in InvestmentGoal), and riskScore (numeric in PortfolioHealth) grouped by the categorical 'category' field of Investor. All target fields are numeric, so a numeric aggregation is appropriate.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?avgReturnsPct ?avgSharpeRatio ?avgRiskScore\nWHERE {\n  {\n    SELECT ?category (AVG(xsd:decimal(?returnsPct)) AS ?avgReturnsPct)\n    WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:returnsPct ?returnsPct ;\n               wm:hasCategory ?category .\n    }\n    GROUP BY ?category\n  }\n  {\n    SELECT ?category (AVG(xsd:decimal(?investorSharpe)) AS ?avgSharpeRatio) (AVG(xsd:decimal(?investorRisk)) AS ?avgRiskScore)\n    WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?investorId ;\n               wm:hasCategory ?category .\n      {\n        SELECT ?investorId (AVG(xsd:decimal(?avgSharpeRatio)) AS ?investorSharpe) (AVG(xsd:decimal(?riskScore)) AS ?investorRisk)\n        WHERE {\n          OPTIONAL {\n            ?goal a wm:InvestmentGoal ;\n                  wm:investorId ?investorId ;\n                  wm:avgSharpeRatio ?avgSharpeRatio .\n          }\n          OPTIONAL {\n            ?health a wm:PortfolioHealth ;\n                    wm:investorId ?investorId ;\n                    wm:riskScore ?riskScore .\n          }\n        }\n        GROUP BY ?investorId\n      }\n    }\n    GROUP BY ?category\n  }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?avgReturnsPct ?avgSharpeRatio ?avgRiskScore\nWHERE {\n  {\n    SELECT ?category (AVG(xsd:decimal(?returnsPct)) AS ?avgReturnsPct)\n    WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:returnsPct ?returnsPct ;\n               wm:hasCategory ?category .\n    }\n    GROUP BY ?category\n  }\n  {\n    SELECT ?category (AVG(xsd:decimal(?investorSharpe)) AS ?avgSharpeRatio) (AVG(xsd:decimal(?investorRisk)) AS ?avgRiskScore)\n    WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?investorId ;\n               wm:hasCategory ?category .\n      {\n        SELECT ?investorId (AVG(xsd:decimal(?avgSharpeRatio)) AS ?investorSharpe) (AVG(xsd:decimal(?riskScore)) AS ?investorRisk)\n        WHERE {\n          OPTIONAL {\n            ?goal a wm:InvestmentGoal ;\n                  wm:investorId ?investorId ;\n                  wm:avgSharpeRatio ?avgSharpeRatio .\n          }\n          OPTIONAL {\n            ?health a wm:PortfolioHealth ;\n                    wm:investorId ?investorId ;\n                    wm:riskScore ?riskScore .\n          }\n        }\n        GROUP BY ?investorId\n      }\n    }\n    GROUP BY ?category\n  }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?avgReturnsPct ?avgSharpeRatio ?avgRiskScore\nWHERE {\n  {\n    SELECT ?category (AVG(xsd:decimal(?returnsPct)) AS ?avgReturnsPct)\n    WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:returnsPct ?returnsPct ;\n               wm:hasCategory ?category .\n    }\n    GROUP BY ?category\n  }\n  {\n    SELECT ?category (AVG(xsd:decimal(?investorSharpe)) AS ?avgSharpeRatio) (AVG(xsd:decimal(?investorRisk)) AS ?avgRiskScore)\n    WHERE {\n      ?holding a wm:PortfolioHolding ;\n               wm:investorId ?investorId ;\n               wm:hasCategory ?category .\n      {\n        SELECT ?investorId (AVG(xsd:decimal(?avgSharpeRatio)) AS ?investorSharpe) (AVG(xsd:decimal(?riskScore)) AS ?investorRisk)\n        WHERE {\n          OPTIONAL {\n            ?goal a wm:InvestmentGoal ;\n                  wm:investorId ?investorId ;\n                  wm:avgSharpeRatio ?avgSharpeRatio .\n          }\n          OPTIONAL {\n            ?health a wm:PortfolioHealth ;\n                    wm:investorId ?investorId ;\n                    wm:riskScore ?riskScore .\n          }\n        }\n        GROUP BY ?investorId\n      }\n    }\n    GROUP BY ?category\n  }\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 600 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "SPARQL execution timed out after 600 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth. Ground truth is JSON list with categories and avg returns, sharpe, risk. Pipeline output: \"A database error prevented data retrieval.\"\n\nThus pipeline did not provide any data, not matching ground truth. According to rule 2, if ground truth contains concrete numbers, pipeline must contain same facts. It didn't. So MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "scan_timeout",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

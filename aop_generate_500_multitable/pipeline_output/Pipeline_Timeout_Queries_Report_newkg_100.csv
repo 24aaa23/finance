@@ -1,0 +1,1363 @@
+Sample Row ID,Question,Table Count,Ground Truth Tables,Pipeline Retrieved Count,Pipeline Retrieved Classes,First Scan Timed Out,Final Scan Timed Out,Any Scan Timed Out,First Scan Status,First Scan Error,Final Scan Status,Final Scan Error,Self Heal Attempts,Category,Difficulty,New Status,Generated SPARQL,Debug Failure Type
+wealth_management_70_question_benchmark:WM-5T-001,"Which Aggressive investors have an underfunded goal, a Gold holding, risk score above 60, and sector allocation above 30%?",5,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_ENTITY_INVESTMENT_GOAL_001; ATOM_ENTITY_PORTFOLIO_HOLDING_001; ATOM_ENTITY_PORTFOLIO_HEALTH_001; ATOM_ENTITY_SECTOR_ALLOCATION_001,5,"[""Investor"", ""InvestmentGoal"", ""PortfolioHolding"", ""PortfolioHealth"", ""SectorAllocation""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,4,Scenario and cross-domain analysis,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investor ?investorLabel
+WHERE {
+  ?investor a wm:Investor ;
+            wm:riskTolerance ?rt ;
+            rdfs:label ?investorLabel .
+  FILTER(LCASE(STR(?rt)) = ""aggressive"")
+
+  ?goal a wm:InvestmentGoal ;
+        wm:belongsToInvestor ?investor ;
+        wm:shortfall ?sf .
+  FILTER(xsd:decimal(?sf) > 0)
+
+  ?hold a wm:PortfolioHolding ;
+        wm:heldByInvestor ?investor ;
+        wm:investmentName ?iname .
+  FILTER(CONTAINS(LCASE(STR(?iname)), ""gold""))
+
+  ?ph a wm:PortfolioHealth ;
+      wm:healthOfInvestor ?investor ;
+      wm:riskScore ?rs .
+  FILTER(xsd:decimal(?rs) > 60)
+
+  ?sa a wm:SectorAllocation ;
+      wm:allocationOfInvestor ?investor ;
+      wm:allocationPct ?ap .
+  FILTER(xsd:decimal(?ap) > 30)
+}",validator_false_positive
+wealth_management_temporal_transaction_65_questions:TT-063,Which ten investors have the highest temporal pressure score where score = 2025 net cash flow + rebalance amount - goal shortfall + scenario allocation change?,5,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,5,"[""Investor"", ""CashFlow"", ""RebalancingAction"", ""InvestmentGoal"", ""ScenarioRebalancing""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,1,Five-table composite reasoning,Expert,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName ?score WHERE {
+  ?inv wm:investorName ?investorName .
+
+  OPTIONAL {
+    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?cash2025) WHERE {
+      ?inv wm:hasCashFlow ?cf .
+      ?cf wm:date ?date ;
+          wm:amount ?amt .
+      FILTER(CONTAINS(LCASE(STR(?date)), ""2025""))
+    } GROUP BY ?inv
+  }
+
+  OPTIONAL {
+    SELECT ?inv (SUM(xsd:decimal(?rebAmt)) AS ?rebalanceAmt) WHERE {
+      ?inv wm:hasRebalancingAction ?ra .
+      ?ra wm:amount ?rebAmt .
+    } GROUP BY ?inv
+  }
+
+  OPTIONAL {
+    SELECT ?inv (SUM(xsd:decimal(?sf)) AS ?shortfallSum) WHERE {
+      ?inv wm:hasInvestmentGoal ?goal .
+      ?goal wm:shortfall ?sf .
+    } GROUP BY ?inv
+  }
+
+  OPTIONAL {
+    SELECT ?inv (SUM(xsd:decimal(?new) - xsd:decimal(?cur)) AS ?allocChange) WHERE {
+      ?inv wm:hasScenarioRebalancing ?sc .
+      ?sc wm:newAllocationPct ?new ;
+          wm:currentAllocationPct ?cur .
+    } GROUP BY ?inv
+  }
+
+  BIND( (COALESCE(?cash2025, 0) + COALESCE(?rebalanceAmt, 0) - COALESCE(?shortfallSum, 0) + COALESCE(?allocChange, 0)) AS ?score )
+}
+ORDER BY DESC(?score)
+LIMIT 10",validator_false_positive
+wealth_management_multi_step_comparative_105_questions:MC-096,"Across profile category, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?",5,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,6,"[""CashFlow"", ""InvestmentGoal"", ""PortfolioHolding"", ""PortfolioHealth"", ""SectorAllocation"", ""Category""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,1,Five-table multi-step comparative,Expert,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?catLabel (SUM(?netCashFlow) AS ?totalNetCashFlow) (AVG(?goalProgress) AS ?avgGoalProgress) (SUM(?holdingGain) AS ?totalHoldingGain) (AVG(?riskScore) AS ?avgRiskScore) (AVG(?allocationPct) AS ?avgAllocationPct)
+WHERE {
+  ?inv a wm:Investor .
+  OPTIONAL {
+    ?inv wm:hasCategory ?cat .
+    OPTIONAL { ?cat rdfs:label ?catLabel . }
+  }
+  OPTIONAL {
+    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?netCashFlow) WHERE {
+      ?inv wm:hasCashFlow ?cf .
+      ?cf wm:amount ?amt .
+    } GROUP BY ?inv
+  }
+  OPTIONAL {
+    SELECT ?inv (AVG(xsd:decimal(?prog)) AS ?goalProgress) WHERE {
+      ?inv wm:hasInvestmentGoal ?ig .
+      ?ig wm:progressPct ?prog .
+    } GROUP BY ?inv
+  }
+  OPTIONAL {
+    SELECT ?inv (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {
+      ?inv wm:hasHolding ?ph .
+      ?ph wm:currentValue ?cv .
+      ?ph wm:cost ?c .
+      BIND (xsd:decimal(?cv) - xsd:decimal(?c) AS ?gain)
+    } GROUP BY ?inv
+  }
+  OPTIONAL {
+    SELECT ?inv (AVG(xsd:decimal(?rs)) AS ?riskScore) WHERE {
+      ?inv wm:hasPortfolioHealth ?phh .
+      ?phh wm:riskScore ?rs .
+    } GROUP BY ?inv
+  }
+  OPTIONAL {
+    SELECT ?inv (AVG(xsd:decimal(?alloc)) AS ?allocationPct) WHERE {
+      ?inv wm:hasSectorAllocation ?sa .
+      ?sa wm:allocationPct ?alloc .
+    } GROUP BY ?inv
+  }
+}
+GROUP BY ?catLabel
+ORDER BY DESC(?totalNetCashFlow)",validator_false_positive
+wealth_management_scoring_quantitative_65_questions:SQA-5T-005,"Which investors have average avg_sharpe_ratio below 0, average avg_volatility_pct above 20, negative total_holding_gain, and risk_score above 50?",5,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_ENTITY_INVESTMENT_GOAL_001; ATOM_ENTITY_PORTFOLIO_HOLDING_001; ATOM_ENTITY_PORTFOLIO_HEALTH_001; ATOM_EVENT_CASH_FLOW_001,4,"[""Investor"", ""InvestmentGoal"", ""PortfolioHealth"", ""PortfolioHolding""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,1,Risk-return comparison,Advanced,PARTIAL,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorId ?investorName ?sharpe ?vol ?gain ?riskScore
+WHERE {
+  ?inv a wm:Investor ;
+       wm:investorId ?investorId .
+  OPTIONAL { ?inv wm:investorName ?investorName . }
+
+  {
+    SELECT ?inv (AVG(xsd:decimal(?sharpeRatio)) AS ?sharpe) (AVG(xsd:decimal(?volatility)) AS ?vol)
+    WHERE {
+      ?inv wm:hasInvestmentGoal ?goal .
+      ?goal wm:avgSharpeRatio ?sharpeRatio .
+      ?goal wm:avgVolatilityPct ?volatility .
+    }
+    GROUP BY ?inv
+  }
+
+  {
+    SELECT ?inv (SUM(xsd:decimal(?gainVal)) AS ?gain)
+    WHERE {
+      ?inv wm:hasHolding ?holding .
+      ?holding wm:currentValue ?curr .
+      ?holding wm:cost ?cost .
+      BIND (xsd:decimal(?curr) - xsd:decimal(?cost) AS ?gainVal)
+    }
+    GROUP BY ?inv
+  }
+
+  ?inv wm:hasPortfolioHealth ?health .
+  ?health wm:riskScore ?riskScore .
+
+  FILTER(?sharpe < 0 && ?vol > 20 && ?gain < 0 && ?riskScore > 50)
+}
+ORDER BY ?investorId",validator_false_positive
+wealth_management_temporal_transaction_65_questions:TT-062,"For each investment_goal, rebalancing logic, and scenario, what is the total cash-flow amount?",5,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,4,"[""InvestmentGoal"", ""RebalancingLogic"", ""MarketScenario"", ""CashFlow""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,1,Five-table transaction reasoning,Expert,PARTIAL,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentGoal ?logic ?scenario (SUM(?cashFlowAmount) AS ?totalCashFlow)
+WHERE {
+  {
+    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?cashFlowAmount)
+    WHERE {
+      ?cf a wm:CashFlow ;
+          wm:cashFlowOfInvestor ?inv ;
+          wm:amount ?amt .
+    }
+    GROUP BY ?inv
+  }
+  ?inv a wm:Investor .
+  ?inv wm:hasInvestmentGoal ?ig .
+  ?ig wm:investmentGoal ?investmentGoal .
+  ?inv wm:hasRebalancingAction ?ra .
+  ?ra wm:hasRebalancingLogic ?logic .
+  ?inv wm:hasScenarioRebalancing ?sr .
+  ?sr wm:scenario ?scenario .
+}
+GROUP BY ?investmentGoal ?logic ?scenario",scan_timeout
+wealth_management_multi_step_comparative_105_questions:MC-089,"Across time_horizon, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?",5,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,6,"[""CashFlow"", ""InvestmentGoal"", ""PortfolioHolding"", ""PortfolioHealth"", ""SectorAllocation"", ""TimeHorizon""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,3,Five-table multi-step comparative,Expert,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorId ?timeHorizon ?totalCashFlow ?avgGoalProgress ?avgHoldingReturn ?riskScore ?totalAllocationPct
+WHERE {
+  {
+    SELECT DISTINCT ?investorId ?timeHorizon
+    WHERE {
+      ?ig a wm:InvestmentGoal ;
+          wm:investorId ?investorId ;
+          wm:timeToGoalMonths ?timeHorizon .
+    }
+  }
+
+  OPTIONAL {
+    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?totalCashFlow)
+    WHERE {
+      ?cf a wm:CashFlow ;
+          wm:investorId ?investorId ;
+          wm:amount ?amount .
+    }
+    GROUP BY ?investorId
+  }
+
+  OPTIONAL {
+    SELECT ?investorId (AVG(xsd:decimal(?progressPct)) AS ?avgGoalProgress)
+    WHERE {
+      ?ig a wm:InvestmentGoal ;
+          wm:investorId ?investorId ;
+          wm:progressPct ?progressPct .
+    }
+    GROUP BY ?investorId
+  }
+
+  OPTIONAL {
+    SELECT ?investorId (AVG(xsd:decimal(?returnsPct)) AS ?avgHoldingReturn)
+    WHERE {
+      ?ph a wm:PortfolioHolding ;
+          wm:investorId ?investorId ;
+          wm:returnsPct ?returnsPct .
+    }
+    GROUP BY ?investorId
+  }
+
+  OPTIONAL {
+    SELECT ?investorId (MAX(xsd:decimal(?riskScore)) AS ?riskScore)
+    WHERE {
+      ?phl a wm:PortfolioHealth ;
+          wm:investorId ?investorId ;
+          wm:riskScore ?riskScore .
+    }
+    GROUP BY ?investorId
+  }
+
+  OPTIONAL {
+    SELECT ?investorId (SUM(xsd:decimal(?allocationPct)) AS ?totalAllocationPct)
+    WHERE {
+      ?sa a wm:SectorAllocation ;
+          wm:investorId ?investorId ;
+          wm:allocationPct ?allocationPct .
+    }
+    GROUP BY ?investorId
+  }
+}
+ORDER BY ?investorId ?timeHorizon",scan_timeout
+wealth_management_at_risk_critical_70_questions:ARC-5T-012,"Which investors have risk_score above 100, allocation_pct above 100, negative-return holdings, and underfunded goals?",5,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_ENTITY_PORTFOLIO_HEALTH_001; ATOM_ENTITY_SECTOR_ALLOCATION_001; ATOM_ENTITY_PORTFOLIO_HOLDING_001; ATOM_ENTITY_INVESTMENT_GOAL_001,5,"[""Investor"", ""PortfolioHealth"", ""SectorAllocation"", ""PortfolioHolding"", ""InvestmentGoal""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,3,Critical or unusual exceptions,Advanced,MATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investorId ?investorName
+WHERE {
+  ?inv a wm:Investor ;
+       wm:investorId ?investorId .
+  OPTIONAL { ?inv wm:investorName ?investorName . }
+
+  ?ph a wm:PortfolioHealth ;
+      wm:healthOfInvestor ?inv ;
+      wm:riskScore ?riskScore .
+  FILTER(xsd:decimal(?riskScore) > 100)
+
+  ?sa a wm:SectorAllocation ;
+      wm:allocationOfInvestor ?inv ;
+      wm:allocationPct ?allocPct .
+  FILTER(xsd:decimal(?allocPct) > 100)
+
+  ?phold a wm:PortfolioHolding ;
+        wm:heldByInvestor ?inv ;
+        wm:returnsPct ?retPct .
+  FILTER(xsd:decimal(?retPct) < 0)
+
+  ?goal a wm:InvestmentGoal ;
+        wm:belongsToInvestor ?inv ;
+        wm:shortfall ?shortfall .
+  FILTER(xsd:decimal(?shortfall) > 0)
+}",no_failure
+wealth_management_enrichment_context_65_questions:EC-5T-009,"Which investors combine Retirement Planning goals, Bear Market scenarios, De-risking actions, poor diversification below 25, and Technology allocation?",5,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_ENTITY_INVESTMENT_GOAL_001; ATOM_EVENT_SCENARIO_REBALANCING_001; ATOM_EVENT_REBALANCING_ACTION_001; ATOM_ENTITY_PORTFOLIO_HEALTH_001,9,"[""Investor"", ""InvestmentGoal"", ""InvestmentGoalType"", ""MarketScenario"", ""RebalancingAction"", ""ScenarioRebalancing"", ""PortfolioHealth"", ""SectorAllocation"", ""Sector""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,3,"Sector, segment, and category context",Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investorId ?investorName
+WHERE {
+  ?inv a wm:Investor ;
+       wm:investorId ?investorId .
+
+  OPTIONAL { ?inv wm:investorName ?investorName . }
+
+  # Investment goal = Retirement Planning
+  ?inv wm:hasInvestmentGoal ?goal .
+  ?goal wm:hasInvestmentGoalType ?goalType .
+  ?goalType rdfs:label ?goalLabel .
+  FILTER(CONTAINS(LCASE(STR(?goalLabel)), ""retirement planning""))
+
+  # Market scenario = Bear Market
+  ?inv wm:hasScenarioRebalancing ?scenReb .
+  ?scenReb wm:hasMarketScenario ?mktScen .
+  ?mktScen rdfs:label ?scenarioLabel .
+  FILTER(CONTAINS(LCASE(STR(?scenarioLabel)), ""bear market""))
+
+  # Rebalancing action = De-risking
+  ?inv wm:hasRebalancingAction ?rebAct .
+  ?rebAct wm:action ?actionLabel .
+  FILTER(CONTAINS(LCASE(STR(?actionLabel)), ""de-risking""))
+
+  # Poor diversification (score < 25)
+  ?inv wm:hasPortfolioHealth ?ph .
+  ?ph wm:diversificationScore ?divScore .
+  FILTER(xsd:decimal(?divScore) < 25)
+
+  # Technology sector allocation
+  ?inv wm:hasSectorAllocation ?secAlloc .
+  ?secAlloc wm:hasSector ?sector .
+  ?sector rdfs:label ?sectorLabel .
+  FILTER(CONTAINS(LCASE(STR(?sectorLabel)), ""technology""))
+}",scan_timeout
+wealth_management_multi_step_comparative_105_questions:MC-099,"Across profile category, how do holding gain, allocation concentration, rebalancing gap, scenario change, and goal volatility compare using five related tables?",5,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,6,"[""Investor"", ""PortfolioHolding"", ""SectorAllocation"", ""RebalancingAction"", ""ScenarioRebalancing"", ""InvestmentGoal""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,1,Five-table multi-step comparative,Expert,MATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?category
+       (AVG(?holdingGain) AS ?avgHoldingGain)
+       (AVG(?allocConcentration) AS ?avgAllocationConcentration)
+       (AVG(?rebalanceGap) AS ?avgRebalancingGap)
+       (AVG(?scenarioChange) AS ?avgScenarioChange)
+       (AVG(?goalVolatility) AS ?avgGoalVolatility)
+WHERE {
+  ?inv a wm:Investor ;
+       wm:category ?category .
+
+  OPTIONAL {
+    SELECT ?inv (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {
+      ?inv wm:hasHolding ?holding .
+      ?holding wm:returnsPct ?returnsPct .
+    } GROUP BY ?inv
+  }
+
+  OPTIONAL {
+    SELECT ?inv (AVG(xsd:decimal(?allocationPct)) AS ?allocConcentration) WHERE {
+      ?inv wm:hasSectorAllocation ?alloc .
+      ?alloc wm:allocationPct ?allocationPct .
+    } GROUP BY ?inv
+  }
+
+  OPTIONAL {
+    SELECT ?inv (AVG(xsd:decimal(?gap)) AS ?rebalanceGap) WHERE {
+      ?inv wm:hasRebalancingAction ?reb .
+      ?reb wm:targetAllocationPct ?target .
+      ?reb wm:currentAllocationPct ?current .
+      BIND((xsd:decimal(?target) - xsd:decimal(?current)) AS ?gap)
+    } GROUP BY ?inv
+  }
+
+  OPTIONAL {
+    SELECT ?inv (AVG(xsd:decimal(?change)) AS ?scenarioChange) WHERE {
+      ?inv wm:hasScenarioRebalancing ?scen .
+      ?scen wm:newAllocationPct ?new .
+      ?scen wm:currentAllocationPct ?curr .
+      BIND((xsd:decimal(?new) - xsd:decimal(?curr)) AS ?change)
+    } GROUP BY ?inv
+  }
+
+  OPTIONAL {
+    SELECT ?inv (AVG(xsd:decimal(?volatility)) AS ?goalVolatility) WHERE {
+      ?inv wm:hasInvestmentGoal ?goal .
+      ?goal wm:avgVolatilityPct ?volatility .
+    } GROUP BY ?inv
+  }
+}
+GROUP BY ?category",no_failure
+wealth_management_multi_step_comparative_105_questions:MC-098,"Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?",5,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"[""Category"", ""CashFlow"", ""RebalancingAction"", ""ScenarioRebalancing"", ""PortfolioHealth""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Five-table multi-step comparative,Expert,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?category ?totalCashFlow ?totalRebalancingAmount ?avgScenarioNewAllocationPct ?avgRiskScore ?avgGoalMatchPct
+WHERE {
+  {
+    SELECT DISTINCT ?category WHERE {
+      ?inv a wm:Investor ;
+           wm:category ?category .
+    }
+  }
+  OPTIONAL {
+    SELECT ?category (SUM(xsd:decimal(?amt)) AS ?totalCashFlow)
+    WHERE {
+      ?inv a wm:Investor ;
+           wm:investorId ?investorId ;
+           wm:category ?category .
+      ?cf a wm:CashFlow ;
+          wm:investorId ?investorId ;
+          wm:amount ?amt .
+    }
+    GROUP BY ?category
+  }
+  OPTIONAL {
+    SELECT ?category (SUM(xsd:decimal(?raAmt)) AS ?totalRebalancingAmount)
+    WHERE {
+      ?inv a wm:Investor ;
+           wm:investorId ?investorId ;
+           wm:category ?category .
+      ?ra a wm:RebalancingAction ;
+          wm:investorId ?investorId ;
+          wm:amount ?raAmt .
+    }
+    GROUP BY ?category
+  }
+  OPTIONAL {
+    SELECT ?category (AVG(xsd:decimal(?newPct)) AS ?avgScenarioNewAllocationPct)
+    WHERE {
+      ?inv a wm:Investor ;
+           wm:investorId ?investorId ;
+           wm:category ?category .
+      ?sr a wm:ScenarioRebalancing ;
+          wm:investorId ?investorId ;
+          wm:newAllocationPct ?newPct .
+    }
+    GROUP BY ?category
+  }
+  OPTIONAL {
+    SELECT ?category (AVG(xsd:decimal(?rs)) AS ?avgRiskScore) (AVG(xsd:decimal(?gm)) AS ?avgGoalMatchPct)
+    WHERE {
+      ?inv a wm:Investor ;
+           wm:investorId ?investorId ;
+           wm:category ?category .
+      ?ph a wm:PortfolioHealth ;
+          wm:investorId ?investorId ;
+          wm:riskScore ?rs ;
+          wm:goalMatchPct ?gm .
+    }
+    GROUP BY ?category
+  }
+}
+ORDER BY ?category",scan_timeout
+wealth_management_multi_step_comparative_105_questions:MC-097,"Across profile category, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?",5,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"[""Category"", ""InvestmentGoal"", ""PortfolioHolding"", ""SectorAllocation"", ""PortfolioHealth""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Five-table multi-step comparative,Expert,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?categoryLabel ?categoryShortfall ?categoryHoldingValue ?categoryAvgAllocationPct ?categoryAvgLiquidity ?categoryAvgDiversification
+WHERE {
+  ?cat a wm:Category .
+  OPTIONAL { ?cat rdfs:label ?categoryLabel . }
+
+  OPTIONAL {
+    SELECT ?cat (SUM(xsd:decimal(?sf)) AS ?categoryShortfall)
+    WHERE {
+      ?investor wm:hasCategory ?cat .
+      ?goal a wm:InvestmentGoal ;
+            wm:belongsToInvestor ?investor ;
+            wm:shortfall ?sf .
+    }
+    GROUP BY ?cat
+  }
+
+  OPTIONAL {
+    SELECT ?cat (SUM(xsd:decimal(?val)) AS ?categoryHoldingValue)
+    WHERE {
+      ?investor wm:hasCategory ?cat .
+      ?ph a wm:PortfolioHolding ;
+          wm:heldByInvestor ?investor ;
+          wm:currentValue ?val .
+    }
+    GROUP BY ?cat
+  }
+
+  OPTIONAL {
+    SELECT ?cat (AVG(xsd:decimal(?alloc)) AS ?categoryAvgAllocationPct)
+    WHERE {
+      ?investor wm:hasCategory ?cat .
+      ?allocRec a wm:SectorAllocation ;
+                wm:allocationOfInvestor ?investor ;
+                wm:allocationPct ?alloc .
+    }
+    GROUP BY ?cat
+  }
+
+  OPTIONAL {
+    SELECT ?cat (AVG(xsd:decimal(?liq)) AS ?categoryAvgLiquidity) (AVG(xsd:decimal(?div)) AS ?categoryAvgDiversification)
+    WHERE {
+      ?investor wm:hasCategory ?cat .
+      ?phl a wm:PortfolioHealth ;
+            wm:healthOfInvestor ?investor ;
+            wm:liquidityScore ?liq ;
+            wm:diversificationScore ?div .
+    }
+    GROUP BY ?cat
+  }
+}
+ORDER BY ?categoryLabel",validator_false_positive
+wealth_management_at_risk_critical_70_questions:ARC-5T-002,"Which investors have Withdrawal cash flows, negative-return holdings, allocation_pct above 30, and liquidity_score below 30?",5,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_EVENT_CASH_FLOW_001; ATOM_ENTITY_PORTFOLIO_HOLDING_001; ATOM_ENTITY_SECTOR_ALLOCATION_001; ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"[""Investor"", ""CashFlow"", ""PortfolioHolding"", ""SectorAllocation"", ""PortfolioHealth""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Cross-table risk combinations,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investorId ?investorName
+WHERE {
+  ?inv a wm:Investor ;
+       wm:investorId ?investorId .
+  OPTIONAL { ?inv wm:investorName ?investorName . }
+
+  {
+    SELECT DISTINCT ?investorId WHERE {
+      ?inv1 a wm:Investor ;
+            wm:investorId ?investorId ;
+            wm:hasCashFlow ?cf .
+      ?cf wm:type ?cfType .
+      FILTER(CONTAINS(LCASE(STR(?cfType)), ""withdrawal""))
+    }
+  }
+  {
+    SELECT DISTINCT ?investorId WHERE {
+      ?inv2 a wm:Investor ;
+            wm:investorId ?investorId ;
+            wm:hasHolding ?hold .
+      ?hold wm:returnsPct ?retPct .
+      FILTER(xsd:decimal(?retPct) < 0)
+    }
+  }
+  {
+    SELECT DISTINCT ?investorId WHERE {
+      ?inv3 a wm:Investor ;
+            wm:investorId ?investorId ;
+            wm:hasSectorAllocation ?alloc .
+      ?alloc wm:allocationPct ?allocPct .
+      FILTER(xsd:decimal(?allocPct) > 30)
+    }
+  }
+  {
+    SELECT DISTINCT ?investorId WHERE {
+      ?inv4 a wm:Investor ;
+            wm:investorId ?investorId ;
+            wm:hasPortfolioHealth ?ph .
+      ?ph wm:liquidityScore ?liqScore .
+      FILTER(xsd:decimal(?liqScore) < 30)
+    }
+  }
+}",validator_false_positive
+wealth_management_temporal_transaction_65_questions:TT-056,"Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?",4,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,5,"[""Investor"", ""CashFlow"", ""RebalancingAction"", ""MarketScenario"", ""ScenarioRebalancing""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Cross-table transaction reasoning,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investorId ?investorName WHERE {
+  ?inv a wm:Investor .
+  FILTER EXISTS {
+    ?cf a wm:CashFlow ;
+        wm:cashFlowOfInvestor ?inv ;
+        wm:type ?cfType .
+    FILTER(CONTAINS(LCASE(STR(?cfType)), ""redemption""))
+  }
+  FILTER EXISTS {
+    ?ra a wm:RebalancingAction ;
+        wm:rebalancingActionOfInvestor ?inv ;
+        wm:action ?raAction .
+    FILTER(CONTAINS(LCASE(STR(?raAction)), ""manual override""))
+  }
+  FILTER EXISTS {
+    ?sr a wm:ScenarioRebalancing ;
+        wm:scenarioRebalancingOfInvestor ?inv ;
+        wm:scenario ?srScenario .
+    FILTER(CONTAINS(LCASE(STR(?srScenario)), ""flash crash""))
+  }
+  OPTIONAL { ?inv wm:investorId ?investorId . }
+  OPTIONAL { ?inv wm:investorName ?investorName . }
+}",validator_false_positive
+wealth_management_scoring_quantitative_65_questions:SQA-4T-005,"How do average returns_pct, avg_sharpe_ratio, and risk_score compare by profile category?",4,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_ENTITY_PORTFOLIO_HOLDING_001; ATOM_ENTITY_INVESTMENT_GOAL_001; ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"[""PortfolioHolding"", ""InvestmentGoal"", ""PortfolioHealth"", ""Investor"", ""Category""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Risk-return comparison,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?category
+       (AVG(?avgReturnsPct) AS ?categoryAvgReturnsPct)
+       (AVG(?avgSharpeRatio) AS ?categoryAvgSharpeRatio)
+       (AVG(?riskScore) AS ?categoryAvgRiskScore)
+WHERE {
+  {
+    SELECT ?investor (AVG(xsd:decimal(?returnsPct)) AS ?avgReturnsPct)
+    WHERE {
+      ?investor wm:hasHolding ?holding .
+      ?holding wm:returnsPct ?returnsPct .
+    }
+    GROUP BY ?investor
+  }
+  {
+    SELECT ?investor (AVG(xsd:decimal(?sharpe)) AS ?avgSharpeRatio)
+    WHERE {
+      ?investor wm:hasInvestmentGoal ?goal .
+      ?goal wm:avgSharpeRatio ?sharpe .
+    }
+    GROUP BY ?investor
+  }
+  {
+    SELECT ?investor (AVG(xsd:decimal(?riskScore)) AS ?riskScore)
+    WHERE {
+      ?investor wm:hasPortfolioHealth ?ph .
+      ?ph wm:riskScore ?riskScore .
+    }
+    GROUP BY ?investor
+  }
+  ?investor wm:category ?category .
+}
+GROUP BY ?category",validator_false_positive
+wealth_management_multi_step_comparative_105_questions:MC-081,Which ten investors have the highest four-table comparative score where score = net cash flow + holding gain - average shortfall + rebalance amount?,4,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_INVESTMENT_GOAL_001,5,"[""Investor"", ""CashFlow"", ""InvestmentGoal"", ""RebalancingAction"", ""PortfolioHolding""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,2,Four-table multi-step comparative,Advanced,MATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investor ?investorName ?score
+WHERE {
+  ?investor a wm:Investor .
+  OPTIONAL { ?investor wm:investorName ?investorName . }
+
+  OPTIONAL {
+    SELECT ?investor (SUM(xsd:decimal(?cfAmt)) AS ?netCashFlow) WHERE {
+      ?investor wm:hasCashFlow ?cf .
+      ?cf wm:amount ?cfAmt .
+    } GROUP BY ?investor
+  }
+
+  OPTIONAL {
+    SELECT ?investor (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {
+      ?investor wm:hasHolding ?ph .
+      ?ph wm:currentValue ?cv .
+      ?ph wm:cost ?cost .
+      BIND(xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)
+    } GROUP BY ?investor
+  }
+
+  OPTIONAL {
+    SELECT ?investor (AVG(xsd:decimal(?shortfall)) AS ?avgShortfall) WHERE {
+      ?investor wm:hasInvestmentGoal ?ig .
+      ?ig wm:shortfall ?shortfall .
+    } GROUP BY ?investor
+  }
+
+  OPTIONAL {
+    SELECT ?investor (SUM(xsd:decimal(?raAmt)) AS ?rebalanceAmt) WHERE {
+      ?investor wm:hasRebalancingAction ?ra .
+      ?ra wm:amount ?raAmt .
+    } GROUP BY ?investor
+  }
+
+  BIND (COALESCE(?netCashFlow, 0) + COALESCE(?holdingGain, 0) - COALESCE(?avgShortfall, 0) + COALESCE(?rebalanceAmt, 0) AS ?score)
+}
+ORDER BY DESC(?score)
+LIMIT 10",no_failure
+wealth_management_multi_step_comparative_105_questions:MC-066,"Across time_horizon, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?",4,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_ENTITY_SECTOR_ALLOCATION_001,5,"[""CashFlow"", ""TimeHorizon"", ""ScenarioRebalancing"", ""SectorAllocation"", ""PortfolioHolding""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Four-table multi-step comparative,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?timeHorizon
+       (SUM(?cfAmount) AS ?totalCashFlow)
+       (AVG(?scenarioChange) AS ?avgScenarioChange)
+       (AVG(?allocPct) AS ?avgSectorAllocationPct)
+       (SUM(?holdingValue) AS ?totalHoldingValue)
+WHERE {
+  ?inv a wm:Investor ;
+       wm:investorId ?investorId ;
+       wm:timeHorizon ?timeHorizon .
+
+  {
+    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?cfAmount)
+    WHERE {
+      ?cf a wm:CashFlow ;
+          wm:investorId ?investorId ;
+          wm:amount ?amount .
+    }
+    GROUP BY ?investorId
+  }
+
+  OPTIONAL {
+    SELECT ?investorId (AVG(xsd:decimal(?diff)) AS ?scenarioChange)
+    WHERE {
+      ?sr a wm:ScenarioRebalancing ;
+          wm:investorId ?investorId ;
+          wm:currentAllocationPct ?curr ;
+          wm:newAllocationPct ?new .
+      BIND(?new - ?curr AS ?diff)
+    }
+    GROUP BY ?investorId
+  }
+
+  OPTIONAL {
+    SELECT ?investorId (AVG(xsd:decimal(?allocationPct)) AS ?allocPct)
+    WHERE {
+      ?sa a wm:SectorAllocation ;
+          wm:investorId ?investorId ;
+          wm:allocationPct ?allocationPct .
+    }
+    GROUP BY ?investorId
+  }
+
+  OPTIONAL {
+    SELECT ?investorId (SUM(xsd:decimal(?currentValue)) AS ?holdingValue)
+    WHERE {
+      ?ph a wm:PortfolioHolding ;
+          wm:investorId ?investorId ;
+          wm:currentValue ?currentValue .
+    }
+    GROUP BY ?investorId
+  }
+}
+GROUP BY ?timeHorizon",validator_false_positive
+wealth_management_temporal_transaction_65_questions:TT-055,"For each cash-flow month and triggered_action, what is the average action amount?",4,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"[""CashFlow"", ""ScenarioRebalancing"", ""RebalancingAction""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Cross-table temporal reasoning,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?month ?triggeredAction (AVG(?avgAmt) AS ?avgActionAmount)
+WHERE {
+  {
+    SELECT DISTINCT ?investorId ?month WHERE {
+      ?cf a wm:CashFlow ;
+          wm:investorId ?investorId ;
+          wm:date ?date .
+      BIND(STR(?date) AS ?dateStr)
+      BIND(SUBSTR(?dateStr,1,7) AS ?month)
+    }
+  }
+  {
+    SELECT DISTINCT ?investorId ?triggeredAction WHERE {
+      ?sr a wm:ScenarioRebalancing ;
+          wm:investorId ?investorId ;
+          wm:triggeredAction ?triggeredAction .
+    }
+  }
+  {
+    SELECT ?investorId (AVG(xsd:decimal(?amount)) AS ?avgAmt) WHERE {
+      ?ra a wm:RebalancingAction ;
+          wm:investorId ?investorId ;
+          wm:amount ?amount .
+    }
+    GROUP BY ?investorId
+  }
+}
+GROUP BY ?month ?triggeredAction",validator_false_positive
+wealth_management_multi_step_comparative_105_questions:MC-057,"Across risk_tolerance, how do holding gain, rebalancing amount, scenario change, and cash flow compare using four related tables?",4,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,5,"[""RiskTolerance"", ""PortfolioHolding"", ""RebalancingAction"", ""ScenarioRebalancing"", ""CashFlow""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Four-table multi-step comparative,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskToleranceLabel ?holdingGain ?rebalancingAmount ?scenarioChange ?cashFlowTotal WHERE {
+  ?inv a wm:Investor .
+  OPTIONAL {
+    ?inv wm:hasRiskTolerance ?rt .
+    ?rt rdfs:label ?riskToleranceLabel .
+  }
+  {
+    SELECT ?inv (AVG(xsd:decimal(?returnsPct)) AS ?holdingGain) WHERE {
+      ?inv wm:hasHolding ?holding .
+      ?holding wm:returnsPct ?returnsPct .
+    } GROUP BY ?inv
+  }
+  {
+    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?rebalancingAmount) WHERE {
+      ?inv wm:hasRebalancingAction ?rebalance .
+      ?rebalance wm:amount ?amount .
+    } GROUP BY ?inv
+  }
+  {
+    SELECT ?inv (AVG(xsd:decimal(?newAlloc) - xsd:decimal(?currAlloc)) AS ?scenarioChange) WHERE {
+      ?inv wm:hasScenarioRebalancing ?scenario .
+      ?scenario wm:newAllocationPct ?newAlloc .
+      ?scenario wm:currentAllocationPct ?currAlloc .
+    } GROUP BY ?inv
+  }
+  {
+    SELECT ?inv (SUM(xsd:decimal(?cfAmount)) AS ?cashFlowTotal) WHERE {
+      ?inv wm:hasCashFlow ?cf .
+      ?cf wm:amount ?cfAmount .
+    } GROUP BY ?inv
+  }
+}
+ORDER BY ?riskToleranceLabel",validator_false_positive
+wealth_management_multi_step_comparative_105_questions:MC-076,"Across profile category, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?",4,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_ENTITY_SECTOR_ALLOCATION_001,5,"[""CashFlow"", ""ScenarioRebalancing"", ""SectorAllocation"", ""PortfolioHolding"", ""Category""]",False,True,True,error,'NotBoundError' object has no attribute 'datatype',error,SPARQL execution timed out after 60 seconds.,2,Four-table multi-step comparative,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?categoryLabel (SUM(?cashFlow) AS ?totalCashFlow) (AVG(?scenarioChange) AS ?avgScenarioChange) (SUM(?allocationPct) AS ?totalAllocationPct) (SUM(?sectorInvestment) AS ?totalSectorInvestment)
+WHERE {
+  ?inv a wm:Investor ;
+       wm:investorId ?investorId ;
+       wm:hasCategory ?cat .
+  OPTIONAL { ?cat rdfs:label ?categoryLabel . }
+
+  OPTIONAL {
+    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?cashFlow) WHERE {
+      ?cf a wm:CashFlow ;
+          wm:investorId ?investorId ;
+          wm:amount ?amount .
+    } GROUP BY ?investorId
+  }
+
+  OPTIONAL {
+    SELECT ?investorId (AVG(xsd:decimal(?newAllocationPct) - xsd:decimal(?currentAllocationPct)) AS ?scenarioChange) WHERE {
+      ?sr a wm:ScenarioRebalancing ;
+          wm:investorId ?investorId ;
+          wm:newAllocationPct ?newAllocationPct ;
+          wm:currentAllocationPct ?currentAllocationPct .
+    } GROUP BY ?investorId
+  }
+
+  OPTIONAL {
+    SELECT ?investorId (SUM(xsd:decimal(?allocationPct)) AS ?allocationPct) (SUM(xsd:decimal(?totalInvestment)) AS ?sectorInvestment) WHERE {
+      ?sa a wm:SectorAllocation ;
+          wm:investorId ?investorId ;
+          wm:allocationPct ?allocationPct ;
+          wm:totalInvestment ?totalInvestment .
+    } GROUP BY ?investorId
+  }
+}
+GROUP BY ?categoryLabel",validator_false_positive
+wealth_management_enrichment_context_65_questions:EC-4T-014,How do total Deposit amount and total rebalancing amount compare across risk-tolerance groups?,4,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_EVENT_CASH_FLOW_001; ATOM_EVENT_REBALANCING_ACTION_001; ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"[""CashFlow"", ""RebalancingAction"", ""RiskTolerance"", ""Investor""]",False,True,True,success,,error,SPARQL execution timed out after 60 seconds.,2,Risk tolerance and time horizon context,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskTolerance ?totalDeposit ?totalRebalance
+WHERE {
+  {
+    SELECT ?riskTolerance (SUM(xsd:decimal(?depAmt)) AS ?totalDeposit)
+    WHERE {
+      ?cf a wm:CashFlow .
+      ?cf wm:cashFlowOfInvestor ?inv .
+      ?cf wm:amount ?depAmt .
+      ?inv wm:riskTolerance ?riskTolerance .
+      ?cf wm:type ?cfType .
+      FILTER(CONTAINS(LCASE(STR(?cfType)), ""deposit""))
+    }
+    GROUP BY ?riskTolerance
+  }
+  OPTIONAL {
+    SELECT ?riskTolerance (SUM(xsd:decimal(?rebAmt)) AS ?totalRebalance)
+    WHERE {
+      ?ra a wm:RebalancingAction .
+      ?ra wm:rebalancingActionOfInvestor ?inv2 .
+      ?ra wm:amount ?rebAmt .
+      ?inv2 wm:riskTolerance ?riskTolerance .
+    }
+    GROUP BY ?riskTolerance
+  }
+}
+ORDER BY ?riskTolerance",validator_false_positive
+wealth_management_multi_step_comparative_105_questions:MC-079,"Across profile category, how do transaction count, holding count, goal count, and scenario count compare using four related tables?",4,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_EVENT_SCENARIO_REBALANCING_001,6,"[""Investor"", ""Category"", ""CashFlow"", ""PortfolioHolding"", ""InvestmentGoal"", ""ScenarioRebalancing""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,2,Four-table multi-step comparative,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?catLabel
+       (COALESCE(?txCount, 0) AS ?transactionCount)
+       (COALESCE(?holdCount, 0) AS ?holdingCount)
+       (COALESCE(?goalCount, 0) AS ?goalCount)
+       (COALESCE(?scenarioCount, 0) AS ?scenarioCount)
+WHERE {
+  {
+    SELECT ?cat (COUNT(DISTINCT ?cf) AS ?txCount)
+           (COUNT(DISTINCT ?ph) AS ?holdCount)
+           (COUNT(DISTINCT ?goal) AS ?goalCount)
+           (COUNT(DISTINCT ?sc) AS ?scenarioCount)
+    WHERE {
+      {
+        SELECT ?cat ?cf WHERE {
+          ?cf a wm:CashFlow .
+          ?cf wm:cashFlowOfInvestor ?inv .
+          ?inv wm:hasCategory ?cat .
+        }
+      }
+      UNION
+      {
+        SELECT ?cat ?ph WHERE {
+          ?ph a wm:PortfolioHolding .
+          ?ph wm:heldByInvestor ?inv .
+          ?inv wm:hasCategory ?cat .
+        }
+      }
+      UNION
+      {
+        SELECT ?cat ?goal WHERE {
+          ?goal a wm:InvestmentGoal .
+          ?goal wm:belongsToInvestor ?inv .
+          ?inv wm:hasCategory ?cat .
+        }
+      }
+      UNION
+      {
+        SELECT ?cat ?sc WHERE {
+          ?sc a wm:ScenarioRebalancing .
+          ?sc wm:scenarioRebalancingOfInvestor ?inv .
+          ?inv wm:hasCategory ?cat .
+        }
+      }
+    }
+    GROUP BY ?cat
+  }
+  OPTIONAL { ?cat rdfs:label ?catLabel . }
+}
+ORDER BY ?catLabel",validator_false_positive
+wealth_management_enrichment_context_65_questions:EC-4T-011,"Which investors have Net Banking cash-flow source, Corporate holding sector, and Corporate allocation sector?",4,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_EVENT_CASH_FLOW_001; ATOM_ENTITY_PORTFOLIO_HOLDING_001; ATOM_ENTITY_SECTOR_ALLOCATION_001,4,"[""Investor"", ""CashFlow"", ""PortfolioHolding"", ""SectorAllocation""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,2,Holding and asset context enrichment,Advanced,MATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investorId ?investorName WHERE {
+  {
+    SELECT DISTINCT ?investor WHERE {
+      ?investor wm:hasCashFlow ?cf .
+      ?cf wm:hasCashFlowSource ?cfs .
+      ?cfs rdfs:label ?cfsLabel .
+      FILTER(CONTAINS(LCASE(STR(?cfsLabel)), ""net banking""))
+    }
+  }
+  {
+    SELECT DISTINCT ?investor WHERE {
+      ?investor wm:hasHolding ?hold .
+      ?hold wm:hasSector ?holdSector .
+      ?holdSector rdfs:label ?holdSectorLabel .
+      FILTER(CONTAINS(LCASE(STR(?holdSectorLabel)), ""corporate""))
+    }
+  }
+  {
+    SELECT DISTINCT ?investor WHERE {
+      ?investor wm:hasSectorAllocation ?alloc .
+      ?alloc wm:hasSector ?allocSector .
+      ?allocSector rdfs:label ?allocSectorLabel .
+      FILTER(CONTAINS(LCASE(STR(?allocSectorLabel)), ""corporate""))
+    }
+  }
+  ?investor wm:investorId ?investorId .
+  OPTIONAL { ?investor wm:investorName ?investorName . }
+}",no_failure
+wealth_management_scoring_quantitative_65_questions:SQA-4T-014,"Which investors have total_holding_gain below 0, net_cash_flow below 0, and risk_pressure_score above 180, where risk_pressure_score = risk_score + (100 - liquidity_score) + (100 - diversification_score)?",4,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_ENTITY_PORTFOLIO_HOLDING_001; ATOM_EVENT_CASH_FLOW_001; ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"[""Investor"", ""PortfolioHealth"", ""CashFlow"", ""PortfolioHolding""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Portfolio health scoring,Advanced,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorId ?investorName ?totalHoldingGain ?netCashFlow ?riskPressureScore WHERE {
+  ?inv a wm:Investor ;
+       wm:investorId ?investorId ;
+       wm:investorName ?investorName ;
+       wm:hasPortfolioHealth ?ph .
+
+  {
+    SELECT ?inv (SUM(xsd:decimal(?cv) - xsd:decimal(?cost)) AS ?totalHoldingGain) WHERE {
+      ?inv wm:hasHolding ?hold .
+      ?hold wm:currentValue ?cv ;
+            wm:cost ?cost .
+    } GROUP BY ?inv
+  }
+
+  {
+    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?netCashFlow) WHERE {
+      ?inv wm:hasCashFlow ?cf .
+      ?cf wm:amount ?amt .
+    } GROUP BY ?inv
+  }
+
+  ?ph wm:riskScore ?riskScore ;
+      wm:liquidityScore ?liquidityScore ;
+      wm:diversificationScore ?divScore .
+
+  BIND ( xsd:decimal(?riskScore) + (100 - xsd:decimal(?liquidityScore)) + (100 - xsd:decimal(?divScore)) AS ?riskPressureScore)
+
+  FILTER ( ?totalHoldingGain < 0 )
+  FILTER ( ?netCashFlow < 0 )
+  FILTER ( ?riskPressureScore > 180 )
+}",validator_false_positive
+wealth_management_temporal_transaction_65_questions:TT-025,"For each risk_tolerance and cash-flow type, what is the average goal progress_pct?",3,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001,5,"[""Investor"", ""CashFlow"", ""InvestmentGoal"", ""RiskTolerance"", ""CashFlowType""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,2,Goal and cash-flow relationship,Hard,MATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskTolerance ?cashFlowType (AVG(?avgProgress) AS ?avgProgressPct)
+WHERE {
+  {
+    SELECT ?investor ?riskTolerance (AVG(xsd:decimal(?progressPct)) AS ?avgProgress)
+    WHERE {
+      ?investor a wm:Investor .
+      OPTIONAL { ?investor wm:riskTolerance ?riskTolerance . }
+      ?investor wm:hasInvestmentGoal ?goal .
+      ?goal wm:progressPct ?progressPct .
+    }
+    GROUP BY ?investor ?riskTolerance
+  }
+  {
+    SELECT DISTINCT ?investor ?cashFlowType
+    WHERE {
+      ?investor wm:hasCashFlow ?cashFlow .
+      ?cashFlow wm:hasCashFlowType ?cashFlowType .
+    }
+  }
+}
+GROUP BY ?riskTolerance ?cashFlowType",no_failure
+wealth_management_scoring_quantitative_65_questions:SQA-3T-014,Which investors have holdings with returns_pct below 0 and goals with shortfall above 1000000?,3,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_ENTITY_PORTFOLIO_HOLDING_001; ATOM_ENTITY_INVESTMENT_GOAL_001,3,"[""Investor"", ""PortfolioHolding"", ""InvestmentGoal""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,1,Investor-level financial totals,Hard,PARTIAL,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investorId ?investorName
+WHERE {
+  ?inv a wm:Investor ;
+       wm:investorId ?investorId ;
+       wm:investorName ?investorName .
+
+  FILTER EXISTS {
+    SELECT ?inv WHERE {
+      ?inv wm:hasHolding ?holding .
+      ?holding wm:returnsPct ?ret .
+      FILTER(?ret < 0)
+    } LIMIT 1
+  }
+
+  FILTER EXISTS {
+    SELECT ?inv WHERE {
+      ?inv wm:hasInvestmentGoal ?goal .
+      ?goal wm:shortfall ?sf .
+      FILTER(?sf > 1000000)
+    } LIMIT 1
+  }
+}",scan_timeout
+wealth_management_multi_step_comparative_105_questions:MC-019,"Across risk_tolerance, how do goal progress, health risk, and liquidity compare using three related tables?",3,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,3,"[""RiskTolerance"", ""InvestmentGoal"", ""PortfolioHealth""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,2,Three-table multi-step comparative,Hard,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskTolerance
+       (AVG(?progressPct) AS ?avgProgressPct)
+       (AVG(?riskScore) AS ?avgRiskScore)
+       (AVG(?liquidityScore) AS ?avgLiquidityScore)
+WHERE {
+  ?inv a wm:Investor ;
+       wm:riskTolerance ?riskTolerance ;
+       wm:hasInvestmentGoal ?goal ;
+       wm:hasPortfolioHealth ?ph .
+
+  OPTIONAL { ?goal wm:progressPct ?progressPct . }
+  OPTIONAL { ?ph wm:riskScore ?riskScore . }
+  OPTIONAL { ?ph wm:liquidityScore ?liquidityScore . }
+}
+GROUP BY ?riskTolerance
+ORDER BY ?riskTolerance",validator_false_positive
+wealth_management_enrichment_context_65_questions:EC-3T-018,How do Deposit and Withdrawal totals compare across profile segments?,3,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_EVENT_CASH_FLOW_001; ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"[""CashFlow"", ""CashFlowType"", ""Segment"", ""Investor""]",False,True,True,success,,error,SPARQL execution timed out after 60 seconds.,2,Investor context enrichment,Hard,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?segment
+       (SUM(IF(CONTAINS(LCASE(?cftLabel), ""deposit""), xsd:decimal(?amount), 0)) AS ?depositTotal)
+       (SUM(IF(CONTAINS(LCASE(?cftLabel), ""withdrawal""), xsd:decimal(?amount), 0)) AS ?withdrawalTotal)
+WHERE {
+  ?inv a wm:Investor ;
+       wm:segment ?segment ;
+       wm:hasCashFlow ?cf .
+  ?cf a wm:CashFlow ;
+      wm:hasCashFlowType ?cft ;
+      wm:allowedValue ?amount .
+  ?cft rdfs:label ?cftLabel .
+  FILTER(CONTAINS(LCASE(?cftLabel), ""deposit"") || CONTAINS(LCASE(?cftLabel), ""withdrawal""))
+}
+GROUP BY ?segment",validator_false_positive
+wealth_management_temporal_transaction_65_questions:TT-029,Which ten investors have the highest net cash flow and average goal progress below 50?,3,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001,3,"[""Investor"", ""CashFlow"", ""InvestmentGoal""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Goal and cash-flow relationship,Hard,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorId ?investorName ?totalCashFlow ?avgProgress
+WHERE {
+  {
+    SELECT ?inv (AVG(xsd:decimal(?progress)) AS ?avgProgress)
+    WHERE {
+      ?ig a wm:InvestmentGoal ;
+          wm:progressPct ?progress ;
+          wm:belongsToInvestor ?inv .
+    }
+    GROUP BY ?inv
+    HAVING (AVG(xsd:decimal(?progress)) < 50)
+  }
+  {
+    SELECT ?inv (SUM(xsd:decimal(?amount)) AS ?totalCashFlow)
+    WHERE {
+      ?cf a wm:CashFlow ;
+          wm:amount ?amount ;
+          wm:cashFlowOfInvestor ?inv .
+    }
+    GROUP BY ?inv
+  }
+  ?inv wm:investorId ?investorId ;
+       wm:investorName ?investorName .
+}
+ORDER BY DESC(?totalCashFlow)
+LIMIT 10",validator_false_positive
+wealth_management_reference_compliance_55_questions:RC-044,How do profile category counts compare with holding category counts for category values appearing in either table?,2,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001,3,"[""Investor"", ""PortfolioHolding"", ""Category""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,1,Categorical coverage,Medium,PARTIAL,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?category (SUM(?invFlag) AS ?profileCount) (SUM(?holdFlag) AS ?holdingCount)
+WHERE {
+  {
+    SELECT ?category ?invFlag ?holdFlag WHERE {
+      {
+        ?inv a wm:Investor ; wm:category ?category .
+        BIND(1 AS ?invFlag) BIND(0 AS ?holdFlag)
+      }
+      UNION
+      {
+        ?hold a wm:PortfolioHolding ; wm:category ?category .
+        BIND(0 AS ?invFlag) BIND(1 AS ?holdFlag)
+      }
+    }
+  }
+}
+GROUP BY ?category
+ORDER BY ?category",validator_false_positive
+wealth_management_at_risk_critical_70_questions:ARC-2T-012,Which investors have risk_score above 100?,2,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_ENTITY_PORTFOLIO_HEALTH_001,2,"[""Investor"", ""PortfolioHealth""]",False,True,True,success,,success,SPARQL execution timed out after 60 seconds.,2,Critical or unusual exceptions,Medium,MATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investorId ?investorName ?riskScore
+WHERE {
+  ?investor a wm:Investor ;
+            wm:investorId ?investorId ;
+            wm:hasPortfolioHealth ?ph .
+  OPTIONAL { ?investor wm:investorName ?investorName . }
+  ?ph wm:riskScore ?riskScore .
+  FILTER ( xsd:decimal(?riskScore) > 100 )
+}",no_failure
+wealth_management_temporal_transaction_65_questions:TT-017,"For each rebalancing action, what is the monthly cash-flow transaction count for investors with that action?",2,ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001,3,"[""RebalancingAction"", ""CashFlow"", ""Investor""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,2,Rebalancing and cash-flow relationship,Medium,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?rebalanceId ?action ?month (COUNT(?cf) AS ?txCount)
+WHERE {
+  ?ra a wm:RebalancingAction ;
+      wm:rebalanceId ?rebalanceId ;
+      wm:action ?action ;
+      wm:rebalancingActionOfInvestor ?inv .
+
+  ?cf a wm:CashFlow ;
+      wm:cashFlowOfInvestor ?inv ;
+      wm:date ?date .
+
+  BIND (SUBSTR(?date, 1, 7) AS ?month)
+}
+GROUP BY ?rebalanceId ?action ?month
+ORDER BY ?rebalanceId ?month",scan_timeout
+wealth_management_enrichment_context_65_questions:EC-2T-005,"For each risk-tolerance and goal-context combination, how many goal rows are recorded?",2,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_ENTITY_INVESTMENT_GOAL_001,3,"[""InvestmentGoal"", ""RiskTolerance"", ""DerivedContext""]",False,True,True,success,,error,SPARQL execution timed out after 60 seconds.,2,Goal context enrichment,Medium,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskTolerance ?derivedContext (COUNT(?goal) AS ?goalCount)
+WHERE {
+  ?riskTolerance a wm:RiskTolerance .
+  ?derivedContext a wm:DerivedContext .
+  OPTIONAL { ?goal a wm:InvestmentGoal . }
+}
+GROUP BY ?riskTolerance ?derivedContext",scan_timeout
+wealth_management_multi_step_comparative_105_questions:MC-016,"Across rebalance logic, how do scenario change compare using two related tables?",2,ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,4,"[""RebalancingLogic"", ""ScenarioRebalancing"", ""RebalancingAction"", ""MarketScenario""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,4,Two-table comparative bridge,Medium,PARTIAL,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?type ?label ?count WHERE {
+  {
+    SELECT ( ""Logic"" AS ?type ) ?logic ?logicLabel (COUNT(?ra) AS ?count)
+    WHERE {
+      ?ra a wm:RebalancingAction ;
+          wm:hasRebalancingLogic ?logic .
+      OPTIONAL { ?logic rdfs:label ?logicLabel . }
+    }
+    GROUP BY ?logic ?logicLabel
+  }
+  UNION
+  {
+    SELECT ( ""Scenario"" AS ?type ) ?scenario ?scenarioLabel (COUNT(?sr) AS ?count)
+    WHERE {
+      ?sr a wm:ScenarioRebalancing ;
+          wm:hasMarketScenario ?scenario .
+      OPTIONAL { ?scenario rdfs:label ?scenarioLabel . }
+    }
+    GROUP BY ?scenario ?scenarioLabel
+  }
+  BIND(COALESCE(?logicLabel, ?scenarioLabel) AS ?label)
+}",scan_timeout
+wealth_management_multi_step_comparative_105_questions:MC-011,"Across time_horizon, how do scenario allocation change compare using two related tables?",2,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"[""ScenarioRebalancing"", ""TimeHorizon"", ""Investor""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,2,Two-table comparative bridge,Medium,PARTIAL,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?timeHorizon (AVG(?invChange) AS ?avgChange) (SUM(?invChange) AS ?totalChange) (COUNT(?inv) AS ?recordCount)
+WHERE {
+  {
+    SELECT ?inv ?timeHorizon (AVG(xsd:decimal(?new) - xsd:decimal(?curr)) AS ?invChange)
+    WHERE {
+      ?inv a wm:Investor .
+      OPTIONAL { ?inv wm:timeHorizon ?timeHorizon . }
+      ?inv wm:hasScenarioRebalancing ?sr .
+      ?sr wm:currentAllocationPct ?curr .
+      ?sr wm:newAllocationPct ?new .
+      FILTER (BOUND(?curr) && BOUND(?new))
+    }
+    GROUP BY ?inv ?timeHorizon
+  }
+}
+GROUP BY ?timeHorizon",scan_timeout
+wealth_management_enrichment_context_65_questions:EC-2T-004,Which Long-term investors have at least one Retirement Planning goal?,2,ATOM_ENTITY_INVESTOR_PROFILE_001; ATOM_ENTITY_INVESTMENT_GOAL_001,4,"[""Investor"", ""InvestmentGoal"", ""InvestmentGoalType"", ""TimeHorizon""]",True,True,True,error,SPARQL execution timed out after 60 seconds.,error,SPARQL execution timed out after 60 seconds.,3,Goal context enrichment,Medium,MISMATCH,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?investor ?investorLabel
+WHERE {
+  ?investor a wm:Investor .
+  {
+    ?investor wm:timeHorizon ?thLit .
+    FILTER(CONTAINS(LCASE(STR(?thLit)), ""long""))
+  } UNION {
+    ?investor wm:hasTimeHorizon ?thObj .
+    ?thObj rdfs:label ?thLabel .
+    FILTER(CONTAINS(LCASE(STR(?thLabel)), ""long""))
+  }
+  ?investor ?rel ?goal .
+  ?goal a wm:InvestmentGoal .
+  ?goal rdfs:label ?goalLabel .
+  FILTER(CONTAINS(LCASE(STR(?goalLabel)), ""retirement planning""))
+  OPTIONAL { ?investor rdfs:label ?investorLabel . }
+}",scan_timeout
+wealth_management_70_question_benchmark:WM-1T-009,Which holdings have negative returns but positive dividends?,1,ATOM_ENTITY_PORTFOLIO_HOLDING_001,1,"[""PortfolioHolding""]",True,False,True,error,SPARQL execution timed out after 60 seconds.,success,nan,1,Holdings and performance,Easy,PARTIAL,"PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?holdingId ?investmentName ?returnsPct ?dividends
+WHERE {
+  ?holding a wm:PortfolioHolding ;
+           wm:holdingId ?holdingId ;
+           wm:returnsPct ?returnsPct ;
+           wm:dividends ?dividends .
+  OPTIONAL { ?holding wm:investmentName ?investmentName . }
+  FILTER(?returnsPct < 0 && ?dividends > 0)
+}",scan_timeout

@@ -1,0 +1,344 @@
+{
+  "sample_row_id": "wealth_management_enrichment_context_65_questions:EC-5T-009",
+  "question": "Which investors combine Retirement Planning goals, Bear Market scenarios, De-risking actions, poor diversification below 25, and Technology allocation?",
+  "ground_truth": "[{\"investor_id\":\"INV-827\",\"investor_name\":\"Meena Gupta\"}]",
+  "pipeline_output": "No data was found in the knowledge graph. The requested entity may not exist.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 436.33,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate",
+    "failure_stage": "Validate",
+    "short_circuit_stage": "Validate"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors combine Retirement Planning goals, Bear Market scenarios, De-risking actions, poor diversification below 25, and Technology allocation?\" This is a lookup/listing question with multiple criteria. Steps: Retrieve ontology classes (maybe Investor, Goal, Scenario, Action, Diversification, Allocation). Then maybe Classify? The query includes numeric condition \"poor diversification below 25\". That's numeric comparison, so we need Classify for numeric-superlative? The rule: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. Here we have numeric condition \"below 25\". That's a numeric comparison, not necessarily a superlative but still numeric. Might still need Classify to handle numeric filter. Probably we should include Classify to interpret numeric condition.\n\nSequence: 1 Retrieve (ontology classes). 2 Classify (identify numeric condition). 3 Generate (SPARQL query). 4 Scan (execute). 5 Validate (check results). 6 Explain (output answer).\n\nThus steps numbered.\n\nLet's craft answer.</reasoning>1. Retrieve – obtain the relevant ontology classes (e.g., Investor, Goal, Scenario, Action, DiversificationMetric, AllocationCategory).  \n2. Classify – identify and interpret the numeric condition “poor diversification below 25” and the categorical filters (Retirement Planning, Bear Market, De‑risking, Technology allocation).  \n3. Generate – write a SPARQL (or graph‑query) statement that selects investors who have all of the specified goals, scenarios, actions, a diversification metric < 25, and a Technology allocation.  \n4. Scan – execute the generated query against the knowledge graph.  \n5. Validate – verify that the returned investor records satisfy every filter condition.  \n6. Explain – present the list of qualifying investors to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest reward dynamic DAG: reward=0.5, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors combine Retirement Planning goals, Bear Market scenarios, De-risking actions, poor diversification below 25, and Technology allocation?\" This is a lookup/listing question with multiple criteria. Need to find ontology classes first using Retrieve. Then classify? There's numeric condition \"poor diversification below 25\" which is numeric threshold, maybe need Classify for numeric-superlative? It's a numeric condition, not aggregation. The law says use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. This includes numeric thresholds? Possibly yes, but it's about numeric condition. Might still need Classify to interpret numeric condition. So steps:\n\n1. Retrieve ontology classes (Investor, Goal, Scenario, Action, DiversificationMetric, Allocation, etc.)\n2. Classify the query to identify numeric condition (diversification below 25) and maybe other criteria.\n3. Generate SPARQL query using identified classes and filters.\n4. Scan to execute query.\n5. Validate results.\n6. Explain answer.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the relevant ontology classes (e.g., Investor, Goal, Scenario, Action, DiversificationMetric, Allocation, TechnologySector).  \n2. Classify – interpret the numeric condition “poor diversification below 25” and identify any other quantitative filters required for the query.  \n3. Generate – write a SPARQL (or equivalent graph) query that selects investors who have a Retirement Planning goal, are associated with a Bear Market scenario, include De‑risking actions, have a DiversificationMetric value < 25, and have a Technology allocation.  \n4. Scan – execute the generated query against the knowledge graph.  \n5. Validate – check that the returned investors satisfy all five criteria and that the diversification values are indeed below 25.  \n6. Explain – present the final list of investors to the user, describing how each meets the specified conditions.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology rules.\n\nQuery: \"Which investors combine Retirement Planning goals, Bear Market scenarios, De-risking actions, poor diversification below 25, and Technology allocation?\"\n\nWe need to find investors that satisfy multiple criteria: have Retirement Planning goals, Bear Market scenarios, De-risking actions, diversification <25 (poor diversification), and Technology allocation (maybe some allocation). This involves numeric condition (<25) and multiple attributes.\n\nWe must start by finding ontology classes using Retrieve.\n\nThen we need to classify for math/numeric words: \"below 25\" is numeric condition, also maybe \"combine\" but not numeric. So we need to use Classify for numeric-superlative/aggregation words. So after Retrieve, we must Classify.\n\nThen we need to Generate SPARQL query (or similar) after Retrieve and Classify.\n\nThen Scan to execute.\n\nThen Validate.\n\nThen Explain.\n\nThus steps:\n\n1. Retrieve: get ontology classes relevant to investors, goals, scenarios, actions, diversification, allocation.\n\n2. Classify: identify numeric condition (poor diversification below 25) and any aggregation (none). So classify numeric.\n\n3. Generate: construct SPARQL query to select investors with properties: hasGoal RetirementPlanning, hasScenario BearMarket, hasAction DeRisking, diversificationMetric < 25, hasAllocation Technology.\n\n4. Scan: execute the query.\n\n5. Validate: check results for completeness/consistency.\n\n6. Explain: present answer to user.\n\nMake sure we follow chronology: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the ontology classes and properties for *Investor*, *Goal*, *Scenario*, *Action*, *DiversificationMetric*, and *Allocation*.\n\n2. Classify – identify and label the numeric condition (“poor diversification below 25”) and any other quantitative criteria in the query.\n\n3. Generate – write a SPARQL (or graph‑query) statement that selects investors who:\n   - have a **Retirement Planning** goal,\n   - are associated with a **Bear Market** scenario,\n   - perform **De‑risking** actions,\n   - have a **DiversificationMetric** value **< 25**,\n   - hold a **Technology** allocation.\n\n4. Scan – execute the generated query against the knowledge graph to retrieve the matching investor entities.\n\n5. Validate – verify that the returned investors satisfy all five criteria and that the diversification values are indeed below 25.\n\n6. Explain – present the final list of investors to the user, describing how each meets the specified goals, scenarios, actions, diversification threshold, and technology allocation.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "InvestmentGoal",
+      "InvestmentGoalType",
+      "MarketScenario",
+      "RebalancingAction",
+      "ScenarioRebalancing",
+      "PortfolioHealth",
+      "SectorAllocation",
+      "Sector"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "point_lookup",
+    "confidence": 0.96,
+    "target_field": "investorId",
+    "schema_datatype": "categorical_string",
+    "why_this_intent": "The query requests a list of investors satisfying several criteria (goal type, market scenario, de‑risking actions, diversification score, technology allocation). This is a retrieval/filter request, not a numeric aggregation, so it maps to a point_lookup intent.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  # Retirement Planning goal\n  ?inv wm:hasInvestmentGoal ?goal .\n  ?goal wm:investmentGoal ?goalName .\n  FILTER(CONTAINS(LCASE(STR(?goalName)), \"retirement planning\"))\n\n  # Bear Market scenario\n  ?inv wm:hasScenarioRebalancing ?scenReb .\n  ?scenReb wm:scenario ?scenarioName .\n  FILTER(CONTAINS(LCASE(STR(?scenarioName)), \"bear market\"))\n\n  # De‑risking action\n  ?inv wm:hasRebalancingAction ?rebAct .\n  ?rebAct wm:action ?actionName .\n  FILTER(CONTAINS(LCASE(STR(?actionName)), \"de-risking\"))\n\n  # Poor diversification (<25)\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:diversificationScore ?divScore .\n  FILTER(xsd:decimal(?divScore) < 25)\n\n  # Technology sector allocation\n  ?inv wm:hasSectorAllocation ?secAlloc .\n  ?secAlloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  # Investment goal = Retirement Planning\n  ?inv wm:hasInvestmentGoal ?goal .\n  ?goal wm:hasInvestmentGoalType ?goalType .\n  ?goalType rdfs:label ?goalLabel .\n  FILTER(CONTAINS(LCASE(STR(?goalLabel)), \"retirement planning\"))\n\n  # Market scenario = Bear Market\n  ?inv wm:hasScenarioRebalancing ?scenReb .\n  ?scenReb wm:hasMarketScenario ?mktScen .\n  ?mktScen rdfs:label ?scenarioLabel .\n  FILTER(CONTAINS(LCASE(STR(?scenarioLabel)), \"bear market\"))\n\n  # Rebalancing action = De-risking\n  ?inv wm:hasRebalancingAction ?rebAct .\n  ?rebAct wm:action ?actionLabel .\n  FILTER(CONTAINS(LCASE(STR(?actionLabel)), \"de-risking\"))\n\n  # Poor diversification (score < 25)\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:diversificationScore ?divScore .\n  FILTER(xsd:decimal(?divScore) < 25)\n\n  # Technology sector allocation\n  ?inv wm:hasSectorAllocation ?secAlloc .\n  ?secAlloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 3,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  # Retirement Planning goal\n  ?inv wm:hasInvestmentGoal ?goal .\n  ?goal wm:investmentGoal ?goalName .\n  FILTER(CONTAINS(LCASE(STR(?goalName)), \"retirement planning\"))\n\n  # Bear Market scenario\n  ?inv wm:hasScenarioRebalancing ?scenReb .\n  ?scenReb wm:scenario ?scenarioName .\n  FILTER(CONTAINS(LCASE(STR(?scenarioName)), \"bear market\"))\n\n  # De‑risking action\n  ?inv wm:hasRebalancingAction ?rebAct .\n  ?rebAct wm:action ?actionName .\n  FILTER(CONTAINS(LCASE(STR(?actionName)), \"de-risking\"))\n\n  # Poor diversification (<25)\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:diversificationScore ?divScore .\n  FILTER(xsd:decimal(?divScore) < 25)\n\n  # Technology sector allocation\n  ?inv wm:hasSectorAllocation ?secAlloc .\n  ?secAlloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  # Retirement Planning goal\n  ?inv wm:hasInvestmentGoal ?goal .\n  ?goal wm:investmentGoal ?goalName .\n  FILTER(CONTAINS(LCASE(STR(?goalName)), \"retirement planning\"))\n\n  # Bear Market scenario\n  ?inv wm:hasScenarioRebalancing ?scenReb .\n  ?scenReb wm:scenario ?scenarioName .\n  FILTER(CONTAINS(LCASE(STR(?scenarioName)), \"bear market\"))\n\n  # De‑risking action\n  ?inv wm:hasRebalancingAction ?rebAct .\n  ?rebAct wm:action ?actionName .\n  FILTER(CONTAINS(LCASE(STR(?actionName)), \"de-risking\"))\n\n  # Poor diversification (<25)\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:diversificationScore ?divScore .\n  FILTER(xsd:decimal(?divScore) < 25)\n\n  # Technology sector allocation\n  ?inv wm:hasSectorAllocation ?secAlloc .\n  ?secAlloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?inv wm:hasInvestmentGoal ?goal .\n    ?goal wm:investmentGoal ?goalName .\n    FILTER(CONTAINS(LCASE(STR(?goalName)), \"retirement planning\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasScenarioRebalancing ?scen .\n    ?scen wm:scenario ?scenName .\n    FILTER(CONTAINS(LCASE(STR(?scenName)), \"bear market\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasRebalancingAction ?rebAct .\n    ?rebAct wm:action ?actName .\n    FILTER(CONTAINS(LCASE(STR(?actName)), \"de-risking\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasPortfolioHealth ?ph .\n    ?ph wm:diversificationScore ?divScore .\n    FILTER(xsd:decimal(?divScore) < 25)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasSectorAllocation ?secAlloc .\n    ?secAlloc wm:hasSector ?sector .\n    ?sector rdfs:label ?sectorLabel .\n    FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n  }\n}",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": "Refine was too similar to timed-out SPARQL, so Generate rewrote with stronger feedback."
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?inv wm:hasInvestmentGoal ?goal .\n    ?goal wm:investmentGoal ?goalName .\n    FILTER(CONTAINS(LCASE(STR(?goalName)), \"retirement planning\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasScenarioRebalancing ?scen .\n    ?scen wm:scenario ?scenName .\n    FILTER(CONTAINS(LCASE(STR(?scenName)), \"bear market\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasRebalancingAction ?rebAct .\n    ?rebAct wm:action ?actName .\n    FILTER(CONTAINS(LCASE(STR(?actName)), \"de-risking\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasPortfolioHealth ?ph .\n    ?ph wm:diversificationScore ?divScore .\n    FILTER(xsd:decimal(?divScore) < 25)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasSectorAllocation ?secAlloc .\n    ?secAlloc wm:hasSector ?sector .\n    ?sector rdfs:label ?sectorLabel .\n    FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n  }\n}",
+        "status": "success",
+        "row_count": 0,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      },
+      {
+        "attempt": 1,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?inv wm:hasInvestmentGoal ?goal .\n    ?goal wm:investmentGoal ?goalName .\n    FILTER(CONTAINS(LCASE(STR(?goalName)), \"retirement planning\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasScenarioRebalancing ?scen .\n    ?scen wm:scenario ?scenName .\n    FILTER(CONTAINS(LCASE(STR(?scenName)), \"bear market\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasRebalancingAction ?rebAct .\n    ?rebAct wm:action ?actName .\n    FILTER(CONTAINS(LCASE(STR(?actName)), \"de-risking\"))\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasPortfolioHealth ?ph .\n    ?ph wm:diversificationScore ?divScore .\n    FILTER(xsd:decimal(?divScore) < 25)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasSectorAllocation ?secAlloc .\n    ?secAlloc wm:hasSector ?sector .\n    ?sector rdfs:label ?sectorLabel .\n    FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n  }\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasInvestmentGoal ?goal .\n  ?goal wm:investmentGoal ?goalName .\n  FILTER(CONTAINS(LCASE(STR(?goalName)), \"retirement planning\"))\n\n  ?inv wm:hasScenarioRebalancing ?scen .\n  ?scen wm:scenario ?scenName .\n  FILTER(CONTAINS(LCASE(STR(?scenName)), \"bear market\"))\n\n  ?inv wm:hasRebalancingAction ?rebAct .\n  ?rebAct wm:action ?actName .\n  FILTER(CONTAINS(LCASE(STR(?actName)), \"de-risking\"))\n\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:diversificationScore ?divScore .\n  FILTER(xsd:decimal(?divScore) < 25)\n\n  ?inv wm:hasSectorAllocation ?secAlloc .\n  ?secAlloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasInvestmentGoal ?goal .\n  ?goal wm:investmentGoal ?goalName .\n  FILTER(CONTAINS(LCASE(STR(?goalName)), \"retirement planning\"))\n\n  ?inv wm:hasScenarioRebalancing ?scen .\n  ?scen wm:scenario ?scenName .\n  FILTER(CONTAINS(LCASE(STR(?scenName)), \"bear market\"))\n\n  ?inv wm:hasRebalancingAction ?rebAct .\n  ?rebAct wm:action ?actName .\n  FILTER(CONTAINS(LCASE(STR(?actName)), \"de-risking\"))\n\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:diversificationScore ?divScore .\n  FILTER(xsd:decimal(?divScore) < 25)\n\n  ?inv wm:hasSectorAllocation ?secAlloc .\n  ?secAlloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      },
+      {
+        "attempt": 2,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  ?inv wm:hasInvestmentGoal ?goal .\n  ?goal wm:investmentGoal ?goalName .\n  FILTER(CONTAINS(LCASE(STR(?goalName)), \"retirement planning\"))\n\n  ?inv wm:hasScenarioRebalancing ?scen .\n  ?scen wm:scenario ?scenName .\n  FILTER(CONTAINS(LCASE(STR(?scenName)), \"bear market\"))\n\n  ?inv wm:hasRebalancingAction ?rebAct .\n  ?rebAct wm:action ?actName .\n  FILTER(CONTAINS(LCASE(STR(?actName)), \"de-risking\"))\n\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:diversificationScore ?divScore .\n  FILTER(xsd:decimal(?divScore) < 25)\n\n  ?inv wm:hasSectorAllocation ?secAlloc .\n  ?secAlloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  # Investment goal = Retirement Planning\n  ?inv wm:hasInvestmentGoal ?goal .\n  ?goal wm:hasInvestmentGoalType ?goalType .\n  ?goalType rdfs:label ?goalLabel .\n  FILTER(CONTAINS(LCASE(STR(?goalLabel)), \"retirement planning\"))\n\n  # Market scenario = Bear Market\n  ?inv wm:hasScenarioRebalancing ?scenReb .\n  ?scenReb wm:hasMarketScenario ?mktScen .\n  ?mktScen rdfs:label ?scenarioLabel .\n  FILTER(CONTAINS(LCASE(STR(?scenarioLabel)), \"bear market\"))\n\n  # Rebalancing action = De-risking\n  ?inv wm:hasRebalancingAction ?rebAct .\n  ?rebAct wm:action ?actionLabel .\n  FILTER(CONTAINS(LCASE(STR(?actionLabel)), \"de-risking\"))\n\n  # Poor diversification (score < 25)\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:diversificationScore ?divScore .\n  FILTER(xsd:decimal(?divScore) < 25)\n\n  # Technology sector allocation\n  ?inv wm:hasSectorAllocation ?secAlloc .\n  ?secAlloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?inv a wm:Investor ;\n       wm:investorId ?investorId .\n\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  # Investment goal = Retirement Planning\n  ?inv wm:hasInvestmentGoal ?goal .\n  ?goal wm:hasInvestmentGoalType ?goalType .\n  ?goalType rdfs:label ?goalLabel .\n  FILTER(CONTAINS(LCASE(STR(?goalLabel)), \"retirement planning\"))\n\n  # Market scenario = Bear Market\n  ?inv wm:hasScenarioRebalancing ?scenReb .\n  ?scenReb wm:hasMarketScenario ?mktScen .\n  ?mktScen rdfs:label ?scenarioLabel .\n  FILTER(CONTAINS(LCASE(STR(?scenarioLabel)), \"bear market\"))\n\n  # Rebalancing action = De-risking\n  ?inv wm:hasRebalancingAction ?rebAct .\n  ?rebAct wm:action ?actionLabel .\n  FILTER(CONTAINS(LCASE(STR(?actionLabel)), \"de-risking\"))\n\n  # Poor diversification (score < 25)\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:diversificationScore ?divScore .\n  FILTER(xsd:decimal(?divScore) < 25)\n\n  # Technology sector allocation\n  ?inv wm:hasSectorAllocation ?secAlloc .\n  ?secAlloc wm:hasSector ?sector .\n  ?sector rdfs:label ?sectorLabel .\n  FILTER(CONTAINS(LCASE(STR(?sectorLabel)), \"technology\"))\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": 0,
+    "final_scan_error": "SPARQL execution timed out after 60 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 0,
+    "final_answer": "No data was found in the knowledge graph. The requested entity may not exist.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth: [{\"investor_id\":\"INV-827\",\"investor_name\":\"Meena Gupta\"}]\n\nPipeline Output: \"No data was found in the knowledge graph. The requested entity may not exist.\"\n\nGround truth has concrete investor ID and name. Pipeline says no data. That's mismatch. According to rule 2, if ground truth has concrete values, pipeline must contain same facts; \"No data found\" is mismatch. So output MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "scan_timeout",
+    "failure_stage": "Validate",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

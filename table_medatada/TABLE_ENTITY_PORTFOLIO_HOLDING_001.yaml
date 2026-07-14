@@ -1,0 +1,186 @@
+# ATOM_ENTITY_PORTFOLIO_HOLDING_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_ENTITY_PORTFOLIO_HOLDING_001"
+  type: "Atom"
+  subtype: "Entity"
+  name: "portfolio_holding"
+  display_name: "Portfolio Holding"
+  
+  
+  description: >
+    Individual investment positions held by investors. Contains cost basis,
+    current valuations, returns, and classification by sector/segment/category.
+    Primary fact table for portfolio analytics and performance tracking.
+
+semantics:
+  business_purpose: >
+    Core transactional data for portfolio composition analysis, performance 
+    tracking, and asset allocation. Enables queries about what investors own,
+    portfolio value, returns, and diversification.
+  
+  use_cases:
+    - "portfolio_composition"
+    - "performance_tracking"
+    - "return_analysis"
+    - "sector_exposure"
+    - "asset_allocation"
+
+
+attributes:
+  - name: "holding_id"
+    display_name: "Holding ID"
+    synonyms: ["position ID"]
+    description: "Unique identifier for each holding"
+    type: "string"
+    filterable: true
+
+  - name: "investor_id"
+    display_name: "Investor ID"
+    synonyms: ["client ID"]
+    description: "Foreign key to investor_profile"
+    type: "string"
+    filterable: true
+
+  - name: "investment_name"
+    display_name: "Investment Name"
+    synonyms: ["holding name", "asset name", "fund name"]
+    description: "Name of the investment"
+    type: "string"
+    filterable: true
+    searchable: true
+
+  - name: "investment_type"
+    display_name: "Investment Type"
+    synonyms: ["type", "asset type", "instrument type"]
+    description: "Type of investment"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Corporate Bond"
+      - "ETF"
+      - "Equity"
+      - "Global Equity"
+      - "Gold"
+      - "Government Bond"
+      - "Hedge Fund"
+      - "InVIT"
+      - "Index Fund"
+      - "Mutual Fund"
+      - "Private Equity"
+      - "REIT"
+      - "Real Estate"
+
+
+  - name: "sector"
+    display_name: "Sector"
+    synonyms: ["industry"]
+    description: "Industry sector classification"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Automobile"
+      - "Banking"
+      - "Consumer Goods"
+      - "Corporate"
+      - "Financial Services"
+      - "Government"
+      - "Healthcare"
+      - "Infrastructure"
+      - "Pharma"
+      - "Private Equity"
+      - "Real Estate"
+      - "Technology"
+
+  - name: "segment"
+    display_name: "Segment"
+    synonyms: ["market cap", "cap segment"]
+    description: "Market capitalization segment"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Large Cap"
+      - "Mid Cap"
+      - "Small Cap"
+      - "Diversified"
+
+  - name: "category"
+    display_name: "Category"
+    synonyms: ["asset class"]
+    description: "Asset category (Equity/Debt/Hybrid)"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Alternative"
+      - "Bonds"
+      - "Cash Equivalent"
+      - "Commodities"
+      - "Crypto"
+      - "Debt"
+      - "ETF"
+      - "Equity"
+      - "Fixed Income"
+      - "Hybrid"
+      - "International"
+      - "MF"
+      - "PPF"
+      - "REIT"
+      - "SGB"
+
+  - name: "purchase_date"
+    display_name: "Purchase Date"
+    synonyms: ["buy date", "acquisition date"]
+    description: "Date when the investment was purchased"
+    type: "date"
+    filterable: true
+
+  - name: "cost"
+    display_name: "Cost"
+    synonyms: ["purchase price", "cost basis", "invested amount"]
+    description: "Original purchase cost/investment amount"
+    type: "decimal"
+    aggregatable: true
+    filterable: true
+
+  - name: "current_value"
+    display_name: "Current Value"
+    synonyms: ["market value", "present value", "portfolio value"]
+    description: "Current market value of the holding"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+  - name: "returns_pct"
+    display_name: "Returns Percentage"
+    synonyms: ["return", "returns", "gain percentage", "profit percentage"]
+    description: "Percentage return on investment"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+  - name: "dividends"
+    display_name: "Dividends"
+    synonyms: ["dividend income", "dividend payout"]
+    description: "Total dividends received from this holding"
+    type: "decimal"
+    aggregatable: true
+
+  - name: "taxes_paid"
+    display_name: "Taxes Paid"
+    synonyms: ["tax", "tax amount"]
+    description: "Taxes paid on this holding"
+    type: "decimal"
+    aggregatable: true
+
+derived_attributes:
+  - name: "absolute_return"
+    display_name: "Absolute Return"
+    description: "Absolute profit/loss amount"
+
+  - name: "holding_period_days"
+    display_name: "Holding Period (Days)"
+    description: "Number of days since purchase"
+
+  - name: "is_profitable"
+    display_name: "Is Profitable"
+    description: "Whether holding is in profit"

@@ -1,0 +1,350 @@
+{
+  "sample_row_id": "wealth_management_scoring_quantitative_65_questions:SQA-1T-007",
+  "question": "How do average progress_pct and average avg_volatility_pct compare across investment goals?",
+  "ground_truth": "[{\"investment_goal\":\"Income Generation\",\"avg_progress_pct\":37.62,\"avg_volatility_pct\":13.73},{\"investment_goal\":null,\"avg_progress_pct\":38.22,\"avg_volatility_pct\":12.91},{\"investment_goal\":\"Child Education\",\"avg_progress_pct\":38.8,\"avg_volatility_pct\":14.95},{\"investment_goal\":\"Wealth Preservation\",\"avg_progress_pct\":39.32,\"avg_volatility_pct\":14.49},{\"investment_goal\":\"Retirement Planning\",\"avg_progress_pct\":39.93,\"avg_volatility_pct\":14.08},{\"investment_goal\":\"Growth\",\"avg_progress_pct\":40.85,\"avg_volatility_pct\":14.32},{\"investment_goal\":\"Emergency Fund\",\"avg_progress_pct\":42.04,\"avg_volatility_pct\":14.43}]",
+  "pipeline_output": "Growth: avgProgressPct 40.73224453463567737918744652, avgVolatilityPct 14.32023948243107787716955941; Wealth Preservation: avgProgressPct 39.43033641738580157499845506, avgVolatilityPct 14.50875176765971551540616246; Child Education: avgProgressPct 38.58404938990116692908171429, avgVolatilityPct 14.95393451857494299287749288; Retirement Planning: avgProgressPct 39.49156163817957117458689933, avgVolatilityPct 14.07849603153899764745308311; Income Generation: avgProgressPct 37.41939469019132340702728997, avgVolatilityPct 13.73120432529339508513513514; Emergency Fund: avgProgressPct 42.03928945459369985642859230, avgVolatilityPct 14.42326538588348481456953642.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 65.893,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"How do average progress_pct and average avg_volatility_pct compare across investment goals?\" Need to find ontology classes, classify math/aggregation words, generate query, scan, validate, explain.\n\nSteps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify that \"average\" is aggregation)\n3. Generate (SPARQL to compute average progress_pct and average avg_volatility_pct grouped by investment goal)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present comparison)\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Explain",
+              "inputs": [
+                5
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2
+            },
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"How do average progress_pct and average avg_volatility_pct compare across investment goals?\"\n\nWe need to find ontology classes first using Retrieve. Then classify math/aggregation words: average. So use Classify after Retrieve. Then Generate SPARQL after Classify. Then Scan to execute. Then Validate. Then Explain.\n\nPotentially also need Filter_Aggregate? But we are limited to linear execution plan using only provided operators. The plan should include steps: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nWe might also need to use Filter_Aggregate to compute averages per investment goal. But the plan can include that as part of Generate query; but we might need to mention using Filter_Aggregate operator after Scan? However chronology says after Scan we must Validate then Explain. No other steps allowed after Validate except Explain. So any aggregation must be done within the query (Generate) or maybe using Filter_Aggregate after Scan? But chronology says Validate must happen after Scan, but does not forbid using other operators before Validate? The critical laws: \"Scan (executing Graph query) must happen immediately AFTER 'Generate'.\" So after Generate we must Scan, then Validate, then Explain. No other operators can be inserted between Generate and Scan, nor between Scan and Validate, nor after Validate except Explain. So we cannot have Filter_Aggregate as separate step. So we must embed aggregation in the SPARQL query generated by Generate.\n\nThus steps:\n\n1. Retrieve: get ontology classes (InvestmentGoal, progress_pct, avg_volatility_pct, etc.)\n2. Classify: identify that query involves average aggregation.\n3. Generate: write SPARQL that groups by investment goal and computes AVG(progress_pct) and AVG(avg_volatility_pct).\n4. Scan: execute the query.\n5. Validate: check results for completeness/consistency.\n6. Explain: present comparison to user.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the ontology classes relevant to the query (e.g., InvestmentGoal, progress_pct, avg_volatility_pct).  \n2. Classify – identify the mathematical/aggregation intent (“average”) and the numeric fields involved.  \n3. Generate – compose a SPARQL query that groups by InvestmentGoal and computes AVG(progress_pct) and AVG(avg_volatility_pct) for each goal.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the returned averages are present for all investment goals and that no errors occurred.  \n6. Explain – present the user with a clear comparison of the average progress_pct versus the average avg_volatility_pct across the investment goals.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"How do average progress_pct and average avg_volatility_pct compare across investment goals?\" So need to retrieve ontology classes, classify math/aggregation words (average), generate SPARQL, scan, validate, explain.\n\nSteps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify that we need average aggregation for progress_pct and avg_volatility_pct)\n3. Generate (SPARQL query to compute average progress_pct and average avg_volatility_pct grouped by investment goal)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present comparison)\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "InvestmentGoal"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.98,
+    "target_field": "progressPct, avgVolatilityPct",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query requests the average of two fields (progressPct and avgVolatilityPct) across investment goals. Both fields are defined as numeric in the schema, so the request is a valid numeric aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investmentGoal \n       (AVG(xsd:decimal(?progressPct)) AS ?avgProgressPct) \n       (AVG(xsd:decimal(?volatilityPct)) AS ?avgVolatilityPct)\nWHERE {\n  ?goal a wm:InvestmentGoal .\n  ?goal wm:investmentGoal ?investmentGoal .\n  ?goal wm:progressPct ?progressPct .\n  ?goal wm:avgVolatilityPct ?volatilityPct .\n}\nGROUP BY ?investmentGoal",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investmentGoal \n       (AVG(xsd:decimal(?progressPct)) AS ?avgProgressPct) \n       (AVG(xsd:decimal(?volatilityPct)) AS ?avgVolatilityPct)\nWHERE {\n  ?goal a wm:InvestmentGoal .\n  ?goal wm:investmentGoal ?investmentGoal .\n  ?goal wm:progressPct ?progressPct .\n  ?goal wm:avgVolatilityPct ?volatilityPct .\n}\nGROUP BY ?investmentGoal",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?investmentGoal \n       (AVG(xsd:decimal(?progressPct)) AS ?avgProgressPct) \n       (AVG(xsd:decimal(?volatilityPct)) AS ?avgVolatilityPct)\nWHERE {\n  ?goal a wm:InvestmentGoal .\n  ?goal wm:investmentGoal ?investmentGoal .\n  ?goal wm:progressPct ?progressPct .\n  ?goal wm:avgVolatilityPct ?volatilityPct .\n}\nGROUP BY ?investmentGoal",
+        "status": "success",
+        "row_count": 6,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 6,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query returns the required columns with correct aggregations and non-empty data, matching the request to compare average progress_pct and avg_volatility_pct across investment goals.",
+    "validator_reason": "The query returns the required columns with correct aggregations and non-empty data, matching the request to compare average progress_pct and avg_volatility_pct across investment goals.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 6,
+    "final_answer": "Growth: avgProgressPct 40.73224453463567737918744652, avgVolatilityPct 14.32023948243107787716955941; Wealth Preservation: avgProgressPct 39.43033641738580157499845506, avgVolatilityPct 14.50875176765971551540616246; Child Education: avgProgressPct 38.58404938990116692908171429, avgVolatilityPct 14.95393451857494299287749288; Retirement Planning: avgProgressPct 39.49156163817957117458689933, avgVolatilityPct 14.07849603153899764745308311; Income Generation: avgProgressPct 37.41939469019132340702728997, avgVolatilityPct 13.73120432529339508513513514; Emergency Fund: avgProgressPct 42.03928945459369985642859230, avgVolatilityPct 14.42326538588348481456953642.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth JSON list with pipeline output. Ground truth includes entries for each investment_goal with avg_progress_pct and avg_volatility_pct. Pipeline output provides values for each goal, but need to see if numbers match (within tolerance?). The numbers: Ground truth values:\n\nIncome Generation: avg_progress_pct 37.62, avg_volatility_pct 13.73\nnull (no goal): avg_progress_pct 38.22, avg_volatility_pct 12.91 (but pipeline output does not include a null goal entry; pipeline output includes only listed goals, not the null one)\nChild Education: 38.8, 14.95\nWealth Preservation: 39.32, 14.49\nRetirement Planning: 39.93, 14.08\nGrowth: 40.85, 14.32\nEmergency Fund: 42.04, 14.43\n\nPipeline output values (rounded many decimals):\n\nGrowth: avgProgressPct 40.7322445346..., avgVolatilityPct 14.3202394824...\nWealth Preservation: 39.4303364173..., 14.5087517676...\nChild Education: 38.5840493899..., 14.9539345185...\nRetirement Planning: 39.4915616381..., 14.0784960315...\nIncome Generation: 37.4193946901..., 13.7312043252...\nEmergency Fund: 42.0392894545..., 14.4232653858...\n\nNow compare each to ground truth numbers. They are close but not exact. The ground truth numbers are given to two decimal places. The pipeline numbers differ slightly: e.g., Growth ground truth 40.85 vs pipeline 40.7322 (difference 0.1178). That's not matching exactly. According to rule 2: If Ground Truth contains a concrete number, the Pipeline Output must contain the same facts. So numbers must match exactly (or maybe tolerance? Not specified). So mismatches.\n\nAlso missing the null investment_goal entry (avg_progress_pct 38.22, avg_volatility_pct 12.91). Pipeline output does not include that. So missing value => PARTIAL at best, but also numbers differ.\n\nThus overall should be MISMATCH because numbers not matching and missing entry. According to rule 2, any difference is mismatch. So output \"MISMATCH\".</reasoning>MISMATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

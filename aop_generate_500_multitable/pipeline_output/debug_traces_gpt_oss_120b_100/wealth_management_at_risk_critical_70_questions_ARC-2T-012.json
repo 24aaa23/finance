@@ -1,0 +1,257 @@
+{
+  "sample_row_id": "wealth_management_at_risk_critical_70_questions:ARC-2T-012",
+  "question": "Which investors have risk_score above 100?",
+  "ground_truth": "[]",
+  "pipeline_output": "No data was found in the knowledge graph. The requested entity may not exist.",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 223.834,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan -> Validate",
+    "failure_stage": "Validate",
+    "short_circuit_stage": "Validate"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have risk_score above 100?\" This is a simple lookup/listing with a numeric filter. According to rules: start with Retrieve to find ontology classes. Then we have numeric comparison \"above 100\" which is a numeric-superlative? It's a comparison, not aggregate. The rule says use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. \"above 100\" is a numeric filter but not necessarily a superlative word. However it's a numeric condition. The rule says \"Classify for math, aggregation, or numeric-superlative words\". It doesn't explicitly require for simple numeric comparisons. Might still need to classify the condition? Possibly we need to use Classify to identify that we need a filter on numeric attribute. The query is simple lookup/listing, but includes numeric filter. The rule: \"If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'.\" This includes numeric filter? Might still be considered simple listing with condition. But to be safe, we could include Classify to identify numeric condition. However the rule says use Classify for math, aggregation, or numeric-superlative words. \"above 100\" is not one of those words. So we might skip Classify and go Retrieve -> Generate.\n\nThus steps:\n\n1. Retrieve (ontology classes, find Investor class and risk_score property)\n2. Generate (write SPARQL query to select investors where risk_score > 100)\n3. Scan (execute the query)\n4. Validate (check results)\n5. Explain (present answer)\n\nWe must output only numbered steps. So:\n\n1. Retrieve\n2. Generate\n3. Scan\n4. Validate\n5. Explain\n\nMake sure each step includes brief description? The instruction: \"Output ONLY the numbered steps.\" Probably just list numbers with operator names? Could include description after colon? Usually they want like \"1. Retrieve\" etc. We'll do that.</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have risk_score above 100?\" This is a simple lookup/listing with a numeric filter. According to rules: start with Retrieve to find ontology classes. Then we have numeric comparison \"above 100\" which is a numeric-superlative? It's a comparison, not aggregate. The rule says use Classify for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', 'Min', 'Max', 'Count', 'Highest', 'Lowest', 'Largest', or 'Smallest'. \"above 100\" is a numeric comparison but not listed. Might not require Classify. However it's a numeric filter; but rule only mentions those specific words. So we can go straight from Retrieve to Generate. Then Scan, Validate, Explain.\n\nThus steps:\n\n1. Retrieve (ontology classes for Investor and risk_score property)\n2. Generate (write SPARQL query to select investors where risk_score > 100)\n3. Scan (execute the query)\n4. Validate (check results)\n5. Explain (present answer)\n\nWe must output only numbered steps. Let's produce.\n\n</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have risk_score above 100?\"\n\nWe need to find ontology classes first using Retrieve. Then classify because we have numeric comparison \"above 100\" which is a numeric-superlative? It's a comparison, but the law says use Classify for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. \"above 100\" is a numeric filter, but not exactly those words. However it's a numeric condition. The rule says \"Use 'Classify' for math, aggregation, or numeric-superlative words such as ...\". It might still require classification to identify that we need a filter on numeric attribute. But maybe we can skip? The rule: \"If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'.\" This query is a simple lookup with a numeric filter, not an aggregation. Might be considered simple listing with condition. But the condition is numeric. The rule says use Classify for math, aggregation, or numeric-superlative words. \"above 100\" is a numeric condition but not a superlative word. Might still need classification to identify numeric filter. Safer to include Classify step to identify numeric condition.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify numeric filter on risk_score)\n3. Generate (write SPARQL query to select investors where risk_score > 100)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nThus output numbered steps only.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": "...",
+  "classify": "...",
+  "generate": "...",
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName ?riskScore\nWHERE {\n  ?investor a wm:Investor ;\n            wm:investorId ?investorId ;\n            wm:hasPortfolioHealth ?ph .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n  ?ph wm:riskScore ?riskScore .\n  FILTER ( xsd:decimal(?riskScore) > 100 )\n}",
+        "status": "success",
+        "row_count": 0,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      },
+      {
+        "attempt": 1,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName ?riskScore\nWHERE {\n  ?investor a wm:Investor ;\n            wm:investorId ?investorId ;\n            wm:hasPortfolioHealth ?ph .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n  ?ph wm:riskScore ?riskScore .\n  FILTER ( xsd:decimal(?riskScore) > 100 )\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName ?riskScore\nWHERE {\n  ?ph a wm:PortfolioHealth ;\n      wm:healthOfInvestor ?investor ;\n      wm:riskScore ?riskScore .\n  ?investor a wm:Investor ;\n            wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n  FILTER ( xsd:decimal(?riskScore) > 100 )\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName ?riskScore\nWHERE {\n  ?ph a wm:PortfolioHealth ;\n      wm:healthOfInvestor ?investor ;\n      wm:riskScore ?riskScore .\n  ?investor a wm:Investor ;\n            wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n  FILTER ( xsd:decimal(?riskScore) > 100 )\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      },
+      {
+        "attempt": 2,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName ?riskScore\nWHERE {\n  ?ph a wm:PortfolioHealth ;\n      wm:healthOfInvestor ?investor ;\n      wm:riskScore ?riskScore .\n  ?investor a wm:Investor ;\n            wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n  FILTER ( xsd:decimal(?riskScore) > 100 )\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName ?riskScore\nWHERE {\n  ?investor a wm:Investor ;\n            wm:investorId ?investorId ;\n            wm:hasPortfolioHealth ?ph .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n  ?ph wm:riskScore ?riskScore .\n  FILTER ( xsd:decimal(?riskScore) > 100 )\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName ?riskScore\nWHERE {\n  ?investor a wm:Investor ;\n            wm:investorId ?investorId ;\n            wm:hasPortfolioHealth ?ph .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n  ?ph wm:riskScore ?riskScore .\n  FILTER ( xsd:decimal(?riskScore) > 100 )\n}",
+        "status": "success",
+        "row_count": 0,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 0,
+    "final_scan_error": "SPARQL execution timed out after 60 seconds."
+  },
+  "validate": "...",
+  "explain": "...",
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to decide if pipeline output matches ground truth. Question: \"Which investors have risk_score above 100?\" Ground Truth: [] (empty list). That indicates no investors have risk_score above 100. So ground truth says no data (empty). Pipeline Output: \"No data was found in the knowledge graph. The requested entity may not exist.\"\n\nGround truth explicitly says no rows/no data. So pipeline output says no data found. According to rule 3: Only mark \"No data found\" as MATCH when Ground Truth explicitly says no rows/no data/no business rule. Here ground truth is [] meaning no investors. That qualifies as no data. So pipeline output matches. So output MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "Validate",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

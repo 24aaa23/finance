@@ -1,0 +1,331 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-097",
+  "question": "Across profile category, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_shortfall\":22638125.66,\"avg_holding_value\":6738916.76,\"avg_max_allocation_pct\":13.71,\"avg_liquidity_score\":49.27,\"avg_diversification_score\":51.01},{\"group_value\":\"Debt\",\"avg_shortfall\":25668295.61,\"avg_holding_value\":8445123.62,\"avg_max_allocation_pct\":16.28,\"avg_liquidity_score\":49.16,\"avg_diversification_score\":52.48},{\"group_value\":\"Equity\",\"avg_shortfall\":17988590.02,\"avg_holding_value\":7489841.63,\"avg_max_allocation_pct\":17.14,\"avg_liquidity_score\":50.42,\"avg_diversification_score\":48.72},{\"group_value\":\"Gold\",\"avg_shortfall\":23036903.56,\"avg_holding_value\":8173942.74,\"avg_max_allocation_pct\":17.81,\"avg_liquidity_score\":51.54,\"avg_diversification_score\":53.36},{\"group_value\":\"Hybrid\",\"avg_shortfall\":23317670.2,\"avg_holding_value\":9897724.92,\"avg_max_allocation_pct\":17.45,\"avg_liquidity_score\":48.72,\"avg_diversification_score\":46.92},{\"group_value\":\"Real Estate\",\"avg_shortfall\":25521919.23,\"avg_holding_value\":7437500.82,\"avg_max_allocation_pct\":17.83,\"avg_liquidity_score\":47.96,\"avg_diversification_score\":48.68}]",
+  "pipeline_output": "A database error prevented data retrieval.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 314.83,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan",
+    "failure_stage": "Scan",
+    "short_circuit_stage": "Scan"
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nWe need to answer query: \"Across profile category, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?\"\n\nWe need to identify ontology classes (profile category, goal shortfall, holding value, allocation concentration, liquidity, diversification). Use Retrieve.\n\nThen classify for math, aggregation, numeric-superlative words. The query asks \"compare\" across profile category using five related tables. Likely need aggregation (maybe average, sum). So we need Classify for math/aggregation.\n\nThen Generate SPARQL to retrieve needed data across five related tables, probably using joins.\n\nThen Scan to execute.\n\nThen Validate to check data.\n\nThen Explain to present results.\n\nPotentially also need Filter_Aggregate, Order_By, etc. But plan steps need to be linear. We can include those as separate steps after Scan? Actually after Scan we can do other processing like Filter_Aggregate, Order_By, etc, then Validate, then Explain.\n\nWe also need to use Set_Intersect etc? Not needed.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify aggregation/comparison)\n3. Generate (SPARQL query to pull goal shortfall, holding value, allocation concentration, liquidity, diversification per profile category from five tables)\n4. Scan (execute query)\n5. Filter_Aggregate (compute comparative metrics, e.g., average or sum across categories)\n6. Order_By (maybe order categories by a metric)\n7. Validate (ensure results are complete)\n8. Explain (present comparison)\n\nWe need to keep linear execution plan, numbered steps.\n\nLet's produce that.</reasoning>1. Retrieve – locate the ontology classes for **ProfileCategory**, **GoalShortfall**, **HoldingValue**, **AllocationConcentration**, **Liquidity**, and **Diversification**.  \n\n2. Classify – identify the mathematical/aggregation intent in the query (comparative analysis across categories, likely requiring averages, sums, or rankings).  \n\n3. Generate – write a SPARQL (or equivalent graph) query that joins the five related tables to return, for each **ProfileCategory**, the values of **GoalShortfall**, **HoldingValue**, **AllocationConcentration**, **Liquidity**, and **Diversification**.  \n\n4. Scan – execute the generated query against the knowledge graph to obtain the raw dataset.  \n\n5. Filter_Aggregate – apply the necessary aggregation functions (e.g., AVG, SUM) and comparative calculations to the retrieved data for each profile category.  \n\n6. Order_By – sort the resulting categories by a chosen metric (e.g., highest to lowest GoalShortfall) to facilitate comparison.  \n\n7. Validate – check the aggregated and ordered results for completeness, consistency, and correctness (e.g., no missing categories, correct data types).  \n\n8. Explain – present the final comparative summary of Goal Shortfall, Holding Value, Allocation Concentration, Liquidity, and Diversification across all profile categories.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Filter_Aggregate -> Order_By -> Validate -> Explain",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Rejected by Python validator: missing dependency path: Classify -> Generate",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Filter_Aggregate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Order_By",
+              "inputs": [
+                "n5"
+              ]
+            },
+            {
+              "id": "n7",
+              "operator": "Validate",
+              "inputs": [
+                "n6"
+              ]
+            },
+            {
+              "id": "n8",
+              "operator": "Explain",
+              "inputs": [
+                "n7"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n6",
+              "target": "n7"
+            },
+            {
+              "source": "n7",
+              "target": "n8"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Across profile category, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?\"\n\nWe need to identify ontology classes: likely \"ProfileCategory\", \"GoalShortfall\", \"HoldingValue\", \"AllocationConcentration\", \"Liquidity\", \"Diversification\", and maybe \"Table\". Use Retrieve.\n\nThen classify for math, aggregation, numeric-superlative words. The query asks \"compare\" across categories for those metrics. Likely need aggregation like average, sum, etc. Words like \"compare\" may imply we need to compute maybe average or sum per profile category. That's aggregation. So we need Classify for aggregation.\n\nThen Generate SPARQL to pull data from five related tables linking profile category to those metrics.\n\nThen Scan to execute.\n\nThen Validate to check data.\n\nThen Explain to present results.\n\nPotentially also need Filter_Aggregate, Order_By, etc. But the plan only needs steps, not actual queries. Provide steps in order.\n\nWe must start with Retrieve (ontology classes). Then Classify (detect aggregation/comparison). Then Generate (SPARQL). Then Scan (execute). Then after Scan we can do other processing like Filter_Aggregate, Order_By, etc, then Validate, then Explain.\n\nThus steps:\n\n1. Retrieve – obtain the ontology classes for ProfileCategory, GoalShortfall, HoldingValue, AllocationConcentration, Liquidity, Diversification, and the five related tables.\n\n2. Classify – analyze the query to detect aggregation/comparison intents (e.g., average, sum, min, max) for each metric across profile categories.\n\n3. Generate – write a graph query (e.g., SPARQL) that links the five tables, selects GoalShortfall, HoldingValue, AllocationConcentration, Liquidity, and Diversification for each ProfileCategory, and applies the aggregation functions identified in step 2.\n\n4. Scan – execute the generated query against the knowledge graph to retrieve the aggregated comparison data.\n\n5. Validate – check the result set for completeness, correct data types, and consistency (ensure every ProfileCategory has values for all five metrics).\n\n6. Explain – present the comparative analysis of goal shortfall, holding value, allocation concentration, liquidity, and diversification across profile categories to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Category",
+      "InvestmentGoal",
+      "PortfolioHolding",
+      "SectorAllocation",
+      "PortfolioHealth"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "taxonomic_reasoning",
+    "confidence": 0.96,
+    "target_field": "shortfall, holding value, allocation concentration, liquidityScore, diversificationScore",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The user asks to compare several numeric metrics across the categorical attribute 'profile category', which requires grouping and aggregating numeric fields rather than a single-point lookup or pure boolean check.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel \n       (SUM(?totalShortfall) AS ?categoryShortfall) \n       (SUM(?totalHoldingValue) AS ?categoryHoldingValue) \n       (AVG(?avgAllocationPct) AS ?categoryAvgAllocationPct) \n       (AVG(?avgLiquidityScore) AS ?categoryAvgLiquidity) \n       (AVG(?avgDiversificationScore) AS ?categoryAvgDiversification)\nWHERE {\n  # Category label\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  # Distinct investor‑to‑category mapping via holdings\n  {\n    SELECT DISTINCT ?investorId ?cat\n    WHERE {\n      ?phMap a wm:PortfolioHolding .\n      ?phMap wm:investorId ?investorId .\n      ?phMap wm:hasCategory ?cat .\n    }\n  }\n\n  # Aggregate shortfall per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?shortfall)) AS ?totalShortfall)\n    WHERE {\n      ?ig a wm:InvestmentGoal .\n      ?ig wm:investorId ?investorId .\n      ?ig wm:shortfall ?shortfall .\n    }\n    GROUP BY ?investorId\n  }\n\n  # Aggregate holding value per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?holdingValue)) AS ?totalHoldingValue)\n    WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:investorId ?investorId .\n      ?ph wm:currentValue ?holdingValue .\n    }\n    GROUP BY ?investorId\n  }\n\n  # Average allocation percentage per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?allocationPct)) AS ?avgAllocationPct)\n    WHERE {\n      ?sa a wm:SectorAllocation .\n      ?sa wm:investorId ?investorId .\n      ?sa wm:allocationPct ?allocationPct .\n    }\n    GROUP BY ?investorId\n  }\n\n  # Average liquidity and diversification scores per investor\n  OPTIONAL {\n    SELECT ?investorId \n           (AVG(xsd:decimal(?liquidityScore)) AS ?avgLiquidityScore) \n           (AVG(xsd:decimal(?diversificationScore)) AS ?avgDiversificationScore)\n    WHERE {\n      ?phl a wm:PortfolioHealth .\n      ?phl wm:investorId ?investorId .\n      ?phl wm:liquidityScore ?liquidityScore .\n      ?phl wm:diversificationScore ?diversificationScore .\n    }\n    GROUP BY ?investorId\n  }\n}\nGROUP BY ?categoryLabel",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel ?categoryShortfall ?categoryHoldingValue ?categoryAvgAllocationPct ?categoryAvgLiquidity ?categoryAvgDiversification\nWHERE {\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?sf)) AS ?categoryShortfall)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?goal a wm:InvestmentGoal ;\n            wm:belongsToInvestor ?investor ;\n            wm:shortfall ?sf .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?val)) AS ?categoryHoldingValue)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?val .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (AVG(xsd:decimal(?alloc)) AS ?categoryAvgAllocationPct)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?allocRec a wm:SectorAllocation ;\n                wm:allocationOfInvestor ?investor ;\n                wm:allocationPct ?alloc .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (AVG(xsd:decimal(?liq)) AS ?categoryAvgLiquidity) (AVG(xsd:decimal(?div)) AS ?categoryAvgDiversification)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?phl a wm:PortfolioHealth ;\n            wm:healthOfInvestor ?investor ;\n            wm:liquidityScore ?liq ;\n            wm:diversificationScore ?div .\n    }\n    GROUP BY ?cat\n  }\n}\nORDER BY ?categoryLabel",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel \n       (SUM(?totalShortfall) AS ?categoryShortfall) \n       (SUM(?totalHoldingValue) AS ?categoryHoldingValue) \n       (AVG(?avgAllocationPct) AS ?categoryAvgAllocationPct) \n       (AVG(?avgLiquidityScore) AS ?categoryAvgLiquidity) \n       (AVG(?avgDiversificationScore) AS ?categoryAvgDiversification)\nWHERE {\n  # Category label\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  # Distinct investor‑to‑category mapping via holdings\n  {\n    SELECT DISTINCT ?investorId ?cat\n    WHERE {\n      ?phMap a wm:PortfolioHolding .\n      ?phMap wm:investorId ?investorId .\n      ?phMap wm:hasCategory ?cat .\n    }\n  }\n\n  # Aggregate shortfall per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?shortfall)) AS ?totalShortfall)\n    WHERE {\n      ?ig a wm:InvestmentGoal .\n      ?ig wm:investorId ?investorId .\n      ?ig wm:shortfall ?shortfall .\n    }\n    GROUP BY ?investorId\n  }\n\n  # Aggregate holding value per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?holdingValue)) AS ?totalHoldingValue)\n    WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:investorId ?investorId .\n      ?ph wm:currentValue ?holdingValue .\n    }\n    GROUP BY ?investorId\n  }\n\n  # Average allocation percentage per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?allocationPct)) AS ?avgAllocationPct)\n    WHERE {\n      ?sa a wm:SectorAllocation .\n      ?sa wm:investorId ?investorId .\n      ?sa wm:allocationPct ?allocationPct .\n    }\n    GROUP BY ?investorId\n  }\n\n  # Average liquidity and diversification scores per investor\n  OPTIONAL {\n    SELECT ?investorId \n           (AVG(xsd:decimal(?liquidityScore)) AS ?avgLiquidityScore) \n           (AVG(xsd:decimal(?diversificationScore)) AS ?avgDiversificationScore)\n    WHERE {\n      ?phl a wm:PortfolioHealth .\n      ?phl wm:investorId ?investorId .\n      ?phl wm:liquidityScore ?liquidityScore .\n      ?phl wm:diversificationScore ?diversificationScore .\n    }\n    GROUP BY ?investorId\n  }\n}\nGROUP BY ?categoryLabel",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel \n       (SUM(?totalShortfall) AS ?categoryShortfall) \n       (SUM(?totalHoldingValue) AS ?categoryHoldingValue) \n       (AVG(?avgAllocationPct) AS ?categoryAvgAllocationPct) \n       (AVG(?avgLiquidityScore) AS ?categoryAvgLiquidity) \n       (AVG(?avgDiversificationScore) AS ?categoryAvgDiversification)\nWHERE {\n  # Category label\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  # Distinct investor‑to‑category mapping via holdings\n  {\n    SELECT DISTINCT ?investorId ?cat\n    WHERE {\n      ?phMap a wm:PortfolioHolding .\n      ?phMap wm:investorId ?investorId .\n      ?phMap wm:hasCategory ?cat .\n    }\n  }\n\n  # Aggregate shortfall per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?shortfall)) AS ?totalShortfall)\n    WHERE {\n      ?ig a wm:InvestmentGoal .\n      ?ig wm:investorId ?investorId .\n      ?ig wm:shortfall ?shortfall .\n    }\n    GROUP BY ?investorId\n  }\n\n  # Aggregate holding value per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?holdingValue)) AS ?totalHoldingValue)\n    WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:investorId ?investorId .\n      ?ph wm:currentValue ?holdingValue .\n    }\n    GROUP BY ?investorId\n  }\n\n  # Average allocation percentage per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?allocationPct)) AS ?avgAllocationPct)\n    WHERE {\n      ?sa a wm:SectorAllocation .\n      ?sa wm:investorId ?investorId .\n      ?sa wm:allocationPct ?allocationPct .\n    }\n    GROUP BY ?investorId\n  }\n\n  # Average liquidity and diversification scores per investor\n  OPTIONAL {\n    SELECT ?investorId \n           (AVG(xsd:decimal(?liquidityScore)) AS ?avgLiquidityScore) \n           (AVG(xsd:decimal(?diversificationScore)) AS ?avgDiversificationScore)\n    WHERE {\n      ?phl a wm:PortfolioHealth .\n      ?phl wm:investorId ?investorId .\n      ?phl wm:liquidityScore ?liquidityScore .\n      ?phl wm:diversificationScore ?diversificationScore .\n    }\n    GROUP BY ?investorId\n  }\n}\nGROUP BY ?categoryLabel",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel \n       (SUM(?shortfall) AS ?categoryShortfall) \n       (SUM(?holdingValue) AS ?categoryHoldingValue) \n       (AVG(?allocationPct) AS ?categoryAvgAllocationPct) \n       (AVG(?liquidityScore) AS ?categoryAvgLiquidity) \n       (AVG(?diversificationScore) AS ?categoryAvgDiversification)\nWHERE {\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  ?investor wm:hasCategory ?cat .\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?sf)) AS ?shortfall)\n    WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:belongsToInvestor ?investor ;\n            wm:shortfall ?sf .\n    }\n    GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?val)) AS ?holdingValue)\n    WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?val .\n    }\n    GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (AVG(xsd:decimal(?alloc)) AS ?allocationPct)\n    WHERE {\n      ?allocRec a wm:SectorAllocation ;\n                wm:allocationOfInvestor ?investor ;\n                wm:allocationPct ?alloc .\n    }\n    GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (AVG(xsd:decimal(?liq)) AS ?liquidityScore) (AVG(xsd:decimal(?div)) AS ?diversificationScore)\n    WHERE {\n      ?phl a wm:PortfolioHealth ;\n            wm:healthOfInvestor ?investor ;\n            wm:liquidityScore ?liq ;\n            wm:diversificationScore ?div .\n    }\n    GROUP BY ?investor\n  }\n}\nGROUP BY ?categoryLabel",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel \n       (SUM(?shortfall) AS ?categoryShortfall) \n       (SUM(?holdingValue) AS ?categoryHoldingValue) \n       (AVG(?allocationPct) AS ?categoryAvgAllocationPct) \n       (AVG(?liquidityScore) AS ?categoryAvgLiquidity) \n       (AVG(?diversificationScore) AS ?categoryAvgDiversification)\nWHERE {\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  ?investor wm:hasCategory ?cat .\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?sf)) AS ?shortfall)\n    WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:belongsToInvestor ?investor ;\n            wm:shortfall ?sf .\n    }\n    GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?val)) AS ?holdingValue)\n    WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?val .\n    }\n    GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (AVG(xsd:decimal(?alloc)) AS ?allocationPct)\n    WHERE {\n      ?allocRec a wm:SectorAllocation ;\n                wm:allocationOfInvestor ?investor ;\n                wm:allocationPct ?alloc .\n    }\n    GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (AVG(xsd:decimal(?liq)) AS ?liquidityScore) (AVG(xsd:decimal(?div)) AS ?diversificationScore)\n    WHERE {\n      ?phl a wm:PortfolioHealth ;\n            wm:healthOfInvestor ?investor ;\n            wm:liquidityScore ?liq ;\n            wm:diversificationScore ?div .\n    }\n    GROUP BY ?investor\n  }\n}\nGROUP BY ?categoryLabel",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel \n       (SUM(?shortfall) AS ?categoryShortfall) \n       (SUM(?holdingValue) AS ?categoryHoldingValue) \n       (AVG(?allocationPct) AS ?categoryAvgAllocationPct) \n       (AVG(?liquidityScore) AS ?categoryAvgLiquidity) \n       (AVG(?diversificationScore) AS ?categoryAvgDiversification)\nWHERE {\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  ?investor wm:hasCategory ?cat .\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?sf)) AS ?shortfall)\n    WHERE {\n      ?goal a wm:InvestmentGoal ;\n            wm:belongsToInvestor ?investor ;\n            wm:shortfall ?sf .\n    }\n    GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (SUM(xsd:decimal(?val)) AS ?holdingValue)\n    WHERE {\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?val .\n    }\n    GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (AVG(xsd:decimal(?alloc)) AS ?allocationPct)\n    WHERE {\n      ?allocRec a wm:SectorAllocation ;\n                wm:allocationOfInvestor ?investor ;\n                wm:allocationPct ?alloc .\n    }\n    GROUP BY ?investor\n  }\n\n  OPTIONAL {\n    SELECT ?investor (AVG(xsd:decimal(?liq)) AS ?liquidityScore) (AVG(xsd:decimal(?div)) AS ?diversificationScore)\n    WHERE {\n      ?phl a wm:PortfolioHealth ;\n            wm:healthOfInvestor ?investor ;\n            wm:liquidityScore ?liq ;\n            wm:diversificationScore ?div .\n    }\n    GROUP BY ?investor\n  }\n}\nGROUP BY ?categoryLabel",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel ?categoryShortfall ?categoryHoldingValue ?categoryAvgAllocationPct ?categoryAvgLiquidity ?categoryAvgDiversification\nWHERE {\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?sf)) AS ?categoryShortfall)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?goal a wm:InvestmentGoal ;\n            wm:belongsToInvestor ?investor ;\n            wm:shortfall ?sf .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?val)) AS ?categoryHoldingValue)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?val .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (AVG(xsd:decimal(?alloc)) AS ?categoryAvgAllocationPct)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?allocRec a wm:SectorAllocation ;\n                wm:allocationOfInvestor ?investor ;\n                wm:allocationPct ?alloc .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (AVG(xsd:decimal(?liq)) AS ?categoryAvgLiquidity) (AVG(xsd:decimal(?div)) AS ?categoryAvgDiversification)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?phl a wm:PortfolioHealth ;\n            wm:healthOfInvestor ?investor ;\n            wm:liquidityScore ?liq ;\n            wm:diversificationScore ?div .\n    }\n    GROUP BY ?cat\n  }\n}\nORDER BY ?categoryLabel",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel ?categoryShortfall ?categoryHoldingValue ?categoryAvgAllocationPct ?categoryAvgLiquidity ?categoryAvgDiversification\nWHERE {\n  ?cat a wm:Category .\n  OPTIONAL { ?cat rdfs:label ?categoryLabel . }\n\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?sf)) AS ?categoryShortfall)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?goal a wm:InvestmentGoal ;\n            wm:belongsToInvestor ?investor ;\n            wm:shortfall ?sf .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?val)) AS ?categoryHoldingValue)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?ph a wm:PortfolioHolding ;\n          wm:heldByInvestor ?investor ;\n          wm:currentValue ?val .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (AVG(xsd:decimal(?alloc)) AS ?categoryAvgAllocationPct)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?allocRec a wm:SectorAllocation ;\n                wm:allocationOfInvestor ?investor ;\n                wm:allocationPct ?alloc .\n    }\n    GROUP BY ?cat\n  }\n\n  OPTIONAL {\n    SELECT ?cat (AVG(xsd:decimal(?liq)) AS ?categoryAvgLiquidity) (AVG(xsd:decimal(?div)) AS ?categoryAvgDiversification)\n    WHERE {\n      ?investor wm:hasCategory ?cat .\n      ?phl a wm:PortfolioHealth ;\n            wm:healthOfInvestor ?investor ;\n            wm:liquidityScore ?liq ;\n            wm:diversificationScore ?div .\n    }\n    GROUP BY ?cat\n  }\n}\nORDER BY ?categoryLabel",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      }
+    ],
+    "final_scan_status": "error",
+    "final_row_count": "",
+    "final_scan_error": "SPARQL execution timed out after 60 seconds."
+  },
+  "validate": {
+    "is_valid": "",
+    "why_passed_or_failed": "",
+    "validator_reason": "",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": "",
+    "final_answer": "A database error prevented data retrieval.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to decide if pipeline output answered question based on ground truth. Ground truth is JSON array with values for each group. Pipeline output: \"A database error prevented data retrieval.\"\n\nThus pipeline output does not contain any of the required data. According to rule 2, if ground truth contains concrete numbers, pipeline output must contain same facts. It doesn't. So it's MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "Scan",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

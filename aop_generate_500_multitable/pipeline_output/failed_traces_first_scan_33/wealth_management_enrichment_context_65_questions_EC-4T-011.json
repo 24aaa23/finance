@@ -1,0 +1,296 @@
+{
+  "sample_row_id": "wealth_management_enrichment_context_65_questions:EC-4T-011",
+  "question": "Which investors have Net Banking cash-flow source, Corporate holding sector, and Corporate allocation sector?",
+  "ground_truth": "[{\"investor_id\":\"INV-025\",\"investor_name\":\"Amrita Nair\"},{\"investor_id\":\"INV-027\",\"investor_name\":\"Sneha Verma\"},{\"investor_id\":\"INV-053\",\"investor_name\":\"Anita Iyer\"},{\"investor_id\":\"INV-1007\",\"investor_name\":\"Amit Nair\"},{\"investor_id\":\"INV-1009\",\"investor_name\":\"Siddharth Hegde\"},{\"investor_id\":\"INV-1050\",\"investor_name\":\"Rajesh Joshi\"},{\"investor_id\":\"INV-1060\",\"investor_name\":\"Amit Reddy\"},{\"investor_id\":\"INV-1122\",\"investor_name\":\"Deepak Sharma\"},{\"investor_id\":\"INV-1221\",\"investor_name\":\"Aishwarya Kulkarni\"},{\"investor_id\":\"INV-1230\",\"investor_name\":\"Suresh Singh\"},{\"investor_id\":\"INV-1296\",\"investor_name\":\"Amit Chauhan\"},{\"investor_id\":\"INV-1312\",\"investor_name\":\"Amit Verma\"},{\"investor_id\":\"INV-1319\",\"investor_name\":\"Kavita Verma\"},{\"investor_id\":\"INV-1386\",\"investor_name\":\"Deepak Patel\"},{\"investor_id\":\"INV-1495\",\"investor_name\":\"Kavita Singh\"},{\"investor_id\":\"INV-1523\",\"investor_name\":\"Ankita Mehta\"},{\"investor_id\":\"INV-180\",\"investor_name\":\"Ankita Bhat\"},{\"investor_id\":\"INV-205\",\"investor_name\":\"Kavita Deshmukh\"},{\"investor_id\":\"INV-243\",\"investor_name\":\"Arvind Kulkarni\"},{\"investor_id\":\"INV-307\",\"investor_name\":\"Geeta Reddy\"},{\"investor_id\":\"INV-327\",\"investor_name\":\"Anjali Sharma\"},{\"investor_id\":\"INV-330\",\"investor_name\":\"Amit Kulkarni\"},{\"investor_id\":\"INV-333\",\"investor_name\":\"Vivek Rao\"},{\"investor_id\":\"INV-347\",\"investor_name\":\"Vikram Pandey\"},{\"investor_id\":\"INV-357\",\"investor_name\":\"Vikram Gupta\"},{\"investor_id\":\"INV-371\",\"investor_name\":\"Sneha Joshi\"},{\"investor_id\":\"INV-402\",\"investor_name\":\"Anita Kulkarni\"},{\"investor_id\":\"INV-418\",\"investor_name\":\"Akshay Mishra\"},{\"investor_id\":\"INV-438\",\"investor_name\":\"Arjun Yadav\"},{\"investor_id\":\"INV-446\",\"investor_name\":\"Arjun Nair\"},{\"investor_id\":\"INV-447\",\"investor_name\":\"Amrita Sharma\"},{\"investor_id\":\"INV-503\",\"investor_name\":\"Sunita Rao\"},{\"investor_id\":\"INV-540\",\"investor_name\":\"Anjali Singh\"},{\"investor_id\":\"INV-542\",\"investor_name\":\"Priyanka Singh\"},{\"investor_id\":\"INV-545\",\"investor_name\":\"Anjali Arora\"},{\"investor_id\":\"INV-566\",\"investor_name\":\"Rahul Arora\"},{\"investor_id\":\"INV-650\",\"investor_name\":\"Rohan Mehta\"},{\"investor_id\":\"INV-662\",\"investor_name\":\"Arvind Chauhan\"},{\"investor_id\":\"INV-663\",\"investor_name\":\"Siddharth Yadav\"},{\"investor_id\":\"INV-689\",\"investor_name\":\"Vivek Hegde\"},{\"investor_id\":\"INV-724\",\"investor_name\":\"Akshay Verma\"},{\"investor_id\":\"INV-816\",\"investor_name\":\"Arjun Reddy\"},{\"investor_id\":\"INV-850\",\"investor_name\":\"Siddharth Reddy\"},{\"investor_id\":\"INV-874\",\"investor_name\":\"Rajesh Bhat\"},{\"investor_id\":\"INV-907\",\"investor_name\":\"Anand Sharma\"},{\"investor_id\":\"INV-963\",\"investor_name\":\"Bhavna Verma\"},{\"investor_id\":\"INV-986\",\"investor_name\":\"Rajesh Kulkarni\"}]",
+  "pipeline_output": "INV-446 Arjun Nair; INV-402 Anita Kulkarni; INV-347 Vikram Pandey; INV-850 Siddharth Reddy; INV-689 Vivek Hegde; INV-1007 Amit Nair; INV-1523 Ankita Mehta; INV-447 Amrita Sharma; INV-1009 Siddharth Hegde; INV-1221 Aishwarya Kulkarni; INV-663 Siddharth Yadav; INV-540 Anjali Singh; INV-027 Sneha Verma; INV-1060 Amit Reddy; INV-662 Arvind Chauhan; INV-1050 Rajesh Joshi; INV-205 Kavita Deshmukh; INV-243 Arvind Kulkarni; INV-566 Rahul Arora; INV-1319 Kavita Verma; INV-025 Amrita Nair; INV-542 Priyanka Singh; INV-986 Rajesh Kulkarni; INV-503 Sunita Rao; INV-1312 Amit Verma; INV-330 Amit Kulkarni; INV-650 Rohan Mehta; INV-1296 Amit Chauhan; INV-327 Anjali Sharma; INV-1386 Deepak Patel; INV-1495 Kavita Singh; INV-724 Akshay Verma; INV-333 Vivek Rao; INV-816 Arjun Reddy; INV-371 Sneha Joshi; INV-438 Arjun Yadav; INV-307 Geeta Reddy; INV-545 Anjali Arora; INV-874 Rajesh Bhat; INV-907 Anand Sharma; INV-1230 Suresh Singh; INV-1122 Deepak Sharma; INV-418 Akshay Mishra; INV-180 Ankita Bhat; INV-963 Bhavna Verma; INV-053 Anita Iyer; INV-357 Vikram Gupta",
+  "new_status": "MATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 258.248,
+  "dag": {
+    "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only the provided operators, following the chronology.\n\nThe query: \"Which investors have Net Banking cash-flow source, Corporate holding sector, and Corporate allocation sector?\" This is a simple lookup/listing question: we need to retrieve investors that satisfy three criteria: cash-flow source = Net Banking, holding sector = Corporate, allocation sector = Corporate.\n\nWe need to start by finding ontology classes using Retrieve. Then because it's a simple lookup, we can go straight from Retrieve to Generate (no need for Classify because no math/aggregation). Then Scan, Validate, Explain.\n\nThus steps:\n\n1. Retrieve: get ontology classes relevant (Investor, CashFlowSource, HoldingSector, AllocationSector, etc.)\n\n2. Generate: write SPARQL query to select investors where cash-flow source = Net Banking, holding sector = Corporate, allocation sector = Corporate.\n\n3. Scan: execute the SPARQL query against KG.\n\n4. Validate: check that results are non-empty and meet criteria.\n\n5. Explain: present the list of investors to user.\n\nMake sure to use exact operator names.\n\nThus output numbered steps.</reasoning>1. Retrieve – obtain the ontology classes and properties for “Investor”, “Cash‑Flow Source”, “Holding Sector”, and “Allocation Sector”.  \n\n2. Generate – compose a SPARQL query that selects all individuals of class Investor whose cash‑flow source is “Net Banking”, whose holding sector is “Corporate”, and whose allocation sector is “Corporate”.  \n\n3. Scan – execute the generated SPARQL query against the knowledge graph to retrieve the matching investors.  \n\n4. Validate – verify that the returned results satisfy all three criteria and that the data is complete and consistent.  \n\n5. Explain – present the user with the list of investors that meet the specified conditions.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have Net Banking cash-flow source, Corporate holding sector, and Corporate allocation sector?\" This is a simple lookup/listing question: we need to retrieve ontology classes, then generate SPARQL, scan, validate, explain. No math/aggregation, so we can skip Classify. But rule 1: start by finding ontology classes using Retrieve. Then Generate, Scan, Validate, Explain. So steps:\n\n1. Retrieve (ontology classes relevant: Investor, CashFlowSource, HoldingSector, AllocationSector)\n2. Generate (SPARQL query to select investors where cash-flow source = Net Banking and holding sector = Corporate and allocation sector = Corporate)\n3. Scan (execute the query)\n4. Validate (ensure results meet criteria)\n5. Explain (present list to user)\n\nThus output only numbered steps.</reasoning>1. Retrieve  \n2. Generate  \n3. Scan  \n4. Validate  \n5. Explain",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=27.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have Net Banking cash-flow source, Corporate holding sector, and Corporate allocation sector?\"\n\nWe need to find investors that satisfy three conditions: cash-flow source = Net Banking, holding sector = Corporate, allocation sector = Corporate.\n\nWe need to start by finding ontology classes using Retrieve. Then classify? The query is simple lookup/listing, no aggregation. According to law 2: If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'. So we can skip Classify. Steps:\n\n1. Retrieve: get ontology classes (Investor, CashFlowSource, HoldingSector, AllocationSector maybe).\n2. Generate: write SPARQL query to select investors where cashFlowSource = Net Banking, holdingSector = Corporate, allocationSector = Corporate.\n3. Scan: execute the query.\n4. Validate: check results for correctness (maybe ensure non-empty, correct types).\n5. Explain: present answer.\n\nThus steps 1-5.\n\nMake sure to use exact operator names. Provide numbered steps.\n\n</reasoning>1. Retrieve – obtain the relevant ontology classes and properties (e.g., Investor, hasCashFlowSource, hasHoldingSector, hasAllocationSector).  \n2. Generate – compose a SPARQL query that selects all ?investor where ?investor hasCashFlowSource “Net Banking”, hasHoldingSector “Corporate”, and hasAllocationSector “Corporate”.  \n3. Scan – execute the generated SPARQL query against the knowledge graph.  \n4. Validate – verify that the returned results are instances of the Investor class and satisfy the three specified criteria.  \n5. Explain – present the list of investors that meet all three conditions to the user.",
+        "dag_sequence": "Retrieve -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 27,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Generate",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Scan",
+              "inputs": [
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Validate",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Explain",
+              "inputs": [
+                "n4"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "CashFlow",
+      "PortfolioHolding",
+      "SectorAllocation"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "",
+    "confidence": null,
+    "target_field": "",
+    "schema_datatype": "",
+    "why_this_intent": "",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  ?investor wm:hasCashFlow ?cashflow .\n  ?cashflow wm:source ?source .\n  FILTER(CONTAINS(LCASE(STR(?source)), \"net banking\"))\n\n  ?investor wm:hasHolding ?holding .\n  ?holding wm:sector ?holdingSector .\n  FILTER(CONTAINS(LCASE(STR(?holdingSector)), \"corporate\"))\n\n  ?investor wm:hasSectorAllocation ?allocation .\n  ?allocation wm:sector ?allocSector .\n  FILTER(CONTAINS(LCASE(STR(?allocSector)), \"corporate\"))\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  {\n    SELECT DISTINCT ?investor WHERE {\n      ?investor wm:hasCashFlow ?cf .\n      ?cf wm:hasCashFlowSource ?cfs .\n      ?cfs rdfs:label ?cfsLabel .\n      FILTER(CONTAINS(LCASE(STR(?cfsLabel)), \"net banking\"))\n    }\n  }\n  {\n    SELECT DISTINCT ?investor WHERE {\n      ?investor wm:hasHolding ?hold .\n      ?hold wm:hasSector ?holdSector .\n      ?holdSector rdfs:label ?holdSectorLabel .\n      FILTER(CONTAINS(LCASE(STR(?holdSectorLabel)), \"corporate\"))\n    }\n  }\n  {\n    SELECT DISTINCT ?investor WHERE {\n      ?investor wm:hasSectorAllocation ?alloc .\n      ?alloc wm:hasSector ?allocSector .\n      ?allocSector rdfs:label ?allocSectorLabel .\n      FILTER(CONTAINS(LCASE(STR(?allocSectorLabel)), \"corporate\"))\n    }\n  }\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  ?investor wm:hasCashFlow ?cashflow .\n  ?cashflow wm:source ?source .\n  FILTER(CONTAINS(LCASE(STR(?source)), \"net banking\"))\n\n  ?investor wm:hasHolding ?holding .\n  ?holding wm:sector ?holdingSector .\n  FILTER(CONTAINS(LCASE(STR(?holdingSector)), \"corporate\"))\n\n  ?investor wm:hasSectorAllocation ?allocation .\n  ?allocation wm:sector ?allocSector .\n  FILTER(CONTAINS(LCASE(STR(?allocSector)), \"corporate\"))\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  ?investor wm:hasCashFlow ?cashflow .\n  ?cashflow wm:source ?source .\n  FILTER(CONTAINS(LCASE(STR(?source)), \"net banking\"))\n\n  ?investor wm:hasHolding ?holding .\n  ?holding wm:sector ?holdingSector .\n  FILTER(CONTAINS(LCASE(STR(?holdingSector)), \"corporate\"))\n\n  ?investor wm:hasSectorAllocation ?allocation .\n  ?allocation wm:sector ?allocSector .\n  FILTER(CONTAINS(LCASE(STR(?allocSector)), \"corporate\"))\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?investor wm:hasCashFlow ?cf .\n    ?cf wm:hasCashFlowSource ?cfs .\n    ?cfs rdfs:label ?cfsLabel .\n    FILTER(CONTAINS(LCASE(STR(?cfsLabel)), \"net banking\"))\n  }\n\n  FILTER EXISTS {\n    ?investor wm:hasHolding ?hold .\n    ?hold wm:hasSector ?holdSector .\n    ?holdSector rdfs:label ?holdSectorLabel .\n    FILTER(CONTAINS(LCASE(STR(?holdSectorLabel)), \"corporate\"))\n  }\n\n  FILTER EXISTS {\n    ?investor wm:hasSectorAllocation ?alloc .\n    ?alloc wm:hasSector ?allocSector .\n    ?allocSector rdfs:label ?allocSectorLabel .\n    FILTER(CONTAINS(LCASE(STR(?allocSectorLabel)), \"corporate\"))\n  }\n}",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": "Refine was too similar to timed-out SPARQL, so Generate rewrote with stronger feedback."
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?investor wm:hasCashFlow ?cf .\n    ?cf wm:hasCashFlowSource ?cfs .\n    ?cfs rdfs:label ?cfsLabel .\n    FILTER(CONTAINS(LCASE(STR(?cfsLabel)), \"net banking\"))\n  }\n\n  FILTER EXISTS {\n    ?investor wm:hasHolding ?hold .\n    ?hold wm:hasSector ?holdSector .\n    ?holdSector rdfs:label ?holdSectorLabel .\n    FILTER(CONTAINS(LCASE(STR(?holdSectorLabel)), \"corporate\"))\n  }\n\n  FILTER EXISTS {\n    ?investor wm:hasSectorAllocation ?alloc .\n    ?alloc wm:hasSector ?allocSector .\n    ?allocSector rdfs:label ?allocSectorLabel .\n    FILTER(CONTAINS(LCASE(STR(?allocSectorLabel)), \"corporate\"))\n  }\n}",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 2,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName\nWHERE {\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?investor wm:hasCashFlow ?cf .\n    ?cf wm:hasCashFlowSource ?cfs .\n    ?cfs rdfs:label ?cfsLabel .\n    FILTER(CONTAINS(LCASE(STR(?cfsLabel)), \"net banking\"))\n  }\n\n  FILTER EXISTS {\n    ?investor wm:hasHolding ?hold .\n    ?hold wm:hasSector ?holdSector .\n    ?holdSector rdfs:label ?holdSectorLabel .\n    FILTER(CONTAINS(LCASE(STR(?holdSectorLabel)), \"corporate\"))\n  }\n\n  FILTER EXISTS {\n    ?investor wm:hasSectorAllocation ?alloc .\n    ?alloc wm:hasSector ?allocSector .\n    ?allocSector rdfs:label ?allocSectorLabel .\n    FILTER(CONTAINS(LCASE(STR(?allocSectorLabel)), \"corporate\"))\n  }\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  {\n    SELECT DISTINCT ?investor WHERE {\n      ?investor wm:hasCashFlow ?cf .\n      ?cf wm:hasCashFlowSource ?cfs .\n      ?cfs rdfs:label ?cfsLabel .\n      FILTER(CONTAINS(LCASE(STR(?cfsLabel)), \"net banking\"))\n    }\n  }\n  {\n    SELECT DISTINCT ?investor WHERE {\n      ?investor wm:hasHolding ?hold .\n      ?hold wm:hasSector ?holdSector .\n      ?holdSector rdfs:label ?holdSectorLabel .\n      FILTER(CONTAINS(LCASE(STR(?holdSectorLabel)), \"corporate\"))\n    }\n  }\n  {\n    SELECT DISTINCT ?investor WHERE {\n      ?investor wm:hasSectorAllocation ?alloc .\n      ?alloc wm:hasSector ?allocSector .\n      ?allocSector rdfs:label ?allocSectorLabel .\n      FILTER(CONTAINS(LCASE(STR(?allocSectorLabel)), \"corporate\"))\n    }\n  }\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n}",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 3,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  {\n    SELECT DISTINCT ?investor WHERE {\n      ?investor wm:hasCashFlow ?cf .\n      ?cf wm:hasCashFlowSource ?cfs .\n      ?cfs rdfs:label ?cfsLabel .\n      FILTER(CONTAINS(LCASE(STR(?cfsLabel)), \"net banking\"))\n    }\n  }\n  {\n    SELECT DISTINCT ?investor WHERE {\n      ?investor wm:hasHolding ?hold .\n      ?hold wm:hasSector ?holdSector .\n      ?holdSector rdfs:label ?holdSectorLabel .\n      FILTER(CONTAINS(LCASE(STR(?holdSectorLabel)), \"corporate\"))\n    }\n  }\n  {\n    SELECT DISTINCT ?investor WHERE {\n      ?investor wm:hasSectorAllocation ?alloc .\n      ?alloc wm:hasSector ?allocSector .\n      ?allocSector rdfs:label ?allocSectorLabel .\n      FILTER(CONTAINS(LCASE(STR(?allocSectorLabel)), \"corporate\"))\n    }\n  }\n  ?investor wm:investorId ?investorId .\n  OPTIONAL { ?investor wm:investorName ?investorName . }\n}",
+        "status": "success",
+        "row_count": 47,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 47,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query returns the requested investor identifiers and names, matches the criteria, non-empty, columns appropriate.",
+    "validator_reason": "The query returns the requested investor identifiers and names, matches the criteria, non-empty, columns appropriate.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 47,
+    "final_answer": "INV-446 Arjun Nair; INV-402 Anita Kulkarni; INV-347 Vikram Pandey; INV-850 Siddharth Reddy; INV-689 Vivek Hegde; INV-1007 Amit Nair; INV-1523 Ankita Mehta; INV-447 Amrita Sharma; INV-1009 Siddharth Hegde; INV-1221 Aishwarya Kulkarni; INV-663 Siddharth Yadav; INV-540 Anjali Singh; INV-027 Sneha Verma; INV-1060 Amit Reddy; INV-662 Arvind Chauhan; INV-1050 Rajesh Joshi; INV-205 Kavita Deshmukh; INV-243 Arvind Kulkarni; INV-566 Rahul Arora; INV-1319 Kavita Verma; INV-025 Amrita Nair; INV-542 Priyanka Singh; INV-986 Rajesh Kulkarni; INV-503 Sunita Rao; INV-1312 Amit Verma; INV-330 Amit Kulkarni; INV-650 Rohan Mehta; INV-1296 Amit Chauhan; INV-327 Anjali Sharma; INV-1386 Deepak Patel; INV-1495 Kavita Singh; INV-724 Akshay Verma; INV-333 Vivek Rao; INV-816 Arjun Reddy; INV-371 Sneha Joshi; INV-438 Arjun Yadav; INV-307 Geeta Reddy; INV-545 Anjali Arora; INV-874 Rajesh Bhat; INV-907 Anand Sharma; INV-1230 Suresh Singh; INV-1122 Deepak Sharma; INV-418 Akshay Mishra; INV-180 Ankita Bhat; INV-963 Bhavna Verma; INV-053 Anita Iyer; INV-357 Vikram Gupta",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare Ground Truth list of investors (IDs and names) with Pipeline Output list. Ground Truth includes many IDs. Let's list them.\n\nGround Truth IDs (and names):\nINV-025 Amrita Nair\nINV-027 Sneha Verma\nINV-053 Anita Iyer\nINV-1007 Amit Nair\nINV-1009 Siddharth Hegde\nINV-1050 Rajesh Joshi\nINV-1060 Amit Reddy\nINV-1122 Deepak Sharma\nINV-1221 Aishwarya Kulkarni\nINV-1230 Suresh Singh\nINV-1296 Amit Chauhan\nINV-1312 Amit Verma\nINV-1319 Kavita Verma\nINV-1386 Deepak Patel\nINV-1495 Kavita Singh\nINV-1523 Ankita Mehta\nINV-180 Ankita Bhat\nINV-205 Kavita Deshmukh\nINV-243 Arvind Kulkarni\nINV-307 Geeta Reddy\nINV-327 Anjali Sharma\nINV-330 Amit Kulkarni\nINV-333 Vivek Rao\nINV-347 Vikram Pandey\nINV-357 Vikram Gupta\nINV-371 Sneha Joshi\nINV-402 Anita Kulkarni\nINV-418 Akshay Mishra\nINV-438 Arjun Yadav\nINV-446 Arjun Nair\nINV-447 Amrita Sharma\nINV-503 Sunita Rao\nINV-540 Anjali Singh\nINV-542 Priyanka Singh\nINV-545 Anjali Arora\nINV-566 Rahul Arora\nINV-650 Rohan Mehta\nINV-662 Arvind Chauhan\nINV-663 Siddharth Yadav\nINV-689 Vivek Hegde\nINV-724 Akshay Verma\nINV-816 Arjun Reddy\nINV-850 Siddharth Reddy\nINV-874 Rajesh Bhat\nINV-907 Anand Sharma\nINV-963 Bhavna Verma\nINV-986 Rajesh Kulkarni\n\nCount them: let's count: 1-10: 025,027,053,1007,1009,1050,1060,1122,1221,1230 =10\n11-20: 1296,1312,1319,1386,1495,1523,180,205,243,307 =20\n21-30: 327,330,333,347,357,371,402,418,438,446 =30\n31-40: 447,503,540,542,545,566,650,662,663,689 =40\n41-50: 724,816,850,874,907,963,986 =47? Wait we have 7 more, total 47. Let's recount: after 689 we have 724,816,850,874,907,963,986 =7, so total 47. Yes.\n\nNow Pipeline Output list includes many IDs. Let's list them:\n\nPipeline Output (in order):\nINV-446 Arjun Nair\nINV-402 Anita Kulkarni\nINV-347 Vikram Pandey\nINV-850 Siddharth Reddy\nINV-689 Vivek Hegde\nINV-1007 Amit Nair\nINV-1523 Ankita Mehta\nINV-447 Amrita Sharma\nINV-1009 Siddharth Hegde\nINV-1221 Aishwarya Kulkarni\nINV-663 Siddharth Yadav\nINV-540 Anjali Singh\nINV-027 Sneha Verma\nINV-1060 Amit Reddy\nINV-662 Arvind Chauhan\nINV-1050 Rajesh Joshi\nINV-205 Kavita Deshmukh\nINV-243 Arvind Kulkarni\nINV-566 Rahul Arora\nINV-1319 Kavita Verma\nINV-025 Amrita Nair\nINV-542 Priyanka Singh\nINV-986 Rajesh Kulkarni\nINV-503 Sunita Rao\nINV-1312 Amit Verma\nINV-330 Amit Kulkarni\nINV-650 Rohan Mehta\nINV-1296 Amit Chauhan\nINV-327 Anjali Sharma\nINV-1386 Deepak Patel\nINV-1495 Kavita Singh\nINV-724 Akshay Verma\nINV-333 Vivek Rao\nINV-816 Arjun Reddy\nINV-371 Sneha Joshi\nINV-438 Arjun Yadav\nINV-307 Geeta Reddy\nINV-545 Anjali Arora\nINV-874 Rajesh Bhat\nINV-907 Anand Sharma\nINV-1230 Suresh Singh\nINV-1122 Deepak Sharma\nINV-418 Akshay Mishra\nINV-180 Ankita Bhat\nINV-963 Bhavna Verma\nINV-053 Anita Iyer\nINV-357 Vikram Gupta\n\nNow compare with ground truth list. Are all ground truth IDs present? Let's check missing ones:\n\nGround truth list includes: INV-025 (present), 027 (present), 053 (present), 1007 (present), 1009 (present), 1050 (present), 1060 (present), 1122 (present), 1221 (present), 1230 (present), 1296 (present), 1312 (present), 1319 (present), 1386 (present), 1495 (present), 1523 (present), 180 (present), 205 (present), 243 (present), 307 (present), 327 (present), 330 (present), 333 (present), 347 (present), 357 (present), 371 (present), 402 (present), 418 (present), 438 (present), 446 (present), 447 (present), 503 (present), 540 (present), 542 (present), 545 (present), 566 (present), 650 (present), 662 (present), 663 (present), 689 (present), 724 (present), 816 (present), 850 (present), 874 (present), 907 (present), 963 (present), 986 (present), 1312 (present) already counted, 1319 present, 1386 present, 1495 present, 1523 present, 180 present, 205 present, 243 present, 307 present, 327 present, 330 present, 333 present, 347 present, 357 present, 371 present, 402 present, 418 present, 438 present, 446 present, 447 present, 503 present, 540 present, 542 present, 545 present, 566 present, 650 present, 662 present, 663 present, 689 present, 724 present, 816 present, 850 present, 874 present, 907 present, 963 present, 986 present, 1230 present, 1122 present, 180 present, 205 present, etc.\n\nMissing from pipeline: Let's see if any ground truth IDs not in pipeline: I think all are present. Let's verify each ground truth ID:\n\n- INV-025: present\n- INV-027: present\n- INV-053: present\n- INV-1007: present\n- INV-1009: present\n- INV-1050: present\n- INV-1060: present\n- INV-1122: present\n- INV-1221: present\n- INV-1230: present\n- INV-1296: present\n- INV-1312: present\n- INV-1319: present\n- INV-1386: present\n- INV-1495: present\n- INV-1523: present\n- INV-180: present\n- INV-205: present\n- INV-243: present\n- INV-307: present\n- INV-327: present\n- INV-330: present\n- INV-333: present\n- INV-347: present\n- INV-357: present\n- INV-371: present\n- INV-402: present\n- INV-418: present\n- INV-438: present\n- INV-446: present\n- INV-447: present\n- INV-503: present\n- INV-540: present\n- INV-542: present\n- INV-545: present\n- INV-566: present\n- INV-650: present\n- INV-662: present\n- INV-663: present\n- INV-689: present\n- INV-724: present\n- INV-816: present\n- INV-850: present\n- INV-874: present\n- INV-907: present\n- INV-963: present\n- INV-986: present\n\nAlso check INV-1312 present, yes.\n\nThus pipeline includes all ground truth IDs. Does pipeline include any extra IDs not in ground truth? Let's see: pipeline list includes exactly those IDs; I think all are from ground truth. No extra ones.\n\nThus pipeline output matches ground truth fully (order irrelevant). So MATCH.\n\nWe must output only MATCH.</reasoning>MATCH",
+    "parsed_status": "MATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "no_failure",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

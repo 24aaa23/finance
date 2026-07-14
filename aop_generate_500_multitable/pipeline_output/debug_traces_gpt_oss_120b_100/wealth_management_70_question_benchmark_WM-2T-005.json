@@ -1,0 +1,198 @@
+{
+  "sample_row_id": "wealth_management_70_question_benchmark:WM-2T-005",
+  "question": "What is the total current holding value for each investor risk-tolerance group?",
+  "ground_truth": "[{\"risk_tolerance\":\"Aggressive\",\"total_current_value\":3769457259.0},{\"risk_tolerance\":\"Conservative\",\"total_current_value\":3690184501.5},{\"risk_tolerance\":\"Moderate\",\"total_current_value\":4437006689.5},{\"risk_tolerance\":null,\"total_current_value\":805362292.5}]",
+  "pipeline_output": "Aggressive investors have a total current holding value of 3769457259.0, Moderate investors 4437006689.5, and Conservative investors 3690184501.5.",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 102.271,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following the critical laws.\n\nQuery: \"What is the total current holding value for each investor risk-tolerance group?\"\n\nWe need to find ontology classes first using Retrieve. Then classify for math/aggregation: \"total current holding value\" => sum of holding values. Also grouping by investor risk-tolerance group. So we need to classify for aggregation (Sum). So steps:\n\n1. Retrieve – locate the ontology classes relevant to investors, risk‑tolerance groups, and holding values.  \n2. Classify – identify the mathematical operation (“total”) as a Sum aggregation and the grouping requirement (“for each investor risk‑tolerance group”).  \n3. Generate – write a SPARQL query that groups holdings by the investor’s risk‑tolerance class and computes the SUM of the current holding value for each group.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – verify that the query returned a non‑empty result set with correct data types (numeric sums) for each risk‑tolerance group.  \n6. Explain – present the total current holding value for each investor risk‑tolerance group to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"What is the total current holding value for each investor risk-tolerance group?\"\n\nWe need to find ontology classes first using Retrieve. Then classify for math/aggregation: total current holding value => sum of holding values. Also grouping by risk-tolerance group => need aggregation. So we need Classify to identify aggregation (Sum) and grouping.\n\nThen Generate SPARQL after Retrieve and Classify. Then Scan, Validate, Explain.\n\nPotential extra steps: maybe Filter_Aggregate, Order_By? But not required. The plan: 1 Retrieve ontology classes (Investor, RiskToleranceGroup, Holding, Value). 2 Classify to detect aggregation (Sum) and grouping. 3 Generate SPARQL query to compute total holding value per risk-tolerance group. 4 Scan to execute query. 5 Validate results. 6 Explain answer.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the relevant ontology classes (e.g., Investor, RiskToleranceGroup, Holding, CurrentHoldingValue).  \n2. Classify – identify the mathematical operation (“total”) and the aggregation requirement (sum) and the grouping dimension (risk‑tolerance group).  \n3. Generate – write a SPARQL query that sums the current holding values for each risk‑tolerance group.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – check that the query returned a valid total holding value for every risk‑tolerance group and that no errors occurred.  \n6. Explain – present the total current holding value for each investor risk‑tolerance group to the user.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"What is the total current holding value for each investor risk-tolerance group?\" This involves aggregation (total) and grouping by risk-tolerance group. So we need to classify math/aggregation. Steps:\n\n1. Retrieve ontology classes (maybe Investor, RiskToleranceGroup, Holding, etc.) using Retrieve.\n2. Classify to identify aggregation \"total\" (sum) and grouping.\n3. Generate SPARQL query using classification results.\n4. Scan to execute query.\n5. Validate results.\n6. Explain to user.\n\nPotentially also need Filter_Aggregate? But we have to follow chronology: after Generate, Scan, then Validate, then Explain. Could include Filter_Aggregate before Generate? Not required. The critical laws: start with Retrieve, then Classify for math, then Generate, then Scan, then Validate, then Explain.\n\nThus steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nWe may add details: \"Retrieve ontology classes related to investors, risk tolerance, holdings\". \"Classify query to identify aggregation (Sum) and grouping\". \"Generate SPARQL that sums current holding value per risk tolerance group\". \"Scan to run query\". \"Validate data integrity\". \"Explain answer\".\n\nReturn only numbered steps.</reasoning>1. Retrieve – obtain the ontology classes relevant to investors, risk‑tolerance groups, holdings, and monetary values.  \n\n2. Classify – identify the mathematical operation (“total”) as a Sum aggregation and the need to group results by the investor risk‑tolerance group.  \n\n3. Generate – write a SPARQL (or equivalent graph) query that selects each risk‑tolerance group and computes the Sum of the current holding value for all investors belonging to that group.  \n\n4. Scan – execute the generated query against the knowledge graph to retrieve the aggregated results.  \n\n5. Validate – check that the returned sums are correctly computed, that no null or inconsistent values exist, and that each result is associated with a valid risk‑tolerance group.  \n\n6. Explain – present the total current holding value for each investor risk‑tolerance group to the user in a clear, concise format.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "PortfolioHolding",
+      "Investor",
+      "RiskTolerance"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.97,
+    "target_field": "currentValue",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks for the total (sum) of the numeric field 'currentValue' from PortfolioHolding, grouped by the investor's riskTolerance category, which is a valid numeric aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentValue)\nWHERE {\n  ?holding rdf:type wm:PortfolioHolding .\n  ?holding wm:heldByInvestor ?investor .\n  ?holding wm:currentValue ?currentValue .\n  ?investor wm:riskTolerance ?riskTolerance .\n}\nGROUP BY ?riskTolerance",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?riskTolerance (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentValue)\nWHERE {\n  ?holding rdf:type wm:PortfolioHolding .\n  ?holding wm:heldByInvestor ?investor .\n  ?holding wm:currentValue ?currentValue .\n  ?investor wm:riskTolerance ?riskTolerance .\n}\nGROUP BY ?riskTolerance",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.ex"
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 3,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query correctly aggregates current holding values per risk tolerance group and returns the expected columns with non-empty results.",
+    "validator_reason": "The query correctly aggregates current holding values per risk tolerance group and returns the expected columns with non-empty results.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 3,
+    "final_answer": "Aggressive investors have a total current holding value of 3769457259.0, Moderate investors 4437006689.5, and Conservative investors 3690184501.5.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth JSON list with pipeline output. Ground truth includes four entries: Aggressive 3769457259.0, Conservative 3690184501.5, Moderate 4437006689.5, null risk_tolerance 805362292.5. Pipeline output: \"Aggressive investors have a total current holding value of 3769457259.0, Moderate investors 4437006689.5, and Conservative investors 3690184501.5.\"\n\nMissing the null risk_tolerance group (presumably \"unknown\" or no risk tolerance) with total 805,362,292.5. So pipeline omitted that. According to rule 4, missing values are PARTIAL or MISMATCH, not MATCH. Since it gave three of four, it's PARTIAL. So answer: PARTIAL.</reasoning>PARTIAL",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

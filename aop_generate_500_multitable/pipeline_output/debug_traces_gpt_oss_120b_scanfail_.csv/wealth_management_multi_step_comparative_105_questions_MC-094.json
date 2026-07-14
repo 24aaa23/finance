@@ -1,0 +1,304 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-094",
+  "question": "Across time_horizon, how do goal count, holding count, transaction count, rebalance count, and scenario count compare using five related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_goal_count\":3.21,\"avg_holding_count\":9.96,\"avg_transaction_count\":5.03,\"avg_rebalance_count\":4.87},{\"group_value\":\"Long-term\",\"avg_goal_count\":3.1,\"avg_holding_count\":9.68,\"avg_transaction_count\":5.06,\"avg_rebalance_count\":4.51},{\"group_value\":\"Medium-term\",\"avg_goal_count\":3.16,\"avg_holding_count\":9.56,\"avg_transaction_count\":5.05,\"avg_rebalance_count\":4.33},{\"group_value\":\"Short-term\",\"avg_goal_count\":3.14,\"avg_holding_count\":9.87,\"avg_transaction_count\":5.05,\"avg_rebalance_count\":4.67}]",
+  "pipeline_output": "For Medium-term, Long-term, and Short-term, goal count, holding count, cash flow count, rebalance count, and scenario count are all None.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 240.377,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across time_horizon, how do goal count, holding count, transaction count, rebalance count, and scenario count compare using five related tables?\" So we need to retrieve ontology classes, classify math/aggregation words (count), then generate SPARQL, scan, validate, explain. Possibly also need to use Filter_Aggregate, Order_By, etc. But the plan must be linear steps, each using an operator. We must start with Retrieve to find ontology classes. Then Classify for math/aggregation words. Then Generate to write query. Then Scan to execute. Then Validate. Then Explain.\n\nPotentially also need to use Filter_Aggregate to compute counts across time_horizon. But the plan can include those operators as steps after Generate? The chronology says after Generate must be Scan, then Validate, then Explain. It doesn't forbid using other operators before Generate? It says \"If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve').\" So we can have steps before Generate like Retrieve, Classify, maybe Filter_Aggregate? But Filter_Aggregate is likely part of query building, not separate step. However we can include it as a step after Generate? But chronology says Scan must happen immediately after Generate. So cannot insert other steps between Generate and Scan. So any other operators must be before Generate (like Retrieve, Classify) or after Validate (like Explain). So we can have steps: 1 Retrieve, 2 Classify, 3 Generate, 4 Scan, 5 Validate, 6 Explain.\n\nThus answer: numbered steps.\n\nLet's produce that.</reasoning>1. Retrieve – locate the ontology classes for **time_horizon**, **Goal**, **Holding**, **Transaction**, **Rebalance**, and **Scenario** as well as the five related tables that store these entities.  \n\n2. Classify – identify the numeric‑aggregation terms in the query (“goal count”, “holding count”, “transaction count”, “rebalance count”, “scenario count”) and label them as **Count** operations.  \n\n3. Generate – compose a SPARQL (or graph‑query) statement that, for each **time_horizon**, aggregates the counts of goals, holdings, transactions, rebalances, and scenarios across the five related tables.  \n\n4. Scan – execute the generated query against the knowledge graph to retrieve the aggregated count results.  \n\n5. Validate – check the returned data for completeness and correctness (e.g., ensure every **time_horizon** has a non‑null count for each entity).  \n\n6. Explain – present the comparative count results to the user, describing how the five counts vary across the different **time_horizon** values.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across time_horizon, how do goal count, holding count, transaction count, rebalance count, and scenario count compare using five related tables?\" So need to retrieve ontology classes, then classify for math/aggregation (count). Then generate SPARQL, scan, validate, explain. Possibly need Filter_Aggregate, Order_By? But we must follow chronology: after Retrieve, we need Classify for math/aggregation words. Then Generate, then Scan, then Validate, then Explain. Possibly also need Filter_Aggregate to compute counts across time_horizon? But the critical chronology says after Retrieve we must Classify for math, then Generate, then Scan, then Validate, then Explain. It doesn't forbid using additional operators in between? It says \"CRITICAL LAWS OF EXECUTION (YOU MUST FOLLOW THIS CHRONOLOGY): 1. You must start by finding the ontology classes. Use 'Retrieve'. 2. CRITICAL: Use 'Classify' for math, aggregation, or numeric-superlative words ... If the query is only a simple lookup/listing question, go straight from 'Retrieve' to 'Generate'. 3. If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve'). 4. 'Scan' (executing Graph query) must happen immediately AFTER 'Generate'. 5. 'Validate' (checking data) must happen AFTER 'Scan'. 6. 'Explain' (talking to the user) MUST be the absolute final step.\"\n\nThus the plan must be linear steps: Retrieve, Classify, Generate, Scan, Validate, Explain. Possibly we could include Filter_Aggregate as part of Generate? But not separate step because after Generate we must Scan immediately. So we cannot insert other operators between Generate and Scan. So we must embed any needed filtering/aggregation in the SPARQL generated. So steps:\n\n1. Retrieve: fetch ontology classes related to time_horizon, goal, holding, transaction, rebalance, scenario, and count metrics.\n\n2. Classify: identify aggregation terms \"count\" for each metric.\n\n3. Generate: write SPARQL query that selects time_horizon and counts of goals, holdings, transactions, rebalances, scenarios across the five related tables, grouping by time_horizon.\n\n4. Scan: execute the SPARQL query against the knowledge graph.\n\n5. Validate: check that results contain counts for each metric per time_horizon and ensure no missing data.\n\n6. Explain: present comparison of counts across time_horizon to the user.\n\nThus output only numbered steps.</reasoning>1. **Retrieve** – Locate and retrieve the ontology classes for the entities *time_horizon*, *goal*, *holding*, *transaction*, *rebalance*, *scenario* and the five related tables that store these records.  \n\n2. **Classify** – Identify and classify the numeric‑aggregation terms in the query (“goal **count**”, “holding **count**”, “transaction **count**”, “rebalance **count**”, “scenario **count**”) as aggregation operations.  \n\n3. **Generate** – Compose a SPARQL query that, for each *time_horizon*, aggregates (COUNT) the number of goals, holdings, transactions, rebalances, and scenarios across the five related tables, grouping the results by *time_horizon*.  \n\n4. **Scan** – Execute the generated SPARQL query against the knowledge graph to retrieve the aggregated counts per *time_horizon*.  \n\n5. **Validate** – Verify that the query result includes a non‑null count for each of the five metrics for every *time_horizon* and that the data types are correct.  \n\n6. **Explain** – Present to the user a clear comparison of goal, holding, transaction, rebalance, and scenario counts across the different *time_horizon* values.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across time_horizon, how do goal count, holding count, transaction count, rebalance count, and scenario count compare using five related tables?\" So we need to retrieve ontology classes, then classify math/aggregation words (count). Then generate SPARQL, scan, validate, explain. Possibly also need Filter_Aggregate, Order_By, etc. But we must follow chronology: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain. Additional operators can be inserted between? The critical laws say that after Retrieve you must find ontology classes. Then Classify for math/aggregation words. Then Generate after Classify. Then Scan after Generate. Then Validate after Scan. Then Explain final. So we can include other operators like Filter_Aggregate etc. But they must be placed appropriately? The chronology only mandates ordering of those steps, but we could include other steps before or after? It says \"CRITICAL LAWS OF EXECUTION (YOU MUST FOLLOW THIS CHRONOLOGY): 1. You must start by finding the ontology classes. Use 'Retrieve'. 2. CRITICAL: Use 'Classify' for math, aggregation... 3. If querying the knowledge graph, 'Generate' (writing SPARQL) must happen AFTER 'Classify' (or 'Retrieve'). 4. 'Scan' (executing Graph query) must happen immediately AFTER 'Generate'. 5. 'Validate' must happen AFTER 'Scan'. 6. 'Explain' MUST be the absolute final step.\"\n\nThus we cannot insert other operators between Generate and Scan, because Scan must be immediate after Generate. Also Validate must be after Scan, but could there be other steps before Validate? Possibly not, as \"must happen AFTER 'Scan'\" not necessarily immediate, but we could have other steps? But safer to keep linear: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain.\n\nThus we produce numbered steps:\n\n1. Retrieve: Identify ontology classes relevant to time_horizon, goal, holding, transaction, rebalance, scenario, and the five related tables.\n\n2. Classify: Detect aggregation intent (Count) for each entity (goal count, holding count, transaction count, rebalance count, scenario count) and the comparative aspect across time_horizon.\n\n3. Generate: Construct SPARQL query that selects time_horizon and computes COUNT for each of the five entities, grouping by time_horizon, possibly using subqueries or UNION across the five tables.\n\n4. Scan: Execute the generated SPARQL query against the knowledge graph to retrieve counts per time_horizon.\n\n5. Validate: Check that results contain counts for all five entities across each time_horizon, ensure no missing values, and confirm data types.\n\n6. Explain: Present the comparative counts across time_horizon to the user in a clear format, highlighting differences.\n\nThus output only numbered steps.</reasoning>1. Retrieve – Locate the ontology classes for **time_horizon**, **goal**, **holding**, **transaction**, **rebalance**, **scenario**, and the five related tables that store these entities.  \n\n2. Classify – Identify the aggregation intent in the query: the word **“count”** for each of the five entities and the comparative phrase **“across time_horizon.”**  \n\n3. Generate – Write a SPARQL query that, for each **time_horizon**, computes `COUNT` of **goal**, **holding**, **transaction**, **rebalance**, and **scenario** records (using `GROUP BY time_horizon` and appropriate `UNION`/sub‑queries to pull from the five tables).  \n\n4. Scan – Execute the generated SPARQL query against the knowledge graph to obtain the count results per **time_horizon**.  \n\n5. Validate – Verify that the returned dataset includes counts for all five entities for every **time_horizon**, check for nulls or type mismatches, and confirm the aggregation logic is correct.  \n\n6. Explain – Summarize and present the comparative counts of goals, holdings, transactions, rebalances, and scenarios across each **time_horizon**, highlighting any notable differences.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": 1,
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": 2,
+              "operator": "Classify",
+              "inputs": [
+                1
+              ]
+            },
+            {
+              "id": 3,
+              "operator": "Generate",
+              "inputs": [
+                1,
+                2
+              ]
+            },
+            {
+              "id": 4,
+              "operator": "Scan",
+              "inputs": [
+                3
+              ]
+            },
+            {
+              "id": 5,
+              "operator": "Validate",
+              "inputs": [
+                4
+              ]
+            },
+            {
+              "id": 6,
+              "operator": "Explain",
+              "inputs": [
+                5
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2
+            },
+            {
+              "source": 1,
+              "target": 3
+            },
+            {
+              "source": 2,
+              "target": 3
+            },
+            {
+              "source": 3,
+              "target": 4
+            },
+            {
+              "source": 4,
+              "target": 5
+            },
+            {
+              "source": 5,
+              "target": 6
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "InvestmentGoal",
+      "PortfolioHolding",
+      "CashFlow",
+      "RebalancingAction",
+      "MarketScenario",
+      "TimeHorizon"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.97,
+    "target_field": "goal count, holding count, transaction count, rebalance count, scenario count",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks for counts of records (goals, holdings, transactions, rebalances, scenarios) grouped by the categorical field time_horizon. Counting rows is a numeric aggregation, and the result is numeric.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?count WHERE {\n  {\n    SELECT (\"Goal\" AS ?category) (COUNT(DISTINCT ?goal) AS ?count)\n    WHERE { ?goal a wm:InvestmentGoal . }\n  }\n  UNION\n  {\n    SELECT (\"Holding\" AS ?category) (COUNT(DISTINCT ?holding) AS ?count)\n    WHERE { ?holding a wm:PortfolioHolding . }\n  }\n  UNION\n  {\n    SELECT (\"CashFlow\" AS ?category) (COUNT(DISTINCT ?cf) AS ?count)\n    WHERE { ?cf a wm:CashFlow . }\n  }\n  UNION\n  {\n    SELECT (\"Rebalance\" AS ?category) (COUNT(DISTINCT ?reb) AS ?count)\n    WHERE { ?reb a wm:RebalancingAction . }\n  }\n  UNION\n  {\n    SELECT (\"Scenario\" AS ?category) (COUNT(DISTINCT ?sc) AS ?count)\n    WHERE { ?sc a wm:MarketScenario . }\n  }\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?timeHorizonLabel ?goalCount ?holdingCount ?cashFlowCount ?rebalanceCount ?scenarioCount WHERE {\n  ?timeHorizon a wm:TimeHorizon .\n  OPTIONAL { ?timeHorizon rdfs:label ?timeHorizonLabel . }\n\n  {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?goal) AS ?goalCount) WHERE {\n      ?timeHorizon wm:hasInvestmentGoal ?goal .\n      ?goal a wm:InvestmentGoal .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?holding) AS ?holdingCount) WHERE {\n      ?timeHorizon wm:hasContextValue ?holding .\n      ?holding a wm:PortfolioHolding .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?cf) AS ?cashFlowCount) WHERE {\n      ?timeHorizon wm:hasContextValue ?cf .\n      ?cf a wm:CashFlow .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?reb) AS ?rebalanceCount) WHERE {\n      ?timeHorizon wm:hasContextValue ?reb .\n      ?reb a wm:RebalancingAction .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?sc) AS ?scenarioCount) WHERE {\n      ?timeHorizon wm:hasMarketScenario ?sc .\n      ?sc a wm:MarketScenario .\n    } GROUP BY ?timeHorizon\n  }\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?count WHERE {\n  {\n    SELECT (\"Goal\" AS ?category) (COUNT(DISTINCT ?goal) AS ?count)\n    WHERE { ?goal a wm:InvestmentGoal . }\n  }\n  UNION\n  {\n    SELECT (\"Holding\" AS ?category) (COUNT(DISTINCT ?holding) AS ?count)\n    WHERE { ?holding a wm:PortfolioHolding . }\n  }\n  UNION\n  {\n    SELECT (\"CashFlow\" AS ?category) (COUNT(DISTINCT ?cf) AS ?count)\n    WHERE { ?cf a wm:CashFlow . }\n  }\n  UNION\n  {\n    SELECT (\"Rebalance\" AS ?category) (COUNT(DISTINCT ?reb) AS ?count)\n    WHERE { ?reb a wm:RebalancingAction . }\n  }\n  UNION\n  {\n    SELECT (\"Scenario\" AS ?category) (COUNT(DISTINCT ?sc) AS ?count)\n    WHERE { ?sc a wm:MarketScenario . }\n  }\n}",
+        "status": "success",
+        "row_count": 5,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      },
+      {
+        "attempt": 1,
+        "operator": "Generate",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?category ?count WHERE {\n  {\n    SELECT (\"Goal\" AS ?category) (COUNT(DISTINCT ?goal) AS ?count)\n    WHERE { ?goal a wm:InvestmentGoal . }\n  }\n  UNION\n  {\n    SELECT (\"Holding\" AS ?category) (COUNT(DISTINCT ?holding) AS ?count)\n    WHERE { ?holding a wm:PortfolioHolding . }\n  }\n  UNION\n  {\n    SELECT (\"CashFlow\" AS ?category) (COUNT(DISTINCT ?cf) AS ?count)\n    WHERE { ?cf a wm:CashFlow . }\n  }\n  UNION\n  {\n    SELECT (\"Rebalance\" AS ?category) (COUNT(DISTINCT ?reb) AS ?count)\n    WHERE { ?reb a wm:RebalancingAction . }\n  }\n  UNION\n  {\n    SELECT (\"Scenario\" AS ?category) (COUNT(DISTINCT ?sc) AS ?count)\n    WHERE { ?sc a wm:MarketScenario . }\n  }\n}",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?timeHorizonLabel ?goalCount ?holdingCount ?cashFlowCount ?rebalanceCount ?scenarioCount WHERE {\n  ?timeHorizon a wm:TimeHorizon .\n  OPTIONAL { ?timeHorizon rdfs:label ?timeHorizonLabel . }\n\n  {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?goal) AS ?goalCount) WHERE {\n      ?timeHorizon wm:hasInvestmentGoal ?goal .\n      ?goal a wm:InvestmentGoal .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?holding) AS ?holdingCount) WHERE {\n      ?timeHorizon wm:hasContextValue ?holding .\n      ?holding a wm:PortfolioHolding .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?cf) AS ?cashFlowCount) WHERE {\n      ?timeHorizon wm:hasContextValue ?cf .\n      ?cf a wm:CashFlow .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?reb) AS ?rebalanceCount) WHERE {\n      ?timeHorizon wm:hasContextValue ?reb .\n      ?reb a wm:RebalancingAction .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?sc) AS ?scenarioCount) WHERE {\n      ?timeHorizon wm:hasMarketScenario ?sc .\n      ?sc a wm:MarketScenario .\n    } GROUP BY ?timeHorizon\n  }\n}",
+        "why_refined": "Validation failed or zero rows.",
+        "changes_from_previous": [],
+        "semantic_risk_after_refine": "Logic rewrite after validator rejection."
+      },
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?timeHorizonLabel ?goalCount ?holdingCount ?cashFlowCount ?rebalanceCount ?scenarioCount WHERE {\n  ?timeHorizon a wm:TimeHorizon .\n  OPTIONAL { ?timeHorizon rdfs:label ?timeHorizonLabel . }\n\n  {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?goal) AS ?goalCount) WHERE {\n      ?timeHorizon wm:hasInvestmentGoal ?goal .\n      ?goal a wm:InvestmentGoal .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?holding) AS ?holdingCount) WHERE {\n      ?timeHorizon wm:hasContextValue ?holding .\n      ?holding a wm:PortfolioHolding .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?cf) AS ?cashFlowCount) WHERE {\n      ?timeHorizon wm:hasContextValue ?cf .\n      ?cf a wm:CashFlow .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?reb) AS ?rebalanceCount) WHERE {\n      ?timeHorizon wm:hasContextValue ?reb .\n      ?reb a wm:RebalancingAction .\n    } GROUP BY ?timeHorizon\n  }\n  OPTIONAL {\n    SELECT ?timeHorizon (COUNT(DISTINCT ?sc) AS ?scenarioCount) WHERE {\n      ?timeHorizon wm:hasMarketScenario ?sc .\n      ?sc a wm:MarketScenario .\n    } GROUP BY ?timeHorizon\n  }\n}",
+        "status": "success",
+        "row_count": 3,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "validation_retry_scan"
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 3,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "Validator returned a non-object response; using row-presence fallback.",
+    "validator_reason": "Validator returned a non-object response; using row-presence fallback.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 3,
+    "final_answer": "For Medium-term, Long-term, and Short-term, goal count, holding count, cash flow count, rebalance count, and scenario count are all None.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth.\n\nQuestion: \"Across time_horizon, how do goal count, holding count, transaction count, rebalance count, and scenario count compare using five related tables?\" Ground truth JSON list with group_value null and three groups: Long-term, Medium-term, Short-term, each with avg_goal_count, avg_holding_count, avg_transaction_count, avg_rebalance_count. Note scenario count not present? Ground truth includes only those four metrics, not scenario count. But pipeline output says: \"For Medium-term, Long-term, and Short-term, goal count, holding count, cash flow count, rebalance count, and scenario count are all None.\"\n\nPipeline output says all None, which contradicts ground truth numbers. So mismatch.\n\nThus output: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

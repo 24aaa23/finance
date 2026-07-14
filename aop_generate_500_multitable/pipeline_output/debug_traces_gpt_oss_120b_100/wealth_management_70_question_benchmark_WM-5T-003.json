@@ -1,0 +1,354 @@
+{
+  "sample_row_id": "wealth_management_70_question_benchmark:WM-5T-003",
+  "question": "Which investors have positive goal shortfall, negative holding gain, net cash flow below 10,000, and a portfolio risk score above 65?",
+  "ground_truth": "[{\"investor_id\":\"INV-034\",\"investor_name\":\"Sneha Reddy\",\"total_shortfall\":757292.99,\"holding_gain\":-43348.5,\"net_cash_flow\":6291.0,\"risk_score\":88.878754},{\"investor_id\":\"INV-580\",\"investor_name\":\"Anita Patel\",\"total_shortfall\":3639208.3,\"holding_gain\":-76990.0,\"net_cash_flow\":9988.0,\"risk_score\":94.105528},{\"investor_id\":\"INV-301\",\"investor_name\":\"Dipti Reddy\",\"total_shortfall\":11246247.89,\"holding_gain\":-996558.0,\"net_cash_flow\":5801.0,\"risk_score\":100.0}]",
+  "pipeline_output": "The investors are INV-580 Anita Patel, INV-1070 Ishita Chauhan, INV-661 Geeta Gupta, INV-1112 Anand Verma, INV-461 Amrita Arora, INV-725 Ishita Patel, INV-841 Priyanka Reddy, INV-1347 Rohan Hegde, INV-1354 Dipti Verma, INV-1236 Dipti Yadav, INV-1079 Amit Reddy, INV-1228 Geeta Iyer, INV-1061 Vikram Verma, INV-1141 Ankita Iyer, INV-1481 Amit Mishra, INV-706 Vikram Deshmukh, INV-151 Rahul Kulkarni, INV-001 Arjun Iyer, INV-314 Siddharth Sharma, INV-1281 Ankita Rao, INV-294 Anita Nair, INV-993 Arvind Rao, INV-229 Kavita Pandey, INV-1386 Deepak Patel, INV-1014 Sneha Hegde, INV-581 Siddharth Pandey, INV-1310 Sneha Iyer, INV-121 Anita Hegde, INV-895 Dipti Verma, INV-152 Ramesh Gupta, INV-1361 Anand Iyer, INV-1261 Ishita Arora, INV-1336 Vikram Kulkarni, INV-1077 Rohan Joshi, INV-1425 Geeta Iyer, INV-420 Suresh Gupta, INV-516 Chetan Mishra, INV-1378 Anjali Joshi, INV-887 Deepak Mishra, INV-807 Ankita Nair, INV-847 Chetan Joshi, INV-154 Ishita Arora, INV-1171 Anjali Iyer, INV-672 Anand Deshmukh, INV-1441 Rahul Chauhan, INV-961 Amrita Yadav, INV-792 Amrita Arora, INV-894 Rahul Kulkarni, INV-1111 Rajesh Sharma, INV-1234 Ishita Iyer, INV-1321 Sunita Verma, INV-936 Amrita Joshi, INV-1201 Ankita Gupta, INV-691 Dipti Mishra, INV-1113 Suresh Rao, INV-364 Anjali Patel, INV-075 Arjun Rao, INV-1472 Ishita Rao, INV-1513 Geeta Reddy, INV-217 Rohan Reddy, INV-1351 Geeta Deshmukh, INV-694 Aishwarya Gupta, INV-640 Vivek Bhat, INV-781 Dipti Reddy, INV-652 Geeta Pandey, INV-1072 Amrita Kulkarni, INV-1198 Anita Verma, INV-091 Akshay Iyer, INV-391 Vivek Kulkarni, INV-034 Sneha Reddy, INV-625 Ishita Sharma, INV-018 Meena Rao, INV-1287 Ishita Mehta, INV-1526 Siddharth Deshmukh, INV-1397 Rajesh Kulkarni, INV-607 Vivek Gupta, INV-953 Chetan Reddy, INV-171 Meena Mehta, INV-511 Arjun Mehta, INV-473 Rohan Rao, INV-749 Rahul Pandey, INV-934 Ankita Gupta, INV-1299 Geeta Chauhan, INV-189 Meena Hegde, INV-1547 Deepak Kulkarni, INV-1021 Amit Joshi, INV-1010 Sunita Patel, INV-741 Vivek Kulkarni, INV-1460 Priyanka Iyer, INV-820 Vikram Yadav, INV-349 Arvind Kulkarni, INV-049 Deepak Mehta, INV-739 Suresh Yadav, INV-878 Vikram Kulkarni, INV-327 Anjali Sharma, INV-239 Anita Chauhan, INV-117 Akshay Patel, INV-1165 Bhavna Mishra, INV-037 Chetan Sharma, INV-656 Ishita Joshi, INV-1434 Arjun Mishra, INV-393 Amrita Pandey, INV-754 Ramesh Deshmukh, INV-1312 Amit Verma, INV-1358 Akshay Mishra, INV-1024 Geeta Gupta, INV-131 Priyanka Sharma, INV-1544 Chetan Rao, INV-1433 Vivek Bhat, INV-299 Chetan Pandey, INV-384 Sneha Gupta, INV-1185 Kavita Singh, INV-855 Priyanka Verma, INV-812 Aishwarya Singh, INV-361 Sunita Kulkarni, INV-421 Kavita Rao, INV-1048 Geeta Pandey, INV-654 Geeta Rao, INV-1450 Anand Patel, INV-501 Aishwarya Deshmukh, INV-1139 Rahul Chauhan, INV-381 Priyanka Deshmukh.",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 97.821,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest reward dynamic DAG: reward=0.5, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have positive goal shortfall, negative holding gain, net cash flow below 10,000, and a portfolio risk score above 65?\"\n\nWe need to retrieve ontology classes, then classify numeric conditions (positive, negative, below, above). Then generate SPARQL, scan, validate, explain.\n\nSteps:\n\n1. Retrieve (ontology classes) – maybe retrieve classes like Investor, GoalShortfall, HoldingGain, NetCashFlow, PortfolioRiskScore.\n\n2. Classify – identify numeric comparisons: positive goal shortfall, negative holding gain, net cash flow below 10,000, portfolio risk score above 65.\n\n3. Generate – write SPARQL query using those filters.\n\n4. Scan – execute query.\n\n5. Validate – check results meet criteria.\n\n6. Explain – present answer.\n\nThus 6 steps.\n\nMake sure to follow order: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nThus output numbered list.</reasoning>1. Retrieve – Obtain the ontology classes and properties relevant to the query (e.g., Investor, goalShortfall, holdingGain, netCashFlow, portfolioRiskScore).  \n2. Classify – Identify and label the numeric and comparative terms in the query: “positive” (goal shortfall > 0), “negative” (holding gain < 0), “below 10,000” (net cash flow < 10000), and “above 65” (portfolio risk score > 65).  \n3. Generate – Write a SPARQL query that selects investors and applies the classified filter conditions on the retrieved properties.  \n4. Scan – Execute the generated SPARQL query against the knowledge graph to retrieve matching investor records.  \n5. Validate – Verify that the returned investors satisfy all four conditions (goal shortfall > 0, holding gain < 0, net cash flow < 10000, portfolio risk score > 65).  \n6. Explain – Present the final list of investors that meet the specified criteria to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest reward dynamic DAG: reward=0.5, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Which investors have positive goal shortfall, negative holding gain, net cash flow below 10,000, and a portfolio risk score above 65?\" This involves numeric comparisons, so we need to classify numeric conditions. Steps:\n\n1. Retrieve ontology classes (maybe Investor, GoalShortfall, HoldingGain, NetCashFlow, PortfolioRiskScore).\n2. Classify numeric conditions (positive, negative, below, above) => classification for math/aggregation.\n3. Generate SPARQL query using those classes and conditions.\n4. Scan to execute query.\n5. Validate results.\n6. Explain answer.\n\nThus steps list with numbers. Ensure order: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain.\n\nWe might also need Filter_Aggregate? But classification already handles numeric. Could also use Filter_Aggregate after Scan? But chronology says Validate after Scan, then Explain. No extra steps needed.\n\nThus output numbered steps.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Validate  \n6. Explain",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"Which investors have positive goal shortfall, negative holding gain, net cash flow below 10,000, and a portfolio risk score above 65?\"\n\nWe need to find ontology classes first using Retrieve. Then classify numeric comparisons (positive, negative, below, above) maybe need Classify for math/aggregation? The rule: Use 'Classify' for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. Here we have numeric comparisons (positive, negative, below, above). Not exactly those words, but they are numeric conditions. Possibly still need Classify to identify numeric filters. The rule says \"for math, aggregation, or numeric-superlative words such as ...\" It doesn't explicitly mention comparisons, but they are numeric. Might still need Classify to identify numeric filters. Safer to include a Classify step to classify the numeric cond",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "InvestmentGoal",
+      "PortfolioHolding",
+      "CashFlow",
+      "PortfolioHealth"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "point_lookup",
+    "confidence": 0.95,
+    "target_field": "investor",
+    "schema_datatype": "categorical_string",
+    "why_this_intent": "The query asks to list investors that satisfy several numeric filter conditions (shortfall > 0, cash flow < 10,000, riskScore > 65). This is a retrieval of specific entities, not a mathematical aggregation, so it maps to a point_lookup intent.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?totalCash)\n    WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amt .\n    }\n    GROUP BY ?inv\n    HAVING (SUM(xsd:decimal(?amt)) < 10000)\n  }\n\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?inv wm:hasInvestmentGoal ?goal .\n    ?goal wm:shortfall ?sf .\n    FILTER(xsd:decimal(?sf) > 0)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasHolding ?hold .\n    ?hold wm:returnsPct ?rp .\n    FILTER(xsd:decimal(?rp) < 0)\n  }\n\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 65)\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?totalCash)\n    WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amt .\n    }\n    GROUP BY ?inv\n    HAVING (SUM(xsd:decimal(?amt)) < 10000)\n  }\n\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?inv wm:hasInvestmentGoal ?goal .\n    ?goal wm:shortfall ?sf .\n    FILTER(xsd:decimal(?sf) > 0)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasHolding ?hold .\n    ?hold wm:returnsPct ?rp .\n    FILTER(xsd:decimal(?rp) < 0)\n  }\n\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 65)\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT DISTINCT ?investorId ?investorName WHERE {\n  {\n    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?totalCash)\n    WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amt .\n    }\n    GROUP BY ?inv\n    HAVING (SUM(xsd:decimal(?amt)) < 10000)\n  }\n\n  ?inv a wm:Investor .\n  OPTIONAL { ?inv wm:investorId ?investorId . }\n  OPTIONAL { ?inv wm:investorName ?investorName . }\n\n  FILTER EXISTS {\n    ?inv wm:hasInvestmentGoal ?goal .\n    ?goal wm:shortfall ?sf .\n    FILTER(xsd:decimal(?sf) > 0)\n  }\n\n  FILTER EXISTS {\n    ?inv wm:hasHolding ?hold .\n    ?hold wm:returnsPct ?rp .\n    FILTER(xsd:decimal(?rp) < 0)\n  }\n\n  ?inv wm:hasPortfolioHealth ?ph .\n  ?ph wm:riskScore ?riskScore .\n  FILTER(xsd:decimal(?riskScore) > 65)\n}",
+        "status": "success",
+        "row_count": 122,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 122,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The SPARQL correctly implements all required filters (positive goal shortfall, negative holding return, net cash flow < 10,000, risk score > 65) and returns the expected columns (investorId, investorName). The result set is non‑empty and includes only investors that satisfy the criteria, matching the user's request for \"which investors...\".",
+    "validator_reason": "The SPARQL correctly implements all required filters (positive goal shortfall, negative holding return, net cash flow < 10,000, risk score > 65) and returns the expected columns (investorId, investorName). The result set is non‑empty and includes only investors that satisfy the criteria, matching the user's request for \"which investors...\".",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 122,
+    "final_answer": "The investors are INV-580 Anita Patel, INV-1070 Ishita Chauhan, INV-661 Geeta Gupta, INV-1112 Anand Verma, INV-461 Amrita Arora, INV-725 Ishita Patel, INV-841 Priyanka Reddy, INV-1347 Rohan Hegde, INV-1354 Dipti Verma, INV-1236 Dipti Yadav, INV-1079 Amit Reddy, INV-1228 Geeta Iyer, INV-1061 Vikram Verma, INV-1141 Ankita Iyer, INV-1481 Amit Mishra, INV-706 Vikram Deshmukh, INV-151 Rahul Kulkarni, INV-001 Arjun Iyer, INV-314 Siddharth Sharma, INV-1281 Ankita Rao, INV-294 Anita Nair, INV-993 Arvind Rao, INV-229 Kavita Pandey, INV-1386 Deepak Patel, INV-1014 Sneha Hegde, INV-581 Siddharth Pandey, INV-1310 Sneha Iyer, INV-121 Anita Hegde, INV-895 Dipti Verma, INV-152 Ramesh Gupta, INV-1361 Anand Iyer, INV-1261 Ishita Arora, INV-1336 Vikram Kulkarni, INV-1077 Rohan Joshi, INV-1425 Geeta Iyer, INV-420 Suresh Gupta, INV-516 Chetan Mishra, INV-1378 Anjali Joshi, INV-887 Deepak Mishra, INV-807 Ankita Nair, INV-847 Chetan Joshi, INV-154 Ishita Arora, INV-1171 Anjali Iyer, INV-672 Anand Deshmukh, INV-1441 Rahul Chauhan, INV-961 Amrita Yadav, INV-792 Amrita Arora, INV-894 Rahul Kulkarni, INV-1111 Rajesh Sharma, INV-1234 Ishita Iyer, INV-1321 Sunita Verma, INV-936 Amrita Joshi, INV-1201 Ankita Gupta, INV-691 Dipti Mishra, INV-1113 Suresh Rao, INV-364 Anjali Patel, INV-075 Arjun Rao, INV-1472 Ishita Rao, INV-1513 Geeta Reddy, INV-217 Rohan Reddy, INV-1351 Geeta Deshmukh, INV-694 Aishwarya Gupta, INV-640 Vivek Bhat, INV-781 Dipti Reddy, INV-652 Geeta Pandey, INV-1072 Amrita Kulkarni, INV-1198 Anita Verma, INV-091 Akshay Iyer, INV-391 Vivek Kulkarni, INV-034 Sneha Reddy, INV-625 Ishita Sharma, INV-018 Meena Rao, INV-1287 Ishita Mehta, INV-1526 Siddharth Deshmukh, INV-1397 Rajesh Kulkarni, INV-607 Vivek Gupta, INV-953 Chetan Reddy, INV-171 Meena Mehta, INV-511 Arjun Mehta, INV-473 Rohan Rao, INV-749 Rahul Pandey, INV-934 Ankita Gupta, INV-1299 Geeta Chauhan, INV-189 Meena Hegde, INV-1547 Deepak Kulkarni, INV-1021 Amit Joshi, INV-1010 Sunita Patel, INV-741 Vivek Kulkarni, INV-1460 Priyanka Iyer, INV-820 Vikram Yadav, INV-349 Arvind Kulkarni, INV-049 Deepak Mehta, INV-739 Suresh Yadav, INV-878 Vikram Kulkarni, INV-327 Anjali Sharma, INV-239 Anita Chauhan, INV-117 Akshay Patel, INV-1165 Bhavna Mishra, INV-037 Chetan Sharma, INV-656 Ishita Joshi, INV-1434 Arjun Mishra, INV-393 Amrita Pandey, INV-754 Ramesh Deshmukh, INV-1312 Amit Verma, INV-1358 Akshay Mishra, INV-1024 Geeta Gupta, INV-131 Priyanka Sharma, INV-1544 Chetan Rao, INV-1433 Vivek Bhat, INV-299 Chetan Pandey, INV-384 Sneha Gupta, INV-1185 Kavita Singh, INV-855 Priyanka Verma, INV-812 Aishwarya Singh, INV-361 Sunita Kulkarni, INV-421 Kavita Rao, INV-1048 Geeta Pandey, INV-654 Geeta Rao, INV-1450 Anand Patel, INV-501 Aishwarya Deshmukh, INV-1139 Rahul Chauhan, INV-381 Priyanka Deshmukh.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare ground truth JSON list of investors that satisfy criteria: three investors: INV-034 Sneha Reddy, INV-580 Anita Patel, INV-301 Dipti Reddy. Pipeline output is a huge list of many investor IDs, includes INV-580 Anita Patel, INV-034 Sneha Reddy, and also includes INV-781 Dipti Reddy? Actually ground truth includes INV-301 Dipti Reddy. Pipeline output includes \"INV-781 Dipti Reddy\". That's a different ID (781 vs 301). So pipeline output includes the correct two IDs (INV-580, INV-034) but also many others, and missing INV-301 (instead has INV-781). So not matching. According to rules: If ground truth has specific IDs, pipeline must contain same facts. Missing INV-301 is a missing value => PARTIAL? But also includes many extra irrelevant IDs. That is not matching. Since missing one required and extra noise, it's not full match. Should be PARTIAL because some correct ones present but not all. However rule: If missing values are present, mark PARTIAL not MATCH. Yes. So answer PARTIAL.</reasoning>PARTIAL",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

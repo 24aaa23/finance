@@ -1,0 +1,236 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-096",
+  "question": "Across profile category, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_net_cash_flow\":1305730.77,\"avg_progress_pct\":43.84,\"avg_holding_gain\":2132093.45,\"avg_risk_score\":53.58},{\"group_value\":\"Debt\",\"avg_net_cash_flow\":372971.91,\"avg_progress_pct\":40.58,\"avg_holding_gain\":3496438.37,\"avg_risk_score\":48.96},{\"group_value\":\"Equity\",\"avg_net_cash_flow\":1314218.34,\"avg_progress_pct\":39.96,\"avg_holding_gain\":2992201.01,\"avg_risk_score\":51.27},{\"group_value\":\"Gold\",\"avg_net_cash_flow\":1667974.31,\"avg_progress_pct\":39.36,\"avg_holding_gain\":3789306.43,\"avg_risk_score\":48.5},{\"group_value\":\"Hybrid\",\"avg_net_cash_flow\":2309609.43,\"avg_progress_pct\":38.47,\"avg_holding_gain\":4975031.31,\"avg_risk_score\":51.09},{\"group_value\":\"Real Estate\",\"avg_net_cash_flow\":1044714.47,\"avg_progress_pct\":41.05,\"avg_holding_gain\":2898414.74,\"avg_risk_score\":50.92}]",
+  "pipeline_output": "Hybrid: net cash flow 702121266.0, goal progress 38.49735952199878264627758493, holding gain 1507434485.5, risk score 51.08630599175407502768166090, allocation concentration 15.24630104597321126305333333; Gold: net cash flow 502060266.0, goal progress 39.43509528841301466205227017, holding gain 1129213315.0, risk score 48.49556586491597790277777778, allocation concentration 15.88725500117772855134259259; Equity: net cash flow 402150811.0, goal progress 40.05731555782721219975126631, holding gain 912621307.0, risk score 51.27143345161068364482758621, allocation concentration 15.73044800010419395049528302; Real Estate: net cash flow 301922482.0, goal progress 41.40935480488978164918786623, holding gain 834743444.0, risk score 50.92437188062169084249084249, allocation concentration 15.48137049754666859221428571; Debt: net cash flow 101821331.0, goal progress 40.58034944624420062320979242, holding gain 954527674.0, risk score 48.96143211770365321923076923, allocation concentration 14.66647392628305066573232323; None: net cash flow 100541269.0, goal progress 43.86334430865815277126753248, holding gain 162039102.5, risk score 53.58412709761360709589041096, allocation concentration 12.36810934123485713692307692",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 223.137,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?\" So need to retrieve ontology classes, classify math/aggregation terms (maybe compare implies maybe aggregation like average, sum). So steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify numeric/aggregation terms: net cash flow, goal progress, holding gain, risk score, allocation concentration; also maybe need to compare across profile category - need grouping)\n3. Generate (SPARQL query to pull those metrics across profile category from five related tables)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present comparison)\n\nPotentially need additional steps like Filter_Aggregate, Order_By, Link, etc. But the plan can be linear: after Validate, maybe need to Filter_Aggregate to compute comparisons. However classification may indicate need for aggregation, so after Scan we might need Filter_Aggregate to compute comparisons (e.g., average per profile). Then Validate, then Explain. But chronology says Validate after Scan, but we can also have additional operators after Validate? The rules: Validate must happen after Scan. It doesn't forbid further steps before Explain. So we can have Filter_Aggregate after Validate? Probably better: after Scan we can directly Filter_Aggregate then Validate then Explain. But Validate should be after Scan, but can also be after Filter_Aggregate? The rule: Validate (checking data) must happen AFTER Scan. It doesn't say it must be immediate. So okay.\n\nThus steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Filter_Aggregate (compute comparisons across profile category)\n6. Validate\n7. Explain\n\nWe might also need Link to join five tables, but could be part of Generate. Could include Integrate to combine tables. But we can keep simple.\n\nThus output numbered steps only.</reasoning>1. Retrieve  \n2. Classify  \n3. Generate  \n4. Scan  \n5. Filter_Aggregate  \n6. Validate  \n7. Explain",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nThe query: \"Across profile category, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?\"\n\nWe need to find ontology classes first using Retrieve. Then classify for math/aggregation words: \"compare\" maybe implies aggregation? It asks \"compare ... across profile category\". Likely need aggregation (maybe average, sum). Words: \"compare\" not directly numeric-superlative but implies we need to compute maybe average per profile category. So we need Classify for math/aggregation? The law says use Classify for math, aggregation, or numeric-superlative words such as 'Average', 'Sum', etc. \"compare\" is not listed but could be considered aggregation. Safer to include Classify step to identify needed aggregations.\n\nThus steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify aggregation/comparison needed for net cash flow, goal progress, holding gain, risk score, allocation concentration across profile category)\n3. Generate (write SPARQL query joining five related tables, grouping by profile category, selecting metrics)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nPotential extra steps: maybe Filter_Aggregate, Order_By, etc. But we can keep linear.\n\nThus output numbered steps only.</reasoning>1. Retrieve – locate the ontology classes for “profile category”, “net cash flow”, “goal progress”, “holding gain”, “risk score”, “allocation concentration”, and the five related tables.  \n\n2. Classify – determine the required mathematical/aggregation operations (e.g., compute and compare values per profile category).  \n\n3. Generate – compose a SPARQL (or equivalent graph) query that joins the five tables, groups results by profile category, and selects the metrics (net cash flow, goal progress, holding gain, risk score, allocation concentration) with the appropriate aggregation (e.g., average or sum).  \n\n4. Scan – execute the generated query against the knowledge graph to retrieve the aggregated data.  \n\n5. Validate – verify that the returned data correctly reflects the metrics for each profile category and that no missing or inconsistent values exist.  \n\n6. Explain – present the comparative results across profile categories to the user in a clear, concise format.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: 'list' object has no attribute 'get'"
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?\" So need to retrieve ontology classes, classify math/aggregation words (maybe compare implies maybe aggregation like average, sum, etc). The query asks \"compare\" across profile category for those metrics using five related tables. Likely need to retrieve classes, classify numeric terms, generate SPARQL, scan, validate, explain.\n\nSteps:\n\n1. Retrieve ontology classes relevant to profile category, net cash flow, goal progress, holding gain, risk score, allocation concentration, and tables.\n\n2. Classify the query for math/aggregation: terms like \"compare\" maybe need aggregation like average, sum, etc. So use Classify.\n\n3. Generate SPARQL query (or similar) to pull data from five related tables, grouping by profile category and selecting those metrics.\n\n4. Scan to execute the query.\n\n5. Validate the results.\n\n6. Explain the findings to the user.\n\nThus 6 steps. Ensure order: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nWe must output only numbered steps.</reasoning>1. Retrieve – locate the ontology classes for “profile category”, “net cash flow”, “goal progress”, “holding gain”, “risk score”, “allocation concentration”, and the five related tables.  \n2. Classify – identify and tag any mathematical or aggregation operations implied by “compare” (e.g., average, sum, min, max) for the listed metrics.  \n3. Generate – construct a SPARQL (or equivalent graph) query that joins the five tables, groups results by profile category, and selects the metrics with the appropriate aggregation functions identified in step 2.  \n4. Scan – execute the generated query against the knowledge graph to retrieve the comparative data.  \n5. Validate – check the returned dataset for completeness, correct data types, and consistency across the joined tables.  \n6. Explain – present the comparative results to the user, describing how net cash flow, goal progress, holding gain, risk score, and allocation concentration differ across each profile category.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "2",
+              "operator": "Classify",
+              "inputs": [
+                "1"
+              ]
+            },
+            {
+              "id": "3",
+              "operator": "Generate",
+              "inputs": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "id": "4",
+              "operator": "Scan",
+              "inputs": [
+                "3"
+              ]
+            },
+            {
+              "id": "5",
+              "operator": "Validate",
+              "inputs": [
+                "4"
+              ]
+            },
+            {
+              "id": "6",
+              "operator": "Explain",
+              "inputs": [
+                "5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "1",
+              "target": "2"
+            },
+            {
+              "source": "1",
+              "target": "3"
+            },
+            {
+              "source": "2",
+              "target": "3"
+            },
+            {
+              "source": "3",
+              "target": "4"
+            },
+            {
+              "source": "4",
+              "target": "5"
+            },
+            {
+              "source": "5",
+              "target": "6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "CashFlow",
+      "InvestmentGoal",
+      "PortfolioHolding",
+      "PortfolioHealth",
+      "SectorAllocation",
+      "Category"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.96,
+    "target_field": "net cash flow",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks to compare quantitative metrics (net cash flow, goal progress, holding gain, risk score, allocation concentration) across profile categories, which requires numeric aggregation.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel \n       (SUM(?netCashFlow) AS ?totalNetCashFlow) \n       (AVG(?avgProgressPct) AS ?avgGoalProgress) \n       (SUM(?totalHoldingGain) AS ?totalHoldingGain) \n       (AVG(?avgRiskScore) AS ?avgRiskScore) \n       (AVG(?avgAllocationPct) AS ?avgAllocationPct)\nWHERE {\n  # Investor‑to‑Category mapping (one row per investor per category)\n  {\n    SELECT DISTINCT ?investorId ?category WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:investorId ?investorId .\n      ?ph wm:hasCategory ?category .\n    }\n  }\n\n  # Net cash flow per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:investorId ?investorId .\n      ?cf wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  # Goal progress per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?progressPct)) AS ?avgProgressPct) WHERE {\n      ?ig a wm:InvestmentGoal .\n      ?ig wm:investorId ?investorId .\n      ?ig wm:progressPct ?progressPct .\n    } GROUP BY ?investorId\n  }\n\n  # Holding gain per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?gain)) AS ?totalHoldingGain) WHERE {\n      ?ph2 a wm:PortfolioHolding .\n      ?ph2 wm:investorId ?investorId .\n      ?ph2 wm:currentValue ?cv .\n      ?ph2 wm:cost ?cost .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    } GROUP BY ?investorId\n  }\n\n  # Risk score per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore) WHERE {\n      ?ph3 a wm:PortfolioHealth .\n      ?ph3 wm:investorId ?investorId .\n      ?ph3 wm:riskScore ?riskScore .\n    } GROUP BY ?investorId\n  }\n\n  # Allocation concentration per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?allocationPct)) AS ?avgAllocationPct) WHERE {\n      ?sa a wm:SectorAllocation .\n      ?sa wm:investorId ?investorId .\n      ?sa wm:allocationPct ?allocationPct .\n    } GROUP BY ?investorId\n  }\n\n  # Category label (if available)\n  OPTIONAL { ?category rdfs:label ?catLabel . }\n}\nGROUP BY ?catLabel\nORDER BY DESC(?totalNetCashFlow)",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel (SUM(?netCashFlow) AS ?totalNetCashFlow) (AVG(?goalProgress) AS ?avgGoalProgress) (SUM(?holdingGain) AS ?totalHoldingGain) (AVG(?riskScore) AS ?avgRiskScore) (AVG(?allocationPct) AS ?avgAllocationPct)\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL {\n    ?inv wm:hasCategory ?cat .\n    OPTIONAL { ?cat rdfs:label ?catLabel . }\n  }\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amt .\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?prog)) AS ?goalProgress) WHERE {\n      ?inv wm:hasInvestmentGoal ?ig .\n      ?ig wm:progressPct ?prog .\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {\n      ?inv wm:hasHolding ?ph .\n      ?ph wm:currentValue ?cv .\n      ?ph wm:cost ?c .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?c) AS ?gain)\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?rs)) AS ?riskScore) WHERE {\n      ?inv wm:hasPortfolioHealth ?phh .\n      ?phh wm:riskScore ?rs .\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?alloc)) AS ?allocationPct) WHERE {\n      ?inv wm:hasSectorAllocation ?sa .\n      ?sa wm:allocationPct ?alloc .\n    } GROUP BY ?inv\n  }\n}\nGROUP BY ?catLabel\nORDER BY DESC(?totalNetCashFlow)",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel \n       (SUM(?netCashFlow) AS ?totalNetCashFlow) \n       (AVG(?avgProgressPct) AS ?avgGoalProgress) \n       (SUM(?totalHoldingGain) AS ?totalHoldingGain) \n       (AVG(?avgRiskScore) AS ?avgRiskScore) \n       (AVG(?avgAllocationPct) AS ?avgAllocationPct)\nWHERE {\n  # Investor‑to‑Category mapping (one row per investor per category)\n  {\n    SELECT DISTINCT ?investorId ?category WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:investorId ?investorId .\n      ?ph wm:hasCategory ?category .\n    }\n  }\n\n  # Net cash flow per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:investorId ?investorId .\n      ?cf wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  # Goal progress per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?progressPct)) AS ?avgProgressPct) WHERE {\n      ?ig a wm:InvestmentGoal .\n      ?ig wm:investorId ?investorId .\n      ?ig wm:progressPct ?progressPct .\n    } GROUP BY ?investorId\n  }\n\n  # Holding gain per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?gain)) AS ?totalHoldingGain) WHERE {\n      ?ph2 a wm:PortfolioHolding .\n      ?ph2 wm:investorId ?investorId .\n      ?ph2 wm:currentValue ?cv .\n      ?ph2 wm:cost ?cost .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    } GROUP BY ?investorId\n  }\n\n  # Risk score per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore) WHERE {\n      ?ph3 a wm:PortfolioHealth .\n      ?ph3 wm:investorId ?investorId .\n      ?ph3 wm:riskScore ?riskScore .\n    } GROUP BY ?investorId\n  }\n\n  # Allocation concentration per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?allocationPct)) AS ?avgAllocationPct) WHERE {\n      ?sa a wm:SectorAllocation .\n      ?sa wm:investorId ?investorId .\n      ?sa wm:allocationPct ?allocationPct .\n    } GROUP BY ?investorId\n  }\n\n  # Category label (if available)\n  OPTIONAL { ?category rdfs:label ?catLabel . }\n}\nGROUP BY ?catLabel\nORDER BY DESC(?totalNetCashFlow)",
+        "status": "error",
+        "row_count": null,
+        "error": "SPARQL execution timed out after 60 seconds.",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": "scan_timeout"
+      },
+      {
+        "attempt": 1,
+        "operator": "Refine",
+        "previous_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel \n       (SUM(?netCashFlow) AS ?totalNetCashFlow) \n       (AVG(?avgProgressPct) AS ?avgGoalProgress) \n       (SUM(?totalHoldingGain) AS ?totalHoldingGain) \n       (AVG(?avgRiskScore) AS ?avgRiskScore) \n       (AVG(?avgAllocationPct) AS ?avgAllocationPct)\nWHERE {\n  # Investor‑to‑Category mapping (one row per investor per category)\n  {\n    SELECT DISTINCT ?investorId ?category WHERE {\n      ?ph a wm:PortfolioHolding .\n      ?ph wm:investorId ?investorId .\n      ?ph wm:hasCategory ?category .\n    }\n  }\n\n  # Net cash flow per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?amount)) AS ?netCashFlow) WHERE {\n      ?cf a wm:CashFlow .\n      ?cf wm:investorId ?investorId .\n      ?cf wm:amount ?amount .\n    } GROUP BY ?investorId\n  }\n\n  # Goal progress per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?progressPct)) AS ?avgProgressPct) WHERE {\n      ?ig a wm:InvestmentGoal .\n      ?ig wm:investorId ?investorId .\n      ?ig wm:progressPct ?progressPct .\n    } GROUP BY ?investorId\n  }\n\n  # Holding gain per investor\n  OPTIONAL {\n    SELECT ?investorId (SUM(xsd:decimal(?gain)) AS ?totalHoldingGain) WHERE {\n      ?ph2 a wm:PortfolioHolding .\n      ?ph2 wm:investorId ?investorId .\n      ?ph2 wm:currentValue ?cv .\n      ?ph2 wm:cost ?cost .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?cost) AS ?gain)\n    } GROUP BY ?investorId\n  }\n\n  # Risk score per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?riskScore)) AS ?avgRiskScore) WHERE {\n      ?ph3 a wm:PortfolioHealth .\n      ?ph3 wm:investorId ?investorId .\n      ?ph3 wm:riskScore ?riskScore .\n    } GROUP BY ?investorId\n  }\n\n  # Allocation concentration per investor\n  OPTIONAL {\n    SELECT ?investorId (AVG(xsd:decimal(?allocationPct)) AS ?avgAllocationPct) WHERE {\n      ?sa a wm:SectorAllocation .\n      ?sa wm:investorId ?investorId .\n      ?sa wm:allocationPct ?allocationPct .\n    } GROUP BY ?investorId\n  }\n\n  # Category label (if available)\n  OPTIONAL { ?category rdfs:label ?catLabel . }\n}\nGROUP BY ?catLabel\nORDER BY DESC(?totalNetCashFlow)",
+        "refined_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel (SUM(?netCashFlow) AS ?totalNetCashFlow) (AVG(?goalProgress) AS ?avgGoalProgress) (SUM(?holdingGain) AS ?totalHoldingGain) (AVG(?riskScore) AS ?avgRiskScore) (AVG(?allocationPct) AS ?avgAllocationPct)\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL {\n    ?inv wm:hasCategory ?cat .\n    OPTIONAL { ?cat rdfs:label ?catLabel . }\n  }\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amt .\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?prog)) AS ?goalProgress) WHERE {\n      ?inv wm:hasInvestmentGoal ?ig .\n      ?ig wm:progressPct ?prog .\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {\n      ?inv wm:hasHolding ?ph .\n      ?ph wm:currentValue ?cv .\n      ?ph wm:cost ?c .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?c) AS ?gain)\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?rs)) AS ?riskScore) WHERE {\n      ?inv wm:hasPortfolioHealth ?phh .\n      ?phh wm:riskScore ?rs .\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?alloc)) AS ?allocationPct) WHERE {\n      ?inv wm:hasSectorAllocation ?sa .\n      ?sa wm:allocationPct ?alloc .\n    } GROUP BY ?inv\n  }\n}\nGROUP BY ?catLabel\nORDER BY DESC(?totalNetCashFlow)",
+        "why_refined": "The previous SPARQL timed out. Treat this as a query-plan problem, not a syntax problem. Do not produce the same WHERE pattern. Use cardinality_hints to avoid flat joins between classes through literal properties that are many_per_value on both sides. Prefer direct object relationships, fewer classes, or subqueries/pre-aggregation before joining.",
+        "changes_from_previous": [],
+        "status_after_refine": "",
+        "row_count_after_refine": null,
+        "error_after_refine": "",
+        "semantic_risk_after_refine": ""
+      },
+      {
+        "attempt": 2,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?catLabel (SUM(?netCashFlow) AS ?totalNetCashFlow) (AVG(?goalProgress) AS ?avgGoalProgress) (SUM(?holdingGain) AS ?totalHoldingGain) (AVG(?riskScore) AS ?avgRiskScore) (AVG(?allocationPct) AS ?avgAllocationPct)\nWHERE {\n  ?inv a wm:Investor .\n  OPTIONAL {\n    ?inv wm:hasCategory ?cat .\n    OPTIONAL { ?cat rdfs:label ?catLabel . }\n  }\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?amt)) AS ?netCashFlow) WHERE {\n      ?inv wm:hasCashFlow ?cf .\n      ?cf wm:amount ?amt .\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?prog)) AS ?goalProgress) WHERE {\n      ?inv wm:hasInvestmentGoal ?ig .\n      ?ig wm:progressPct ?prog .\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (SUM(xsd:decimal(?gain)) AS ?holdingGain) WHERE {\n      ?inv wm:hasHolding ?ph .\n      ?ph wm:currentValue ?cv .\n      ?ph wm:cost ?c .\n      BIND (xsd:decimal(?cv) - xsd:decimal(?c) AS ?gain)\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?rs)) AS ?riskScore) WHERE {\n      ?inv wm:hasPortfolioHealth ?phh .\n      ?phh wm:riskScore ?rs .\n    } GROUP BY ?inv\n  }\n  OPTIONAL {\n    SELECT ?inv (AVG(xsd:decimal(?alloc)) AS ?allocationPct) WHERE {\n      ?inv wm:hasSectorAllocation ?sa .\n      ?sa wm:allocationPct ?alloc .\n    } GROUP BY ?inv\n  }\n}\nGROUP BY ?catLabel\nORDER BY DESC(?totalNetCashFlow)",
+        "status": "success",
+        "row_count": 6,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 6,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The result set is non‑empty and includes the expected columns (catLabel, totalNetCashFlow, avgGoalProgress, totalHoldingGain, avgRiskScore, avgAllocationPct). These correspond to the requested metrics across profile categories. The SPARQL correctly aggregates each metric per category (SUM for cash flow and holding gain, AVG for goal progress, risk score, and allocation percentage) and groups by the category label, fulfilling the user's request for a comparative view. No entity‑specific filter or missing aggregation is detected.",
+    "validator_reason": "The result set is non‑empty and includes the expected columns (catLabel, totalNetCashFlow, avgGoalProgress, totalHoldingGain, avgRiskScore, avgAllocationPct). These correspond to the requested metrics across profile categories. The SPARQL correctly aggregates each metric per category (SUM for cash flow and holding gain, AVG for goal progress, risk score, and allocation percentage) and groups by the category label, fulfilling the user's request for a comparative view. No entity‑specific filter or missing aggregation is detected.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 6,
+    "final_answer": "Hybrid: net cash flow 702121266.0, goal progress 38.49735952199878264627758493, holding gain 1507434485.5, risk score 51.08630599175407502768166090, allocation concentration 15.24630104597321126305333333; Gold: net cash flow 502060266.0, goal progress 39.43509528841301466205227017, holding gain 1129213315.0, risk score 48.49556586491597790277777778, allocation concentration 15.88725500117772855134259259; Equity: net cash flow 402150811.0, goal progress 40.05731555782721219975126631, holding gain 912621307.0, risk score 51.27143345161068364482758621, allocation concentration 15.73044800010419395049528302; Real Estate: net cash flow 301922482.0, goal progress 41.40935480488978164918786623, holding gain 834743444.0, risk score 50.92437188062169084249084249, allocation concentration 15.48137049754666859221428571; Debt: net cash flow 101821331.0, goal progress 40.58034944624420062320979242, holding gain 954527674.0, risk score 48.96143211770365321923076923, allocation concentration 14.66647392628305066573232323; None: net cash flow 100541269.0, goal progress 43.86334430865815277126753248, holding gain 162039102.5, risk score 53.58412709761360709589041096, allocation concentration 12.36810934123485713692307692",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth.\n\nQuestion: \"Across profile category, how do net cash flow, goal progress, holding gain, risk score, and allocation concentration compare using five related tables?\" Ground truth is JSON array with entries for each group_value (null, Debt, Equity, Gold, Hybrid, Real Estate) with avg_net_cash_flow, avg_progress_pct, avg_holding_gain, avg_risk_score. No allocation concentration in ground truth. The pipeline output includes for each category (Hybrid, Gold, Equity, Real Estate, Debt, None) net cash flow, goal progress, holding gain, risk score, allocation concentration. The numbers are vastly different: ground truth avg_net_cash_flow for Hybrid is 2,309,609.43 but pipeline says 702,121,266.0. So mismatch. Also allocation concentration not in ground truth, but that's extra. The pipeline numbers do not match ground truth. So MISMATCH.\n\nThus output \"MISMATCH\".</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

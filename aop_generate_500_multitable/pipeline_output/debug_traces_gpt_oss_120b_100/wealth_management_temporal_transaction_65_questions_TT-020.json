@@ -1,0 +1,267 @@
+{
+  "sample_row_id": "wealth_management_temporal_transaction_65_questions:TT-020",
+  "question": "For each scenario, how does average current_allocation_pct compare with average new_allocation_pct?",
+  "ground_truth": "[{\"scenario\":null,\"avg_current_allocation_pct\":47.68,\"avg_new_allocation_pct\":49.44},{\"scenario\":\"Approaching Goal\",\"avg_current_allocation_pct\":45.81,\"avg_new_allocation_pct\":45.16},{\"scenario\":\"Bear Market\",\"avg_current_allocation_pct\":49.75,\"avg_new_allocation_pct\":49.22},{\"scenario\":\"Bull Market\",\"avg_current_allocation_pct\":43.54,\"avg_new_allocation_pct\":48.75},{\"scenario\":\"Currency Depreciation\",\"avg_current_allocation_pct\":47.52,\"avg_new_allocation_pct\":42.68},{\"scenario\":\"Economic Growth\",\"avg_current_allocation_pct\":47.61,\"avg_new_allocation_pct\":45.55},{\"scenario\":\"Flash Crash\",\"avg_current_allocation_pct\":49.11,\"avg_new_allocation_pct\":48.17},{\"scenario\":\"Geopolitical Tension\",\"avg_current_allocation_pct\":46.06,\"avg_new_allocation_pct\":45.07},{\"scenario\":\"Inflation Surge\",\"avg_current_allocation_pct\":46.44,\"avg_new_allocation_pct\":47.43},{\"scenario\":\"Interest Rate Cut\",\"avg_current_allocation_pct\":48.02,\"avg_new_allocation_pct\":48.78},{\"scenario\":\"Interest Rate Hike\",\"avg_current_allocation_pct\":48.65,\"avg_new_allocation_pct\":47.07},{\"scenario\":\"Market Volatility\",\"avg_current_allocation_pct\":50.46,\"avg_new_allocation_pct\":47.22},{\"scenario\":\"Sector Rotation\",\"avg_current_allocation_pct\":49.31,\"avg_new_allocation_pct\":46.05}]",
+  "pipeline_output": "Economic Growth: current 47.82539682539682539682539683 > new 45.64285714285714285714285714; Geopolitical Tension: current 46.38235294117647058823529412 > new 44.99019607843137254901960784; Sector Rotation: current 49.79824561403508771929824561 > new 45.78070175438596491228070175; Market Volatility: current 51.66990291262135922330097087 > new 46.87378640776699029126213592; Approaching Goal: current 45.91869918699186991869918699 > new 45.49593495934959349593495935; Flash Crash: current 48.45631067961165048543689320 > new 48.34951456310679611650485437; Interest Rate Hike: current 48.20833333333333333333333333 > new 46.675; Currency Depreciation: current 47.6 > new 42.6; Bull Market: current 43.55769230769230769230769231 < new 47.66346153846153846153846154; Inflation Surge: current 46.02678571428571428571428571 < new 46.72321428571428571428571429; Interest Rate Cut: current 47.77227722772277227722772277 < new 48.75247524752475247524752475; Bear Market: current 49.70338983050847457627118644 > new 47.97457627118644067796610169.",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 101.205,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"For each scenario, how does average current_allocation_pct compare with average new_allocation_pct?\" So need to retrieve ontology classes, classify math/aggregation words (average). Then generate SPARQL, scan, validate, explain. Also maybe need Filter_Aggregate? But we must follow chronology: Retrieve, then Classify, then Generate, then Scan, then Validate, then Explain. Possibly also need Filter_Aggregate after Scan? But chronology says Validate after Scan, then Explain final. We can include extra steps but must maintain order? The critical laws: steps must follow chronology but can include extra steps as long as order respects constraints. So we can have Retrieve (ontology classes), Classify (detect average aggregation), Generate (SPARQL to compute avg per scenario for both fields), Scan (run query), Validate (check results), Explain (output answer). Could also include Filter_Aggregate? Not required. But we could incorporate it after Scan? But Validate must be after Scan; Filter_Aggregate is maybe before Generate? Not needed. So produce steps:\n\n1. Retrieve\n2. Classify\n3. Generate\n4. Scan\n5. Validate\n6. Explain\n\nAdd description per step. Output only numbered steps.</reasoning>1. Retrieve – Locate and fetch the ontology classes relevant to the query (e.g., **Scenario**, **current_allocation_pct**, **new_allocation_pct**).  \n2. Classify – Identify the mathematical/aggregation intent in the query, recognizing the term **“average”** as an aggregation operation.  \n3. Generate – Write a SPARQL query that, for each **Scenario**, computes `AVG(current_allocation_pct)` and `AVG(new_allocation_pct)` and returns both averages side‑by‑side.  \n4. Scan – Execute the generated SPARQL query against the knowledge graph to obtain the per‑scenario average values.  \n5. Validate – Verify that the query returned results for every scenario and that the average values are numeric and non‑null.  \n6. Explain – Present the user with a clear comparison of the average **current_allocation_pct** versus the average **new_allocation_pct** for each scenario.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nGoal: For each scenario, compare average current_allocation_pct with average new_allocation_pct.\n\nWe need to retrieve ontology classes first. Then classify math/aggregation words: average. So we need Classify. Then Generate SPARQL to compute averages per scenario. Then Scan to execute. Then Validate data. Then Explain to user.\n\nPotentially need Filter_Aggregate? But we can compute averages using SPARQL with GROUP BY scenario and AVG. That's aggregation, but classification already done. The operators list includes Filter_Aggregate which could be used, but not required. The plan: 1 Retrieve, 2 Classify, 3 Generate, 4 Scan, 5 Validate, 6 Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate and load the ontology classes relevant to the query (e.g., Scenario, current_allocation_pct, new_allocation_pct).  \n2. Classify – identify the mathematical/aggregation intent in the query (the word “Average”).  \n3. Generate – write a SPARQL query that groups by each scenario and computes `AVG(current_allocation_pct)` and `AVG(new_allocation_pct)`.  \n4. Scan – execute the generated SPARQL query against the knowledge graph to obtain the average values per scenario.  \n5. Validate – check the returned results for completeness and correctness (e.g., ensure every scenario has both averages and no nulls).  \n6. Explain – present the comparison of the two averages for each scenario to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"For each scenario, how does average current_allocation_pct compare with average new_allocation_pct?\" So need to retrieve ontology classes, classify math/aggregation (average). Then generate SPARQL, scan, validate, explain. Steps:\n\n1. Retrieve (ontology classes) – maybe retrieve classes related to scenario, current_allocation_pct, new_allocation_pct.\n\n2. Classify (identify that query involves aggregation: average of numeric fields).\n\n3. Generate (write SPARQL query to compute average current_allocation_pct and average new_allocation_pct per scenario, maybe also compute difference/comparison).\n\n4. Scan (execute the SPARQL query).\n\n5. Validate (check results for correctness, ensure values present).\n\n6. Explain (present answer to user).\n\nThus 6 steps. Ensure order: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain.\n\nWe must output only numbered steps.</reasoning>1. Retrieve – Locate and fetch the ontology classes relevant to “scenario”, “current_allocation_pct”, and “new_allocation_pct”.  \n\n2. Classify – Identify the mathematical/aggregation intent in the query (the use of “average” on numeric fields).  \n\n3. Generate – Write a SPARQL query that, for each scenario, calculates the average current_allocation_pct and the average new_allocation_pct (and optionally a comparative metric such as the difference).  \n\n4. Scan – Execute the generated SPARQL query against the knowledge graph to obtain the result set.  \n\n5. Validate – Verify that the returned data includes averages for both metrics for every scenario and that the values are numerically sound.  \n\n6. Explain – Present the user with a clear comparison of the average current_allocation_pct versus the average new_allocation_pct for each scenario.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "ScenarioRebalancing"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.99,
+    "target_field": "currentAllocationPct, newAllocationPct",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks for the average of the numeric fields 'currentAllocationPct' and 'newAllocationPct' in ScenarioRebalancing, which are defined as numeric in the schema.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?scenario \n       (AVG(xsd:decimal(?currAlloc)) AS ?avgCurrentAllocationPct) \n       (AVG(xsd:decimal(?newAlloc)) AS ?avgNewAllocationPct)\nWHERE {\n  ?rebalance a wm:ScenarioRebalancing ;\n             wm:scenario ?scenario ;\n             wm:currentAllocationPct ?currAlloc ;\n             wm:newAllocationPct ?newAlloc .\n}\nGROUP BY ?scenario",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?scenario \n       (AVG(xsd:decimal(?currAlloc)) AS ?avgCurrentAllocationPct) \n       (AVG(xsd:decimal(?newAlloc)) AS ?avgNewAllocationPct)\nWHERE {\n  ?rebalance a wm:ScenarioRebalancing ;\n             wm:scenario ?scenario ;\n             wm:currentAllocationPct ?currAlloc ;\n             wm:newAllocationPct ?newAlloc .\n}\nGROUP BY ?scenario",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": false,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?scenario \n       (AVG(xsd:decimal(?currAlloc)) AS ?avgCurrentAllocationPct) \n       (AVG(xsd:decimal(?newAlloc)) AS ?avgNewAllocationPct)\nWHERE {\n  ?rebalance a wm:ScenarioRebalancing ;\n             wm:scenario ?scenario ;\n             wm:currentAllocationPct ?currAlloc ;\n             wm:newAllocationPct ?newAlloc .\n}\nGROUP BY ?scenario",
+        "status": "success",
+        "row_count": 12,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 12,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query returns the average current_allocation_pct and average new_allocation_pct per scenario as requested, with appropriate column names and non-empty results.",
+    "validator_reason": "The query returns the average current_allocation_pct and average new_allocation_pct per scenario as requested, with appropriate column names and non-empty results.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 12,
+    "final_answer": "Economic Growth: current 47.82539682539682539682539683 > new 45.64285714285714285714285714; Geopolitical Tension: current 46.38235294117647058823529412 > new 44.99019607843137254901960784; Sector Rotation: current 49.79824561403508771929824561 > new 45.78070175438596491228070175; Market Volatility: current 51.66990291262135922330097087 > new 46.87378640776699029126213592; Approaching Goal: current 45.91869918699186991869918699 > new 45.49593495934959349593495935; Flash Crash: current 48.45631067961165048543689320 > new 48.34951456310679611650485437; Interest Rate Hike: current 48.20833333333333333333333333 > new 46.675; Currency Depreciation: current 47.6 > new 42.6; Bull Market: current 43.55769230769230769230769231 < new 47.66346153846153846153846154; Inflation Surge: current 46.02678571428571428571428571 < new 46.72321428571428571428571429; Interest Rate Cut: current 47.77227722772277227722772277 < new 48.75247524752475247524752475; Bear Market: current 49.70338983050847457627118644 > new 47.97457627118644067796610169.",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth. Question: \"For each scenario, how does average current_allocation_pct compare with average new_allocation_pct?\" Ground truth provides list of scenarios with avg_current and avg_new. The pipeline output provides a subset of scenarios with comparisons, but not all. Let's see.\n\nGround truth scenarios (including null scenario): null, Approaching Goal, Bear Market, Bull Market, Currency Depreciation, Economic Growth, Flash Crash, Geopolitical Tension, Inflation Surge, Interest Rate Cut, Interest Rate Hike, Market Volatility, Sector Rotation. That's 13 entries (including null). Pipeline output includes: Economic Growth, Geopolitical Tension, Sector Rotation, Market Volatility, Approaching Goal, Flash Crash, Interest Rate Hike, Currency Depreciation, Bull Market, Inflation Surge, Interest Rate Cut, Bear Market. That's 12 entries. Missing scenario: null (maybe not needed) but also missing? Let's list: Pipeline includes all except maybe \"null\"? It includes all except maybe \"null\". It includes Economic Growth, Geopolitical Tension, Sector Rotation, Market Volatility, Approaching Goal, Flash Crash, Interest Rate Hike, Currency Depreciation, Bull Market, Inflation Surge, Interest Rate Cut, Bear Market. That's 12. Ground truth has 13 including null scenario. The null scenario is maybe a row with no scenario name. The pipeline didn't include that. Also need to check numbers: Are the numbers matching? Let's compare each.\n\nGround truth values:\n\n- null: avg_current 47.68, avg_new 49.44. Pipeline doesn't have null scenario. So missing.\n\n- Approaching Goal: current 45.81, new 45.16. Pipeline says Approaching Goal: current 45.91869918699186991869918699 > new 45.49593495934959349593495935. The numbers differ: pipeline current 45.9187 vs ground truth 45.81. new 45.4959 vs 45.16. Not matching numbers. Also pipeline says > (greater) while ground truth: 45.81 > 45.16, also greater. So direction matches but numbers differ. According to rule 2, if ground truth contains concrete numbers, pipeline must contain same facts. Since numbers differ, that's a mismatch for that scenario.\n\n- Bear Market: ground truth current 49.75, new 49.22. Pipeline: Bear Market: current 49.70338983050847457627118644 > new 47.97457627118644067796610169. Numbers differ significantly; also direction: ground truth current > new (49.75 > 49.22) pipeline also > but numbers differ. So mismatch.\n\n- Bull Market: ground truth current 43.54, new 48.75 (current < new). Pipeline: Bull Market: current 43.55769230769230769230769231 < new 47.66346153846153846153846154. Numbers close but not exact: current 43.5577 vs 43.54 (close), new 47.6635 vs 48.75 (different). Not matching new value. So mismatch.\n\n- Currency Depreciation: ground truth current 47.52, new 42.68. Pipeline: current 47.6 > new 42.6. Numbers close but not exact; slight differences. Not exact; mismatch.\n\n- Economic Growth: ground truth current 47.61, new 45.55. Pipeline: current 47.82539682539682539682539683 > new 45.64285714285714285714285714. Numbers differ. Mismatch.\n\n- Flash Crash: ground truth current 49.11, new 48.17. Pipeline: current 48.45631067961165048543689320 > new 48.34951456310679611650485437. Numbers differ; also direction: ground truth > (49.11 > 48.17) pipeline > (48.456 > 48.349). But numbers not matching. Mismatch.\n\n- Geopolitical Tension: ground truth current 46.06, new 45.07. Pipeline: current 46.38235294117647058823529412 > new 44.99019607843137254901960784. Numbers differ. Mismatch.\n\n- Inflation Surge: ground truth current 46.44, new 47.43 (current < new). Pipeline: current 46.02678571428571428571428571 < new 46.72321428571428571428571429. Numbers differ; direction matches (<). But numbers not same. Mismatch.\n\n- Interest Rate Cut: ground truth current 48.02, new 48.78 (current < new). Pipeline: current 47.77227722772277227722772277 < new 48.75247524752475247524752475. Numbers differ; direction matches. Mismatch.\n\n- Interest Rate Hike: ground truth current 48.65, new 47.07 (current > new). Pipeline: current 48.20833333333333333333333333 > new 46.675. Numbers differ. Mismatch.\n\n- Market Volatility: ground truth current 50.46, new 47.22 (current > new). Pipeline: current 51.66990291262135922330097087 > new 46.87378640776699029126213592. Numbers differ. Mismatch.\n\n- Sector Rotation: ground truth current 49.31, new 46.05 (current > new). Pipeline: current 49.79824561403508771929824561 > new 45.78070175438596491228070175. Numbers differ. Mismatch.\n\nThus pipeline output includes all scenarios except null, but numbers are not matching ground truth. According to rule 2, must contain same facts. Since numbers differ, it's a mismatch. Also missing null scenario. So overall answer is MISMATCH.\n\nWe output only the word.</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

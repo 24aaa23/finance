@@ -1,0 +1,310 @@
+{
+  "sample_row_id": "wealth_management_multi_step_comparative_105_questions:MC-077",
+  "question": "Across profile category, how do holding gain, rebalancing amount, scenario change, and cash flow compare using four related tables?",
+  "ground_truth": "[{\"group_value\":null,\"avg_holding_gain\":1965169.97,\"avg_rebalance_amount\":442236.74,\"avg_scenario_change\":-10.65},{\"group_value\":\"Debt\",\"avg_holding_gain\":3662669.48,\"avg_rebalance_amount\":402125.4,\"avg_scenario_change\":-6.64},{\"group_value\":\"Equity\",\"avg_holding_gain\":3046375.45,\"avg_rebalance_amount\":435689.66,\"avg_scenario_change\":-1.19},{\"group_value\":\"Gold\",\"avg_holding_gain\":4369052.04,\"avg_rebalance_amount\":404021.82,\"avg_scenario_change\":0.89},{\"group_value\":\"Hybrid\",\"avg_holding_gain\":5711321.49,\"avg_rebalance_amount\":397961.76,\"avg_scenario_change\":2.77},{\"group_value\":\"Real Estate\",\"avg_holding_gain\":2548538.78,\"avg_rebalance_amount\":383518.43,\"avg_scenario_change\":-2.63}]",
+  "pipeline_output": "Equity: holding gain 64.39164138860802157061004382, rebalance amount 108537964.0, scenario change -1.227272727272727272727272727, cash flow 402150811.0; Debt: holding gain 76.80355160932297447280799112, rebalance amount 97484455.0, scenario change -4.26, cash flow 101821331.0; Gold: holding gain 79.96460176991150442477876106, rebalance amount 107584752.0, scenario change -0.3470149253731343283582089552, cash flow 502060266.0; Hybrid: holding gain 100.9224461906388793987017424, rebalance amount 109796025.0, scenario change 3.870175438596491228070175439, cash flow 702121266.0; Real Estate: holding gain 53.50970017636684303350970018, rebalance amount 98825549.0, scenario change -2.417543859649122807017543860, cash flow 301922482.0",
+  "new_status": "MISMATCH",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 108.69,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do holding gain, rebalancing amount, scenario change, and cash flow compare using four related tables?\" So need to retrieve ontology classes, classify math/aggregation words. The query asks to compare across profile category the four metrics using four related tables. Likely need to retrieve classes, classify numeric terms (holding gain, rebalancing amount, scenario change, cash flow) maybe need aggregation (compare). So steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify that we need aggregation/comparison maybe \"compare\" implies maybe need to compute differences or maybe just list values per profile category). So we classify numeric terms.\n3. Generate (write SPARQL or query to fetch holding gain, rebalancing amount, scenario change, cash flow across profile category from four tables, linking them)\n4. Scan (execute query)\n5. Validate (check results)\n6. Explain (present answer)\n\nThus 6 steps. Ensure order: Retrieve, Classify, Generate, Scan, Validate, Explain.\n\nWe must output only numbered steps.</reasoning>1. Retrieve – locate the ontology classes for “profile category”, “holding gain”, “rebalancing amount”, “scenario change”, “cash flow”, and the four related tables.  \n2. Classify – identify the numeric/aggregation intent in the query (holding gain, rebalancing amount, scenario change, cash flow) and the comparative operation across profile categories.  \n3. Generate – construct a graph query (e.g., SPARQL) that links the four tables, selects each of the four metrics, groups the results by profile category, and prepares them for comparison.  \n4. Scan – execute the generated query against the knowledge graph to retrieve the metric values per profile category.  \n5. Validate – verify that the returned data includes all four metrics for each profile category and that the joins between the four tables are correct.  \n6. Explain – present the comparative results, showing how holding gain, rebalancing amount, scenario change, and cash flow differ across profile categories.",
+        "dag_sequence": "",
+        "semantic_score": null,
+        "reward": null,
+        "cost": null,
+        "selected": false,
+        "why_selected_or_rejected": "Failed DAG compilation: DAG rewrite returned no nodes."
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do holding gain, rebalancing amount, scenario change, and cash flow compare using four related tables?\" This involves comparing numeric measures across profile category, likely need aggregation (maybe sum, average). So we need to classify for math/aggregation. Steps:\n\n1. Retrieve ontology classes (maybe profile category, holding gain, rebalancing amount, scenario change, cash flow, tables). Use Retrieve.\n\n2. Classify for aggregation (maybe need Sum or Average). Use Classify.\n\n3. Generate SPARQL query to pull data from four related tables, grouping by profile category and retrieving measures.\n\n4. Scan to execute query.\n\n5. Validate results.\n\n6. Explain to user.\n\nPotential need for Filter_Aggregate, Order_By? But linear plan: we can include Filter_Aggregate after Scan? Actually after Scan we have data; we might need to aggregate. But classification already identified aggregation; we might need to apply Filter_Aggregate operator to compute aggregates. However chronology: after Scan we can do Filter_Aggregate, then Validate, then Explain. The critical chronology only mentions order for Retrieve, Classify, Generate, Scan, Validate, Explain. It doesn't forbid other operators in between as long as order respects those constraints. So we can insert Filter_Aggregate after Scan, before Validate.\n\nThus steps:\n\n1. Retrieve\n\n2. Classify\n\n3. Generate\n\n4. Scan\n\n5. Filter_Aggregate (compute sums/comparisons across profile category)\n\n6. Validate\n\n7. Explain\n\nMake sure to mention using four related tables maybe via Link or Integrate? Could be needed to join tables. Could use Link after Retrieve to identify relationships. But chronology not strict about that; we can add Link before Generate perhaps. But we must keep order: Retrieve first, then maybe Link, then Classify? The rule says after Retrieve you must find ontology classes. Then classification for math. So we can do Retrieve, Classify, Generate, Scan, Validate, Explain. Additional operators can be inserted but must not violate order. Could add Link after Retrieve before Generate. That would be okay.\n\nThus final steps:\n\n1. Retrieve\n\n2. Link (to identify relationships among the four tables)\n\n3. Classify (detect aggregation)\n\n4. Generate (SPARQL to select holding_gain, rebalancing_amount, scenario_change, cash_flow grouped by profile_category)\n\n5. Scan\n\n6. Filter_Aggregate (apply sum/average per category)\n\n7. Validate\n\n8. Explain\n\nReturn numbered steps.</reasoning>1. Retrieve – obtain the ontology classes for *profile category*, *holding gain*, *rebalancing amount*, *scenario change*, *cash flow*, and the four related tables.  \n\n2. Link – identify and map the relationships between the four tables so they can be queried together.  \n\n3. Classify – detect the presence of numeric‑aggregation intent (e.g., compare values across categories, likely using Sum/Average).  \n\n4. Generate – write a SPARQL (or equivalent graph) query that selects the four measures for each *profile category* from the linked tables, grouping by *profile category*.  \n\n5. Scan – execute the generated query against the knowledge graph to retrieve the raw rows.  \n\n6. Filter_Aggregate – apply the required aggregations (e.g., SUM or AVG) to the retrieved rows so that each *profile category* shows the comparative totals for holding gain, rebalancing amount, scenario change, and cash flow.  \n\n7. Validate – check the aggregated results for completeness, type correctness, and consistency with the schema.  \n\n8. Explain – present the comparison of the four measures across profile categories to the user in a clear, concise format.",
+        "dag_sequence": "Retrieve -> Classify -> Link -> Generate -> Scan -> Filter_Aggregate -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 38,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Link",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2",
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Scan",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Filter_Aggregate",
+              "inputs": [
+                "n5"
+              ]
+            },
+            {
+              "id": "n7",
+              "operator": "Validate",
+              "inputs": [
+                "n5",
+                "n6"
+              ]
+            },
+            {
+              "id": "n8",
+              "operator": "Explain",
+              "inputs": [
+                "n7"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n1",
+              "target": "n4"
+            },
+            {
+              "source": "n2",
+              "target": "n4"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            },
+            {
+              "source": "n5",
+              "target": "n7"
+            },
+            {
+              "source": "n6",
+              "target": "n7"
+            },
+            {
+              "source": "n7",
+              "target": "n8"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"Across profile category, how do holding gain, rebalancing amount, scenario change, and cash flow compare using four related tables?\" This involves comparing numeric measures across profile category, likely need aggregation (compare). So we need to classify for math/aggregation. Steps:\n\n1. Retrieve ontology classes (profile category, holding gain, rebalancing amount, scenario change, cash flow, tables).\n2. Classify the query for aggregation/comparison (maybe need Sum, Average, etc). Use Classify.\n3. Generate SPARQL (or query) that joins four related tables and selects measures per profile category, maybe using aggregation functions.\n4. Scan to execute the query.\n5. Validate results.\n6. Explain to user.\n\nThus steps numbered 1-6. Ensure we follow chronology: Retrieve first, then Classify, then Generate, then Scan, then Validate, then Explain. No extra steps. Provide only numbered steps.</reasoning>1. Retrieve – locate the ontology classes for “profile category”, “holding gain”, “rebalancing amount”, “scenario change”, “cash flow”, and the four related tables.  \n2. Classify – identify the numeric‑aggregation intent of the query (comparison of measures across categories) and determine the required aggregation operators (e.g., SUM, AVG, MIN, MAX).  \n3. Generate – construct a SPARQL (or equivalent graph) query that joins the four tables on the profile category key and selects the holding gain, rebalancing amount, scenario change, and cash flow values, applying the appropriate aggregation functions for comparison.  \n4. Scan – execute the generated query against the knowledge graph to retrieve the aggregated results.  \n5. Validate – check the returned data for completeness, correct datatype, and consistency with the schema.  \n6. Explain – present the comparison of holding gain, rebalancing amount, scenario change, and cash flow across each profile category to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 29,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=29.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "Investor",
+      "Category",
+      "PortfolioHolding",
+      "RebalancingAction",
+      "ScenarioRebalancing",
+      "CashFlow"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.96,
+    "target_field": "holding gain, rebalancing amount, scenario change, cash flow",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks to compare numeric measures (holding gain, rebalancing amount, scenario change, cash flow) across the 'profile category' dimension, which requires aggregation of numeric fields.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel ?avgHoldingGainPct ?totalRebalanceAmount ?avgScenarioChangePct ?totalCashFlow\nWHERE {\n  {\n    SELECT ?cat (AVG(xsd:decimal(?returnsPct)) AS ?avgHoldingGainPct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasHolding ?hold .\n      ?hold wm:returnsPct ?returnsPct .\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?rebAmount)) AS ?totalRebalanceAmount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasRebalancingAction ?reb .\n      ?reb wm:amount ?rebAmount .\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL {\n    SELECT ?cat (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChangePct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasScenarioRebalancing ?sc .\n      ?sc wm:newAllocationPct ?newPct ;\n          wm:currentAllocationPct ?curPct .\n      BIND ((xsd:decimal(?newPct) - xsd:decimal(?curPct)) AS ?scenarioChange)\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?cfAmount)) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cfAmount .\n    }\n    GROUP BY ?cat\n  }\n  ?cat rdfs:label ?categoryLabel .\n}",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel ?avgHoldingGainPct ?totalRebalanceAmount ?avgScenarioChangePct ?totalCashFlow\nWHERE {\n  {\n    SELECT ?cat (AVG(xsd:decimal(?returnsPct)) AS ?avgHoldingGainPct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasHolding ?hold .\n      ?hold wm:returnsPct ?returnsPct .\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?rebAmount)) AS ?totalRebalanceAmount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasRebalancingAction ?reb .\n      ?reb wm:amount ?rebAmount .\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL {\n    SELECT ?cat (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChangePct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasScenarioRebalancing ?sc .\n      ?sc wm:newAllocationPct ?newPct ;\n          wm:currentAllocationPct ?curPct .\n      BIND ((xsd:decimal(?newPct) - xsd:decimal(?curPct)) AS ?scenarioChange)\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?cfAmount)) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cfAmount .\n    }\n    GROUP BY ?cat\n  }\n  ?cat rdfs:label ?categoryLabel .\n}",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": true,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?categoryLabel ?avgHoldingGainPct ?totalRebalanceAmount ?avgScenarioChangePct ?totalCashFlow\nWHERE {\n  {\n    SELECT ?cat (AVG(xsd:decimal(?returnsPct)) AS ?avgHoldingGainPct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasHolding ?hold .\n      ?hold wm:returnsPct ?returnsPct .\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?rebAmount)) AS ?totalRebalanceAmount)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasRebalancingAction ?reb .\n      ?reb wm:amount ?rebAmount .\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL {\n    SELECT ?cat (AVG(xsd:decimal(?scenarioChange)) AS ?avgScenarioChangePct)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasScenarioRebalancing ?sc .\n      ?sc wm:newAllocationPct ?newPct ;\n          wm:currentAllocationPct ?curPct .\n      BIND ((xsd:decimal(?newPct) - xsd:decimal(?curPct)) AS ?scenarioChange)\n    }\n    GROUP BY ?cat\n  }\n  OPTIONAL {\n    SELECT ?cat (SUM(xsd:decimal(?cfAmount)) AS ?totalCashFlow)\n    WHERE {\n      ?inv a wm:Investor ;\n           wm:hasCategory ?cat ;\n           wm:hasCashFlow ?cf .\n      ?cf wm:amount ?cfAmount .\n    }\n    GROUP BY ?cat\n  }\n  ?cat rdfs:label ?categoryLabel .\n}",
+        "status": "success",
+        "row_count": 5,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 5,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The result set is non‑empty and includes exactly the columns requested for a cross‑category comparison: category label, average holding gain (%), total rebalancing amount, average scenario change (%), and total cash flow. The SPARQL query correctly aggregates each metric per profile category, matching the user's request to compare these four measures across categories. No missing fields or incorrect granularity are observed.",
+    "validator_reason": "The result set is non‑empty and includes exactly the columns requested for a cross‑category comparison: category label, average holding gain (%), total rebalancing amount, average scenario change (%), and total cash flow. The SPARQL query correctly aggregates each metric per profile category, matching the user's request to compare these four measures across categories. No missing fields or incorrect granularity are observed.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 5,
+    "final_answer": "Equity: holding gain 64.39164138860802157061004382, rebalance amount 108537964.0, scenario change -1.227272727272727272727272727, cash flow 402150811.0; Debt: holding gain 76.80355160932297447280799112, rebalance amount 97484455.0, scenario change -4.26, cash flow 101821331.0; Gold: holding gain 79.96460176991150442477876106, rebalance amount 107584752.0, scenario change -0.3470149253731343283582089552, cash flow 502060266.0; Hybrid: holding gain 100.9224461906388793987017424, rebalance amount 109796025.0, scenario change 3.870175438596491228070175439, cash flow 702121266.0; Real Estate: holding gain 53.50970017636684303350970018, rebalance amount 98825549.0, scenario change -2.417543859649122807017543860, cash flow 301922482.0",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth.\n\nQuestion: \"Across profile category, how do holding gain, rebalancing amount, scenario change, and cash flow compare using four related tables?\" Ground truth provides JSON array with group_value (null, Debt, Equity, Gold, Hybrid, Real Estate) and avg_holding_gain, avg_rebalance_amount, avg_scenario_change. No cash flow in ground truth. Pipeline output provides for each category: holding gain (some numbers like 64.39...), rebalance amount (large numbers like 108537964.0), scenario change (some numbers), cash flow (some numbers). The values are completely different: ground truth avg_holding_gain are in millions (e.g., 1965169.97) while pipeline shows percentages? Also cash flow not in ground truth. So mismatch.\n\nAlso pipeline missing avg_holding_gain values matching ground truth. So MISMATCH.\n\nThus output \"MISMATCH\".</reasoning>MISMATCH",
+    "parsed_status": "MISMATCH",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}

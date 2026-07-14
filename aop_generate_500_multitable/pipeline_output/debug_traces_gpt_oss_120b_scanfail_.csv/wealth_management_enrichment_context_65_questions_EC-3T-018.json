@@ -1,0 +1,347 @@
+{
+  "sample_row_id": "wealth_management_enrichment_context_65_questions:EC-3T-018",
+  "question": "How do Deposit and Withdrawal totals compare across profile segments?",
+  "ground_truth": "[{\"segment\":\"Small Cap\",\"deposit_amount\":100535972.0,\"withdrawal_amount\":544744.0},{\"segment\":null,\"deposit_amount\":125130.0,\"withdrawal_amount\":100099498.0},{\"segment\":\"Diversified\",\"deposit_amount\":488050.0,\"withdrawal_amount\":100507341.0},{\"segment\":\"Mid Cap\",\"deposit_amount\":530203.0,\"withdrawal_amount\":545454.0},{\"segment\":\"Large Cap\",\"deposit_amount\":583364.0,\"withdrawal_amount\":200531363.0}]",
+  "pipeline_output": "Diversified: Deposit 488050.0, Withdrawal -100507341.0; Large Cap: Deposit 583364.0, Withdrawal -200531363.0; Mid Cap: Deposit 530203.0, Withdrawal -545454.0; Small Cap: Deposit 100535972.0, Withdrawal -544744.0",
+  "new_status": "PARTIAL",
+  "old_status": "NEW_BENCHMARK",
+  "elapsed_seconds": 101.039,
+  "dag": {
+    "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "operator_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "failure_stage": "",
+    "short_circuit_stage": ""
+  },
+  "planner": {
+    "chosen_plan": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+    "why_this_plan": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+    "candidate_plans": [
+      {
+        "plan_id": "round_1_path_2",
+        "linear_plan": "<reasoning>We need to produce step-by-step linear execution plan using only provided operators. Query: \"How do Deposit and Withdrawal totals compare across profile segments?\" Need to find ontology classes first using Retrieve. Then classify for math/aggregation words: \"totals compare\" implies sum totals of Deposit and Withdrawal across profile segments. So need Classify for math/aggregation. Then Generate SPARQL after Retrieve and Classify. Then Scan, Validate, Explain. Possibly also need Filter_Aggregate, Order_By? But plan must be linear steps, using operators. Could include Filter_Aggregate after Scan? Actually after Scan we have data, then we might need to aggregate. But guidelines: after Scan, Validate, then Explain. Could incorporate aggregation within SPARQL query (Generate). So steps: 1 Retrieve ontology classes. 2 Classify query for aggregation. 3 Generate SPARQL to compute sum of Deposit and Withdrawal per profile segment. 4 Scan to execute query. 5 Validate results. 6 Explain to user.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the ontology classes relevant to “Deposit”, “Withdrawal”, and “Profile Segment”.  \n2. Classify – identify the mathematical/aggregation intent (summing totals) in the query.  \n3. Generate – write a SPARQL query that aggregates (SUM) the Deposit and Withdrawal amounts for each Profile Segment.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – check the returned aggregation results for completeness and correctness.  \n6. Explain – present the comparison of Deposit and Withdrawal totals across the profile segments to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 31,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_3",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology.\n\nQuery: \"How do Deposit and Withdrawal totals compare across profile segments?\"\n\nWe need to compare totals of Deposit and Withdrawal across profile segments. This involves aggregation (totals) and comparison across segments. So we need to classify for math/aggregation: \"Deposit totals\", \"Withdrawal totals\", \"compare\". So we need Classify step to identify aggregation.\n\nSteps:\n\n1. Retrieve ontology classes (likely \"Deposit\", \"Withdrawal\", \"ProfileSegment\", maybe \"Transaction\").\n\n2. Classify for math/aggregation: identify that we need to compute totals (Sum) for Deposit and Withdrawal per profile segment.\n\n3. Generate SPARQL query to compute sums of Deposit and Withdrawal per profile segment.\n\n4. Scan to execute query.\n\n5. Validate results.\n\n6. Explain to user.\n\nThus steps list with operator names.\n\nMake sure order: Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain.\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the ontology classes relevant to the query (e.g., Deposit, Withdrawal, ProfileSegment, Transaction).  \n2. Classify – identify the mathematical/aggregation intent (compute total Sum of Deposit and Withdrawal amounts per profile segment and compare them).  \n3. Generate – write a SPARQL query that aggregates (SUM) Deposit amounts and Withdrawal amounts grouped by each profile segment.  \n4. Scan – execute the generated SPARQL query against the knowledge graph to obtain the aggregated totals.  \n5. Validate – check the returned data for completeness, correct types, and any missing segment values.  \n6. Explain – present the comparison of Deposit vs. Withdrawal totals across the profile segments to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 0.5,
+        "reward": 0.5,
+        "cost": 29,
+        "selected": false,
+        "why_selected_or_rejected": "Valid DAG candidate.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": []
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      },
+      {
+        "plan_id": "round_1_path_1",
+        "linear_plan": "<reasoning>We need to produce a step-by-step linear execution plan using only provided operators, following chronology. Query: \"How do Deposit and Withdrawal totals compare across profile segments?\" Need to find ontology classes first using Retrieve. Then classify for math/aggregation words: \"totals compare\" implies sum of Deposit and Withdrawal per profile segment. So need classification for aggregation (Sum). So after Retrieve, use Classify to identify that we need sum aggregation. Then Generate SPARQL to compute sums of Deposit and Withdrawal per profile segment. Then Scan to execute. Then Validate to check data. Then Explain to present answer. Possibly also need Filter_Aggregate or Order_By? But we must follow chronology: after Validate, we can still do other operators before Explain? The rules only specify order: Retrieve first, then Classify if needed, then Generate after Retrieve/Classify, then Scan, then Validate, then Explain final. It doesn't forbid additional steps between Validate and Explain, but we should keep linear. Could include Filter_Aggregate to compute sums? But classification already identifies need for aggregation; Generate will include aggregation. So steps:\n\n1. Retrieve (ontology classes)\n2. Classify (identify aggregation: Sum of Deposit and Withdrawal)\n3. Generate (SPARQL query to compute total Deposit and total Withdrawal per profile segment)\n4. Scan (execute the query)\n5. Validate (ensure results are correct, non-null)\n6. Explain (present comparison)\n\nThus output numbered steps.</reasoning>1. Retrieve – locate the ontology classes for Deposit, Withdrawal, and ProfileSegment.  \n2. Classify – detect that the query requires numeric aggregation (summing totals) for Deposit and Withdrawal.  \n3. Generate – write a SPARQL query that groups by ProfileSegment and computes SUM(Deposit) and SUM(Withdrawal) for each segment.  \n4. Scan – execute the generated SPARQL query against the knowledge graph.  \n5. Validate – check that the query returned valid, non‑null totals for every profile segment.  \n6. Explain – present the comparison of Deposit and Withdrawal totals across the profile segments to the user.",
+        "dag_sequence": "Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain",
+        "semantic_score": 1.0,
+        "reward": 1.0,
+        "cost": 31,
+        "selected": true,
+        "why_selected_or_rejected": "Selected highest-rated DAG with low cost: reward=1.0, cost=31.",
+        "dag_data": {
+          "nodes": [
+            {
+              "id": "n1",
+              "operator": "Retrieve",
+              "inputs": []
+            },
+            {
+              "id": "n2",
+              "operator": "Classify",
+              "inputs": [
+                "n1"
+              ]
+            },
+            {
+              "id": "n3",
+              "operator": "Generate",
+              "inputs": [
+                "n1",
+                "n2"
+              ]
+            },
+            {
+              "id": "n4",
+              "operator": "Scan",
+              "inputs": [
+                "n3"
+              ]
+            },
+            {
+              "id": "n5",
+              "operator": "Validate",
+              "inputs": [
+                "n4"
+              ]
+            },
+            {
+              "id": "n6",
+              "operator": "Explain",
+              "inputs": [
+                "n5"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "n1",
+              "target": "n2"
+            },
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n2",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n4"
+            },
+            {
+              "source": "n4",
+              "target": "n5"
+            },
+            {
+              "source": "n5",
+              "target": "n6"
+            }
+          ]
+        }
+      }
+    ],
+    "assumptions": [],
+    "alternatives_available": []
+  },
+  "retrieve": {
+    "selected_classes": [
+      "CashFlow",
+      "CashFlowType",
+      "Segment",
+      "Investor"
+    ],
+    "why_selected": "",
+    "possible_missing_classes": [],
+    "ambiguous_terms": [],
+    "risk_flags": []
+  },
+  "classify": {
+    "intent": "aggregation_numeric",
+    "confidence": 0.97,
+    "target_field": "amount",
+    "schema_datatype": "numeric",
+    "why_this_intent": "The query asks for total (sum) of Deposit and Withdrawal amounts, which are stored in the numeric 'amount' field of the CashFlow class, grouped by the categorical 'segment' of Investor.",
+    "risk_flags": []
+  },
+  "generate": {
+    "initial_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment ?cftLabel (SUM(xsd:decimal(?amount)) AS ?totalAmount)\nWHERE {\n  ?cf a wm:CashFlow ;\n      wm:cashFlowOfInvestor ?inv ;\n      wm:hasCashFlowType ?cft ;\n      wm:amount ?amount .\n  ?inv wm:segment ?segment .\n  ?cft rdfs:label ?cftLabel .\n  FILTER ( ?cftLabel = \"Deposit\" || ?cftLabel = \"Withdrawal\" )\n}\nGROUP BY ?segment ?cftLabel\nORDER BY ?segment ?cftLabel",
+    "final_sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment ?cftLabel (SUM(xsd:decimal(?amount)) AS ?totalAmount)\nWHERE {\n  ?cf a wm:CashFlow ;\n      wm:cashFlowOfInvestor ?inv ;\n      wm:hasCashFlowType ?cft ;\n      wm:amount ?amount .\n  ?inv wm:segment ?segment .\n  ?cft rdfs:label ?cftLabel .\n  FILTER ( ?cftLabel = \"Deposit\" || ?cftLabel = \"Withdrawal\" )\n}\nGROUP BY ?segment ?cftLabel\nORDER BY ?segment ?cftLabel",
+    "why_this_sparql": "",
+    "join_choices": [],
+    "aggregation_choices": [],
+    "filter_choices": [],
+    "label_choices": {
+      "uses_human_labels": true,
+      "raw_uri_fields": [],
+      "label_risk": ""
+    },
+    "null_handling": {
+      "preserves_null_buckets": false,
+      "optional_patterns_used": [],
+      "null_risk": ""
+    },
+    "assumptions": [],
+    "risk_flags": []
+  },
+  "scan_and_refine": {
+    "self_heal_attempts": 0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "operator": "Scan",
+        "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX kg: <https://wealth.example.org/kg/>\nPREFIX wmmeta: <https://wealth.example.org/metadata/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX schema1: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?segment ?cftLabel (SUM(xsd:decimal(?amount)) AS ?totalAmount)\nWHERE {\n  ?cf a wm:CashFlow ;\n      wm:cashFlowOfInvestor ?inv ;\n      wm:hasCashFlowType ?cft ;\n      wm:amount ?amount .\n  ?inv wm:segment ?segment .\n  ?cft rdfs:label ?cftLabel .\n  FILTER ( ?cftLabel = \"Deposit\" || ?cftLabel = \"Withdrawal\" )\n}\nGROUP BY ?segment ?cftLabel\nORDER BY ?segment ?cftLabel",
+        "status": "success",
+        "row_count": 8,
+        "error": "",
+        "unknown_terms": [],
+        "term_suggestions": {},
+        "diagnosis": ""
+      }
+    ],
+    "final_scan_status": "success",
+    "final_row_count": 8,
+    "final_scan_error": ""
+  },
+  "validate": {
+    "is_valid": true,
+    "why_passed_or_failed": "The query correctly aggregates Deposit and Withdrawal amounts per segment, returns the expected columns, and the sample data provides totals for each segment, satisfying the user's request.",
+    "validator_reason": "The query correctly aggregates Deposit and Withdrawal amounts per segment, returns the expected columns, and the sample data provides totals for each segment, satisfying the user's request.",
+    "missed_checks": [],
+    "risk_flags": []
+  },
+  "explain": {
+    "input_row_count": 8,
+    "final_answer": "Diversified: Deposit 488050.0, Withdrawal -100507341.0; Large Cap: Deposit 583364.0, Withdrawal -200531363.0; Mid Cap: Deposit 530203.0, Withdrawal -545454.0; Small Cap: Deposit 100535972.0, Withdrawal -544744.0",
+    "did_output_all_rows": null,
+    "formatting_or_omission_issue": "",
+    "risk_flags": []
+  },
+  "final_grader": {
+    "raw_grader_output": "<reasoning>We need to compare pipeline output to ground truth.\n\nQuestion: \"How do Deposit and Withdrawal totals compare across profile segments?\" Ground truth is a list of objects with segment, deposit_amount, withdrawal_amount.\n\nGround truth entries:\n1. {\"segment\":\"Small Cap\",\"deposit_amount\":100535972.0,\"withdrawal_amount\":544744.0}\n2. {\"segment\":null,\"deposit_amount\":125130.0,\"withdrawal_amount\":100099498.0}\n3. {\"segment\":\"Diversified\",\"deposit_amount\":488050.0,\"withdrawal_amount\":100507341.0}\n4. {\"segment\":\"Mid Cap\",\"deposit_amount\":530203.0,\"withdrawal_amount\":545454.0}\n5. {\"segment\":\"Large Cap\",\"deposit_amount\":583364.0,\"withdrawal_amount\":200531363.0}\n\nPipeline Output: \"Diversified: Deposit 488050.0, Withdrawal -100507341.0; Large Cap: Deposit 583364.0, Withdrawal -200531363.0; Mid Cap: Deposit 530203.0, Withdrawal -545454.0; Small Cap: Deposit 100535972.0, Withdrawal -544744.0\"\n\nObservations:\n- It includes four segments: Diversified, Large Cap, Mid Cap, Small Cap. It omits the segment with null (maybe \"unknown\" segment) which has deposit 125130 and withdrawal 100099498. So missing that entry => missing values => PARTIAL or MISMATCH? According to rule 4: If Ground Truth is JSON, all important values must appear. Missing values are PARTIAL or MISMATCH, not MATCH. Since missing one entry, it's PARTIAL.\n\nAlso note sign: pipeline shows withdrawal as negative numbers (e.g., -100507341.0) while ground truth has positive 100507341.0. Does that count as mismatch? The numbers are same magnitude but sign differs. The ground truth says withdrawal_amount: 100507341.0 (positive). The pipeline says Withdrawal -100507341.0 (negative). That is a factual discrepancy. According to rule 2: If ground truth contains a concrete number, pipeline must contain same facts. Negative sign is different. So that is a mismatch for those values. However we already have missing entry. The overall classification: Since there are multiple errors (sign mismatch and missing entry), it's definitely not MATCH. Could be PARTIAL if some correct facts present. The pipeline includes correct deposit numbers for those four segments, and withdrawal numbers are same magnitude but sign wrong. Does sign difference count as mismatch? Yes, it's a different number. So those entries are mismatched. However the pipeline includes the correct deposit values and the withdrawal values are wrong sign. So overall answer is not fully correct. According to rule 6: For comparison question, need to include all compared facts. It omitted one segment and sign errors. So it's not correct. Should be MISMATCH? The classification between PARTIAL and MISMATCH: PARTIAL is used when some but not all required values are present. Here some values are present (deposit amounts for four segments) but withdrawal amounts are wrong sign, and one segment missing. So it's partially correct but also contains incorrect facts. The guidelines: \"Missing values are PARTIAL or MISMATCH, not MATCH.\" It doesn't specify if incorrect values also lead to PARTIAL or MISMATCH. Usually if some values are wrong, it's MISMATCH. But we need to decide. The pipeline output includes wrong sign, which is a factual error. That likely makes it MISMATCH, because the answer is not correct. However the presence of some correct facts might be considered PARTIAL if they are correct and others missing/incorrect. The examples: They didn't give example of sign error. But rule 2: If ground truth contains a concrete number, pipeline must contain same facts. If not, mark MISMATCH. So for each mismatched fact, it's a mismatch. Since there are mismatches, overall should be MISMATCH, not PARTIAL. The partial is for missing values but not incorrect? The rule says missing values are PARTIAL or MISMATCH, not MATCH. But if there are also incorrect values, it's definitely MISMATCH. So answer: MISMATCH.</reasoning>MISMATCH",
+    "parsed_status": "PARTIAL",
+    "comments": "Evaluated via LLM-only final grader.",
+    "grader_parse_issue": false
+  },
+  "postmortem": {
+    "failure_type": "validator_false_positive",
+    "failure_stage": "",
+    "why_wrong": "",
+    "root_cause": "",
+    "suggested_fix": "",
+    "confidence": null
+  }
+}
