@@ -16,6 +16,7 @@ aop_gpt_oss_120b_runner/
   rdf_id_alias_map.json
   dataset/
     verification_results_v2_sql_correct_train_300.xlsx
+    verification_results_v2_sql_correct_test_142.xlsx
   kg_output_fixed/
     wealth_management_diverse_schema.ttl
     wealth_management_diverse_kg.ttl
@@ -153,6 +154,30 @@ macOS/Linux:
 
 ```bash
 TEST_QUERY_LIMIT=300 TEST_QUERY_OFFSET=0 python firstcheck_gpt_oss_120b_deterministic_json_grading9_1.py
+```
+
+## Run the Test Dataset
+
+The test split is included here:
+
+```text
+dataset/verification_results_v2_sql_correct_test_142.xlsx
+```
+
+Windows PowerShell:
+
+```powershell
+$env:INPUT_SAMPLE_FILE="dataset/verification_results_v2_sql_correct_test_142.xlsx"
+$env:TEST_QUERY_LIMIT="142"
+$env:TEST_QUERY_OFFSET="0"
+$env:REPORT_FILE="pipeline_output/test_142_report.csv"
+python firstcheck_gpt_oss_120b_deterministic_json_grading9_1.py
+```
+
+macOS/Linux:
+
+```bash
+INPUT_SAMPLE_FILE=dataset/verification_results_v2_sql_correct_test_142.xlsx TEST_QUERY_LIMIT=142 TEST_QUERY_OFFSET=0 REPORT_FILE=pipeline_output/test_142_report.csv python firstcheck_gpt_oss_120b_deterministic_json_grading9_1.py
 ```
 
 ## Useful Options
