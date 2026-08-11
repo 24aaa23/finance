@@ -1,0 +1,151 @@
+{
+    "Which investors have average progress_pct below 40, total_holding_gain below 0, net_cash_flow below 0, and risk_pressure_score above 180?": {
+        "total_calls": 30,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 9,
+            "Pre_Scan_Validate": 9
+        }
+    },
+    "Across time_horizon, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "For each rebalancing logic, how many rebalancing actions are present and what is the total amount?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Within investment goals, how do average progress_pct, average shortfall, and average volatility compare by investment_goal?": {
+        "total_calls": 17,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 2,
+            "Validate": 2
+        }
+    },
+    "Which investors have profile category Equity and risk_score above 80?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Filter_Aggregate": 1,
+            "Validate": 1
+        }
+    },
+    "Using the consistency rule that a Hybrid profile category should have at least one Hybrid holding category, which Hybrid-profile investors violate this rule?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "How do profile category counts compare with holding category counts for category values appearing in either table?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 2,
+            "Refine": 1,
+            "Validate": 1
+        }
+    },
+    "What holding sectors appear for investors in the Equity category?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Across risk_tolerance, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?": {
+        "total_calls": 18,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 4,
+            "Pre_Scan_Validate": 4
+        }
+    },
+    "Across time_horizon, how do holding gain, health risk, and diversification compare using three related tables?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "For each cash-flow type, how many distinct investors have that transaction type?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    }
+}

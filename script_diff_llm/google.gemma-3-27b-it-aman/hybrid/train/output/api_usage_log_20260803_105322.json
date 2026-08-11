@@ -1,0 +1,180 @@
+{
+    "Within cash flows, how do transaction count, inflow, outflow, and net cash flow compare by type?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Which investors have average progress_pct below 40, average avg_sharpe_ratio below 0, and risk_score above 70?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 2,
+            "Validate": 1
+        }
+    },
+    "Which investors are comparative outliers with net cash flow above 100000000, average goal progress below 25, risk_score above 70, and scenario change above 20?": {
+        "total_calls": 28,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 5,
+            "Pre_Scan_Validate": 8,
+            "Refine": 3
+        }
+    },
+    "Across risk_tolerance, how do scenario change, goal progress, and volatility compare using three related tables?": {
+        "total_calls": 24,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Link": 1,
+            "Generate": 7,
+            "Pre_Scan_Validate": 7
+        }
+    },
+    "Across risk_tolerance, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Which five investors with average goal progress below 40% and risk above 50 have the highest total Withdrawal amount?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Which investors have risk_pressure_score above 220 and average progress_pct below 40, where risk_pressure_score = risk_score + (100 - liquidity_score) + (100 - diversification_score)?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Filter_Aggregate": 1,
+            "Validate": 1
+        }
+    },
+    "Which investors have average progress_pct below 40, total_holding_gain below 0, and net_cash_flow below 0?": {
+        "total_calls": 19,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Validate": 1
+        }
+    },
+    "Across time_horizon, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?": {
+        "total_calls": 19,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 4,
+            "Refine": 2
+        }
+    },
+    "How does average goal progress compare across investor risk-tolerance groups?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Across time_horizon, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?": {
+        "total_calls": 18,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Validate": 2
+        }
+    },
+    "Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?": {
+        "total_calls": 17,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 2,
+            "Validate": 2
+        }
+    },
+    "Which investors have average goal progress below 30%, risk above 60, Withdrawal amount greater than Deposit amount, and at least one Sell action?": {
+        "total_calls": 17,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3
+        }
+    }
+}

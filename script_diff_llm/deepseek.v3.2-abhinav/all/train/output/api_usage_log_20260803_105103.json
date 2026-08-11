@@ -1,0 +1,709 @@
+{
+    "Across profile segment, how do scenario change, goal progress, and volatility compare using three related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "Across risk_tolerance, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 3
+        }
+    },
+    "Across time_horizon, how do goal progress, health risk, and liquidity compare using three related tables?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 7
+        }
+    },
+    "Using the required holding context rule that category must be present, which holdings have missing category?": {
+        "total_calls": 26,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 1,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 8,
+            "Pre_Scan_Validate": 8,
+            "Validate": 3
+        }
+    },
+    "Across profile segment, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "Across profile segment, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "Which investor profiles are missing both risk tolerance and category?": {
+        "total_calls": 44,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 2,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 13,
+            "Pre_Scan_Validate": 16,
+            "Refine": 3,
+            "Validate": 3
+        }
+    },
+    "Across risk_tolerance, how do rebalancing action amount and gap compare using two related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "For each investor category and cash-flow type, how many investors also have rebalancing actions?": {
+        "total_calls": 32,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 9,
+            "Pre_Scan_Validate": 9,
+            "Validate": 3
+        }
+    },
+    "Across category, how do holding value and holding gain compare using two related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "For each month of 2025, what is the net cash flow for investors whose risk_score is above 70?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "Across cash-flow type, how do rebalancing amount compare using two related tables?": {
+        "total_calls": 40,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 6,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 9,
+            "Pre_Scan_Validate": 9,
+            "Validate": 3
+        }
+    },
+    "How do profile segment counts compare with holding segment counts for segment values appearing in either table?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 6
+        }
+    },
+    "Which Debt-category investors have negative-return holdings and diversification_score below 35?": {
+        "total_calls": 20,
+        "functions": {
+            "Planner_Generate_Chain": 6,
+            "Planner_Rewrite_DAG": 4,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Validate": 1
+        }
+    },
+    "Across profile segment, how do holding gain, health risk, and diversification compare using three related tables?": {
+        "total_calls": 21,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Link": 1,
+            "Query_Spec": 1,
+            "Extract": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Validate": 1,
+            "Filter_Aggregate": 1,
+            "Order_By": 1
+        }
+    },
+    "Across category, how do allocation concentration compare using two related tables?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 3
+        }
+    },
+    "Which investors have total_holding_gain below 0, net_cash_flow below 0, and risk_pressure_score above 180, where risk_pressure_score = risk_score + (100 - liquidity_score) + (100 - diversification_score)?": {
+        "total_calls": 39,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 13,
+            "Pre_Scan_Validate": 15,
+            "Refine": 2
+        }
+    },
+    "Across risk_tolerance, how do scenario change, goal progress, and volatility compare using three related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "Which investors have at least three underfunded investment goals?": {
+        "total_calls": 21,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1,
+            "Filter_Aggregate": 1
+        }
+    },
+    "Across profile category, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "What is the monthly net cash flow for 2025?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 6
+        }
+    },
+    "For each month in the cash-flow table, what is the transaction count and net amount?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 1,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 2,
+            "Validate": 1
+        }
+    },
+    "Across scenario, how do goal shortfall compare using two related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "Which Conservative investors have a risk score above 75?": {
+        "total_calls": 9,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 1,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1
+        }
+    },
+    "Across time_horizon, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "Across profile segment, how do goal progress, health risk, and liquidity compare using three related tables?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 3
+        }
+    },
+    "Across profile category, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "Across time_horizon, how do scenario allocation change compare using two related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "Across time_horizon, how do scenario change, goal progress, and volatility compare using three related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "Which investors have at least one underfunded goal and a sector allocation above 35%?": {
+        "total_calls": 35,
+        "functions": {
+            "Planner_Generate_Chain": 6,
+            "Planner_Rewrite_DAG": 5,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 9,
+            "Pre_Scan_Validate": 9,
+            "Validate": 3
+        }
+    },
+    "Across profile category, how do goal progress, health risk, and liquidity compare using three related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "Which Long-term investors have Retirement Planning goals, Healthcare holdings, and diversification below 50?": {
+        "total_calls": 21,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1,
+            "Filter_Aggregate": 1
+        }
+    },
+    "Across profile category, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 3
+        }
+    },
+    "Across risk_tolerance, how do goal progress, health risk, and liquidity compare using three related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "Which investors combine risk_score above 50, liquidity_score below 30, negative-return holdings, allocation_pct above 20, and Withdrawal cash flows?": {
+        "total_calls": 20,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Which investors have negative total_holding_gain, positive total shortfall, net_cash_flow below 0, and liquidity_score below 30?": {
+        "total_calls": 24,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 2,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 5,
+            "Pre_Scan_Validate": 7,
+            "Refine": 2
+        }
+    },
+    "Across time_horizon, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?": {
+        "total_calls": 27,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Validate": 1,
+            "Link": 1,
+            "Filter_Aggregate": 1,
+            "Order_By": 1
+        }
+    },
+    "Across risk_tolerance, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "What are the risk, liquidity, and diversification scores of investor INV-003?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 3
+        }
+    },
+    "Across time_horizon, how do cash-flow inflow and outflow compare using two related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "Across cash source, how do scenario change compare using two related tables?": {
+        "total_calls": 8,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 2,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1
+        }
+    },
+    "Which investors have holdings with returns_pct below 0 and goals with shortfall above 1000000?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 6
+        }
+    },
+    "Which investors have goal progress below 20% and a portfolio risk score above 70?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 3
+        }
+    },
+    "Which investors have Deposit cash-flow transactions and goals with shortfall above 1000000?": {
+        "total_calls": 38,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 9,
+            "Pre_Scan_Validate": 9,
+            "Validate": 3
+        }
+    },
+    "For each profile category, what is the 2025 monthly net cash flow?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 6
+        }
+    },
+    "Across investment_goal, how do cash flow compare using two related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "How do profile category counts compare with holding category counts for category values appearing in either table?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 3
+        }
+    },
+    "What was the monthly cash-flow total for each risk-tolerance group during 2025?": {
+        "total_calls": 28,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 2,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 7,
+            "Pre_Scan_Validate": 9,
+            "Refine": 2
+        }
+    },
+    "Which investors have underfunded goals, negative-return holdings, allocation_pct above 30, and risk_score above 70?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Across time_horizon, how do allocation concentration, holding return, and holding value compare using three related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "Across time_horizon, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "Across risk_tolerance, how do allocation concentration, holding return, and holding value compare using three related tables?": {
+        "total_calls": 20,
+        "functions": {
+            "Planner_Generate_Chain": 6,
+            "Planner_Rewrite_DAG": 5,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 2,
+            "Validate": 1
+        }
+    },
+    "Across time_horizon, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?": {
+        "total_calls": 32,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 6,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 6,
+            "Pre_Scan_Validate": 6,
+            "Validate": 2
+        }
+    },
+    "How do total_holding_gain, net_cash_flow, avg_progress_pct, and avg_risk_score compare by investor category?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "Across risk_tolerance, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?": {
+        "total_calls": 26,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 6,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Validate": 1
+        }
+    },
+    "Which holdings have complete reference classification but missing numeric returns_pct?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 1,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 2,
+            "Validate": 1
+        }
+    },
+    "Across investment_type, how do health scores compare using two related tables?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 7
+        }
+    },
+    "Across risk_tolerance, how do goal progress and shortfall compare using two related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "Across risk_tolerance, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "How do Deposit and Withdrawal totals compare across profile segments?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 6
+        }
+    },
+    "What are the date, type, amount, and source of cash flow 000d1e47-195d-4b5a-96d9-0ea20b081a36?": {
+        "total_calls": 10,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 1,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Across time_horizon, how do holding gain, health risk, and diversification compare using three related tables?": {
+        "total_calls": 18,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 9
+        }
+    },
+    "Across sector allocation, how do holding returns compare using two related tables?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 6
+        }
+    },
+    "Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "Which investors have Withdrawal amount greater than Deposit amount, liquidity_score below 30, and negative-return holdings?": {
+        "total_calls": 26,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 7,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3
+        }
+    },
+    "Across risk_tolerance, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?": {
+        "total_calls": 27,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 7,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Validate": 1
+        }
+    },
+    "Which investors are missing profile risk-tolerance context but still have portfolio-health and holding records?": {
+        "total_calls": 29,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 2,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 9,
+            "Pre_Scan_Validate": 9,
+            "Validate": 3
+        }
+    },
+    "Across time_horizon, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?": {
+        "total_calls": 22,
+        "functions": {
+            "Planner_Generate_Chain": 6,
+            "Planner_Rewrite_DAG": 5,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 3,
+            "Refine": 1,
+            "Validate": 1
+        }
+    },
+    "Which investors have Tax Refund transactions after 2026-04-28, Growth goals, Tactical actions, and Bull Market scenarios?": {
+        "total_calls": 11,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 2,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1
+        }
+    },
+    "Using the allowed time_horizon values Short-term, Medium-term, and Long-term, which investor profiles have a time_horizon outside the allowed list?": {
+        "total_calls": 21,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3
+        }
+    },
+    "Across profile category, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "For each investor category, what are the number of holdings and number of distinct investors represented?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 7
+        }
+    }
+}

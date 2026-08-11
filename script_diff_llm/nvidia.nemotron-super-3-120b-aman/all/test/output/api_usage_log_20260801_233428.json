@@ -1,0 +1,91 @@
+{
+    "How do total_holding_gain, net_cash_flow, avg_progress_pct, and avg_risk_score compare by investor category?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 3
+        }
+    },
+    "Which investors have at least one goal with a shortfall above 100 million?": {
+        "total_calls": 11,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 2,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Which Long-term investors have at least four investment goals?": {
+        "total_calls": 12,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 3
+        }
+    },
+    "Which investors have a sector allocation above 50% and a diversification score below 25?": {
+        "total_calls": 20,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Across profile category, how do holding gain, health risk, and diversification compare using three related tables?": {
+        "total_calls": 20,
+        "functions": {
+            "Planner_Generate_Chain": 6,
+            "Planner_Rewrite_DAG": 4,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Validate": 1
+        }
+    },
+    "How do Deposit and Withdrawal totals compare across profile segments?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 4
+        }
+    },
+    "Across profile category, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?": {
+        "total_calls": 32,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 6,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 5,
+            "Pre_Scan_Validate": 6,
+            "Refine": 1,
+            "Validate": 1
+        }
+    },
+    "Across segment, how do health scores compare using two related tables?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    },
+    "For each investor category, what are the number of holdings and number of distinct investors represented?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 9,
+            "Planner_Rewrite_DAG": 5
+        }
+    }
+}

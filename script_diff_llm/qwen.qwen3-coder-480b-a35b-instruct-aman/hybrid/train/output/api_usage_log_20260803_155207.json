@@ -1,0 +1,70 @@
+{
+    "Using the rule that an investor should have both complete profile context and at least one holding matching their profile segment, which investors fail either condition?": {
+        "total_calls": 14,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Across profile category, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 2,
+            "Validate": 2
+        }
+    },
+    "Across risk_tolerance, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 2,
+            "Refine": 1,
+            "Validate": 1
+        }
+    },
+    "Across time_horizon, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?": {
+        "total_calls": 13,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 1,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?": {
+        "total_calls": 31,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 9,
+            "Pre_Scan_Validate": 9,
+            "Validate": 3
+        }
+    }
+}

@@ -1,0 +1,51 @@
+"Split","ExitCode","Seconds","Csv","Status","FailureStage","Result","Question","OutputFile","Tail"
+"train","0","41.58","CSV_WRITTEN","PRE_SCAN_ERROR","Pre_Scan_Validate","Generated SPARQL was not executable after 3 Pre_Scan_Validate attempt(s): unsafe unjoined graph pattern.","Which ten investors have the highest five-table risk-pressure score where score = risk score + allocation concentration + goal volatility - liquidity + scenario change?","C:\Users\AMAN KUMAR SINGH\Desktop\financial\aop_generate_500_multitable\script_checking\script_diff_llm\deepseek.v3.1-aman\all\train\output\smoke_deepseek_v3_1_all_train_fresh.csv","[WARN] Invalid JSON response from Query_Spec; using default. Response preview: "",     ""type"": ""conversation"",     ""user"": ""assistant"" }
+ Query_Spec completed.
+Executing: [Generate] at Node 'n4'...
+
+[DEBUG] Retrieve passed these classes: ['Investor', 'PortfolioHealth', 'SectorAllocation', 'InvestmentGoal', 'ScenarioRebalancing']
+ Generate completed.
+Executing: [Pre_Scan_Validate] at Node 'n5'...
+   [!] Pre_Scan_Validate failed attempt 1 (hard_error): SPARQL implements incorrect formula for risk-pressure score. Query_Spec requires 'risk score + allocation concentration + goal volatility - liquidity + scenario change' but SPARQL uses 'riskScore + allocationPct + avgVolatilityPct - liquidityScore + scenarioChange'. The terms 'allocation concentration' and 'allocationPct' are not equivalent - allocation concentration should be a measure of portfolio concentration, not individual allocation percentages. SPARQL also incorrectly calculates scenario change as newAllocationPct - currentAllocationPct instead of a proper scenario change metric.
+
+[DEBUG] Retrieve passed these classes: ['Investor', 'PortfolioHealth', 'SectorAllocation', 'InvestmentGoal', 'ScenarioRebalancing']
+   [+] SPARQL regenerated after Pre_Scan_Validate failure.
+   [!] Pre_Scan_Validate failed attempt 2 (hard_error): SPARQL contains multiple critical errors: 1) The subquery for allocationConcentration is syntactically invalid (missing closing bracket, misplaced GROUP BY), 2) The subquery creates a Cartesian product by not joining with the main query's investor context, 3) The scenarioChange calculation uses variables that are not properly scoped to the investor, 4) Missing proper aggregation for measures that require it
+
+[DEBUG] Retrieve passed these classes: ['Investor', 'PortfolioHealth', 'SectorAllocation', 'InvestmentGoal', 'ScenarioRebalancing']
+   [+] SPARQL regenerated after Pre_Scan_Validate failure.
+   [!] Pre_Scan_Validate failed attempt 3 (hard_error): SPARQL contains multiple critical errors: 1) Missing required class SectorAllocation in main query pattern (subquery doesn't satisfy class requirement), 2) Cartesian product created between subquery and main query patterns due to missing join condition, 3) Incorrect calculation of allocation concentration (SUM(xsd:decimal(?allocationPct) * SUM(xsd:decimal(?allocationPct)) instead of proper HHI formula), 4) Missing grouping for scenario change calculation which will cause aggregation error
+   [!] Pre_Scan_Validate found hard stop: unsafe unjoined graph pattern.
+--- Execution Complete (Short-circuited) ---
+Processed 1/1 this run (1/1 total window): PRE_SCAN_ERROR in 26.033s
+
+[SUCCESS] Final report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\aop_generate_500_multitable\script_checking\script_diff_llm\deepseek.v3.1-aman\all\train\output\smoke_deepseek_v3_1_all_train_fresh.csv.
+[TIME] Completed query rows in report: 1
+[TIME] Total per-query generation time: 26.03 seconds (0.43 minutes)
+[TIME] Average per-query time: 26.03 seconds
+[TIME] Wall-clock time for this run: 36.67 seconds (0.61 minutes)"
+"test","0","37.96","CSV_WRITTEN","SCAN_ERROR","Scan","A database error prevented data retrieval.","What was the monthly cash-flow total for each risk-tolerance group during 2025?","C:\Users\AMAN KUMAR SINGH\Desktop\financial\aop_generate_500_multitable\script_checking\script_diff_llm\deepseek.v3.1-aman\all\test\output\smoke_deepseek_v3_1_all_test_fresh.csv","      ?cashFlow rdf:type wm:CashFlow ;
+                wm:amount ?amount ;
+                wm:date ?date ;
+                wm:cashFlowOfInvestor ?investor .
+      FILTER(CONTAINS(STR(?date), ""2025""))
+    }
+    GROUP BY ?investor (SUBSTR(STR(?date), 1, 7))
+  }
+  ?investor rdf:type wm:Investor ;
+            wm:riskTolerance ?riskToleranceRaw .
+  BIND(COALESCE(STR(?riskToleranceRaw), ""NULL"") AS ?risk_tolerance_group)
+}
+GROUP BY ?risk_tolerance_group ?month
+
+   [!] SPARQL Error Caught: Fuseki HTTP 400: Parse error: Non-group key variable in SELECT: ?date in expression (substr (str ?date) 1 7)
+
+   [!] Max retries reached for Scan. Short-circuiting directly to Explain.
+--- Execution Complete (Short-circuited) ---
+Processed 1/1 this run (1/1 total window): SCAN_ERROR in 30.064s
+
+[SUCCESS] Final report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\aop_generate_500_multitable\script_checking\script_diff_llm\deepseek.v3.1-aman\all\test\output\smoke_deepseek_v3_1_all_test_fresh.csv.
+[TIME] Completed query rows in report: 1
+[TIME] Total per-query generation time: 30.06 seconds (0.50 minutes)
+[TIME] Average per-query time: 30.06 seconds
+[TIME] Wall-clock time for this run: 33.62 seconds (0.56 minutes)"

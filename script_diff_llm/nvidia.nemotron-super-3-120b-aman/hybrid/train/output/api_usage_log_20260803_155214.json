@@ -1,0 +1,145 @@
+{
+    "For each cash-flow type, what is the transaction count and net amount?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "How many rebalancing actions use each rebalancing logic?": {
+        "total_calls": 15,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Which five market scenarios have the largest average absolute allocation change?": {
+        "total_calls": 17,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Filter_Aggregate": 1,
+            "Order_By": 1,
+            "Generate": 1,
+            "Pre_Scan_Validate": 1,
+            "Validate": 1
+        }
+    },
+    "Which investors have total_holding_gain below 0, net_cash_flow below 0, and risk_pressure_score above 180, where risk_pressure_score = risk_score + (100 - liquidity_score) + (100 - diversification_score)?": {
+        "total_calls": 24,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 6,
+            "Pre_Scan_Validate": 6,
+            "Validate": 1
+        }
+    },
+    "For each rebalancing logic, how many rebalancing actions are present and what is the total amount?": {
+        "total_calls": 19,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Filter_Aggregate": 1,
+            "Validate": 1
+        }
+    },
+    "Across time_horizon, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?": {
+        "total_calls": 18,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Filter_Aggregate": 1,
+            "Order_By": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 2,
+            "Validate": 1
+        }
+    },
+    "How do total_holding_gain, net_cash_flow, avg_progress_pct, and avg_risk_score compare by investor category?": {
+        "total_calls": 25,
+        "functions": {
+            "Planner_Generate_Chain": 6,
+            "Planner_Rewrite_DAG": 6,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Validate": 1
+        }
+    },
+    "Which five investors have the highest 2025 cash-flow amount among those whose average goal progress is below 40%?": {
+        "total_calls": 16,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 2,
+            "Validate": 1
+        }
+    },
+    "Across risk_tolerance, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?": {
+        "total_calls": 17,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 2,
+            "Retrieve": 1,
+            "Query_Spec": 1,
+            "Generate": 3,
+            "Pre_Scan_Validate": 3,
+            "Validate": 1
+        }
+    },
+    "Which ten investors with underfunded goals and negative-return holdings have the highest risk_score?": {
+        "total_calls": 17,
+        "functions": {
+            "Planner_Generate_Chain": 3,
+            "Planner_Rewrite_DAG": 3,
+            "Planner_Evaluate_DAG": 3,
+            "Retrieve": 1,
+            "Classify": 1,
+            "Query_Spec": 1,
+            "Generate": 2,
+            "Pre_Scan_Validate": 2,
+            "Validate": 1
+        }
+    }
+}
