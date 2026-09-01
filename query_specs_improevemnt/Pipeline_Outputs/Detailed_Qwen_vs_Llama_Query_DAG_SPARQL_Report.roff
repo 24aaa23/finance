@@ -1,0 +1,435 @@
+.po 0.55i
+.ll 7.15i
+.ps 10.3
+.vs 12.8
+.fam H
+.ce
+.ft B
+Detailed Qwen vs Llama Query, DAG, and SPARQL Comparison Report
+.br
+.ft R
+.ce
+Files used: Pipeline_Retest_Report_qwen_all.csv and Pipeline_Retest_Report_llama_all.csv
+.br
+.ce
+Report date: 10 June 2026
+.br
+.sp
+.sp
+.ne 5
+.ft B
+1. Executive Summary
+.br
+.ft R
+This report uses only the two retest CSV files supplied by the user. It compares final
+.br
+answer correctness, likely wrong MATCH labels, DAG/operator sequence quality, SPARQL
+.br
+generation quality, scan reliability, and per-query winners.
+.br
+Main conclusion: Qwen is stronger overall. It has many more MATCH answers, many more
+.br
+MATCH+PARTIAL answers, better head-to-head answer results, and better SPARQL/scan
+.br
+reliability. Llama has a few individual wins but is mostly weaker in this retest.
+.br
+.sp
+.ne 5
+.ft B
+2. Answer Correctness Counts
+.br
+.ft R
+Qwen: total 142; MATCH 52 (36.6%); PARTIAL 23 (16.2%); MISMATCH 60 (42.3%); CRASH 7
+.br
+(4.9%); MATCH+PARTIAL 75 (52.8%).
+.br
+Llama: total 143; MATCH 12 (8.4%); PARTIAL 13 (9.1%); MISMATCH 112 (78.3%); CRASH 6
+.br
+(4.2%); MATCH+PARTIAL 25 (17.5%).
+.br
+Head-to-head on shared question occurrences:
+.br
+- Tie: 76 (53.5%)
+.br
+- Qwen: 62 (43.7%)
+.br
+- Llama: 4 (2.8%)
+.br
+Status pair counts:
+.br
+- Qwen MISMATCH vs Llama MISMATCH: 58
+.br
+- Qwen MATCH vs Llama MISMATCH: 30
+.br
+- Qwen PARTIAL vs Llama MISMATCH: 21
+.br
+- Qwen MATCH vs Llama MATCH: 12
+.br
+- Qwen MATCH vs Llama PARTIAL: 10
+.br
+- Qwen CRASH vs Llama CRASH: 4
+.br
+- Qwen CRASH vs Llama MISMATCH: 3
+.br
+- Qwen PARTIAL vs Llama PARTIAL: 2
+.br
+- Qwen MISMATCH vs Llama CRASH: 1
+.br
+- Qwen MISMATCH vs Llama PARTIAL: 1
+.br
+.sp
+.ne 5
+.ft B
+3. Checking Whether MATCH Is Actually Correct
+.br
+.ft R
+I created a per-query audit CSV. For JSON/numeric ground truths, expected values must
+.br
+appear in the answer or scan raw rows. For no-data ground truths, answers must clearly
+.br
+say no data/no rows/no rule. Zero answers for no-data ground truth are marked
+.br
+NEEDS_REVIEW because zero is only safe for count questions.
+.br
+Qwen audit verdicts: WRONG=64, CORRECT=26, UNDER_LABELLED=14, PARTIAL_OR_WRONG=13,
+.br
+PARTIAL_OK=13, NEEDS_REVIEW=12
+.br
+Llama audit verdicts: WRONG=115, CORRECT=11, NEEDS_REVIEW=9, UNDER_LABELLED=4,
+.br
+PARTIAL_OR_WRONG=3, PARTIAL_OK=1
+.br
+Potential wrong/review MATCH labels found: 27 total. These rows are listed in
+.br
+Detailed_Qwen_vs_Llama_Per_Query_Audit.csv.
+.br
+Review example (Qwen): Across the entire investor database, how many Gold holdings does
+.br
+investor INV-005 hold? | GT: There is no data in raw_data_sample to answer this query. |
+.br
+Answer: Investor INV-005 holds 0 Gold holdings. | Audit: NEEDS_REVIEW.
+.br
+Review example (Qwen): Across the entire investor database, how many investors affected
+.br
+by the Interest Rate Hike scenario have a ... | GT: There is no business rule/data to
+.br
+calculate this from raw_data_sample. | Answer: No investors affected by the Interest
+.br
+Rate Hike scenario have a Moderate portfolio health status. | Audit: WRONG.
+.br
+Review example (Qwen): Can you tell me what the average holding duration in days for
+.br
+investor INV-012? | GT: There is no data in raw_data_sample to answer this query. |
+.br
+Answer: A database error prevented data retrieval. | Audit: WRONG.
+.br
+Review example (Qwen): Can you tell me what the total current value of ETF holdings for
+.br
+investor INV-010? | GT: There is no data in raw_data_sample to answer this query. |
+.br
+Answer: The total current value of ETF holdings for investor INV-010 is 0. | Audit:
+.br
+NEEDS_REVIEW.
+.br
+Review example (Qwen): Could you show me total Lump Sum investments made per investor
+.br
+across all time.? | GT: (no rows returned) | Answer: Deepak Sharma has made total Lump
+.br
+Sum investments of 35656852 across all time. | Audit: WRONG.
+.br
+Review example (Qwen): How many Redemption transactions has investor INV-008 made? | GT:
+.br
+There is no data in raw_data_sample to answer this query. | Answer: Investor INV-008 has
+.br
+made 0 Redemption transactions. | Audit: NEEDS_REVIEW.
+.br
+Review example (Qwen): How many holdings does investor INV-015 have in total? | GT:
+.br
+There is no data in raw_data_sample to answer this query. | Answer: Investor INV-015 has
+.br
+a total of 0 holdings. | Audit: NEEDS_REVIEW.
+.br
+Review example (Qwen): How many investors affected by the Interest Rate Hike scenario
+.br
+have an At Risk portfolio health status? | GT: There is no business rule/data to
+.br
+calculate this from raw_data_sample. | Answer: No investors affected by the Interest
+.br
+Rate Hike scenario have an At Risk portfolio health status. | Audit: WRONG.
+.br
+.sp
+.ne 5
+.ft B
+4. DAG / Operator Sequence Strength
+.br
+.ft R
+DAG quality was scored simply: one point each for Retrieve, Generate, Scan, Validate,
+.br
+and Explain appearing in the planned sequence. This checks pipeline completeness, not
+.br
+semantic correctness.
+.br
+Qwen: average DAG completeness score 4.81/5.
+.br
+Llama: average DAG completeness score 4.86/5.
+.br
+DAG head-to-head winner Tie: 139 (97.9%)
+.br
+DAG head-to-head winner Llama: 3 (2.1%)
+.br
+Interpretation: both models usually create plausible DAGs. Qwen does not win by DAG
+.br
+shape alone; it wins because its generated query and answer survive later stages more
+.br
+often.
+.br
+.sp
+.ne 5
+.ft B
+5. SPARQL / Scan Generation Strength
+.br
+.ft R
+SPARQL quality was scored from generated query presence, SELECT/PREFIX shape, scan
+.br
+success, no unknown terms, and scan error absence. This captures practical query
+.br
+generation quality better than DAG shape alone.
+.br
+Qwen: average SPARQL/scan score 4.32/5; scan success 117; scan error 18; rows with
+.br
+unknown terms 15.
+.br
+Llama: average SPARQL/scan score 2.67/5; scan success 60; scan error 77; rows with
+.br
+unknown terms 78.
+.br
+SPARQL head-to-head winner Qwen: 79 (55.6%)
+.br
+SPARQL head-to-head winner Tie: 53 (37.3%)
+.br
+SPARQL head-to-head winner Llama: 10 (7.0%)
+.br
+Interpretation: Qwen is much stronger at producing SPARQL that reaches scan success.
+.br
+Llama has many more scan errors and many more rows with unknown RDF terms.
+.br
+.sp
+.ne 5
+.ft B
+6. Failure Pattern Comparison
+.br
+.ft R
+Qwen failure stages: blank=67, Validate=51, Scan=17, Exception=7
+.br
+Llama failure stages: Scan=55, Validate=49, blank=33, Exception=6
+.br
+Qwen failures are often validation-stage or specific crashes. Llama failures are more
+.br
+heavily scan-stage, meaning the generated SPARQL often cannot execute correctly against
+.br
+the graph.
+.br
+.sp
+.ne 5
+.ft B
+7. Variant / Repeated Query Check
+.br
+.ft R
+Qwen: 12 exact repeated questions, 12 extra repeated rows, 0 repeated questions with
+.br
+mixed statuses.
+.br
+Llama: 12 exact repeated questions, 12 extra repeated rows, 0 repeated questions with
+.br
+mixed statuses.
+.br
+Repeated queries are internally consistent within each model, but Qwen and Llama often
+.br
+differ on the same repeated query.
+.br
+.sp
+.ne 5
+.ft B
+8. Representative Query Examples
+.br
+.ft R
+.ft B
+Qwen answer-winner examples
+.br
+.ft R
+Question: Across the entire investor database, how many Gold holdings does investor
+.br
+INV-005 hold?
+.br
+Ground Truth: There is no data in raw_data_sample to answer this query.
+.br
+Qwen (MATCH, audit NEEDS_REVIEW): Investor INV-005 holds 0 Gold holdings.
+.br
+Llama (PARTIAL, audit NEEDS_REVIEW): Investor INV-005 holds 0 Gold holdings across the
+.br
+entire investor database.
+.br
+.sp
+Question: Across the entire investor database, how many investors affected by the
+.br
+Interest Rate Hike scenario have a Moderate p...
+.br
+Ground Truth: There is no business rule/data to calculate this from raw_data_sample.
+.br
+Qwen (MATCH, audit WRONG): No investors affected by the Interest Rate Hike scenario have
+.br
+a Moderate portfolio health status.
+.br
+Llama (PARTIAL, audit NEEDS_REVIEW): There are 0 investors affected by the Interest Rate
+.br
+Hike scenario with a Moderate portfolio health status.
+.br
+.sp
+Question: Across the portfolio database, list all redemption events for investor inv-008
+.br
+with dates and amounts.?
+.br
+Ground Truth: There is no data in raw_data_sample to answer this query.
+.br
+Qwen (MATCH, audit CORRECT): No data was found in the knowledge graph. The requested
+.br
+entity may not exist.
+.br
+Llama (MISMATCH, audit WRONG): A database error prevented data retrieval.
+.br
+.sp
+Question: Among all investors, which one holds the highest total Gold investment value?
+.br
+Ground Truth: (no rows returned)
+.br
+Qwen (MATCH, audit CORRECT): No data was found in the knowledge graph. The requested
+.br
+entity may not exist.
+.br
+Llama (PARTIAL, audit WRONG): The investor with the highest total Gold investment value
+.br
+is INV001 with a value of 35,656,852.
+.br
+.sp
+.ft B
+Llama answer-winner examples
+.br
+.ft R
+Question: Compare the preferred sector in the investor's profile to the sector with the
+.br
+highest allocation percentage in their ...
+.br
+Ground Truth: {"investor_id": "INV-001", "stated_sector_focus": "Government, Gold,
+.br
+Debt", "highest_actual_sector": "Priva...
+.br
+Qwen (CRASH, audit WRONG): ERROR: Operator Compare not found in registry!
+.br
+Llama (MISMATCH, audit WRONG): No data was found in the knowledge graph. The requested
+.br
+entity may not exist.
+.br
+.sp
+Question: Summarise the total cash flow amount for each month for investor INV003.?
+.br
+Ground Truth: [{"transaction_month": "2023-04", "total_cash_flow": 5000}]
+.br
+Qwen (MISMATCH, audit WRONG): A database error prevented data retrieval.
+.br
+Llama (PARTIAL, audit UNDER_LABELLED): For investor INV003, the total cash flow amount
+.br
+for April 2023 is $5000.
+.br
+.sp
+Question: What was the total investment cost made in 2022?
+.br
+Ground Truth: 30560651
+.br
+Qwen (CRASH, audit WRONG): ERROR: Request timed out.
+.br
+Llama (MISMATCH, audit WRONG): The total investment cost made in 2022 was $0.
+.br
+.sp
+Question: Which investors have zero dividend income from all their holdings?
+.br
+Ground Truth: [{"investor_id": "INV-002", "investor_name": "Neha Sharma 2"},
+.br
+{"investor_id": "INV-003", "investor_name": ...
+.br
+Qwen (CRASH, audit WRONG): ERROR: Request timed out.
+.br
+Llama (MISMATCH, audit WRONG): A database error prevented data retrieval.
+.br
+.sp
+.ft B
+Tie answer-winner examples
+.br
+.ft R
+Question: Across the portfolio database, what was the total cash inflow from deposits
+.br
+and sip contributions in the last 12 months?
+.br
+Ground Truth: 0
+.br
+Qwen (MISMATCH, audit WRONG): A database error prevented data retrieval.
+.br
+Llama (MISMATCH, audit UNDER_LABELLED): No data was found in the knowledge graph. The
+.br
+requested entity may not exist.
+.br
+.sp
+Question: Among all investors, which ones have not purchased any new holdings in the
+.br
+last 12 months?
+.br
+Ground Truth: [{"investor_id": "INV-001", "investor_name": "Deepak Sharma"},
+.br
+{"investor_id": "INV-002", "investor_name": ...
+.br
+Qwen (MISMATCH, audit WRONG): A database error prevented data retrieval.
+.br
+Llama (MISMATCH, audit WRONG): A database error prevented data retrieval.
+.br
+.sp
+Question: Among all investors, which ones hold Private Equity investments?
+.br
+Ground Truth: [{"investor_id": "INV-001", "investor_name": "Deepak Sharma"}]
+.br
+Qwen (MISMATCH, audit WRONG): No data was found in the knowledge graph. The requested
+.br
+entity may not exist.
+.br
+Llama (MISMATCH, audit WRONG): A database error prevented data retrieval.
+.br
+.sp
+Question: Among all investors, who has the longest average holding duration across all
+.br
+investors?
+.br
+Ground Truth: {"investor_id": "INV-001", "investor_name": "Deepak Sharma",
+.br
+"average_holding_duration_days": 1359.1}
+.br
+Qwen (MISMATCH, audit WRONG): A database error prevented data retrieval.
+.br
+Llama (MISMATCH, audit WRONG): A database error prevented data retrieval.
+.br
+.sp
+.sp
+.ne 5
+.ft B
+9. Final Conclusion
+.br
+.ft R
+Qwen is better for this financial query pipeline. Its strengths are higher answer
+.br
+correctness, more usable partial answers, stronger SPARQL/scan performance, and fewer
+.br
+scan-stage failures. Llama can still produce a plausible DAG, but its SPARQL execution
+.br
+and final factual correctness are much weaker in this retest.
+.br
+Use the PDF for easy explanation and the per-query audit CSV to check every query one by
+.br
+one.
+.br

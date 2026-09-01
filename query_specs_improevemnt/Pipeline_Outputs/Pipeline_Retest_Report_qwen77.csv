@@ -1,0 +1,269 @@
+Question,Ground Truth,New Pipeline Result,New Status,Old Status,Comparison / Comments,DAG Sequence,AOP Operator Sequence,Retrieved Classes,Generated SPARQL,Scan Status,Scan Row Count,Scan Error,Validation Is Valid,Validation Reason,Self Heal Attempts,Short Circuit Stage,Failure Stage
+"Given all the data available, which investment type generates the highest average dividend income?","{""investment_type"": ""Corporate Bond"", ""average_dividends"": 7290}",The investment type that generates the highest average dividend income is not determinable based on the provided data.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Classify -> Generate -> Scan -> Validate -> Filter_Aggregate -> Order_By -> Extract -> Explain,Retrieve -> Classify -> Generate -> Scan -> Validate -> Filter_Aggregate -> Order_By -> Extract -> Explain,"[""InvestmentGoalContext_InvestmentGoal"", ""PortfolioHolding_Dividends""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investment_type (AVG(xsd:decimal(?dividends)) AS ?average_dividend_income)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentTypeLiteral ?investment_type ;
+           ex:dividends ?dividends .
+}
+GROUP BY ?investment_type
+ORDER BY DESC(?average_dividend_income)
+LIMIT 1",success,1,,True,,0,,
+What sector has the highest allocation percentage in investor INV-001's actual portfolio?,"{""sector"": ""Private Equity"", ""allocation_pct"": 42}",No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""SectorAllocation_Sector""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sector (MAX(xsd:decimal(?allocationPercentage)) AS ?highestAllocation)
+WHERE {
+  ex:INV001 ex:hasSectorAllocation ?allocation .
+  ?allocation a ex:SectorAllocation ;
+              ex:sectorName ?sector ;
+              ex:allocationPercentage ?allocationPercentage .
+}
+GROUP BY ?sector
+ORDER BY DESC(?highestAllocation)
+LIMIT 1",success,0,,,,2,Validate,Validate
+Provide the count of rebalancing actions have an Underweight drift direction?,1,There is 1 rebalancing action with an Underweight drift direction.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""RebalancingAction""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?rebalancingAction) AS ?count)
+WHERE {
+  ?rebalancingAction a ex:RebalancingAction ;
+                     ex:currentAllocationPct ?currentAllocationPct ;
+                     ex:targetAllocationPct ?targetAllocationPct .
+  FILTER(xsd:decimal(?currentAllocationPct) < xsd:decimal(?targetAllocationPct))
+}",success,1,,True,,0,,
+"Out of all options, which segment (Large Cap, Mid Cap etc.) has the most total invested amount?","{""segment"": ""Private Equity"", ""total_invested_amount"": 11019100}",No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Order_By -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""SegmentContext_Segment"", ""SectorAllocation_SectorId"", ""InvestorProfile_InvestorName"", ""ScenarioRebalancing_NewAllocationPct"", ""AssetClassContext_Category"", ""CashFlow_Type"", ""RiskToleranceContext_RiskTolerance"", ""SectorContext_Sector"", ""PortfolioHolding_Segment"", ""SegmentContext_SegmentId""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?segment (SUM(xsd:decimal(?totalInvestment)) AS ?totalInvestedAmount)
+WHERE {
+  ?allocation a ex:SectorAllocation ;
+              ex:segment ?segment ;
+              ex:totalInvestment ?totalInvestment .
+}
+GROUP BY ?segment
+ORDER BY DESC(?totalInvestedAmount)
+LIMIT 1",success,0,,,,2,Validate,Validate
+Provide the count of Conservative risk profile investors have a portfolio diversification score below 50?,There is no business rule/data to calculate this from raw_data_sample.,There are no Conservative risk profile investors with a portfolio diversification score below 50.,PARTIAL,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile"", ""PortfolioHealth""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?investor) AS ?count)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:riskTolerance ""Conservative"" .
+  
+  ?health a ex:PortfolioHealth ;
+         ex:hasInvestor ?investor ;
+         ex:diversificationScore ?diversificationScore .
+  
+  FILTER(xsd:decimal(?diversificationScore) < 50)
+}",success,1,,True,,0,,
+Which risk profile group has the highest average investment goal target amount?,"{""risk_tolerance"": ""High"", ""average_target_amount"": 1500000}",The risk profile group with the highest average investment goal target amount is not available as there are no results to analyze.,PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Classify -> Math_Compute -> Generate -> Scan -> Validate -> Order_By -> Extract -> Explain,Retrieve -> Classify -> Math_Compute -> Generate -> Scan -> Validate -> Order_By -> Extract -> Explain,"[""InvestmentGoal""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?goalRiskId (AVG(xsd:decimal(?targetAmount)) AS ?avgTargetAmount)
+WHERE {
+  ?investmentGoal a ex:InvestmentGoal ;
+                  ex:goalRiskId ?goalRiskId ;
+                  ex:targetAmount ?targetAmount .
+}
+GROUP BY ?goalRiskId
+ORDER BY DESC(?avgTargetAmount)
+LIMIT 1",success,1,,True,,0,,
+"From the complete wealth management dataset, what was the total investment cost made in 2022?",30560651,There were no investments made in 2022.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Math_Compute -> Explain,Retrieve -> Generate -> Scan -> Validate -> Math_Compute -> Explain,"[""PortfolioHolding"", ""TimeHorizonContext_TimeHorizon""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?cost)) AS ?totalInvestmentCost)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:purchaseDate ?date ;
+           ex:cost ?cost .
+  FILTER(?date >= ""2022-01-01""^^xsd:date && ?date <= ""2022-12-31""^^xsd:date)
+}",success,1,,True,,0,,
+Do you know which investment type generates the lowest average dividend income?,"{""investment_type"": ""Alternative Investment Funds (AIF - Cat I)"", ""average_dividends"": 2753}",The Alternative Investment Funds (AIF - Cat I) investment type generates an average dividend income of 2753.,MATCH,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain,Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain,"[""InvestmentGoalContext_InvestmentGoal"", ""InvestmentTypeContext_InvestmentType""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investment_type (AVG(xsd:decimal(?dividends)) AS ?average_dividend_income)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentTypeLiteral ?investment_type ;
+           ex:dividends ?dividends .
+}
+GROUP BY ?investment_type
+ORDER BY ASC(?average_dividend_income)
+LIMIT 1",success,1,,True,,0,,
+Can you tell me √¢¬Ä¬î list holdings where taxes paid exceeds 10% of the current value.?,(no rows returned),No data was found in the knowledge graph. The requested entity may not exist.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""PortfolioHolding"", ""InvestmentGoal""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?holdingId ?investmentName
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:holdingId ?holdingId ;
+           ex:investmentName ?investmentName ;
+           ex:currentValue ?currentValue ;
+           ex:taxesPaid ?taxesPaid .
+  FILTER (xsd:decimal(?taxesPaid) > xsd:decimal(?currentValue) * 0.1)
+}",success,0,,,,2,Validate,Validate
+"Across the entire investor database, how many investors affected by the Interest Rate Hike scenario have a Moderate portfolio health status?",There is no business rule/data to calculate this from raw_data_sample.,There are 0 investors with a Moderate portfolio health status who were affected by the Interest Rate Hike scenario across the entire investor database.,MATCH,PARTIAL,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""InvestorProfile_InvestorId"", ""ScenarioRebalancing_AffectedAssetsSectors"", ""PortfolioHealth_HealthStatus""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?investor) AS ?numInvestors)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:hasPortfolioHealth ?health .
+  ?health a ex:PortfolioHealth ;
+          ex:healthStatus ""Moderate""^^xsd:string .
+  FILTER EXISTS {
+    ?rebalancing a ex:ScenarioRebalancing ;
+                 ex:affectsInvestor ?investor ;
+                 ex:scenarioName ""Interest Rate Hike""^^xsd:string .
+  }
+}",success,1,,True,,0,,
+"Looking at all available records, what is the largest single cash flow transaction (any type) in the database?","{""cash_flow_id"": ""15a6c830-b586-4c2a-a961-94b2ddce3452"", ""investor_id"": ""INV-001"", ""date"": ""2023-04-01"", ""type"": ""SIP"", ""amount"": 10000, ""source"": ""Gov Bond"", ""notes"": ""Monthly SIP""}","The largest single cash flow transaction in the database is $10,000.",MATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (MAX(xsd:decimal(?amount)) AS ?largestTransactionAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:amount ?amount .
+}",success,1,,True,,0,,
+"Please display total portfolio value grouped by category (Equity, Debt, Hybrid etc.).?","[{""category"": ""Private Equity"", ""total_portfolio_value"": 15028100}, {""category"": ""Equity"", ""total_portfolio_value"": 11703296}, {""category"": ""REIT"", ""total_portfolio_value"": 6269835}, {""category"": ""Bond"", ""total_portfolio_value"": 4616900}, {""category"": ""Debt"", ""total_portfolio_value"": 1030000}]","Here is the final natural language response:
+
+""The total portfolio value by category is as follows: Bond - $4,616,900, Debt - $1,030,000, Private Equity - $15,028,100, Equity - $11,703,296, REIT - $6,269,835.""",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""AssetClassContext_Category"", ""PortfolioHealth_GoalMatchPct""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?category (SUM(xsd:decimal(?currentValue)) AS ?totalPortfolioValue)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:categoryLiteral ?category ;
+           ex:currentValue ?currentValue .
+}
+GROUP BY ?category",success,5,,True,,0,,
+Compare the preferred sector in the investor's profile to the sector with the highest allocation percentage in their actual portfolio for investor INV001.?,"{""investor_id"": ""INV-001"", ""stated_sector_focus"": ""Government, Gold, Debt"", ""highest_actual_sector"": ""Private Equity"", ""highest_allocation_pct"": 42, ""matches_profile_focus"": false}",A database error prevented data retrieval.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Generate -> Scan -> Scan -> Validate -> Compare -> Generate -> Explain,Retrieve -> Generate -> Generate -> Scan,"[""InvestorProfile"", ""SectorAllocation"", ""ScenarioRebalancing""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?preferredSector ?highestAllocationSector
+WHERE {
+  # Get the preferred sector from the investor's profile
+  ex:INV001 ex:sectorFocus ?preferredSector.
+
+  # Get the sector with the highest allocation percentage in their actual portfolio
+  {
+    SELECT ?sectorName AS ?highestAllocationSector (MAX(?allocationPct) AS ?maxAllocation)
+    WHERE {
+      ex:INV001 ex:hasHolding ?holding.
+      ?holding ex:hasSector ?sector.
+      ?sector ex:sectorName ?sectorName.
+      ?holding ex:allocationPct ?allocationPct.
+    }
+  }
+}
+GROUP BY ?preferredSector",,,,,,2,Scan,Scan
+Can you tell me √¢¬Ä¬î does investor inv-001's highest allocated sector match their stated sector focus?,No,No data was found in the knowledge graph. The requested entity may not exist.,MATCH,NO_ANSWER,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""SectorAllocation_SectorId"", ""InvestmentGoalContext_InvestmentGoal"", ""InvestorProfile_SectorFocus""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorFocus ?highestAllocatedSector
+WHERE {
+  ex:INV001 ex:sectorFocus ?sectorFocus .
+  
+  {
+    SELECT (MAX(xsd:decimal(?totalInvestment)) AS ?maxTotalInvestment)
+    WHERE {
+      ?allocation a ex:SectorAllocation ;
+                 ex:hasInvestor ex:INV001 ;
+                 ex:totalInvestment ?totalInvestment .
+    }
+  }
+  
+  {
+    SELECT ?highestAllocatedSector
+    WHERE {
+      ?allocation a ex:SectorAllocation ;
+                 ex:hasInvestor ex:INV001 ;
+                 ex:totalInvestment ?totalInvestment .
+      FILTER(xsd:decimal(?totalInvestment) = ?maxTotalInvestment)
+    }
+  }
+}",success,0,,,,2,Validate,Validate
+What can be found for the maximum total investment amount recorded for each sector in the sector allocation records.?,"[{""sector"": ""Private Equity"", ""max_total_investment"": 15028100}, {""sector"": ""Technology"", ""max_total_investment"": 6917749}, {""sector"": ""Infrastructure"", ""max_total_investment"": 6269835}, {""sector"": ""Automobile"", ""max_total_investment"": 2793077}, {""sector"": ""Healthcare"", ""max_total_investment"": 1992470}, {""sector"": ""Government"", ""max_total_investment"": 1150000}, {""sector"": ""Banking"", ""max_total_investment"": 1030000}, {""sector"": ""Corporate"", ""max_total_investment"": 475621}]","The maximum total investment amount recorded for each sector is as follows: Government - $1,150,000, Technology - $6,917,749, Corporate - $475,621, Automobile - $2,793,077, Private Equity - $15,028,100, Infrastructure - $6,269,835, Healthcare - $1,992,470, Banking - $1,030,000.",PARTIAL,MISMATCH,Evaluated via deterministic fact comparison.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate -> Explain,"[""SectorAllocation""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sector (MAX(xsd:decimal(?totalInvestment)) AS ?maxTotalInvestment)
+WHERE {
+  ?allocation a ex:SectorAllocation ;
+              ex:sectorName ?sector ;
+              ex:totalInvestment ?totalInvestment .
+}
+GROUP BY ?sector",success,8,,True,,0,,
+Can you tell me what the largest single cash flow transaction (any type) in the database?,"{""cash_flow_id"": ""15a6c830-b586-4c2a-a961-94b2ddce3452"", ""investor_id"": ""INV-001"", ""date"": ""2023-04-01"", ""type"": ""SIP"", ""amount"": 10000, ""source"": ""Gov Bond"", ""notes"": ""Monthly SIP""}","The largest single cash flow transaction in the database is unknown, as there are no transactions listed.",MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Order_By -> Extract -> Explain,Retrieve -> Generate -> Scan -> Validate -> Order_By -> Extract -> Explain,"[""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?cashFlowId (MAX(xsd:decimal(?amount)) AS ?largestAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:cashFlowId ?cashFlowId ;
+            ex:amount ?amount .
+}
+GROUP BY ?cashFlowId
+ORDER BY DESC(?largestAmount)
+LIMIT 1",success,1,,True,,0,,
+Show the total SWP (Systematic Withdrawal Plan) amount per investor.?,"[{""investor_id"": ""INV-003"", ""total_swp_amount"": 5000}]",No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""InvestmentGoal"", ""CashFlow""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investor (SUM(xsd:decimal(?amount)) AS ?totalSWPAmount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:hasInvestor ?investor ;
+            ex:cashFlowType ""Systematic Withdrawal Plan"" ;
+            ex:amount ?amount .
+}
+GROUP BY ?investor",success,0,,,,2,Validate,Validate
+Show the count and total amount of Dividend transactions per investor.?,"[{""investor_id"": ""INV-002"", ""dividend_transaction_count"": 1, ""total_dividend_amount"": 2000}]",No data was found in the knowledge graph. The requested entity may not exist.,MISMATCH,MISMATCH,Evaluated via LLM.,Retrieve -> Generate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Scan -> Validate,"[""PortfolioHolding_Dividends"", ""InvestorProfile_InvestorId""]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorId (COUNT(?dividend) AS ?countDividends) (SUM(xsd:decimal(?amount)) AS ?totalAmount)
+WHERE {
+  ?holding a ex:PortfolioHolding_Dividends ;
+           ex:hasInvestor ?investor ;
+           ex:amount ?amount .
+  ?investor ex:investorId ?investorId .
+}
+GROUP BY ?investorId",success,0,,,,2,Validate,Validate

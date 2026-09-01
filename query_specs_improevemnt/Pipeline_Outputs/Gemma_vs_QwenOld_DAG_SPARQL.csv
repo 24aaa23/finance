@@ -1,0 +1,241 @@
+Question,gemma_New Status,gemma_DAG Sequence,gemma_dag_valid,gemma_dag_reason,gemma_Scan Status,gemma_Scan Row Count,gemma_unknown_count,gemma_Unknown Terms,gemma_Failure Stage,gemma_Generated SPARQL,gemma_Scan Raw Rows,qwen_New Status,qwen_DAG Sequence,qwen_dag_valid,qwen_dag_reason,qwen_Scan Status,qwen_Scan Row Count,qwen_unknown_count,qwen_Unknown Terms,qwen_Failure Stage,qwen_Generated SPARQL,qwen_Scan Raw Rows,gemma_generation_score,qwen_generation_score,winner
+"Given all the data available, which investment type generates the highest average dividend income?",PARTIAL,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentTypeName (AVG(xsd:decimal(?dividends)) AS ?avgDividends)
+WHERE {
+  ?holding ex:hasInvestmentType ?type .
+  ?type ex:investmentTypeName ?investmentTypeName .
+  ?holding ex:dividends ?dividends .
+}
+GROUP BY ?investmentTypeName
+ORDER BY DESC(?avgDividends)
+LIMIT 1","[{""investmentTypeName"": ""Coporate Bond"", ""avgDividends"": ""7290""}]",MATCH,Retrieve -> Classify -> Math_Compute -> Generate -> Scan -> Validate -> Explain,True,proper,success,1.0,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentTypeName (AVG(xsd:decimal(?dividends)) AS ?averageDividendIncome)
+WHERE {
+  ?portfolioHolding ex:hasInvestmentType ?investmentType .
+  ?investmentType ex:investmentTypeName ?investmentTypeName .
+  ?portfolioHolding ex:dividends ?dividends .
+}
+GROUP BY ?investmentTypeName
+ORDER BY DESC(?averageDividendIncome)
+LIMIT 1","[{""investmentTypeName"": ""Coporate Bond"", ""averageDividendIncome"": ""7290""}]",6,6,Tie
+What sector has the highest allocation percentage in investor INV-001's actual portfolio?,MISMATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,0,0,[],Validate,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName
+WHERE {
+  ?sa a ex:SectorAllocation ;
+      ex:sectorName ?sectorName ;
+      ex:allocationPct ?allocationPct ;
+      ex:hasInvestor ?ip .
+  ?ip a ex:InvestorProfile ;
+      ex:investorId ?id .
+  FILTER(CONTAINS(LCASE(STR(?id)), ""INV001""))
+}
+ORDER BY DESC(xsd:decimal(?allocationPct))
+LIMIT 1",[],MISMATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,0.0,0,[],Validate,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName (MAX(xsd:decimal(?allocationPct)) AS ?maxAllocationPct)
+WHERE {
+  ?sectorAllocation a ex:SectorAllocation ;
+                     ex:hasInvestor ?investorProfile ;
+                     ex:sectorName ?sectorName ;
+                     ex:allocationPct ?allocationPct .
+  FILTER(CONTAINS(LCASE(STR(?investorProfile)), ""inv-001""))
+}
+GROUP BY ?sectorName
+ORDER BY DESC(?maxAllocationPct)
+LIMIT 1",[],5,5,Tie
+Provide the count of rebalancing actions have an Underweight drift direction?,MISMATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1,2,"[""RebalancingAction_DriftDirection"", ""driftDirection""]",,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?action) AS ?count)
+WHERE {
+  ?action rdf:type ex:RebalancingAction .
+  ?action ex:action ?direction .
+  FILTER(CONTAINS(LCASE(STR(?direction)), ""underweight""))
+}","[{""count"": ""0""}]",MISMATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1.0,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?rebalancingAction) AS ?count)
+WHERE {
+  ?rebalancingAction a ex:RebalancingAction ;
+                     ex:logic ""Underweight"" .
+}","[{""count"": ""0""}]",4,6,Qwen_old
+"Out of all options, which segment (Large Cap, Mid Cap etc.) has the most total invested amount?",MISMATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?segmentName (SUM(xsd:decimal(?cost)) AS ?totalInvestedAmount)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:hasSegment ?segment ;
+           ex:cost ?cost .
+  ?segment ex:segmentName ?segmentName .
+}
+GROUP BY ?segmentName
+ORDER BY DESC(?totalInvestedAmount)
+LIMIT 1","[{""segmentName"": ""Large Cap"", ""totalInvestedAmount"": ""8822850""}]",MISMATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1.0,0,[],Validate,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorName (SUM(xsd:decimal(?totalInvestment)) AS ?totalAmount)
+WHERE {
+  ?allocation a ex:SectorAllocation ;
+              ex:sectorName ?sectorName ;
+              ex:totalInvestment ?totalInvestment .
+}
+GROUP BY ?sectorName
+ORDER BY DESC(?totalAmount)
+LIMIT 1","[{""sectorName"": ""Private Equity"", ""totalAmount"": ""15028100""}]",6,6,Tie
+Provide the count of Conservative risk profile investors have a portfolio diversification score below 50?,MISMATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?investor) AS ?count)
+WHERE {
+  ?health ex:hasInvestor ?investor .
+  ?investor ex:riskTolerance ?riskTolerance .
+  ?health ex:diversificationScore ?scoreStr .
+  FILTER(LCASE(STR(?riskTolerance)) = ""conservative"")
+  FILTER(xsd:decimal(?scoreStr) < 50)
+}","[{""count"": ""0""}]",MATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1.0,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?investor) AS ?count)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:riskTolerance ""Conservative"" .
+  
+  ?portfolioHealth a ex:PortfolioHealth ;
+                   ex:hasInvestor ?investor ;
+                   ex:diversificationScore ?score .
+  
+  FILTER(xsd:decimal(?score) < 50)
+}","[{""count"": ""0""}]",6,6,Tie
+Which risk profile group has the highest average investment goal target amount?,PARTIAL,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskTolerance (AVG(xsd:decimal(?targetAmount)) AS ?avgTargetAmount)
+WHERE {
+  ?profile a ex:InvestorProfile ;
+           ex:riskTolerance ?riskTolerance .
+  ?goal a ex:InvestmentGoal ;
+        ex:targetAmount ?targetAmount .
+  ?profile ex:hasInvestmentGoal ?goal .
+}
+GROUP BY ?riskTolerance
+ORDER BY DESC(?avgTargetAmount)
+LIMIT 1","[{""riskTolerance"": ""High"", ""avgTargetAmount"": ""1500000""}]",PARTIAL,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1.0,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskProfile (AVG(xsd:decimal(?targetAmount)) AS ?averageTargetAmount)
+WHERE {
+  ?investmentGoal ex:hasInvestor ?investorProfile .
+  ?investmentGoal ex:goalRiskId ?riskProfile .
+  ?investmentGoal ex:targetAmount ?targetAmount .
+}
+GROUP BY ?riskProfile
+ORDER BY DESC(?averageTargetAmount)
+LIMIT 1","[{""riskProfile"": ""44b3866e-4285-4987-a809-beb00bfc7653"", ""averageTargetAmount"": ""1500000""}]",6,6,Tie
+"From the complete wealth management dataset, what was the total investment cost made in 2022?",MATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?cost)) AS ?totalInvestmentCost)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:cost ?cost ;
+           ex:purchaseDate ?purchaseDate .
+  FILTER(CONTAINS(LCASE(STR(?purchaseDate)), ""2022""))
+}","[{""totalInvestmentCost"": ""30560651""}]",MISMATCH,Retrieve -> Generate -> Scan -> Validate -> Math_Compute -> Explain,True,proper,success,1.0,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?amount)) AS ?totalInvestmentCost)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:date ?date ;
+            ex:amount ?amount .
+  FILTER(CONTAINS(LCASE(STR(?date)), ""2022""))
+}","[{""totalInvestmentCost"": ""0""}]",6,6,Tie
+Do you know which investment type generates the lowest average dividend income?,MATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,1,0,[],,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentTypeName (AVG(xsd:decimal(?dividends)) AS ?avgDividends)
+WHERE {
+  ?holding ex:hasInvestmentType ?type .
+  ?type ex:investmentTypeName ?investmentTypeName .
+  ?holding ex:dividends ?dividends .
+}
+GROUP BY ?investmentTypeName
+ORDER BY ?avgDividends
+LIMIT 1","[{""investmentTypeName"": ""Alternative Investment Funds (AIF - Cat I)"", ""avgDividends"": ""2753""}]",MISMATCH,Retrieve -> Classify -> Generate -> Scan -> Validate -> Explain,True,proper,success,1.0,0,[],Validate,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentType (AVG(xsd:decimal(?dividend)) AS ?averageDividend)
+WHERE {
+  ?holding ex:investmentTypeLiteral ?investmentType .
+  ?holding ex:dividends ?dividend .
+}
+GROUP BY ?investmentType
+ORDER BY ASC(?averageDividend)
+LIMIT 1","[{""investmentType"": ""Alternative Investment Funds (AIF - Cat I)"", ""averageDividend"": ""2753""}]",6,6,Tie
+Can you tell me √¢¬Ä¬î list holdings where taxes paid exceeds 10% of the current value.?,MATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,0,0,[],Validate,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentName
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentName ?investmentName ;
+           ex:taxesPaid ?taxesPaid ;
+           ex:currentValue ?currentValue .
+  FILTER(xsd:decimal(?taxesPaid) > (xsd:decimal(?currentValue) * 0.1))
+}",[],MATCH,Retrieve -> Generate -> Scan -> Validate -> Explain,True,proper,success,0.0,0,[],Validate,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?holdingId ?investmentName
+WHERE {
+  ?portfolioHolding a ex:PortfolioHolding ;
+                     ex:taxesPaid ?taxesPaid ;
+                     ex:currentValue ?currentValue ;
+                     ex:investmentName ?investmentName ;
+                     ex:holdingId ?holdingId .
+  
+  FILTER (xsd:decimal(?taxesPaid) > xsd:decimal(?currentValue) * 0.1)
+}",[],5,5,Tie

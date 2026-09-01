@@ -1,0 +1,122 @@
+Question,Strict Winner,Reason,Gemma Status,Qwen14 Status,Gemma Output,Qwen14 Output
+"Given all the data available, which investment type has the lowest average cost basis?",Tie,deterministic same MATCH,MATCH,MATCH,The investment type with the lowest average cost basis is Global Equity at 601230.,"The investment type with the lowest average cost basis is Global Equity, with an average cost of 601230."
+"Out of all options, which sector has the highest total taxes paid across all investors?",Tie,deterministic same MATCH,MATCH,MATCH,The Technology sector has the highest total taxes paid at 5789.,"The sector with the highest total taxes paid across all investors is Technology, with a total of 5789 in taxes."
+"For investors pursuing 'Growth' goals, what is the total amount currently recommended for 'Buy' rebalancing actions?",Tie,"strict fallback Gemma=MISMATCH, Qwen14=MISMATCH; LLM MATCH set aside",MISMATCH,MISMATCH,The total amount currently recommended for 'Buy' rebalancing actions for investors pursuing 'Growth' goals is 0.,The total amount currently recommended for 'Buy' rebalancing actions is 0.
+"Considering all investors in the system, which investor bought the most holdings in 2023?",Tie,deterministic same MATCH,MATCH,MATCH,No data was found.,No data was found in the knowledge graph. The requested entity may not exist.
+Display the number of holdings purchased per year per investor.?,Gemma4,"deterministic Gemma=PARTIAL, Qwen14=None",PARTIAL,MISMATCH,Deepak Sharma purchased 10 holdings in 2022.,A database error prevented data retrieval.
+Display the count and total amount of Dividend transactions per investor.?,Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,Neha Sharma 2 has 1 dividend transaction with a total amount of 2000.,Deepak Sharma has 10 Dividend transactions with a total amount of 61420.
+Provide the count of investors have a portfolio diversification score below 50?,Tie,deterministic same MISMATCH,MISMATCH,MISMATCH,The count of investors with a portfolio diversification score below 50 is 0.,No investors have a portfolio diversification score below 50.
+What would be the average dividend cash flow amount per investor?,Gemma4,"deterministic Gemma=PARTIAL, Qwen14=None",PARTIAL,MATCH,The average dividend cash flow amount for investor http://example.org/kg#INV002 is 2000.,The average dividend cash flow amount per investor is 0.
+Which investor has paid the highest total taxes across all holdings?,Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,Deepak Sharma has paid the highest total taxes of 24539.,Deepak Sharma has paid the highest total taxes across all holdings with a total of 24539.
+"Given all the data available, which investment type has the lowest average taxes paid per holding?",Tie,deterministic same MATCH,MATCH,MATCH,"The investment type with the lowest average taxes paid per holding is Equity, with an average tax of 1998.",Equity has the lowest average taxes paid per holding at 1998.
+"Across the portfolio database, what was the total cash inflow from deposits and sip contributions in the last 12 months?",Gemma4,"deterministic Gemma=MATCH, Qwen14=None",MATCH,MISMATCH,The total cash inflow from deposits and sip contributions in the last 12 months was 10000.,A database error prevented data retrieval.
+What is the average dividend cash flow amount per investor?,Gemma4,"deterministic Gemma=PARTIAL, Qwen14=None",PARTIAL,MATCH,The average dividend cash flow amount for Neha Sharma 2 is 2000.,The average dividend cash flow amount per investor is 0.
+Can you tell me what the total taxes paid per sector for all investors combined?,Gemma4,"deterministic Gemma=MATCH, Qwen14=None",MATCH,MATCH,"The total taxes paid per sector are: Government (4105), Banking (3144), Private Equity (2017), Automobile (1607), Technology (5789), Infrastructure (3253), Healthcare (3352), and Corporate (1272).","The total taxes paid per sector for all investors combined are as follows:
+
+- Sector http://example.org/kg#SECTOR001: 4,105
+- Sector http://example.org/kg#SECTOR008: 3,144
+- Sector http://example.org/kg#SECTOR017: 2,017
+- Sector http://example.org/kg#SECTOR015: 1,607
+- Sector http://example.org/kg#SECTOR003: 5,789
+- Sector http://example.org/kg#SECTOR011: 3,253
+- Sector http://example.org/kg#SECTOR016: 3,352
+- Sector http://example.org/kg#SECTOR009: 1,272"
+"From the complete wealth management dataset, for investor inv002, what is the total transaction amount processed for each type of cash flow?",Tie,"strict fallback Gemma=MISMATCH, Qwen14=MISMATCH; LLM MATCH set aside",MISMATCH,MISMATCH,No data was found in the knowledge graph. The requested entity may not exist.,No data was found in the knowledge graph. The requested entity may not exist.
+"Out of all options, which investment category holds the highest total portfolio value?",Tie,deterministic same MATCH,MATCH,MATCH,"The investment category with the highest total portfolio value is Private Equity, with a value of 15028100.",Private Equity holds the highest total portfolio value of 15028100.
+"Given all the data available, which payment source channel handles the highest number of cash flow transactions?",Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,Gov Bond handles the highest number of cash flow transactions with a count of 1.,The payment source channel that handles the highest number of cash flow transactions is Gov Bond with 1 transaction.
+Can you tell me what the average cost basis per investment type across the entire database?,Tie,deterministic same MATCH,MATCH,MATCH,"The average cost basis per investment type is: Corporate Bond (2111945), Certificates of Deposit (CDs) (1000000), Alternative Investment Funds (AIF - Cat I) (11019100), Equity (2121621), REIT (5229947), and Global Equity (601230).","The average cost basis per investment type across the entire database is as follows:
+
+- Corporate Bond: 2,111,945
+- Certificates of Deposit (CDs): 1,000,000
+- Alternative Investment Funds (AIF - Cat I): 11,019,100
+- Equity: 2,121,621
+- REIT: 5,229,947
+- Global Equity: 601,230"
+What is the total count of distinct investment types does investor INV-005 hold?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,Investor INV-005 holds a total count of 0 distinct investment types.,The total count of distinct investment types that investor INV-005 holds is 0.
+"Considering all investors in the system, which investors have zero dividend income from their holdings?",Tie,"strict fallback Gemma=MISMATCH, Qwen14=MISMATCH; LLM MATCH set aside",MISMATCH,MISMATCH,No data was found.,No data was found in the knowledge graph. The requested entity may not exist.
+Provide the count of dividend transactions has investor INV-001 made?,Tie,deterministic same MATCH,MATCH,MATCH,Investor INV-001 has made 0 dividend transactions.,The investor INV-001 has made 0 dividend transactions.
+"Given all the data available, which investment category has the highest average taxes paid?",Tie,deterministic same MATCH,MATCH,MATCH,"The investment category with the highest average taxes paid is REIT, with an average tax of 3253.","The investment category with the highest average taxes paid is REIT, with an average tax of 3253."
+What is the average new allocation percentage for Increase scenario rebalancing changes?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,The average new allocation percentage for Increase scenario rebalancing changes is 0.,The average new allocation percentage for Increase scenario rebalancing changes is 54.17%.
+"Please display the number of rebalancing actions recorded, categorised by how much each sector deviates from its target allocation.?",Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,There were 2 rebalancing actions with an allocation drift of 5 and 1 rebalancing action with an allocation drift of -10.,"The number of rebalancing actions recorded for each sector, categorized by how much each sector deviates from its target allocation, is as follows:
+
+- Government: 1 action
+- Technology: 1 action
+- Corporate: 1 action
+- Automobile: 1 action
+- Private Equity: 1 action
+- Infrastructure: 1 action
+- Healthcare: 1 action
+- Banking: 1 action"
+"Given all the data available, which market scenario triggered the fewest scenario-based rebalancing events?",Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,The Market Crash scenario triggered the fewest scenario-based rebalancing events.,"The market scenario that triggered the fewest scenario-based rebalancing events is ""Market Crash"" with 1 event."
+Which investment category holds the lowest total portfolio value?,Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,"The Debt category holds the lowest total portfolio value of 1,030,000.","The investment category that holds the lowest total portfolio value is Debt with a total portfolio value of 1,030,000."
+What is the earliest purchase date of any holding across all investors?,Gemma4,"deterministic Gemma=PARTIAL, Qwen14=None",PARTIAL,MISMATCH,The earliest purchase date of any holding across all investors is 2022-01-19.,A database error prevented data retrieval.
+"Among all investors, who has the longest average holding duration across all investors?",Tie,"strict fallback Gemma=MISMATCH, Qwen14=MISMATCH; LLM MATCH set aside",MISMATCH,MISMATCH,A database error prevented data retrieval.,A database error prevented data retrieval.
+"In which of the years 2022, 2023, or 2024 was the total investment (cost) highest?",Gemma4,"deterministic Gemma=MATCH, Qwen14=None",MATCH,MISMATCH,The total investment (cost) was highest in 2022 with 30560651.,No data was found in the knowledge graph. The requested entity may not exist.
+What would be the total current portfolio value for all Conservative risk profile investors?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,The total current portfolio value for all Conservative risk profile investors is 0.,The total current portfolio value for all Conservative risk profile investors is 0.
+Identify the risk profile group has the highest average investment goal target amount?,Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,"The High risk tolerance group has the highest average investment goal target amount of 1,500,000.","The risk profile group with the highest average investment goal target amount is ""44b3866e-4285-4987-a809-beb00bfc7653"" with an average target amount of 1,500,000."
+Display the average taxes paid per category of investment.?,Tie,deterministic same MATCH,MATCH,MATCH,"The average taxes paid per category of investment are: Bond: 2688.5, Debt: 3144, Private Equity: 2017, Equity: 2149.6, and REIT: 3253.","The average taxes paid per category of investment are as follows:
+
+- Bond: 2688.5
+- Debt: 3144
+- Private Equity: 2017
+- Equity: 2149.6
+- REIT: 3253"
+Can you tell me what the total current value of ETF holdings for investor INV-010?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,The total current value of ETF holdings for investor INV-010 is 0.,The total current value of ETF holdings for investor INV-010 is 0.
+I need to find out how many Gold holdings does investor INV-005 hold?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,Investor INV-005 holds 0 Gold holdings.,Investor INV-005 holds 0 Gold holdings.
+"Considering all investors in the system, which investors have received dividend cash flows from HDFC Bank as source?",Tie,deterministic same MATCH,MATCH,MATCH,No data was found in the knowledge graph. The requested entity may not exist.,No data was found in the knowledge graph. The requested entity may not exist.
+How many holdings does investor INV-015 have in total?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,Investor INV-015 has 0 holdings in total.,Investor INV-015 has a total of 0 holdings.
+I need to find out how many distinct investment types does investor INV-005 hold?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,Investor INV-005 holds 0 distinct investment types.,Investor INV-005 holds 0 distinct investment types.
+"Across the portfolio database, list all redemption events for investor inv-008 with dates and amounts.?",Tie,deterministic same MATCH,MATCH,MATCH,No data was found.,No data was found in the knowledge graph. The requested entity may not exist.
+I want to know which investor has paid the highest total taxes across all holdings?,Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,Deepak Sharma has paid the highest total taxes of 24539.,Deepak Sharma has paid the highest total taxes across all holdings with a total of 24539.
+"Could you show me the number of rebalancing actions recorded, categorised by how much each sector deviates from its target allocation.?",Qwen14,"deterministic Qwen14=PARTIAL, Gemma=None",MISMATCH,PARTIAL,A database error prevented data retrieval.,"The number of rebalancing actions recorded for each sector, categorized by how much each sector deviates from its target allocation, is as follows:
+
+- Government: 1 action
+- Technology: 1 action
+- Corporate: 1 action
+- Automobile: 1 action
+- Private Equity: 1 action
+- Infrastructure: 1 action
+- Healthcare: 1 action
+- Banking: 1 action"
+What is the total current market value of all holdings owned by Aggressive risk profile investors?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,The total current market value of all holdings owned by Aggressive risk profile investors is 0.,The total current market value of all holdings owned by Aggressive risk profile investors is 0.
+What are the monthly cash flow totals for investor INV-003?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MISMATCH; LLM MATCH set aside",MISMATCH,MISMATCH,No data was found in the knowledge graph. The requested entity may not exist.,No data was found in the knowledge graph. The requested entity may not exist.
+"Looking at all available records, what is the risk-adjusted performance ratio for investment goal G003?",Tie,"strict fallback Gemma=MISMATCH, Qwen14=MISMATCH; LLM MATCH set aside",MISMATCH,MISMATCH,No data was found in the knowledge graph. The requested entity may not exist.,No data was found in the knowledge graph. The requested entity may not exist.
+Could you show me total Lump Sum investments made per investor across all time.?,Gemma4,"deterministic Gemma=MATCH, Qwen14=None",MATCH,MATCH,No data was found in the knowledge graph. The requested entity may not exist.,"Deepak Sharma has made a total of 35,656,852 in Lump Sum investments across all time."
+What is the average cost basis per investment type across the entire database?,Tie,deterministic same MATCH,MATCH,MATCH,"The average cost basis per investment type is as follows: Corporate Bond: 2111945, Certificates of Deposit (CDs): 1000000, Alternative Investment Funds (AIF - Cat I): 11019100, Equity: 2121621, REIT: 5229947, and Global Equity: 601230.","The average cost basis per investment type across the entire database is as follows:
+
+- Corporate Bond: 2,111,945
+- Certificates of Deposit (CDs): 1,000,000
+- Alternative Investment Funds (AIF - Cat I): 11,019,100
+- Equity: 2,121,621
+- REIT: 5,229,947
+- Global Equity: 601,230"
+"Across the entire investor database, how many Gold holdings does investor INV-005 hold?",Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,Investor INV-005 holds 0 Gold holdings.,Investor INV-005 holds 0 Gold holdings.
+"From the complete wealth management dataset, group the holdings of investor inv001 by investment type and show the count for each category.?",Tie,"strict fallback Gemma=MISMATCH, Qwen14=MISMATCH; LLM MATCH set aside",MISMATCH,MISMATCH,No data was found in the knowledge graph. The requested entity may not exist.,No data was found in the knowledge graph. The requested entity may not exist.
+Could you show me the breakdown of investment types held by investor INV-010?,Tie,deterministic same MATCH,MATCH,MATCH,No data was found in the knowledge graph. The requested entity may not exist.,No data was found in the knowledge graph. The requested entity may not exist.
+"Calculate the average liquidity rating for investors whose total withdrawal transactions exceed 50,000.?",Tie,deterministic same MISMATCH,MISMATCH,MISMATCH,"The average liquidity rating for investors whose total withdrawal transactions exceed 50,000 is 0.","The average liquidity rating for investors whose total withdrawal transactions exceed 50,000 is 0."
+Could you show me all holdings purchased in 2024 and their current returns.?,Tie,deterministic same MATCH,MATCH,MATCH,No data was found in the knowledge graph. The requested entity may not exist.,No data was found in the knowledge graph. The requested entity may not exist.
+What would be the earliest purchase date of any holding across all investors?,Gemma4,"deterministic Gemma=PARTIAL, Qwen14=None",PARTIAL,MISMATCH,The earliest purchase date of any holding across all investors is 2022-01-19.,A database error prevented data retrieval.
+Summarise the total cash flow amount for each month for investor INV003.?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MISMATCH; LLM MATCH set aside",MISMATCH,MISMATCH,No data was found in the knowledge graph. The requested entity may not exist.,A database error prevented data retrieval.
+"Considering all investors in the system, which investor has the shortest average holding duration across all investors?",Tie,"strict fallback Gemma=MISMATCH, Qwen14=MISMATCH; LLM MATCH set aside",MISMATCH,MISMATCH,A database error prevented data retrieval.,A database error prevented data retrieval.
+Identify the investment type generates the most dividends on average?,Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,"The investment type that generates the most dividends on average is Coporate Bond, with 7290.",Corporate Bond generates the most dividends on average.
+Could you show me the number of holdings purchased per year per investor.?,Gemma4,"deterministic Gemma=PARTIAL, Qwen14=None",PARTIAL,MISMATCH,Deepak Sharma purchased 10 holdings in 2022.,A database error prevented data retrieval.
+Do you know which payment source channel handles the highest number of cash flow transactions?,Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,The Gov Bond payment source channel handles the highest number of cash flow transactions with a count of 1.,The payment source channel that handles the highest number of cash flow transactions is Gov Bond with 1 transaction.
+How many Redemption transactions has investor INV-008 made?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,Investor INV-008 has made 0 Redemption transactions.,Investor INV-008 has made 0 Redemption transactions.
+"Among all investors, who has paid the highest total taxes across all holdings?",Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,Deepak Sharma has paid the highest total taxes of 24539.,Deepak Sharma has paid the highest total taxes across all holdings with a total of 24539.
+"From the complete wealth management dataset, does investor inv-001's highest allocated sector match their stated sector focus?",Qwen14,"deterministic Qwen14=MATCH, Gemma=MISMATCH",MISMATCH,MATCH,No data was found in the knowledge graph. The requested entity may not exist.,"No, investor inv-001's highest allocated sector, Private Equity, does not match their stated sector focus of Government, Gold, Debt."
+What are all the 5 oldest holdings (by purchase date) across all investors.?,Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,"The five oldest holdings are Persistent Systems Ltd. (2022-01-19), Hinduja Leyland Finance Limited (2022-04-26), Tata Motors Passenger Vehicles Ltd (2022-05-19), Brookfield India Real Estate Trust (2022-07-04), and Apple Inc (2022-07-06).","The 5 oldest holdings (by purchase date) across all investors are:
+
+1. Persistent Systems Ltd. - Purchased on 2022-01-19
+2. Hinduja Leyland Finance Limited - Purchased on 2022-04-26
+3. Tata Motors Passenger Vehicles Ltd - Purchased on 2022-05-19
+4. Brookfield India Real Estate Trust - Purchased on 2022-07-04
+5. Apple Inc - Purchased on 2022-07-06"
+"From the complete wealth management dataset, list 'mutual fund' holdings for investors who have never recorded a 'redemption' type cash flow.?",Tie,deterministic same MATCH,MATCH,MATCH,No data was found.,No data was found in the knowledge graph. The requested entity may not exist.
+Please display the count and total amount of Dividend transactions per investor.?,Tie,deterministic same PARTIAL,PARTIAL,PARTIAL,Neha Sharma 2 has 1 dividend transaction with a total amount of 2000.,Deepak Sharma has 10 Dividend transactions with a total amount of 61420.
+Can you tell me what the average new allocation percentage for Increase scenario rebalancing changes?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,The average new allocation percentage for Increase scenario rebalancing changes is 0.,The average new allocation percentage for Increase scenario rebalancing changes is 54.17%.
+I need to find out how many Redemption transactions has investor INV-008 made?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,Investor INV-008 has made 0 Redemption transactions.,Investor INV-008 has made 0 Redemption transactions.
+How many total holdings do Conservative risk profile investors hold?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,Conservative risk profile investors hold 0 total holdings.,Conservative risk profile investors hold a total of 0 holdings.
+"Looking at all available records, what is the average dividend cash flow amount per investor?",Gemma4,"deterministic Gemma=PARTIAL, Qwen14=None",PARTIAL,MATCH,The average dividend cash flow amount for Neha Sharma 2 is 2000.,The average dividend cash flow amount per investor is 0.
+"Looking at all available records, what is the dividend amount for the 5th highest dividend-earning holding?",Gemma4,"deterministic Gemma=MATCH, Qwen14=None",MATCH,MATCH,The dividend amount is 6407.,The dividend amount for the 5th highest dividend-earning holding is $61420.
+What would be the average investment goal target amount for Aggressive risk profile investors?,Tie,"strict fallback Gemma=MISMATCH, Qwen14=MATCH; LLM MATCH set aside",MISMATCH,MATCH,The average investment goal target amount for Aggressive risk profile investors is 0.,The average investment goal target amount for Aggressive risk profile investors is 0.
+How many investors have a portfolio diversification score below 50?,Tie,deterministic same MISMATCH,MISMATCH,MISMATCH,0 investors have a portfolio diversification score below 50.,No investors have a portfolio diversification score below 50.

@@ -1,0 +1,315 @@
+.po 0.55i
+.ll 7.15i
+.ps 10.5
+.vs 13
+.fam H
+.ce
+.ft B
+Simple Qwen vs Llama Retest Comparison Report
+.br
+.ft R
+.ce
+Using only Pipeline_Retest_Report_qwen_all.csv and Pipeline_Retest_Report_llama_all.csv
+.br
+.ce
+Report date: 10 June 2026
+.br
+.sp
+.sp
+.ft B
+Final Answer
+.br
+.ft R
+Qwen is better than Llama on these two retest files. Qwen has more correct answers, more
+.br
+correct-or-partial answers, and fewer scan errors.
+.br
+.sp
+.ft B
+Overall Counts
+.br
+.ft R
+Qwen: total rows 142; MATCH 52 (36.6%); PARTIAL 23 (16.2%); MISMATCH 60 (42.3%); CRASH 7
+.br
+(4.9%); MATCH+PARTIAL 75 (52.8%).
+.br
+Llama: total rows 143; MATCH 12 (8.4%); PARTIAL 13 (9.1%); MISMATCH 112 (78.3%); CRASH 6
+.br
+(4.2%); MATCH+PARTIAL 25 (17.5%).
+.br
+.sp
+.ft B
+Head-to-Head Same Questions
+.br
+.ft R
+There are 142 shared question occurrences. Qwen-only occurrences: 0. Llama-only
+.br
+occurrences: 1. Ranking used: MATCH > PARTIAL > MISMATCH > CRASH.
+.br
+Qwen better: 62 (43.7%).
+.br
+Tie MISMATCH: 58 (40.8%).
+.br
+Tie MATCH: 12 (8.5%).
+.br
+Llama better: 4 (2.8%).
+.br
+Tie CRASH: 4 (2.8%).
+.br
+Tie PARTIAL: 2 (1.4%).
+.br
+Status pair counts:
+.br
+Qwen MISMATCH vs Llama MISMATCH: 58.
+.br
+Qwen MATCH vs Llama MISMATCH: 30.
+.br
+Qwen PARTIAL vs Llama MISMATCH: 21.
+.br
+Qwen MATCH vs Llama MATCH: 12.
+.br
+Qwen MATCH vs Llama PARTIAL: 10.
+.br
+Qwen CRASH vs Llama CRASH: 4.
+.br
+Qwen CRASH vs Llama MISMATCH: 3.
+.br
+Qwen PARTIAL vs Llama PARTIAL: 2.
+.br
+Qwen MISMATCH vs Llama CRASH: 1.
+.br
+Qwen MISMATCH vs Llama PARTIAL: 1.
+.br
+.sp
+.ft B
+Correctness Interpretation
+.br
+.ft R
+MATCH means the answer is treated as correct against the Ground Truth column. PARTIAL
+.br
+means the answer has some correct information but is incomplete or not fully aligned.
+.br
+MISMATCH and CRASH are treated as incorrect.
+.br
+One important caveat: when Ground Truth says no data/no rule/no rows, an answer saying 0
+.br
+may need manual review. It can be correct for count questions, but wrong for list/value
+.br
+questions. Qwen has 14 such MATCH-zero cases; Llama has 1.
+.br
+.sp
+.ft B
+Pipeline Reliability
+.br
+.ft R
+Qwen: scan success 117, scan error 18, blank scan status 7; failure Scan 17, Validate
+.br
+51, Exception 7.
+.br
+Llama: scan success 60, scan error 77, blank scan status 6; failure Scan 55, Validate
+.br
+49, Exception 6.
+.br
+.sp
+.ft B
+Variant / Duplicate Question Check
+.br
+.ft R
+Qwen: 12 exact duplicate questions, 12 extra duplicate rows, 0 duplicate questions with
+.br
+mixed statuses.
+.br
+Llama: 12 exact duplicate questions, 12 extra duplicate rows, 0 duplicate questions with
+.br
+mixed statuses.
+.br
+.sp
+.ft B
+Examples
+.br
+.ft R
+.ft B
+Qwen better
+.br
+.ft R
+Question: Across the entire investor database, how many Gold holdings does investor
+.br
+INV-005 hold?
+.br
+Ground Truth: There is no data in raw_data_sample to answer this query.
+.br
+Qwen (MATCH): Investor INV-005 holds 0 Gold holdings.
+.br
+Llama (PARTIAL): Investor INV-005 holds 0 Gold holdings across the entire investor
+.br
+database.
+.br
+.sp
+Question: Across the entire investor database, how many investors affected by the
+.br
+Interest Rate Hike scenario have a Moderate portfolio h...
+.br
+Ground Truth: There is no business rule/data to calculate this from raw_data_sample.
+.br
+Qwen (MATCH): No investors affected by the Interest Rate Hike scenario have a Moderate
+.br
+portfolio health status.
+.br
+Llama (PARTIAL): There are 0 investors affected by the Interest Rate Hike scenario with
+.br
+a Moderate portfolio health status.
+.br
+.sp
+Question: Across the portfolio database, list all redemption events for investor inv-008
+.br
+with dates and amounts.?
+.br
+Ground Truth: There is no data in raw_data_sample to answer this query.
+.br
+Qwen (MATCH): No data was found in the knowledge graph. The requested entity may not
+.br
+exist.
+.br
+Llama (MISMATCH): A database error prevented data retrieval.
+.br
+.sp
+.ft B
+Llama better
+.br
+.ft R
+Question: Compare the preferred sector in the investor's profile to the sector with the
+.br
+highest allocation percentage in their actual por...
+.br
+Ground Truth: {"investor_id": "INV-001", "stated_sector_focus": "Government, Gold,
+.br
+Debt", "highest_actual_sector": "Private Equity", "highest...
+.br
+Qwen (CRASH): ERROR: Operator Compare not found in registry!
+.br
+Llama (MISMATCH): No data was found in the knowledge graph. The requested entity may not
+.br
+exist.
+.br
+.sp
+Question: Summarise the total cash flow amount for each month for investor INV003.?
+.br
+Ground Truth: [{"transaction_month": "2023-04", "total_cash_flow": 5000}]
+.br
+Qwen (MISMATCH): A database error prevented data retrieval.
+.br
+Llama (PARTIAL): For investor INV003, the total cash flow amount for April 2023 is
+.br
+$5000.
+.br
+.sp
+Question: What was the total investment cost made in 2022?
+.br
+Ground Truth: 30560651
+.br
+Qwen (CRASH): ERROR: Request timed out.
+.br
+Llama (MISMATCH): The total investment cost made in 2022 was $0.
+.br
+.sp
+.ft B
+Tie MATCH
+.br
+.ft R
+Question: Calculate the average liquidity rating for investors whose total withdrawal
+.br
+transactions exceed 50,000.?
+.br
+Ground Truth: There is no business rule/data to calculate this from raw_data_sample.
+.br
+Qwen (MATCH): No data was found in the knowledge graph. The requested entity may not
+.br
+exist.
+.br
+Llama (MATCH): No data was found in the knowledge graph. The requested entity may not
+.br
+exist.
+.br
+.sp
+Question: Calculate the average liquidity rating for investors whose total withdrawal
+.br
+transactions exceed 50,000.?
+.br
+Ground Truth: There is no business rule/data to calculate this from raw_data_sample.
+.br
+Qwen (MATCH): No data was found in the knowledge graph. The requested entity may not
+.br
+exist.
+.br
+Llama (MATCH): No data was found in the knowledge graph. The requested entity may not
+.br
+exist.
+.br
+.sp
+Question: Considering all investors in the system, which investor bought the most
+.br
+holdings in 2023?
+.br
+Ground Truth: (no rows returned)
+.br
+Qwen (MATCH): No data was found in the knowledge graph. The requested entity may not
+.br
+exist.
+.br
+Llama (MATCH): No data was found in the knowledge graph. The requested entity may not
+.br
+exist.
+.br
+.sp
+.ft B
+Tie MISMATCH
+.br
+.ft R
+Question: Across the portfolio database, what was the total cash inflow from deposits
+.br
+and sip contributions in the last 12 months?
+.br
+Ground Truth: 0
+.br
+Qwen (MISMATCH): A database error prevented data retrieval.
+.br
+Llama (MISMATCH): No data was found in the knowledge graph. The requested entity may not
+.br
+exist.
+.br
+.sp
+Question: Among all investors, which ones have not purchased any new holdings in the
+.br
+last 12 months?
+.br
+Ground Truth: [{"investor_id": "INV-001", "investor_name": "Deepak Sharma"},
+.br
+{"investor_id": "INV-002", "investor_name": "Neha Sharma 2"}, {"...
+.br
+Qwen (MISMATCH): A database error prevented data retrieval.
+.br
+Llama (MISMATCH): A database error prevented data retrieval.
+.br
+.sp
+Question: Among all investors, which ones hold Private Equity investments?
+.br
+Ground Truth: [{"investor_id": "INV-001", "investor_name": "Deepak Sharma"}]
+.br
+Qwen (MISMATCH): No data was found in the knowledge graph. The requested entity may not
+.br
+exist.
+.br
+Llama (MISMATCH): A database error prevented data retrieval.
+.br
+.sp
+.sp
+.ft B
+Conclusion
+.br
+.ft R
+Simple conclusion from only the two given CSVs: Qwen wins. It has 52 MATCH answers
+.br
+versus Llama 12, and 75 MATCH+PARTIAL answers versus Llama 25. Qwen is not perfect, but
+.br
+it is clearly stronger in this retest.
+.br

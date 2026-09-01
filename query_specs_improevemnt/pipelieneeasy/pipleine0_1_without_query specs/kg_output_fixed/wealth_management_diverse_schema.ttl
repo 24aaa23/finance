@@ -1,0 +1,2358 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wm: <https://wealth.example.org/ontology/> .
+@prefix wmmeta: <https://wealth.example.org/metadata/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+wmmeta:ATOM_CONTEXT_ASSET_CLASS_001 a wm:Primitive ;
+    rdfs:label "Asset Class Context",
+        "asset_class_context" ;
+    dcterms:description "Unified business intelligence for asset categories and investment types, merging Category (Equity/Debt/Hybrid) and InvestmentType (Mutual Fund/Stock/ ELSS/PPF). Contains risk profiles, tax treatment, lock-in rules, and suitability guidelines." ;
+    wm:businessPurpose "Provides comprehensive business intelligence for asset classes combining category characteristics (equity/debt/hybrid) with investment type specifics (mutual fund/stock/ELSS/PPF). Enables tax-aware recommendations, lock-in compliance, and suitability analysis." ;
+    wm:hasContextValue <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Alternative>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Bonds>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Cash-Equivalent>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Commodities>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Corporate-Bond>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Crypto>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Debt>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/ETF>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Equity>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Fixed-Income>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Global-Equity>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Gold>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Government-Bond>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Hedge-Fund>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Hybrid>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/InVIT>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Index-Fund>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/International>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/MF>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Mutual-Fund>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/PPF>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Private-Equity>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/REIT>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Real-Estate>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/SGB>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Venture-Capital> ;
+    wm:hasDerivedContext <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/derived-context/has_lock_in>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/derived-context/is_suitable_for_risk>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/derived-context/is_tax_saving> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/attribute/asset_class_id>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/attribute/category>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/attribute/investment_type> ;
+    wm:primitiveId "ATOM_CONTEXT_ASSET_CLASS_001" ;
+    wm:primitiveName "asset_class_context" ;
+    wm:primitiveSubtype "Context" ;
+    wm:sourceFile "TABLE_CONTEXT_ASSET_CLASS_001.yaml" ;
+    wm:useCase "lock_in_compliance",
+        "product_recommendation",
+        "regulatory_compliance",
+        "suitability_analysis",
+        "tax_planning" .
+
+wmmeta:ATOM_CONTEXT_INVESTMENT_GOAL_001 a wm:Primitive ;
+    rdfs:label "Investment Goal Rules",
+        "investment_goal_context" ;
+    dcterms:description "Investment goal classification with embedded business intelligence including recommended asset allocations, target return expectations, time horizon requirements, milestone tracking rules, and priority-based contribution strategies. Enables goal-based portfolio construction and progress monitoring." ;
+    wm:businessPurpose "Provides prescriptive business intelligence for goal-based investing. Enables automated goal tracking, asset allocation recommendations based on goal type, and progress milestone monitoring." ;
+    wm:hasContextValue <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Child-Education>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Emergency-Fund>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Growth>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Income-Generation>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Retirement-Planning>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Wealth-Preservation> ;
+    wm:hasDerivedContext <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/derived-context/is_long_term_goal>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/derived-context/is_tax_advantaged>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/derived-context/recommended_equity_allocation>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/derived-context/requires_liquidity> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/attribute/goal_type_id>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/attribute/investment_goal> ;
+    wm:primitiveId "ATOM_CONTEXT_INVESTMENT_GOAL_001" ;
+    wm:primitiveName "investment_goal_context" ;
+    wm:primitiveSubtype "Context" ;
+    wm:sourceFile "TABLE_CONTEXT_INVESTMENT_GOAL_001.yaml" ;
+    wm:useCase "contribution_planning",
+        "goal_based_portfolio_construction",
+        "goal_priority_management",
+        "milestone_alerts",
+        "progress_tracking" .
+
+wmmeta:ATOM_CONTEXT_INVESTMENT_TYPE_001 a wm:Primitive ;
+    rdfs:label "Investment Type Rules",
+        "investment_type_context" ;
+    dcterms:description "Investment product type classification with embedded business intelligence including tax treatment rules, lock-in requirements, risk-return profiles, expense ratios, and regulatory compliance requirements. Enables product-level compliance checks, tax optimization, and suitability validation." ;
+    wm:businessPurpose "Provides comprehensive business intelligence for investment products. Enables automated tax calculations, lock-in compliance, suitability checks, and regulatory requirement validation." ;
+    wm:hasContextValue <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Corporate-Bond>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/ETF>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Equity>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Global-Equity>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Gold>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Government-Bond>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Hedge-Fund>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/InVIT>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Index-Fund>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Mutual-Fund>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Private-Equity>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/REIT>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Real-Estate>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Venture-Capital> ;
+    wm:hasDerivedContext <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/derived-context/has_lock_in>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/derived-context/is_80c_eligible>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/derived-context/is_equity_taxed>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/derived-context/ltcg_rate>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/derived-context/requires_demat> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/attribute/investment_type>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/attribute/invtype_id> ;
+    wm:primitiveId "ATOM_CONTEXT_INVESTMENT_TYPE_001" ;
+    wm:primitiveName "investment_type_context" ;
+    wm:primitiveSubtype "Context" ;
+    wm:sourceFile "TABLE_CONTEXT_INVESTMENT_TYPE_001.yaml" ;
+    wm:useCase "expense_optimization",
+        "lock_in_compliance",
+        "product_recommendation",
+        "redemption_planning",
+        "regulatory_compliance",
+        "tax_planning" .
+
+wmmeta:ATOM_CONTEXT_RISK_TOLERANCE_001 a wm:Primitive ;
+    rdfs:label "Risk Tolerance Rules",
+        "risk_tolerance_context" ;
+    dcterms:description "Risk tolerance classification with embedded business intelligence including asset allocation limits, product suitability rules, volatility thresholds, and compliance requirements. This is NOT just a lookup table - it contains the rules that govern how each risk profile should be treated in portfolio construction and compliance validation." ;
+    wm:businessPurpose "Provides prescriptive business intelligence for risk-based portfolio management. Enables automated compliance checking, suitability validation, and risk-appropriate product recommendations." ;
+    wm:hasContextValue <https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/context/Aggressive>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/context/Conservative>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/context/Moderate> ;
+    wm:hasDerivedContext <https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/derived-context/get_suitable_products>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/derived-context/is_equity_heavy_allowed>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/derived-context/is_high_risk_products_allowed>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/derived-context/max_equity_allocation> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/attribute/risk_tolerance>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/attribute/risk_tolerance_id> ;
+    wm:primitiveId "ATOM_CONTEXT_RISK_TOLERANCE_001" ;
+    wm:primitiveName "risk_tolerance_context" ;
+    wm:primitiveSubtype "Context" ;
+    wm:sourceFile "TABLE_CONTEXT_RISK_TOLERANCE_001.yaml" ;
+    wm:useCase "asset_allocation_validation",
+        "portfolio_compliance",
+        "product_recommendation",
+        "risk_based_rebalancing",
+        "suitability_assessment" .
+
+wmmeta:ATOM_CONTEXT_SECTOR_001 a wm:Primitive ;
+    rdfs:label "Sector Context",
+        "sector_context" ;
+    dcterms:description "Business intelligence for industry sectors including risk characteristics, allocation limits by risk tolerance, volatility profiles, and regulatory considerations. This is NOT just a lookup table - it contains embedded business rules that travel with data." ;
+    wm:businessPurpose "Provides business intelligence for sector-based portfolio analysis including risk characteristics, allocation limits, and suitability rules. Enables automated compliance checking and intelligent recommendations." ;
+    wm:hasContextValue <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Automobile>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Banking>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Consumer-Goods>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Corporate>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Financial-Services>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Government>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Healthcare>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Infrastructure>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Pharma>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Private-Equity>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Real-Estate>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Technology> ;
+    wm:hasDerivedContext <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/derived-context/is_defensive>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/derived-context/is_suitable_for_conservative>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/derived-context/max_allocation_for_risk_tolerance> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/attribute/sector>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/attribute/sector_id> ;
+    wm:primitiveId "ATOM_CONTEXT_SECTOR_001" ;
+    wm:primitiveName "sector_context" ;
+    wm:primitiveSubtype "Context" ;
+    wm:sourceFile "TABLE_CONTEXT_SECTOR_001.yaml" ;
+    wm:useCase "allocation_compliance",
+        "portfolio_enrichment",
+        "rebalancing_rules",
+        "risk_assessment",
+        "suitability_analysis" .
+
+wmmeta:ATOM_CONTEXT_SEGMENT_001 a wm:Primitive ;
+    rdfs:label "Segment Context",
+        "segment_context" ;
+    dcterms:description "Business intelligence for market capitalization segments including risk characteristics, allocation guidelines, liquidity profiles, and suitability rules. Enables segment-based compliance and recommendation." ;
+    wm:businessPurpose "Provides business intelligence for market cap segment-based portfolio analysis including risk characteristics, allocation guidelines, and suitability rules. Enables compliance checking for segment-based allocation limits." ;
+    wm:hasContextValue <https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/context/Diversified>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/context/Large-Cap>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/context/Mid-Cap>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/context/Small-Cap> ;
+    wm:hasDerivedContext <https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/derived-context/allocation_limit_for_risk>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/derived-context/is_suitable_for_risk_tolerance> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/attribute/segment>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/attribute/segment_id> ;
+    wm:primitiveId "ATOM_CONTEXT_SEGMENT_001" ;
+    wm:primitiveName "segment_context" ;
+    wm:primitiveSubtype "Context" ;
+    wm:sourceFile "TABLE_CONTEXT_SEGMENT_001.yaml" ;
+    wm:useCase "liquidity_analysis",
+        "portfolio_construction",
+        "risk_assessment",
+        "segment_allocation_compliance" .
+
+wmmeta:ATOM_CONTEXT_TIME_HORIZON_001 a wm:Primitive ;
+    rdfs:label "Time Horizon Rules",
+        "time_horizon_context" ;
+    dcterms:description "Investment time horizon classification with embedded business intelligence including asset allocation strategies, product eligibility rules, liquidity requirements, and risk-return optimization guidelines. Enables duration-based portfolio construction and maturity planning." ;
+    wm:businessPurpose "Provides prescriptive business intelligence for duration-based investing. Enables time-appropriate asset allocation, product selection, and exit strategy planning based on investment horizon." ;
+    wm:hasContextValue <https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/context/Long-term>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/context/Medium-term>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/context/Short-term> ;
+    wm:hasDerivedContext <https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/derived-context/allows_equity>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/derived-context/can_use_lock_in_products>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/derived-context/is_wealth_creation_suitable>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/derived-context/max_equity_allowed>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/derived-context/requires_liquidity> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/attribute/horizon_id>,
+        <https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/attribute/time_horizon> ;
+    wm:primitiveId "ATOM_CONTEXT_TIME_HORIZON_001" ;
+    wm:primitiveName "time_horizon_context" ;
+    wm:primitiveSubtype "Context" ;
+    wm:sourceFile "TABLE_CONTEXT_TIME_HORIZON_001.yaml" ;
+    wm:useCase "duration_based_allocation",
+        "exit_strategy_planning",
+        "liquidity_planning",
+        "lock_in_compliance",
+        "product_eligibility_check" .
+
+wmmeta:ATOM_ENTITY_INVESTMENT_GOAL_001 a wm:Primitive ;
+    rdfs:label "Investment Goal",
+        "investment_goal" ;
+    dcterms:description "Unified investment goal entity consolidating goal definition, progress tracking, performance metrics, and risk metrics. Provides a complete view of investor goals including target amounts, current progress, returns, and volatility. Replaces separate GoalTracking, GoalPerformance, and GoalRiskMetrics entities." ;
+    wm:businessPurpose "Provides unified view of investor financial goals including definition, progress tracking, performance metrics, and risk metrics. Enables goal-based advisory, progress monitoring, and goal achievement forecasting." ;
+    wm:hasDerivedAttribute <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/derived-attribute/is_on_track>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/derived-attribute/risk_return_ratio> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/avg_annual_return_pct>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/avg_post_tax_return_pct>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/avg_sharpe_ratio>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/avg_volatility_pct>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/current_value>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/description>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/goal_id>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/investment_goal>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/investor_id>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/progress_pct>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/shortfall>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/std_dev_annual_return_pct>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/target_amount>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/time_to_goal_months> ;
+    wm:primitiveId "ATOM_ENTITY_INVESTMENT_GOAL_001" ;
+    wm:primitiveName "investment_goal" ;
+    wm:primitiveSubtype "Entity" ;
+    wm:sourceFile "TABLE_ENTITY_INVESTMENT_GOAL_001.yaml" ;
+    wm:useCase "financial_planning",
+        "goal_achievement_forecasting",
+        "goal_performance_analysis",
+        "goal_progress_tracking",
+        "goal_risk_assessment" .
+
+wmmeta:ATOM_ENTITY_INVESTOR_PROFILE_001 a wm:Primitive ;
+    rdfs:label "Investor Profile",
+        "investor_profile" ;
+    dcterms:description "Core investor identity and investment preferences. This is the primary entity for all investor-centric queries including risk profiling, goal setting, and suitability analysis. Contains demographic information, risk tolerance,  investment horizon, and sector preferences." ;
+    wm:businessPurpose "Provides the foundational investor identity and preferences required for  portfolio management, suitability analysis, and personalized advisory services. This entity is the anchor for all investor-centric operations." ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/category>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/investment_goal>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/investor_id>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/investor_name>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/notes>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/risk_tolerance>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/sector_focus>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/segment>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/time_horizon> ;
+    wm:primitiveId "ATOM_ENTITY_INVESTOR_PROFILE_001" ;
+    wm:primitiveName "investor_profile" ;
+    wm:primitiveSubtype "Entity" ;
+    wm:sourceFile "TABLE_ENTITY_INVESTOR_PROFILE_001.yaml" ;
+    wm:useCase "client_segmentation",
+        "investor_lookup",
+        "portfolio_construction",
+        "regulatory_reporting",
+        "risk_profiling",
+        "suitability_analysis" .
+
+wmmeta:ATOM_ENTITY_PORTFOLIO_HEALTH_001 a wm:Primitive ;
+    rdfs:label "Portfolio Health",
+        "portfolio_health" ;
+    dcterms:description "Pre-computed portfolio health scores across multiple dimensions: goal alignment, risk, liquidity, and diversification. This is stored data (not computed at  runtime) providing instant access to health assessments." ;
+    wm:businessPurpose "Provides pre-computed health assessment scores for portfolio monitoring, risk management, and advisory prioritization. Enables quick identification of portfolios needing attention." ;
+    wm:hasDerivedAttribute <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/derived-attribute/health_status>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/derived-attribute/overall_health_score> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/diversification_score>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/goal_match_pct>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/investor_id>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/liquidity_score>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/portfolio_health_id>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/risk_score> ;
+    wm:primitiveId "ATOM_ENTITY_PORTFOLIO_HEALTH_001" ;
+    wm:primitiveName "portfolio_health" ;
+    wm:primitiveSubtype "Entity" ;
+    wm:sourceFile "TABLE_ENTITY_PORTFOLIO_HEALTH_001.yaml" ;
+    wm:useCase "advisory_prioritization",
+        "client_review",
+        "health_assessment",
+        "portfolio_monitoring",
+        "risk_identification" .
+
+wmmeta:ATOM_ENTITY_PORTFOLIO_HOLDING_001 a wm:Primitive ;
+    rdfs:label "Portfolio Holding",
+        "portfolio_holding" ;
+    dcterms:description "Individual investment positions held by investors. Contains cost basis, current valuations, returns, and classification by sector/segment/category. Primary fact table for portfolio analytics and performance tracking." ;
+    wm:businessPurpose "Core transactional data for portfolio composition analysis, performance  tracking, and asset allocation. Enables queries about what investors own, portfolio value, returns, and diversification." ;
+    wm:hasDerivedAttribute <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/derived-attribute/absolute_return>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/derived-attribute/holding_period_days>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/derived-attribute/is_profitable> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/category>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/cost>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/current_value>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/dividends>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/holding_id>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/investment_name>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/investment_type>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/investor_id>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/purchase_date>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/returns_pct>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/sector>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/segment>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/taxes_paid> ;
+    wm:primitiveId "ATOM_ENTITY_PORTFOLIO_HOLDING_001" ;
+    wm:primitiveName "portfolio_holding" ;
+    wm:primitiveSubtype "Entity" ;
+    wm:sourceFile "TABLE_ENTITY_PORTFOLIO_HOLDING_001.yaml" ;
+    wm:useCase "asset_allocation",
+        "performance_tracking",
+        "portfolio_composition",
+        "return_analysis",
+        "sector_exposure" .
+
+wmmeta:ATOM_ENTITY_SECTOR_ALLOCATION_001 a wm:Primitive ;
+    rdfs:label "Sector Allocation",
+        "sector_allocation" ;
+    dcterms:description "Pre-computed sector allocation percentages and total investments per sector for each investor. This is stored data (not computed at runtime) providing fast access to allocation analysis without recalculating from holdings." ;
+    wm:businessPurpose "Provides pre-computed sector allocation breakdown for portfolio analysis and compliance checking. Enables fast queries for allocation percentages, concentration analysis, and diversification assessment." ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_ENTITY_SECTOR_ALLOCATION_001/attribute/allocation_pct>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_SECTOR_ALLOCATION_001/attribute/investor_id>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_SECTOR_ALLOCATION_001/attribute/sector>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_SECTOR_ALLOCATION_001/attribute/sector_id>,
+        <https://wealth.example.org/metadata/ATOM_ENTITY_SECTOR_ALLOCATION_001/attribute/total_investment> ;
+    wm:primitiveId "ATOM_ENTITY_SECTOR_ALLOCATION_001" ;
+    wm:primitiveName "sector_allocation" ;
+    wm:primitiveSubtype "Entity" ;
+    wm:sourceFile "TABLE_ENTITY_SECTOR_ALLOCATION_001.yaml" ;
+    wm:useCase "allocation_analysis",
+        "compliance_validation",
+        "concentration_risk",
+        "diversification_check",
+        "rebalancing_input" .
+
+wmmeta:ATOM_EVENT_CASH_FLOW_001 a wm:Primitive ;
+    rdfs:label "Cash Flow",
+        "cash_flow" ;
+    dcterms:description "Time-stamped cash flow events including deposits, withdrawals, SIP contributions, lump sum investments, and redemptions. Primary event source for transaction history, cash flow analysis, and contribution tracking." ;
+    wm:businessPurpose "Tracks all monetary transactions for investor portfolios including contributions and withdrawals. Enables cash flow analysis, contribution tracking, and transaction history reporting." ;
+    wm:hasDerivedAttribute <https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/derived-attribute/absolute_amount>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/derived-attribute/is_inflow>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/derived-attribute/transaction_month> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/amount>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/cash_flow_id>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/date>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/investor_id>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/notes>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/source>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/type> ;
+    wm:primitiveId "ATOM_EVENT_CASH_FLOW_001" ;
+    wm:primitiveName "cash_flow" ;
+    wm:primitiveSubtype "Event" ;
+    wm:sourceFile "TABLE_EVENT_CASH_FLOW_001.yaml" ;
+    wm:useCase "cash_flow_analysis",
+        "contribution_tracking",
+        "sip_monitoring",
+        "transaction_history",
+        "withdrawal_analysis" .
+
+wmmeta:ATOM_EVENT_REBALANCING_ACTION_001 a wm:Primitive ;
+    rdfs:label "Rebalancing Action",
+        "rebalancing_action" ;
+    dcterms:description "Time-stamped portfolio rebalancing action events. Captures buy/sell/hold recommendations generated by rebalancing logic. Each event represents an actionable step to align portfolio with target allocation." ;
+    wm:businessPurpose "Captures portfolio rebalancing recommendations and actions. Enables tracking of buy/sell/hold decisions, allocation drift analysis, and rebalancing strategy execution." ;
+    wm:hasDerivedAttribute <https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/derived-attribute/allocation_drift>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/derived-attribute/drift_direction> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/action>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/amount>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/current_allocation_pct>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/investor_id>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/logic>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/notes>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/rebalance_id>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/target_allocation_pct> ;
+    wm:primitiveId "ATOM_EVENT_REBALANCING_ACTION_001" ;
+    wm:primitiveName "rebalancing_action" ;
+    wm:primitiveSubtype "Event" ;
+    wm:sourceFile "TABLE_EVENT_REBALANCING_ACTION_001.yaml" ;
+    wm:useCase "action_recommendations",
+        "allocation_drift_analysis",
+        "compliance_audit",
+        "portfolio_adjustment",
+        "rebalancing_tracking" .
+
+wmmeta:ATOM_EVENT_SCENARIO_REBALANCING_001 a wm:Primitive ;
+    rdfs:label "Scenario-Based Rebalancing",
+        "scenario_rebalancing" ;
+    dcterms:description "Time-stamped scenario-based rebalancing events. Captures rebalancing actions triggered by specific market scenarios (e.g., interest rate changes, market volatility spikes). Each event represents a conditional rebalancing response with rationale and affected assets." ;
+    wm:businessPurpose "Captures scenario-driven portfolio rebalancing triggers. Enables tracking of how market events or conditions trigger rebalancing actions, affected assets/sectors, and the rationale behind allocation changes." ;
+    wm:hasDerivedAttribute <https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/derived-attribute/allocation_change>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/derived-attribute/change_direction> ;
+    wm:hasPrimitiveAttribute <https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/affected_assets_sectors>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/current_allocation_pct>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/investor_id>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/new_allocation_pct>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/rationale>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/scenario>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/scenario_rebalance_id>,
+        <https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/triggered_action> ;
+    wm:primitiveId "ATOM_EVENT_SCENARIO_REBALANCING_001" ;
+    wm:primitiveName "scenario_rebalancing" ;
+    wm:primitiveSubtype "Event" ;
+    wm:sourceFile "TABLE_EVENT_SCENARIO_REBALANCING_001.yaml" ;
+    wm:useCase "compliance_documentation",
+        "conditional_rebalancing",
+        "market_response_analysis",
+        "risk_event_tracking",
+        "scenario_analysis" .
+
+wm:AffectedAssetSector a owl:Class ;
+    rdfs:label "Affected Asset Sector" .
+
+wm:Asset a owl:Class ;
+    rdfs:label "Asset" .
+
+wm:CashFlow a owl:Class ;
+    rdfs:label "Cash Flow" .
+
+wm:CashFlowSource a owl:Class ;
+    rdfs:label "Cash Flow Source" .
+
+wm:CashFlowType a owl:Class ;
+    rdfs:label "Cash Flow Type" .
+
+wm:Category a owl:Class ;
+    rdfs:label "Category" .
+
+wm:InvestmentGoal a owl:Class ;
+    rdfs:label "Investment Goal" .
+
+wm:InvestmentGoalType a owl:Class ;
+    rdfs:label "Investment Goal Type" .
+
+wm:InvestmentType a owl:Class ;
+    rdfs:label "Investment Type" .
+
+wm:Investor a owl:Class ;
+    rdfs:label "Investor" .
+
+wm:MarketScenario a owl:Class ;
+    rdfs:label "Market Scenario" .
+
+wm:PortfolioHealth a owl:Class ;
+    rdfs:label "Portfolio Health" .
+
+wm:PortfolioHolding a owl:Class ;
+    rdfs:label "Portfolio Holding" .
+
+wm:RebalancingAction a owl:Class ;
+    rdfs:label "Rebalancing Action" .
+
+wm:RebalancingDecision a owl:Class ;
+    rdfs:label "Rebalancing Decision" .
+
+wm:RebalancingLogic a owl:Class ;
+    rdfs:label "Rebalancing Logic" .
+
+wm:RiskTolerance a owl:Class ;
+    rdfs:label "Risk Tolerance" .
+
+wm:ScenarioRebalancing a owl:Class ;
+    rdfs:label "Scenario Rebalancing" .
+
+wm:Sector a owl:Class ;
+    rdfs:label "Sector" .
+
+wm:SectorAllocation a owl:Class ;
+    rdfs:label "Sector Allocation" .
+
+wm:Segment a owl:Class ;
+    rdfs:label "Segment" .
+
+wm:TimeHorizon a owl:Class ;
+    rdfs:label "Time Horizon" .
+
+wm:affectsAssetOrSector a owl:ObjectProperty ;
+    rdfs:label "affectsAssetOrSector" .
+
+wm:aggregatable a owl:DatatypeProperty ;
+    rdfs:label "aggregatable" .
+
+wm:allocationOfInvestor a owl:ObjectProperty ;
+    rdfs:label "allocationOfInvestor" .
+
+wm:allocationPct a owl:DatatypeProperty ;
+    rdfs:label "allocationPct" .
+
+wm:allowedValue a owl:DatatypeProperty ;
+    rdfs:label "allowedValue" .
+
+wm:amount a owl:DatatypeProperty ;
+    rdfs:label "amount" .
+
+wm:attributeName a owl:DatatypeProperty ;
+    rdfs:label "attributeName" .
+
+wm:attributeType a owl:DatatypeProperty ;
+    rdfs:label "attributeType" .
+
+wm:avgAnnualReturnPct a owl:DatatypeProperty ;
+    rdfs:label "avgAnnualReturnPct" .
+
+wm:avgPostTaxReturnPct a owl:DatatypeProperty ;
+    rdfs:label "avgPostTaxReturnPct" .
+
+wm:avgSharpeRatio a owl:DatatypeProperty ;
+    rdfs:label "avgSharpeRatio" .
+
+wm:avgVolatilityPct a owl:DatatypeProperty ;
+    rdfs:label "avgVolatilityPct" .
+
+wm:belongsToInvestor a owl:ObjectProperty ;
+    rdfs:label "belongsToInvestor" .
+
+wm:businessPurpose a owl:DatatypeProperty ;
+    rdfs:label "businessPurpose" .
+
+wm:cashFlowId a owl:DatatypeProperty ;
+    rdfs:label "cashFlowId" .
+
+wm:cashFlowOfInvestor a owl:ObjectProperty ;
+    rdfs:label "cashFlowOfInvestor" .
+
+wm:contextValue a owl:DatatypeProperty ;
+    rdfs:label "contextValue" .
+
+wm:cost a owl:DatatypeProperty ;
+    rdfs:label "cost" .
+
+wm:currentAllocationPct a owl:DatatypeProperty ;
+    rdfs:label "currentAllocationPct" .
+
+wm:currentValue a owl:DatatypeProperty ;
+    rdfs:label "currentValue" .
+
+wm:derivedName a owl:DatatypeProperty ;
+    rdfs:label "derivedName" .
+
+wm:description a owl:DatatypeProperty ;
+    rdfs:label "description" .
+
+wm:diversificationScore a owl:DatatypeProperty ;
+    rdfs:label "diversificationScore" .
+
+wm:dividends a owl:DatatypeProperty ;
+    rdfs:label "dividends" .
+
+wm:filterable a owl:DatatypeProperty ;
+    rdfs:label "filterable" .
+
+wm:focusesOnSector a owl:ObjectProperty ;
+    rdfs:label "focusesOnSector" .
+
+wm:goalId a owl:DatatypeProperty ;
+    rdfs:label "goalId" .
+
+wm:goalMatchPct a owl:DatatypeProperty ;
+    rdfs:label "goalMatchPct" .
+
+wm:hasCashFlow a owl:ObjectProperty ;
+    rdfs:label "hasCashFlow" .
+
+wm:hasCashFlowSource a owl:ObjectProperty ;
+    rdfs:label "hasCashFlowSource" .
+
+wm:hasCashFlowType a owl:ObjectProperty ;
+    rdfs:label "hasCashFlowType" .
+
+wm:hasCategory a owl:ObjectProperty ;
+    rdfs:label "hasCategory" .
+
+wm:hasContextValue a owl:ObjectProperty ;
+    rdfs:label "hasContextValue" .
+
+wm:hasDerivedAttribute a owl:ObjectProperty ;
+    rdfs:label "hasDerivedAttribute" .
+
+wm:hasDerivedContext a owl:ObjectProperty ;
+    rdfs:label "hasDerivedContext" .
+
+wm:hasHolding a owl:ObjectProperty ;
+    rdfs:label "hasHolding" .
+
+wm:hasInvestmentGoal a owl:ObjectProperty ;
+    rdfs:label "hasInvestmentGoal" .
+
+wm:hasInvestmentGoalType a owl:ObjectProperty ;
+    rdfs:label "hasInvestmentGoalType" .
+
+wm:hasInvestmentType a owl:ObjectProperty ;
+    rdfs:label "hasInvestmentType" .
+
+wm:hasMarketScenario a owl:ObjectProperty ;
+    rdfs:label "hasMarketScenario" .
+
+wm:hasPortfolioHealth a owl:ObjectProperty ;
+    rdfs:label "hasPortfolioHealth" .
+
+wm:hasPrimitiveAttribute a owl:ObjectProperty ;
+    rdfs:label "hasPrimitiveAttribute" .
+
+wm:hasRebalancingAction a owl:ObjectProperty ;
+    rdfs:label "hasRebalancingAction" .
+
+wm:hasRebalancingDecision a owl:ObjectProperty ;
+    rdfs:label "hasRebalancingDecision" .
+
+wm:hasRebalancingLogic a owl:ObjectProperty ;
+    rdfs:label "hasRebalancingLogic" .
+
+wm:hasRiskTolerance a owl:ObjectProperty ;
+    rdfs:label "hasRiskTolerance" .
+
+wm:hasScenarioRebalancing a owl:ObjectProperty ;
+    rdfs:label "hasScenarioRebalancing" .
+
+wm:hasSector a owl:ObjectProperty ;
+    rdfs:label "hasSector" .
+
+wm:hasSectorAllocation a owl:ObjectProperty ;
+    rdfs:label "hasSectorAllocation" .
+
+wm:hasSegment a owl:ObjectProperty ;
+    rdfs:label "hasSegment" .
+
+wm:hasTimeHorizon a owl:ObjectProperty ;
+    rdfs:label "hasTimeHorizon" .
+
+wm:hasTriggeredAction a owl:ObjectProperty ;
+    rdfs:label "hasTriggeredAction" .
+
+wm:healthOfInvestor a owl:ObjectProperty ;
+    rdfs:label "healthOfInvestor" .
+
+wm:heldByInvestor a owl:ObjectProperty ;
+    rdfs:label "heldByInvestor" .
+
+wm:holdingId a owl:DatatypeProperty ;
+    rdfs:label "holdingId" .
+
+wm:investmentName a owl:DatatypeProperty ;
+    rdfs:label "investmentName" .
+
+wm:investorId a owl:DatatypeProperty ;
+    rdfs:label "investorId" .
+
+wm:investorName a owl:DatatypeProperty ;
+    rdfs:label "investorName" .
+
+wm:liquidityScore a owl:DatatypeProperty ;
+    rdfs:label "liquidityScore" .
+
+wm:newAllocationPct a owl:DatatypeProperty ;
+    rdfs:label "newAllocationPct" .
+
+wm:notes a owl:DatatypeProperty ;
+    rdfs:label "notes" .
+
+wm:portfolioHealthId a owl:DatatypeProperty ;
+    rdfs:label "portfolioHealthId" .
+
+wm:primitiveId a owl:DatatypeProperty ;
+    rdfs:label "primitiveId" .
+
+wm:primitiveName a owl:DatatypeProperty ;
+    rdfs:label "primitiveName" .
+
+wm:primitiveSubtype a owl:DatatypeProperty ;
+    rdfs:label "primitiveSubtype" .
+
+wm:progressPct a owl:DatatypeProperty ;
+    rdfs:label "progressPct" .
+
+wm:purchaseDate a owl:DatatypeProperty ;
+    rdfs:label "purchaseDate" .
+
+wm:rationale a owl:DatatypeProperty ;
+    rdfs:label "rationale" .
+
+wm:rebalanceId a owl:DatatypeProperty ;
+    rdfs:label "rebalanceId" .
+
+wm:rebalancingActionOfInvestor a owl:ObjectProperty ;
+    rdfs:label "rebalancingActionOfInvestor" .
+
+wm:representsAsset a owl:ObjectProperty ;
+    rdfs:label "representsAsset" .
+
+wm:returnsPct a owl:DatatypeProperty ;
+    rdfs:label "returnsPct" .
+
+wm:riskScore a owl:DatatypeProperty ;
+    rdfs:label "riskScore" .
+
+wm:scenarioRebalanceId a owl:DatatypeProperty ;
+    rdfs:label "scenarioRebalanceId" .
+
+wm:scenarioRebalancingOfInvestor a owl:ObjectProperty ;
+    rdfs:label "scenarioRebalancingOfInvestor" .
+
+wm:searchable a owl:DatatypeProperty ;
+    rdfs:label "searchable" .
+
+wm:sectorAllocationId a owl:DatatypeProperty ;
+    rdfs:label "sectorAllocationId" .
+
+wm:shortfall a owl:DatatypeProperty ;
+    rdfs:label "shortfall" .
+
+wm:source a owl:DatatypeProperty ;
+    rdfs:label "source" .
+
+wm:sourceColumn a owl:DatatypeProperty ;
+    rdfs:label "sourceColumn" .
+
+wm:sourceFile a owl:DatatypeProperty ;
+    rdfs:label "sourceFile" .
+
+wm:sourceTable a owl:DatatypeProperty ;
+    rdfs:label "sourceTable" .
+
+wm:stdDevAnnualReturnPct a owl:DatatypeProperty ;
+    rdfs:label "stdDevAnnualReturnPct" .
+
+wm:synonym a owl:DatatypeProperty ;
+    rdfs:label "synonym" .
+
+wm:targetAllocationPct a owl:DatatypeProperty ;
+    rdfs:label "targetAllocationPct" .
+
+wm:targetAmount a owl:DatatypeProperty ;
+    rdfs:label "targetAmount" .
+
+wm:taxesPaid a owl:DatatypeProperty ;
+    rdfs:label "taxesPaid" .
+
+wm:timeToGoalMonths a owl:DatatypeProperty ;
+    rdfs:label "timeToGoalMonths" .
+
+wm:totalInvestment a owl:DatatypeProperty ;
+    rdfs:label "totalInvestment" .
+
+wm:useCase a owl:DatatypeProperty ;
+    rdfs:label "useCase" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/attribute/asset_class_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Asset Class ID" ;
+    dcterms:description "Unique identifier for asset class" ;
+    wm:attributeName "asset_class_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/attribute/category> a wm:PrimitiveAttribute ;
+    rdfs:label "Category" ;
+    dcterms:description "Broad asset category classification" ;
+    wm:allowedValue "Alternative",
+        "Bonds",
+        "Cash Equivalent",
+        "Commodities",
+        "Crypto",
+        "Debt",
+        "ETF",
+        "Equity",
+        "Fixed Income",
+        "Gold",
+        "Hybrid",
+        "International",
+        "MF",
+        "PPF",
+        "REIT",
+        "Real Estate",
+        "SGB" ;
+    wm:attributeName "category" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "asset category",
+        "broad category" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/attribute/investment_type> a wm:PrimitiveAttribute ;
+    rdfs:label "Investment Type" ;
+    dcterms:description "Specific investment product type" ;
+    wm:allowedValue "Corporate Bond",
+        "ETF",
+        "Equity",
+        "Global Equity",
+        "Gold",
+        "Government Bond",
+        "Hedge Fund",
+        "InVIT",
+        "Index Fund",
+        "Mutual Fund",
+        "Private Equity",
+        "REIT",
+        "Real Estate",
+        "Venture Capital" ;
+    wm:attributeName "investment_type" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "instrument type",
+        "product type" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Alternative> a wm:ContextValue ;
+    rdfs:label "Alternative" ;
+    dcterms:description "Alternative investment category such as hedge fund, private equity, or venture capital exposure" ;
+    wm:contextValue "Alternative" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Bonds> a wm:ContextValue ;
+    rdfs:label "Bonds" ;
+    dcterms:description "Debt security category including corporate and government bonds" ;
+    wm:contextValue "Bonds" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Cash-Equivalent> a wm:ContextValue ;
+    rdfs:label "Cash Equivalent" ;
+    dcterms:description "Highly liquid low-risk cash-like instruments" ;
+    wm:contextValue "Cash Equivalent" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Commodities> a wm:ContextValue ;
+    rdfs:label "Commodities" ;
+    dcterms:description "Commodity-linked exposure such as gold or other commodity instruments" ;
+    wm:contextValue "Commodities" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Corporate-Bond> a wm:ContextValue ;
+    rdfs:label "Corporate Bond" ;
+    dcterms:description "Corporate fixed-income instrument" ;
+    wm:contextValue "Corporate Bond" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Crypto> a wm:ContextValue ;
+    rdfs:label "Crypto" ;
+    dcterms:description "Crypto or digital asset exposure category" ;
+    wm:contextValue "Crypto" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Debt> a wm:ContextValue ;
+    rdfs:label "Debt" ;
+    dcterms:description "Debt or fixed-income oriented category" ;
+    wm:contextValue "Debt" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/ETF> a wm:ContextValue ;
+    rdfs:label "ETF" ;
+    dcterms:description "Exchange-traded fund product/category" ;
+    wm:contextValue "ETF" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Equity> a wm:ContextValue ;
+    rdfs:label "Equity" ;
+    dcterms:description "Equity-oriented category or direct equity exposure" ;
+    wm:contextValue "Equity" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Fixed-Income> a wm:ContextValue ;
+    rdfs:label "Fixed Income" ;
+    dcterms:description "Fixed-income investment category" ;
+    wm:contextValue "Fixed Income" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Global-Equity> a wm:ContextValue ;
+    rdfs:label "Global Equity" ;
+    dcterms:description "Global or international equity exposure" ;
+    wm:contextValue "Global Equity" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Gold> a wm:ContextValue ;
+    rdfs:label "Gold" ;
+    dcterms:description "Gold-linked investment exposure" ;
+    wm:contextValue "Gold" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Government-Bond> a wm:ContextValue ;
+    rdfs:label "Government Bond" ;
+    dcterms:description "Government fixed-income instrument" ;
+    wm:contextValue "Government Bond" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Hedge-Fund> a wm:ContextValue ;
+    rdfs:label "Hedge Fund" ;
+    dcterms:description "Alternative pooled investment product" ;
+    wm:contextValue "Hedge Fund" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Hybrid> a wm:ContextValue ;
+    rdfs:label "Hybrid" ;
+    dcterms:description "Mixed allocation between equity, debt, or other asset classes" ;
+    wm:contextValue "Hybrid" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/InVIT> a wm:ContextValue ;
+    rdfs:label "InVIT" ;
+    dcterms:description "Infrastructure Investment Trust product" ;
+    wm:contextValue "InVIT" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Index-Fund> a wm:ContextValue ;
+    rdfs:label "Index Fund" ;
+    dcterms:description "Passive fund tracking a market index" ;
+    wm:contextValue "Index Fund" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/International> a wm:ContextValue ;
+    rdfs:label "International" ;
+    dcterms:description "International or global market exposure" ;
+    wm:contextValue "International" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/MF> a wm:ContextValue ;
+    rdfs:label "MF" ;
+    dcterms:description "Mutual fund category abbreviation observed in holdings" ;
+    wm:contextValue "MF" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Mutual-Fund> a wm:ContextValue ;
+    rdfs:label "Mutual Fund" ;
+    dcterms:description "Pooled mutual fund investment product" ;
+    wm:contextValue "Mutual Fund" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/PPF> a wm:ContextValue ;
+    rdfs:label "PPF" ;
+    dcterms:description "Public Provident Fund or long-term savings category" ;
+    wm:contextValue "PPF" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Private-Equity> a wm:ContextValue ;
+    rdfs:label "Private Equity" ;
+    dcterms:description "Private equity investment exposure" ;
+    wm:contextValue "Private Equity" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/REIT> a wm:ContextValue ;
+    rdfs:label "REIT" ;
+    dcterms:description "Real Estate Investment Trust exposure" ;
+    wm:contextValue "REIT" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Real-Estate> a wm:ContextValue ;
+    rdfs:label "Real Estate" ;
+    dcterms:description "Real-estate-oriented investment exposure" ;
+    wm:contextValue "Real Estate" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/SGB> a wm:ContextValue ;
+    rdfs:label "SGB" ;
+    dcterms:description "Sovereign Gold Bond category" ;
+    wm:contextValue "SGB" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/context/Venture-Capital> a wm:ContextValue ;
+    rdfs:label "Venture Capital" ;
+    dcterms:description "Venture capital investment exposure" ;
+    wm:contextValue "Venture Capital" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/derived-context/has_lock_in> a wm:DerivedContext ;
+    rdfs:label "has_lock_in" ;
+    dcterms:description "Whether investment has mandatory lock-in period" ;
+    wm:derivedName "has_lock_in" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/derived-context/is_suitable_for_risk> a wm:DerivedContext ;
+    rdfs:label "is_suitable_for_risk" ;
+    dcterms:description "Whether asset class suits given risk tolerance" ;
+    wm:derivedName "is_suitable_for_risk" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_ASSET_CLASS_001/derived-context/is_tax_saving> a wm:DerivedContext ;
+    rdfs:label "is_tax_saving" ;
+    dcterms:description "Whether investment qualifies for 80C deduction" ;
+    wm:derivedName "is_tax_saving" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/attribute/goal_type_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Goal Type ID" ;
+    dcterms:description "Unique identifier for goal type" ;
+    wm:attributeName "goal_type_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/attribute/investment_goal> a wm:PrimitiveAttribute ;
+    rdfs:label "Investment Goal" ;
+    dcterms:description "Investment goal classification name" ;
+    wm:allowedValue "Child Education",
+        "Emergency Fund",
+        "Growth",
+        "Income Generation",
+        "Retirement Planning",
+        "Wealth Preservation" ;
+    wm:attributeName "investment_goal" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "financial goal",
+        "goal",
+        "objective" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Child-Education> a wm:ContextValue ;
+    rdfs:label "Child Education" ;
+    dcterms:description "Goal-dated investment for child's education expenses" ;
+    wm:contextValue "Child Education" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Emergency-Fund> a wm:ContextValue ;
+    rdfs:label "Emergency Fund" ;
+    dcterms:description "Highly liquid reserve for unexpected expenses" ;
+    wm:contextValue "Emergency Fund" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Growth> a wm:ContextValue ;
+    rdfs:label "Growth" ;
+    dcterms:description "Capital appreciation focused investment goal" ;
+    wm:contextValue "Growth" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Income-Generation> a wm:ContextValue ;
+    rdfs:label "Income Generation" ;
+    dcterms:description "Investment goal focused on generating regular income or cash flow" ;
+    wm:contextValue "Income Generation" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Retirement-Planning> a wm:ContextValue ;
+    rdfs:label "Retirement Planning" ;
+    dcterms:description "Long-term wealth accumulation and income planning for retirement" ;
+    wm:contextValue "Retirement Planning" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/context/Wealth-Preservation> a wm:ContextValue ;
+    rdfs:label "Wealth Preservation" ;
+    dcterms:description "Capital protection focused goal prioritizing stability and controlled risk" ;
+    wm:contextValue "Wealth Preservation" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/derived-context/is_long_term_goal> a wm:DerivedContext ;
+    rdfs:label "is_long_term_goal" ;
+    dcterms:description "Whether goal requires long-term investment horizon" ;
+    wm:derivedName "is_long_term_goal" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/derived-context/is_tax_advantaged> a wm:DerivedContext ;
+    rdfs:label "is_tax_advantaged" ;
+    dcterms:description "Whether goal investments qualify for tax benefits" ;
+    wm:derivedName "is_tax_advantaged" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/derived-context/recommended_equity_allocation> a wm:DerivedContext ;
+    rdfs:label "recommended_equity_allocation" ;
+    dcterms:description "Recommended equity allocation for the goal" ;
+    wm:derivedName "recommended_equity_allocation" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_GOAL_001/derived-context/requires_liquidity> a wm:DerivedContext ;
+    rdfs:label "requires_liquidity" ;
+    dcterms:description "Whether goal requires highly liquid investments" ;
+    wm:derivedName "requires_liquidity" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/attribute/investment_type> a wm:PrimitiveAttribute ;
+    rdfs:label "Investment Type" ;
+    dcterms:description "Investment product type name" ;
+    wm:allowedValue "Corporate Bond",
+        "ETF",
+        "Equity",
+        "Global Equity",
+        "Gold",
+        "Government Bond",
+        "Hedge Fund",
+        "InVIT",
+        "Index Fund",
+        "Mutual Fund",
+        "Private Equity",
+        "REIT",
+        "Real Estate",
+        "Venture Capital" ;
+    wm:attributeName "investment_type" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "fund type",
+        "instrument",
+        "product type" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/attribute/invtype_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Investment Type ID" ;
+    dcterms:description "Unique identifier for investment type" ;
+    wm:attributeName "invtype_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Corporate-Bond> a wm:ContextValue ;
+    rdfs:label "Corporate Bond" ;
+    dcterms:description "Corporate fixed-income investment instrument" ;
+    wm:contextValue "Corporate Bond" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/ETF> a wm:ContextValue ;
+    rdfs:label "ETF" ;
+    dcterms:description "Exchange-traded fund product traded on an exchange" ;
+    wm:contextValue "ETF" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Equity> a wm:ContextValue ;
+    rdfs:label "Equity" ;
+    dcterms:description "Direct or equity-oriented investment exposure" ;
+    wm:contextValue "Equity" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Global-Equity> a wm:ContextValue ;
+    rdfs:label "Global Equity" ;
+    dcterms:description "International or global equity exposure" ;
+    wm:contextValue "Global Equity" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Gold> a wm:ContextValue ;
+    rdfs:label "Gold" ;
+    dcterms:description "Gold-linked investment exposure" ;
+    wm:contextValue "Gold" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Government-Bond> a wm:ContextValue ;
+    rdfs:label "Government Bond" ;
+    dcterms:description "Government-issued fixed-income investment instrument" ;
+    wm:contextValue "Government Bond" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Hedge-Fund> a wm:ContextValue ;
+    rdfs:label "Hedge Fund" ;
+    dcterms:description "Alternative pooled investment product" ;
+    wm:contextValue "Hedge Fund" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/InVIT> a wm:ContextValue ;
+    rdfs:label "InVIT" ;
+    dcterms:description "Infrastructure Investment Trust product" ;
+    wm:contextValue "InVIT" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Index-Fund> a wm:ContextValue ;
+    rdfs:label "Index Fund" ;
+    dcterms:description "Passive fund tracking a market index" ;
+    wm:contextValue "Index Fund" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Mutual-Fund> a wm:ContextValue ;
+    rdfs:label "Mutual Fund" ;
+    dcterms:description "Pooled mutual fund investment product" ;
+    wm:contextValue "Mutual Fund" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Private-Equity> a wm:ContextValue ;
+    rdfs:label "Private Equity" ;
+    dcterms:description "Private equity investment exposure" ;
+    wm:contextValue "Private Equity" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/REIT> a wm:ContextValue ;
+    rdfs:label "REIT" ;
+    dcterms:description "Real Estate Investment Trust exposure" ;
+    wm:contextValue "REIT" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Real-Estate> a wm:ContextValue ;
+    rdfs:label "Real Estate" ;
+    dcterms:description "Real-estate-oriented investment exposure" ;
+    wm:contextValue "Real Estate" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/context/Venture-Capital> a wm:ContextValue ;
+    rdfs:label "Venture Capital" ;
+    dcterms:description "Venture capital investment exposure" ;
+    wm:contextValue "Venture Capital" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/derived-context/has_lock_in> a wm:DerivedContext ;
+    rdfs:label "has_lock_in" ;
+    dcterms:description "Whether investment has mandatory lock-in" ;
+    wm:derivedName "has_lock_in" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/derived-context/is_80c_eligible> a wm:DerivedContext ;
+    rdfs:label "is_80c_eligible" ;
+    dcterms:description "Whether investment qualifies for 80C deduction" ;
+    wm:derivedName "is_80c_eligible" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/derived-context/is_equity_taxed> a wm:DerivedContext ;
+    rdfs:label "is_equity_taxed" ;
+    dcterms:description "Whether taxed as equity (15% STCG)" ;
+    wm:derivedName "is_equity_taxed" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/derived-context/ltcg_rate> a wm:DerivedContext ;
+    rdfs:label "ltcg_rate" ;
+    dcterms:description "Long-term capital gains tax rate" ;
+    wm:derivedName "ltcg_rate" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_INVESTMENT_TYPE_001/derived-context/requires_demat> a wm:DerivedContext ;
+    rdfs:label "requires_demat" ;
+    dcterms:description "Whether demat account is required" ;
+    wm:derivedName "requires_demat" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/attribute/risk_tolerance> a wm:PrimitiveAttribute ;
+    rdfs:label "Risk Tolerance" ;
+    dcterms:description "Risk tolerance classification name" ;
+    wm:allowedValue "Aggressive",
+        "Conservative",
+        "Moderate" ;
+    wm:attributeName "risk_tolerance" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "risk appetite",
+        "risk level",
+        "risk profile" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/attribute/risk_tolerance_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Risk Tolerance ID" ;
+    dcterms:description "Unique identifier for risk tolerance level" ;
+    wm:attributeName "risk_tolerance_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/context/Aggressive> a wm:ContextValue ;
+    rdfs:label "Aggressive" ;
+    dcterms:description "Growth focused with high volatility tolerance" ;
+    wm:contextValue "Aggressive" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/context/Conservative> a wm:ContextValue ;
+    rdfs:label "Conservative" ;
+    dcterms:description "Capital preservation focused with minimal volatility tolerance" ;
+    wm:contextValue "Conservative" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/context/Moderate> a wm:ContextValue ;
+    rdfs:label "Moderate" ;
+    dcterms:description "Balanced approach between growth and capital preservation" ;
+    wm:contextValue "Moderate" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/derived-context/get_suitable_products> a wm:DerivedContext ;
+    rdfs:label "get_suitable_products" ;
+    dcterms:description "Returns list of suitable product types" ;
+    wm:derivedName "get_suitable_products" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/derived-context/is_equity_heavy_allowed> a wm:DerivedContext ;
+    rdfs:label "is_equity_heavy_allowed" ;
+    dcterms:description "Whether equity-heavy portfolios are permitted" ;
+    wm:derivedName "is_equity_heavy_allowed" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/derived-context/is_high_risk_products_allowed> a wm:DerivedContext ;
+    rdfs:label "is_high_risk_products_allowed" ;
+    dcterms:description "Whether high-risk products can be recommended" ;
+    wm:derivedName "is_high_risk_products_allowed" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_RISK_TOLERANCE_001/derived-context/max_equity_allocation> a wm:DerivedContext ;
+    rdfs:label "max_equity_allocation" ;
+    dcterms:description "Maximum allowed equity allocation percentage" ;
+    wm:derivedName "max_equity_allocation" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/attribute/sector> a wm:PrimitiveAttribute ;
+    rdfs:label "Sector" ;
+    dcterms:description "Sector classification name" ;
+    wm:allowedValue "Automobile",
+        "Banking",
+        "Consumer Goods",
+        "Corporate",
+        "Financial Services",
+        "Government",
+        "Healthcare",
+        "Infrastructure",
+        "Pharma",
+        "Private Equity",
+        "Real Estate",
+        "Technology" ;
+    wm:attributeName "sector" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "industry",
+        "sector name" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/attribute/sector_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Sector ID" ;
+    dcterms:description "Unique identifier for sector" ;
+    wm:attributeName "sector_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Automobile> a wm:ContextValue ;
+    rdfs:label "Automobile" ;
+    dcterms:description "Automobile and auto-related sector exposure" ;
+    wm:contextValue "Automobile" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Banking> a wm:ContextValue ;
+    rdfs:label "Banking" ;
+    dcterms:description "Banking and lending sector exposure" ;
+    wm:contextValue "Banking" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Consumer-Goods> a wm:ContextValue ;
+    rdfs:label "Consumer Goods" ;
+    dcterms:description "Consumer goods, FMCG, consumer durables, and retail exposure" ;
+    wm:contextValue "Consumer Goods" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Corporate> a wm:ContextValue ;
+    rdfs:label "Corporate" ;
+    dcterms:description "Corporate sector exposure" ;
+    wm:contextValue "Corporate" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Financial-Services> a wm:ContextValue ;
+    rdfs:label "Financial Services" ;
+    dcterms:description "Banks, insurance, asset management, fintech, and broader financial services" ;
+    wm:contextValue "Financial Services" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Government> a wm:ContextValue ;
+    rdfs:label "Government" ;
+    dcterms:description "Government or public-sector related exposure" ;
+    wm:contextValue "Government" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Healthcare> a wm:ContextValue ;
+    rdfs:label "Healthcare" ;
+    dcterms:description "Healthcare services, medical devices, and healthcare-related exposure" ;
+    wm:contextValue "Healthcare" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Infrastructure> a wm:ContextValue ;
+    rdfs:label "Infrastructure" ;
+    dcterms:description "Infrastructure and infrastructure-linked investment exposure" ;
+    wm:contextValue "Infrastructure" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Pharma> a wm:ContextValue ;
+    rdfs:label "Pharma" ;
+    dcterms:description "Pharmaceuticals and pharma-related exposure" ;
+    wm:contextValue "Pharma" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Private-Equity> a wm:ContextValue ;
+    rdfs:label "Private Equity" ;
+    dcterms:description "Private equity sector or private-market exposure" ;
+    wm:contextValue "Private Equity" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Real-Estate> a wm:ContextValue ;
+    rdfs:label "Real Estate" ;
+    dcterms:description "REITs, property development, and real-estate-related exposure" ;
+    wm:contextValue "Real Estate" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/context/Technology> a wm:ContextValue ;
+    rdfs:label "Technology" ;
+    dcterms:description "Information technology, software, hardware, and technology services" ;
+    wm:contextValue "Technology" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/derived-context/is_defensive> a wm:DerivedContext ;
+    rdfs:label "is_defensive" ;
+    dcterms:description "Whether sector is defensive (non-cyclical)" ;
+    wm:derivedName "is_defensive" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/derived-context/is_suitable_for_conservative> a wm:DerivedContext ;
+    rdfs:label "is_suitable_for_conservative" ;
+    dcterms:description "Whether sector is suitable for conservative investors" ;
+    wm:derivedName "is_suitable_for_conservative" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SECTOR_001/derived-context/max_allocation_for_risk_tolerance> a wm:DerivedContext ;
+    rdfs:label "max_allocation_for_risk_tolerance" ;
+    dcterms:description "Maximum allowed allocation for given risk tolerance" ;
+    wm:derivedName "max_allocation_for_risk_tolerance" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/attribute/segment> a wm:PrimitiveAttribute ;
+    rdfs:label "Segment" ;
+    dcterms:description "Market capitalization segment name" ;
+    wm:allowedValue "Diversified",
+        "Large Cap",
+        "Mid Cap",
+        "Small Cap" ;
+    wm:attributeName "segment" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "cap category",
+        "market cap" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/attribute/segment_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Segment ID" ;
+    dcterms:description "Unique identifier for segment" ;
+    wm:attributeName "segment_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/context/Diversified> a wm:ContextValue ;
+    rdfs:label "Diversified" ;
+    dcterms:description "Diversified exposure across multiple market segments" ;
+    wm:contextValue "Diversified" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/context/Large-Cap> a wm:ContextValue ;
+    rdfs:label "Large Cap" ;
+    dcterms:description "Companies with market cap above ₹20,000 crores" ;
+    wm:contextValue "Large Cap" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/context/Mid-Cap> a wm:ContextValue ;
+    rdfs:label "Mid Cap" ;
+    dcterms:description "Companies with market cap between ₹5,000-20,000 crores" ;
+    wm:contextValue "Mid Cap" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/context/Small-Cap> a wm:ContextValue ;
+    rdfs:label "Small Cap" ;
+    dcterms:description "Companies with market cap below ₹5,000 crores" ;
+    wm:contextValue "Small Cap" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/derived-context/allocation_limit_for_risk> a wm:DerivedContext ;
+    rdfs:label "allocation_limit_for_risk" ;
+    dcterms:description "Maximum allocation for given risk tolerance" ;
+    wm:derivedName "allocation_limit_for_risk" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_SEGMENT_001/derived-context/is_suitable_for_risk_tolerance> a wm:DerivedContext ;
+    rdfs:label "is_suitable_for_risk_tolerance" ;
+    dcterms:description "Whether segment is suitable for given risk tolerance" ;
+    wm:derivedName "is_suitable_for_risk_tolerance" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/attribute/horizon_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Horizon ID" ;
+    dcterms:description "Unique identifier for time horizon category" ;
+    wm:attributeName "horizon_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/attribute/time_horizon> a wm:PrimitiveAttribute ;
+    rdfs:label "Time Horizon" ;
+    dcterms:description "Time horizon classification name" ;
+    wm:allowedValue "Long-term",
+        "Medium-term",
+        "Short-term" ;
+    wm:attributeName "time_horizon" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "duration",
+        "holding period",
+        "investment tenure" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/context/Long-term> a wm:ContextValue ;
+    rdfs:label "Long-term" ;
+    dcterms:description "Investments with 7+ year horizon" ;
+    wm:contextValue "Long-term" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/context/Medium-term> a wm:ContextValue ;
+    rdfs:label "Medium-term" ;
+    dcterms:description "Investments with 3-7 year horizon" ;
+    wm:contextValue "Medium-term" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/context/Short-term> a wm:ContextValue ;
+    rdfs:label "Short-term" ;
+    dcterms:description "Investments with 0-3 year horizon" ;
+    wm:contextValue "Short-term" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/derived-context/allows_equity> a wm:DerivedContext ;
+    rdfs:label "allows_equity" ;
+    dcterms:description "Whether time horizon allows equity investments" ;
+    wm:derivedName "allows_equity" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/derived-context/can_use_lock_in_products> a wm:DerivedContext ;
+    rdfs:label "can_use_lock_in_products" ;
+    dcterms:description "Whether lock-in products like ELSS/PPF are suitable" ;
+    wm:derivedName "can_use_lock_in_products" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/derived-context/is_wealth_creation_suitable> a wm:DerivedContext ;
+    rdfs:label "is_wealth_creation_suitable" ;
+    dcterms:description "Whether horizon is suitable for wealth creation" ;
+    wm:derivedName "is_wealth_creation_suitable" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/derived-context/max_equity_allowed> a wm:DerivedContext ;
+    rdfs:label "max_equity_allowed" ;
+    dcterms:description "Maximum equity allocation for this horizon" ;
+    wm:derivedName "max_equity_allowed" .
+
+<https://wealth.example.org/metadata/ATOM_CONTEXT_TIME_HORIZON_001/derived-context/requires_liquidity> a wm:DerivedContext ;
+    rdfs:label "requires_liquidity" ;
+    dcterms:description "Whether liquidity is a key requirement" ;
+    wm:derivedName "requires_liquidity" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/avg_annual_return_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Average Annual Return" ;
+    dcterms:description "Average annual return percentage for investments towards this goal" ;
+    wm:aggregatable true ;
+    wm:attributeName "avg_annual_return_pct" ;
+    wm:attributeType "decimal" ;
+    wm:synonym "CAGR",
+        "annual return",
+        "yearly return" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/avg_post_tax_return_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Average Post-Tax Return" ;
+    dcterms:description "Average annual return after taxes" ;
+    wm:aggregatable true ;
+    wm:attributeName "avg_post_tax_return_pct" ;
+    wm:attributeType "decimal" ;
+    wm:synonym "net return",
+        "post-tax return" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/avg_sharpe_ratio> a wm:PrimitiveAttribute ;
+    rdfs:label "Average Sharpe Ratio" ;
+    dcterms:description "Risk-adjusted return metric for goal investments" ;
+    wm:aggregatable true ;
+    wm:attributeName "avg_sharpe_ratio" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "risk-adjusted return",
+        "sharpe ratio" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/avg_volatility_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Average Volatility" ;
+    dcterms:description "Average volatility percentage of goal investments" ;
+    wm:aggregatable true ;
+    wm:attributeName "avg_volatility_pct" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "risk level",
+        "volatility" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/current_value> a wm:PrimitiveAttribute ;
+    rdfs:label "Current Value" ;
+    dcterms:description "Current accumulated value towards the goal" ;
+    wm:aggregatable true ;
+    wm:attributeName "current_value" ;
+    wm:attributeType "decimal" ;
+    wm:synonym "accumulated amount",
+        "current amount" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/description> a wm:PrimitiveAttribute ;
+    rdfs:label "Description" ;
+    dcterms:description "Detailed description of the goal" ;
+    wm:attributeName "description" ;
+    wm:attributeType "string" ;
+    wm:searchable true ;
+    wm:synonym "details",
+        "goal description" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/goal_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Goal ID" ;
+    dcterms:description "Unique identifier for each investment goal" ;
+    wm:attributeName "goal_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "goal identifier" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/investment_goal> a wm:PrimitiveAttribute ;
+    rdfs:label "Investment Goal" ;
+    dcterms:description "Type/name of the investment goal" ;
+    wm:allowedValue "Child Education",
+        "Emergency Fund",
+        "Growth",
+        "Income Generation",
+        "Retirement Planning",
+        "Wealth Preservation" ;
+    wm:attributeName "investment_goal" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "financial objective",
+        "goal name",
+        "goal type" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/investor_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Investor ID" ;
+    dcterms:description "Foreign key to investor_profile" ;
+    wm:attributeName "investor_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "client ID" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/progress_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Progress Percentage" ;
+    dcterms:description "Percentage of goal completed" ;
+    wm:aggregatable true ;
+    wm:attributeName "progress_pct" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "completion percentage",
+        "goal progress",
+        "progress" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/shortfall> a wm:PrimitiveAttribute ;
+    rdfs:label "Shortfall" ;
+    dcterms:description "Amount remaining to reach goal target" ;
+    wm:aggregatable true ;
+    wm:attributeName "shortfall" ;
+    wm:attributeType "decimal" ;
+    wm:synonym "deficit",
+        "gap",
+        "remaining amount" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/std_dev_annual_return_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Standard Deviation" ;
+    dcterms:description "Standard deviation of annual returns" ;
+    wm:aggregatable true ;
+    wm:attributeName "std_dev_annual_return_pct" ;
+    wm:attributeType "decimal" ;
+    wm:synonym "return deviation",
+        "std dev" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/target_amount> a wm:PrimitiveAttribute ;
+    rdfs:label "Target Amount" ;
+    dcterms:description "Target amount to achieve for this goal" ;
+    wm:aggregatable true ;
+    wm:attributeName "target_amount" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "goal amount",
+        "goal target",
+        "target value" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/attribute/time_to_goal_months> a wm:PrimitiveAttribute ;
+    rdfs:label "Time to Goal (Months)" ;
+    dcterms:description "Estimated whole number of months remaining to achieve goal" ;
+    wm:attributeName "time_to_goal_months" ;
+    wm:attributeType "integer" ;
+    wm:filterable true ;
+    wm:synonym "months remaining",
+        "time remaining" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/derived-attribute/is_on_track> a wm:DerivedAttribute ;
+    rdfs:label "Is On Track" ;
+    dcterms:description "Whether goal progress is on track (progress >= expected based on time)" ;
+    wm:derivedName "is_on_track" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTMENT_GOAL_001/derived-attribute/risk_return_ratio> a wm:DerivedAttribute ;
+    rdfs:label "Risk-Return Ratio" ;
+    dcterms:description "Return divided by volatility" ;
+    wm:derivedName "risk_return_ratio" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/category> a wm:PrimitiveAttribute ;
+    rdfs:label "Category" ;
+    dcterms:description "Preferred asset category" ;
+    wm:allowedValue "Debt",
+        "Equity",
+        "Gold",
+        "Hybrid",
+        "Real Estate" ;
+    wm:attributeName "category" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:searchable true ;
+    wm:synonym "asset category",
+        "asset class",
+        "investment category" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/investment_goal> a wm:PrimitiveAttribute ;
+    rdfs:label "Investment Goal" ;
+    dcterms:description "Primary investment objective of the investor" ;
+    wm:allowedValue "Child Education",
+        "Emergency Fund",
+        "Growth",
+        "Income Generation",
+        "Retirement Planning",
+        "Wealth Preservation" ;
+    wm:attributeName "investment_goal" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:searchable true ;
+    wm:synonym "financial goal",
+        "investment objective",
+        "objective" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/investor_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Investor ID" ;
+    dcterms:description "Unique identifier for each investor" ;
+    wm:attributeName "investor_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "account ID",
+        "client ID",
+        "customer number" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/investor_name> a wm:PrimitiveAttribute ;
+    rdfs:label "Investor Name" ;
+    dcterms:description "Full name of the investor" ;
+    wm:attributeName "investor_name" ;
+    wm:attributeType "string" ;
+    wm:searchable true ;
+    wm:synonym "client name",
+        "name" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/notes> a wm:PrimitiveAttribute ;
+    rdfs:label "Notes" ;
+    dcterms:description "Free-form notes about the investor" ;
+    wm:attributeName "notes" ;
+    wm:attributeType "string" ;
+    wm:synonym "additional info",
+        "comments",
+        "remarks" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/risk_tolerance> a wm:PrimitiveAttribute ;
+    rdfs:label "Risk Tolerance" ;
+    dcterms:description "Investor's risk tolerance classification" ;
+    wm:allowedValue "Aggressive",
+        "Conservative",
+        "Moderate" ;
+    wm:attributeName "risk_tolerance" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "risk appetite",
+        "risk preference",
+        "risk profile" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/sector_focus> a wm:PrimitiveAttribute ;
+    rdfs:label "Sector Focus" ;
+    dcterms:description "Investor's preferred sector for investment allocation" ;
+    wm:allowedValue "Automobile",
+        "Banking",
+        "Consumer Goods",
+        "Corporate",
+        "Financial Services",
+        "Government",
+        "Healthcare",
+        "Infrastructure",
+        "Pharma",
+        "Private Equity",
+        "Real Estate",
+        "Technology" ;
+    wm:attributeName "sector_focus" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:searchable true ;
+    wm:synonym "industry focus",
+        "preferred sector",
+        "sector preference" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/segment> a wm:PrimitiveAttribute ;
+    rdfs:label "Segment" ;
+    dcterms:description "Investor's preferred market capitalization or diversification segment" ;
+    wm:allowedValue "Diversified",
+        "Large Cap",
+        "Mid Cap",
+        "Small Cap" ;
+    wm:attributeName "segment" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "cap segment",
+        "market cap category",
+        "market segment" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_INVESTOR_PROFILE_001/attribute/time_horizon> a wm:PrimitiveAttribute ;
+    rdfs:label "Time Horizon" ;
+    dcterms:description "Investment time horizon in years" ;
+    wm:aggregatable true ;
+    wm:allowedValue "Long-term",
+        "Medium-term",
+        "Short-term" ;
+    wm:attributeName "time_horizon" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "holding period",
+        "investment duration",
+        "investment horizon" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/diversification_score> a wm:PrimitiveAttribute ;
+    rdfs:label "Diversification Score" ;
+    dcterms:description "Portfolio diversification score (0-100)" ;
+    wm:aggregatable true ;
+    wm:attributeName "diversification_score" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "diversification",
+        "spread score" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/goal_match_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Goal Match Percentage" ;
+    dcterms:description "How well the portfolio aligns with goals" ;
+    wm:aggregatable true ;
+    wm:attributeName "goal_match_pct" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "goal alignment",
+        "goal match" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/investor_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Investor ID" ;
+    dcterms:description "Foreign key to investor_profile" ;
+    wm:attributeName "investor_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "client ID" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/liquidity_score> a wm:PrimitiveAttribute ;
+    rdfs:label "Liquidity Score" ;
+    dcterms:description "Portfolio liquidity score (0-100)" ;
+    wm:aggregatable true ;
+    wm:attributeName "liquidity_score" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "cash availability",
+        "liquidity" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/portfolio_health_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Portfolio Health ID" ;
+    dcterms:description "Unique identifier for health record" ;
+    wm:attributeName "portfolio_health_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/attribute/risk_score> a wm:PrimitiveAttribute ;
+    rdfs:label "Risk Score" ;
+    dcterms:description "Portfolio risk score (0-100)" ;
+    wm:aggregatable true ;
+    wm:attributeName "risk_score" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "risk level",
+        "risk rating" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/derived-attribute/health_status> a wm:DerivedAttribute ;
+    rdfs:label "Health Status" ;
+    dcterms:description "Categorical health assessment" ;
+    wm:derivedName "health_status" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HEALTH_001/derived-attribute/overall_health_score> a wm:DerivedAttribute ;
+    rdfs:label "Overall Health Score" ;
+    dcterms:description "Weighted average of all health dimensions" ;
+    wm:derivedName "overall_health_score" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/category> a wm:PrimitiveAttribute ;
+    rdfs:label "Category" ;
+    dcterms:description "Asset category (Equity/Debt/Hybrid)" ;
+    wm:allowedValue "Alternative",
+        "Bonds",
+        "Cash Equivalent",
+        "Commodities",
+        "Crypto",
+        "Debt",
+        "ETF",
+        "Equity",
+        "Fixed Income",
+        "Hybrid",
+        "International",
+        "MF",
+        "PPF",
+        "REIT",
+        "SGB" ;
+    wm:attributeName "category" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "asset class" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/cost> a wm:PrimitiveAttribute ;
+    rdfs:label "Cost" ;
+    dcterms:description "Original purchase cost/investment amount" ;
+    wm:aggregatable true ;
+    wm:attributeName "cost" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "cost basis",
+        "invested amount",
+        "purchase price" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/current_value> a wm:PrimitiveAttribute ;
+    rdfs:label "Current Value" ;
+    dcterms:description "Current market value of the holding" ;
+    wm:aggregatable true ;
+    wm:attributeName "current_value" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "market value",
+        "portfolio value",
+        "present value" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/dividends> a wm:PrimitiveAttribute ;
+    rdfs:label "Dividends" ;
+    dcterms:description "Total dividends received from this holding" ;
+    wm:aggregatable true ;
+    wm:attributeName "dividends" ;
+    wm:attributeType "decimal" ;
+    wm:synonym "dividend income",
+        "dividend payout" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/holding_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Holding ID" ;
+    dcterms:description "Unique identifier for each holding" ;
+    wm:attributeName "holding_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "position ID" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/investment_name> a wm:PrimitiveAttribute ;
+    rdfs:label "Investment Name" ;
+    dcterms:description "Name of the investment" ;
+    wm:attributeName "investment_name" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:searchable true ;
+    wm:synonym "asset name",
+        "fund name",
+        "holding name" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/investment_type> a wm:PrimitiveAttribute ;
+    rdfs:label "Investment Type" ;
+    dcterms:description "Type of investment" ;
+    wm:allowedValue "Corporate Bond",
+        "ETF",
+        "Equity",
+        "Global Equity",
+        "Gold",
+        "Government Bond",
+        "Hedge Fund",
+        "InVIT",
+        "Index Fund",
+        "Mutual Fund",
+        "Private Equity",
+        "REIT",
+        "Real Estate" ;
+    wm:attributeName "investment_type" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "asset type",
+        "instrument type",
+        "type" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/investor_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Investor ID" ;
+    dcterms:description "Foreign key to investor_profile" ;
+    wm:attributeName "investor_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "client ID" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/purchase_date> a wm:PrimitiveAttribute ;
+    rdfs:label "Purchase Date" ;
+    dcterms:description "Date when the investment was purchased" ;
+    wm:attributeName "purchase_date" ;
+    wm:attributeType "date" ;
+    wm:filterable true ;
+    wm:synonym "acquisition date",
+        "buy date" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/returns_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Returns Percentage" ;
+    dcterms:description "Percentage return on investment" ;
+    wm:aggregatable true ;
+    wm:attributeName "returns_pct" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "gain percentage",
+        "profit percentage",
+        "return",
+        "returns" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/sector> a wm:PrimitiveAttribute ;
+    rdfs:label "Sector" ;
+    dcterms:description "Industry sector classification" ;
+    wm:allowedValue "Automobile",
+        "Banking",
+        "Consumer Goods",
+        "Corporate",
+        "Financial Services",
+        "Government",
+        "Healthcare",
+        "Infrastructure",
+        "Pharma",
+        "Private Equity",
+        "Real Estate",
+        "Technology" ;
+    wm:attributeName "sector" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "industry" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/segment> a wm:PrimitiveAttribute ;
+    rdfs:label "Segment" ;
+    dcterms:description "Market capitalization segment" ;
+    wm:allowedValue "Diversified",
+        "Large Cap",
+        "Mid Cap",
+        "Small Cap" ;
+    wm:attributeName "segment" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "cap segment",
+        "market cap" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/attribute/taxes_paid> a wm:PrimitiveAttribute ;
+    rdfs:label "Taxes Paid" ;
+    dcterms:description "Taxes paid on this holding" ;
+    wm:aggregatable true ;
+    wm:attributeName "taxes_paid" ;
+    wm:attributeType "decimal" ;
+    wm:synonym "tax",
+        "tax amount" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/derived-attribute/absolute_return> a wm:DerivedAttribute ;
+    rdfs:label "Absolute Return" ;
+    dcterms:description "Absolute profit/loss amount" ;
+    wm:derivedName "absolute_return" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/derived-attribute/holding_period_days> a wm:DerivedAttribute ;
+    rdfs:label "Holding Period (Days)" ;
+    dcterms:description "Number of days since purchase" ;
+    wm:derivedName "holding_period_days" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_PORTFOLIO_HOLDING_001/derived-attribute/is_profitable> a wm:DerivedAttribute ;
+    rdfs:label "Is Profitable" ;
+    dcterms:description "Whether holding is in profit" ;
+    wm:derivedName "is_profitable" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_SECTOR_ALLOCATION_001/attribute/allocation_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Allocation Percentage" ;
+    dcterms:description "Percentage of portfolio in this sector" ;
+    wm:aggregatable true ;
+    wm:allowedValue "Automobile",
+        "Banking",
+        "Consumer Goods",
+        "Corporate",
+        "Financial Services",
+        "Government",
+        "Healthcare",
+        "Infrastructure",
+        "Pharma",
+        "Private Equity",
+        "Real Estate",
+        "Technology" ;
+    wm:attributeName "allocation_pct" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "allocation",
+        "percentage",
+        "weight" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_SECTOR_ALLOCATION_001/attribute/investor_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Investor ID" ;
+    dcterms:description "Foreign key to investor_profile" ;
+    wm:attributeName "investor_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "client ID" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_SECTOR_ALLOCATION_001/attribute/sector> a wm:PrimitiveAttribute ;
+    rdfs:label "Sector" ;
+    dcterms:description "Sector name" ;
+    wm:attributeName "sector" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "industry" .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_SECTOR_ALLOCATION_001/attribute/sector_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Sector ID" ;
+    dcterms:description "Unique identifier for allocation record" ;
+    wm:attributeName "sector_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true .
+
+<https://wealth.example.org/metadata/ATOM_ENTITY_SECTOR_ALLOCATION_001/attribute/total_investment> a wm:PrimitiveAttribute ;
+    rdfs:label "Total Investment" ;
+    dcterms:description "Total value invested in this sector" ;
+    wm:aggregatable true ;
+    wm:attributeName "total_investment" ;
+    wm:attributeType "decimal" ;
+    wm:synonym "invested amount",
+        "sector value" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/amount> a wm:PrimitiveAttribute ;
+    rdfs:label "Amount" ;
+    dcterms:description "Transaction amount (positive for inflows, negative for outflows)" ;
+    wm:aggregatable true ;
+    wm:attributeName "amount" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "transaction amount",
+        "value" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/cash_flow_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Cash Flow ID" ;
+    dcterms:description "Unique identifier for each cash flow transaction" ;
+    wm:attributeName "cash_flow_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "transaction ID" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/date> a wm:PrimitiveAttribute ;
+    rdfs:label "Date" ;
+    dcterms:description "Date of the transaction" ;
+    wm:attributeName "date" ;
+    wm:attributeType "date" ;
+    wm:filterable true ;
+    wm:synonym "transaction date" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/investor_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Investor ID" ;
+    dcterms:description "Foreign key to investor_profile" ;
+    wm:attributeName "investor_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "client ID" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/notes> a wm:PrimitiveAttribute ;
+    rdfs:label "Notes" ;
+    dcterms:description "Additional notes about the transaction" ;
+    wm:attributeName "notes" ;
+    wm:attributeType "string" ;
+    wm:searchable true ;
+    wm:synonym "comments",
+        "remarks" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/source> a wm:PrimitiveAttribute ;
+    rdfs:label "Source" ;
+    dcterms:description "Source of funds or destination of withdrawal" ;
+    wm:allowedValue "Auto-debit",
+        "Bank Transfer",
+        "Cash",
+        "Cheque",
+        "Credit Card",
+        "Internal Transfer",
+        "Net Banking",
+        "Systematic",
+        "UPI",
+        "Wallet" ;
+    wm:attributeName "source" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "fund source",
+        "origin",
+        "payment method" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/attribute/type> a wm:PrimitiveAttribute ;
+    rdfs:label "Type" ;
+    dcterms:description "Type of cash flow (Deposit/Withdrawal/SIP/Lump Sum/Redemption)" ;
+    wm:allowedValue "Deposit",
+        "Dividend Reinvestment",
+        "Interest Credit",
+        "Lump Sum",
+        "Redemption",
+        "SIP",
+        "Tax Refund",
+        "Withdrawal" ;
+    wm:attributeName "type" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "flow type",
+        "transaction type" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/derived-attribute/absolute_amount> a wm:DerivedAttribute ;
+    rdfs:label "Absolute Amount" ;
+    dcterms:description "Absolute value of transaction amount" ;
+    wm:derivedName "absolute_amount" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/derived-attribute/is_inflow> a wm:DerivedAttribute ;
+    rdfs:label "Is Inflow" ;
+    dcterms:description "Whether this is an inflow (deposit/contribution)" ;
+    wm:derivedName "is_inflow" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_CASH_FLOW_001/derived-attribute/transaction_month> a wm:DerivedAttribute ;
+    rdfs:label "Transaction Month" ;
+    dcterms:description "Month of transaction for grouping" ;
+    wm:derivedName "transaction_month" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/action> a wm:PrimitiveAttribute ;
+    rdfs:label "Action" ;
+    dcterms:description "Recommended action (Buy/Sell/Hold)" ;
+    wm:allowedValue "Aggressive Entry",
+        "Asset Reallocation",
+        "Buy",
+        "Cash Deployment",
+        "De-risking",
+        "Defensive Shift",
+        "Dividend Reinvestment",
+        "Goal Alignment Buy",
+        "Goal Alignment Sell",
+        "Hold",
+        "Partial Exit",
+        "Portfolio Trim",
+        "Profit Booking",
+        "Rebalance Buy",
+        "Rebalance Sell",
+        "Sector Rotation Buy",
+        "Sector Rotation Sell",
+        "Sell",
+        "Stop Loss Exit",
+        "Switch In",
+        "Switch Out",
+        "Tactical Decrease",
+        "Tactical Increase" ;
+    wm:attributeName "action" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "recommendation",
+        "trade action" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/amount> a wm:PrimitiveAttribute ;
+    rdfs:label "Amount" ;
+    dcterms:description "Amount to buy/sell" ;
+    wm:aggregatable true ;
+    wm:attributeName "amount" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "adjustment amount",
+        "trade amount" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/current_allocation_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Current Allocation" ;
+    dcterms:description "Current allocation percentage" ;
+    wm:aggregatable true ;
+    wm:attributeName "current_allocation_pct" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "current weight",
+        "existing allocation" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/investor_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Investor ID" ;
+    dcterms:description "Foreign key to investor_profile" ;
+    wm:attributeName "investor_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "client ID" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/logic> a wm:PrimitiveAttribute ;
+    rdfs:label "Logic" ;
+    dcterms:description "Observed reasoning or trigger logic behind the rebalancing action" ;
+    wm:allowedValue "Automated Trigger",
+        "Calendar-based",
+        "Manual Override",
+        "Mean-reversion",
+        "Momentum-driven",
+        "Risk-parity",
+        "Scenario-based",
+        "Tactical",
+        "Threshold-based",
+        "Valuation-based" ;
+    wm:attributeName "logic" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:searchable true ;
+    wm:synonym "rationale",
+        "reason",
+        "trigger logic" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/notes> a wm:PrimitiveAttribute ;
+    rdfs:label "Notes" ;
+    dcterms:description "Free-form notes explaining the rebalancing action" ;
+    wm:attributeName "notes" ;
+    wm:attributeType "string" ;
+    wm:searchable true ;
+    wm:synonym "additional info",
+        "comments",
+        "remarks" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/rebalance_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Rebalance ID" ;
+    dcterms:description "Unique identifier for each rebalancing action" ;
+    wm:attributeName "rebalance_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "action ID" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/attribute/target_allocation_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Target Allocation" ;
+    dcterms:description "Target allocation percentage" ;
+    wm:aggregatable true ;
+    wm:attributeName "target_allocation_pct" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "desired allocation",
+        "target weight" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/derived-attribute/allocation_drift> a wm:DerivedAttribute ;
+    rdfs:label "Allocation Drift" ;
+    dcterms:description "Difference between current and target allocation" ;
+    wm:derivedName "allocation_drift" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_REBALANCING_ACTION_001/derived-attribute/drift_direction> a wm:DerivedAttribute ;
+    rdfs:label "Drift Direction" ;
+    dcterms:description "Whether allocation is overweight or underweight" ;
+    wm:derivedName "drift_direction" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/affected_assets_sectors> a wm:PrimitiveAttribute ;
+    rdfs:label "Affected Assets/Sectors" ;
+    dcterms:description "Assets or sectors impacted by the scenario trigger" ;
+    wm:allowedValue "Banking",
+        "Commodities",
+        "Consumer",
+        "Corporate",
+        "Equity",
+        "Gold",
+        "Government Bonds",
+        "Healthcare",
+        "Infrastructure",
+        "MF",
+        "Pharma",
+        "Real Estate",
+        "Silver",
+        "Technology" ;
+    wm:attributeName "affected_assets_sectors" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:searchable true ;
+    wm:synonym "affected sectors",
+        "impacted assets" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/current_allocation_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "Current Allocation Percentage" ;
+    dcterms:description "Current allocation percentage before scenario rebalancing" ;
+    wm:aggregatable true ;
+    wm:attributeName "current_allocation_pct" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "current weight",
+        "existing allocation" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/investor_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Investor ID" ;
+    dcterms:description "Foreign key to investor_profile" ;
+    wm:attributeName "investor_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:synonym "client ID" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/new_allocation_pct> a wm:PrimitiveAttribute ;
+    rdfs:label "New Allocation Percentage" ;
+    dcterms:description "New allocation percentage after scenario rebalancing" ;
+    wm:aggregatable true ;
+    wm:attributeName "new_allocation_pct" ;
+    wm:attributeType "decimal" ;
+    wm:filterable true ;
+    wm:synonym "new allocation",
+        "target weight" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/rationale> a wm:PrimitiveAttribute ;
+    rdfs:label "Rationale" ;
+    dcterms:description "Explanation for why this rebalancing was triggered" ;
+    wm:attributeName "rationale" ;
+    wm:attributeType "string" ;
+    wm:searchable true ;
+    wm:synonym "explanation",
+        "justification",
+        "reason" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/scenario> a wm:PrimitiveAttribute ;
+    rdfs:label "Scenario" ;
+    dcterms:description "Type of scenario triggering the rebalancing" ;
+    wm:allowedValue "Approaching Goal",
+        "Bear Market",
+        "Bull Market",
+        "Currency Depreciation",
+        "Economic Growth",
+        "Flash Crash",
+        "Geopolitical Tension",
+        "Inflation Surge",
+        "Interest Rate Cut",
+        "Interest Rate Hike",
+        "Market Volatility",
+        "Sector Rotation" ;
+    wm:attributeName "scenario" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:searchable true ;
+    wm:synonym "condition",
+        "market event",
+        "trigger" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/scenario_rebalance_id> a wm:PrimitiveAttribute ;
+    rdfs:label "Scenario Rebalance ID" ;
+    dcterms:description "Unique identifier for scenario-based rebalancing" ;
+    wm:attributeName "scenario_rebalance_id" ;
+    wm:attributeType "string" ;
+    wm:filterable true .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/attribute/triggered_action> a wm:PrimitiveAttribute ;
+    rdfs:label "Triggered Action" ;
+    dcterms:description "Action triggered by the scenario" ;
+    wm:allowedValue "Add Gold",
+        "Buy Defensive Stocks",
+        "Exit sector positions",
+        "Hedge Currency Risk",
+        "Increase Bonds",
+        "Increase Cash Position",
+        "Increase Equity",
+        "Reduce Equity",
+        "Reduce Gold",
+        "Reduce Long Bonds",
+        "Shift to Debt" ;
+    wm:attributeName "triggered_action" ;
+    wm:attributeType "string" ;
+    wm:filterable true ;
+    wm:searchable true ;
+    wm:synonym "action taken",
+        "response" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/derived-attribute/allocation_change> a wm:DerivedAttribute ;
+    rdfs:label "Allocation Change" ;
+    dcterms:description "Change in allocation from current to new" ;
+    wm:derivedName "allocation_change" .
+
+<https://wealth.example.org/metadata/ATOM_EVENT_SCENARIO_REBALANCING_001/derived-attribute/change_direction> a wm:DerivedAttribute ;
+    rdfs:label "Change Direction" ;
+    dcterms:description "Whether allocation was increased or decreased" ;
+    wm:derivedName "change_direction" .
+
+wm:DerivedAttribute a owl:Class ;
+    rdfs:label "Derived Attribute" .
+
+wm:Primitive a owl:Class ;
+    rdfs:label "Primitive" .
+
+wm:DerivedContext a owl:Class ;
+    rdfs:label "Derived Context" .
+
+wm:ContextValue a owl:Class ;
+    rdfs:label "Context Value" .
+
+wm:PrimitiveAttribute a owl:Class ;
+    rdfs:label "Primitive Attribute" .
+

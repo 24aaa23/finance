@@ -1,0 +1,509 @@
+Original Row Index,Question,Ground Truth,New Pipeline Result,Manual Verdict,Manual Reason,Scan Raw Rows,Generated SPARQL
+31,"Looking at all available records, what is the total dividend cash flow amount for investor INV-020?",There is no data in raw_data_sample to answer this query.,The total dividend cash flow amount for investor INV-020 is 0.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""totalDividendCashFlow"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?amount)) AS ?totalDividendCashFlow)
+WHERE {
+  ?cashFlow ex:cashFlowType ""dividend"" ;
+            ex:hasInvestor ?investor ;
+            ex:amount ?amount .
+  ?investor ex:investorId ""INV-020"" .
+}"
+36,Please display total Lump Sum investments made per investor across all time.?,(no rows returned),"Deepak Sharma has made a total of 35,656,852 in Lump Sum investments across all time.",WRONG,Ground truth says no rows returned; output returns positive Lump Sum result.,"[{""investorName"": ""Deepak Sharma"", ""totalLumpSumInvestments"": ""35656852""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?totalInvestment)) AS ?totalLumpSumInvestments)
+WHERE {
+  ?sectorAllocation ex:hasInvestor ?investorProfile .
+  ?investorProfile ex:investorName ?investorName .
+  ?sectorAllocation ex:totalInvestment ?totalInvestment .
+}
+GROUP BY ?investorName"
+47,What would be the average dividend cash flow amount per investor?,"[{""investor_id"": ""INV-002"", ""average_dividend_cash_flow_amount"": 2000}]",The average dividend cash flow amount per investor is 0.,WRONG,Ground truth expects INV-002 average dividend cash flow 2000; output says 0.,"[{""averageDividendCashFlow"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?amount)) AS ?averageDividendCashFlow)
+WHERE {
+  ?cashFlow ex:cashFlowType ""dividend"" ;
+            ex:amount ?amount .
+}"
+51,What is the average dividend cash flow amount per investor?,"[{""investor_id"": ""INV-002"", ""average_dividend_cash_flow_amount"": 2000}]",The average dividend cash flow amount per investor is 0.,WRONG,Ground truth expects INV-002 average dividend cash flow 2000; output says 0.,"[{""averageDividendCashFlow"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?amount)) AS ?averageDividendCashFlow)
+WHERE {
+  ?cashFlow ex:cashFlowType ""dividend"" .
+  ?cashFlow ex:amount ?amount .
+}"
+52,Can you tell me what the total taxes paid per sector for all investors combined?,"[{""sector"": ""Technology"", ""total_taxes_paid"": 5789}, {""sector"": ""Government"", ""total_taxes_paid"": 4105}, {""sector"": ""Healthcare"", ""total_taxes_paid"": 3352}, {""sector"": ""Infrastructure"", ""total_taxes_paid"": 3253}, {""sector"": ""Banking"", ""total_taxes_paid"": 3144}, {""sector"": ""Private Equity"", ""total_taxes_paid"": 2017}, {""sector"": ""Automobile"", ""total_taxes_paid"": 1607}, {""sector"": ""Corporate"", ""total_taxes_paid"": 1272}]","The total taxes paid per sector for all investors combined are as follows:
+
+- Sector http://example.org/kg#SECTOR001: 4,105
+- Sector http://example.org/kg#SECTOR008: 3,144
+- Sector http://example.org/kg#SECTOR017: 2,017
+- Sector http://example.org/kg#SECTOR015: 1,607
+- Sector http://example.org/kg#SECTOR003: 5,789
+- Sector http://example.org/kg#SECTOR011: 3,253
+- Sector http://example.org/kg#SECTOR016: 3,352
+- Sector http://example.org/kg#SECTOR009: 1,272",PARTIAL,"All tax totals appear present, but sectors are raw IRIs instead of expected sector labels.","[{""sector"": ""http://example.org/kg#SECTOR001"", ""totalTaxesPaid"": ""4105""}, {""sector"": ""http://example.org/kg#SECTOR008"", ""totalTaxesPaid"": ""3144""}, {""sector"": ""http://example.org/kg#SECTOR017"", ""totalTaxesPaid"": ""2017""}, {""sector"": ""http://example.org/kg#SECTOR015"", ""totalTaxesPaid"": ""1607""}, {""sector"": ""http://example.org/kg#SECTOR003"", ""totalTaxesPaid"": ""5789""}, {""sector"": ""http://example.org/kg#SECTOR011"", ""totalTaxesPaid"": ""3253""}, {""sector"": ""http://example.org/kg#SECTOR016"", ""totalTaxesPaid"": ""3352""}, {""sector"": ""http://example.org/kg#SECTOR009"", ""totalTaxesPaid"": ""1272""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sector (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxesPaid)
+WHERE {
+  ?portfolioHolding a ex:PortfolioHolding ;
+                     ex:hasSector ?sector ;
+                     ex:taxesPaid ?taxesPaid .
+}
+GROUP BY ?sector"
+57,What is the total count of distinct investment types does investor INV-005 hold?,There is no data in raw_data_sample to answer this query.,The total count of distinct investment types that investor INV-005 holds is 0.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""distinctInvestmentTypesCount"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investmentTypeLiteral) AS ?distinctInvestmentTypesCount)
+WHERE {
+  ex:INV004 a ex:InvestorProfile ;
+             ex:hasHolding ?holding .
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentTypeLiteral ?investmentTypeLiteral .
+}"
+61,What is the average new allocation percentage for Increase scenario rebalancing changes?,61.25,The average new allocation percentage for Increase scenario rebalancing changes is 54.17%.,WRONG,Ground truth is 61.25; output is 54.17.,"[{""averageNewAllocationPct"": ""54.16666666666666666666666667""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?newAllocationPct)) AS ?averageNewAllocationPct)
+WHERE {
+  ?scenarioRebalancing a ex:ScenarioRebalancing ;
+                       ex:newAllocationPct ?newAllocationPct .
+}"
+65,What is the average dividend cash flow amount per investor?,"[{""investor_id"": ""INV-002"", ""average_dividend_cash_flow_amount"": 2000}]",The average dividend cash flow amount per investor is 0.,WRONG,Ground truth expects INV-002 average dividend cash flow 2000; output says 0.,"[{""averageDividendCashFlow"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?amount)) AS ?averageDividendCashFlow)
+WHERE {
+  ?cashFlow ex:cashFlowType ""dividend"" .
+  ?cashFlow ex:amount ?amount .
+}"
+69,What would be the total current portfolio value for all Conservative risk profile investors?,There is no data in raw_data_sample to answer this query.,The total current portfolio value for all Conservative risk profile investors is 0.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""totalPortfolioValue"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?currentValue)) AS ?totalPortfolioValue)
+WHERE {
+  ?investorProfile a ex:InvestorProfile ;
+                    ex:riskTolerance ""Conservative"" .
+  ?portfolioHolding a ex:PortfolioHolding ;
+                     ex:hasInvestor ?investorProfile ;
+                     ex:currentValue ?currentValue .
+}"
+72,Can you tell me what the total current value of ETF holdings for investor INV-010?,There is no data in raw_data_sample to answer this query.,The total current value of ETF holdings for investor INV-010 is 0.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""totalCurrentValue"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?currentValue)) AS ?totalCurrentValue)
+WHERE {
+  ?investorProfile ex:investorId ""INV-010""^^xsd:string ;
+                    ex:hasHolding ?portfolioHolding .
+  ?portfolioHolding ex:investmentTypeLiteral ""ETF""^^xsd:string ;
+                     ex:currentValue ?currentValue .
+}"
+73,I need to find out how many Gold holdings does investor INV-005 hold?,There is no data in raw_data_sample to answer this query.,Investor INV-005 holds 0 Gold holdings.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""goldHoldingsCount"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?goldHolding) AS ?goldHoldingsCount)
+WHERE {
+  ?investorProfile ex:investorId ""INV-005"" ;
+                    ex:hasHolding ?portfolioHolding .
+  ?portfolioHolding ex:investmentTypeLiteral ""Gold"" .
+}"
+75,How many holdings does investor INV-015 have in total?,There is no data in raw_data_sample to answer this query.,Investor INV-015 has a total of 0 holdings.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""totalHoldings"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?totalHoldings)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:investorId ""INV-015""^^xsd:string ;
+            ex:hasHolding ?holding .
+}"
+76,I need to find out how many distinct investment types does investor INV-005 hold?,There is no data in raw_data_sample to answer this query.,Investor INV-005 holds 0 distinct investment types.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""distinctInvestmentTypes"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investmentTypeLiteral) AS ?distinctInvestmentTypes)
+WHERE {
+  ex:INV004 ex:hasHolding ?holding .
+  ?holding ex:investmentTypeLiteral ?investmentTypeLiteral .
+}"
+80,What is the total current market value of all holdings owned by Aggressive risk profile investors?,There is no data in raw_data_sample to answer this query.,The total current market value of all holdings owned by Aggressive risk profile investors is 0.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""totalMarketValue"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?currentValue)) AS ?totalMarketValue)
+WHERE {
+  ?investorProfile a ex:InvestorProfile ;
+                    ex:notes ""Aggressive"" .
+  ?portfolioHolding a ex:PortfolioHolding ;
+                     ex:hasInvestor ?investorProfile ;
+                     ex:currentValue ?currentValue .
+}"
+83,Could you show me total Lump Sum investments made per investor across all time.?,(no rows returned),"Deepak Sharma has made a total of 35,656,852 in Lump Sum investments across all time.",WRONG,Ground truth says no rows returned; output returns positive Lump Sum result.,"[{""investorName"": ""Deepak Sharma"", ""totalLumpSumInvestments"": ""35656852""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?totalInvestment)) AS ?totalLumpSumInvestments)
+WHERE {
+  ?sectorAllocation ex:hasInvestor ?investorProfile .
+  ?investorProfile ex:investorName ?investorName .
+  ?sectorAllocation ex:totalInvestment ?totalInvestment .
+}
+GROUP BY ?investorName"
+85,"Across the entire investor database, how many Gold holdings does investor INV-005 hold?",There is no data in raw_data_sample to answer this query.,Investor INV-005 holds 0 Gold holdings.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""goldHoldingsCount"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?goldHolding) AS ?goldHoldingsCount)
+WHERE {
+  ?investorProfile ex:investorId ""INV-005"" ;
+                    ex:hasHolding ?portfolioHolding .
+  ?portfolioHolding ex:categoryLiteral ""Gold"" .
+}"
+96,How many Redemption transactions has investor INV-008 made?,There is no data in raw_data_sample to answer this query.,Investor INV-008 has made 0 Redemption transactions.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""redemptionCount"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?cashFlow) AS ?redemptionCount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:cashFlowType ""Redemption"" ;
+            ex:hasInvestor ?investor .
+  FILTER(CONTAINS(LCASE(STR(?investor)), ""inv-008""))
+}"
+102,Can you tell me what the average new allocation percentage for Increase scenario rebalancing changes?,61.25,The average new allocation percentage for Increase scenario rebalancing changes is 54.17%.,WRONG,Ground truth is 61.25; output is 54.17.,"[{""averageNewAllocationPct"": ""54.16666666666666666666666667""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?newAllocationPct)) AS ?averageNewAllocationPct)
+WHERE {
+  ?scenarioRebalancing a ex:ScenarioRebalancing ;
+                       ex:newAllocationPct ?newAllocationPct .
+}"
+103,I need to find out how many Redemption transactions has investor INV-008 made?,There is no data in raw_data_sample to answer this query.,Investor INV-008 has made 0 Redemption transactions.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""redemptionCount"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?cashFlow) AS ?redemptionCount)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:cashFlowType ""Redemption"" ;
+            ex:hasInvestor ?investor .
+  ?investor a ex:InvestorProfile ;
+            ex:investorId ""INV-008"" .
+}"
+104,How many total holdings do Conservative risk profile investors hold?,There is no data in raw_data_sample to answer this query.,Conservative risk profile investors hold a total of 0 holdings.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""totalHoldings"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?totalHoldings)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:riskTolerance ""Conservative"" .
+  ?investor ex:hasHolding ?holding .
+}"
+105,"Looking at all available records, what is the average dividend cash flow amount per investor?","[{""investor_id"": ""INV-002"", ""average_dividend_cash_flow_amount"": 2000}]",The average dividend cash flow amount per investor is 0.,WRONG,Ground truth expects INV-002 average dividend cash flow 2000; output says 0.,"[{""averageDividendCashFlow"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?amount)) AS ?averageDividendCashFlow)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:cashFlowType ""dividend""^^xsd:string ;
+            ex:amount ?amount .
+}"
+106,"Looking at all available records, what is the dividend amount for the 5th highest dividend-earning holding?",6407,The dividend amount for the 5th highest dividend-earning holding is $61420.,WRONG,Ground truth is 6407; output is 61420.,"[{""totalDividends"": ""61420""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?dividends)) AS ?totalDividends)
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:dividends ?dividends .
+}
+ORDER BY DESC(?totalDividends)
+LIMIT 5"
+107,What would be the average investment goal target amount for Aggressive risk profile investors?,There is no data in raw_data_sample to answer this query.,The average investment goal target amount for Aggressive risk profile investors is 0.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""averageTargetAmount"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?targetAmount)) AS ?averageTargetAmount)
+WHERE {
+  ?investmentGoal a ex:InvestmentGoal ;
+                   ex:hasInvestor ?investorProfile ;
+                   ex:targetAmount ?targetAmount .
+  ?investorProfile a ex:InvestorProfile ;
+                    ex:riskTolerance ""Aggressive""^^xsd:string .
+}"
+109,What would be the average dividend cash flow amount per investor?,"[{""investor_id"": ""INV-002"", ""average_dividend_cash_flow_amount"": 2000}]",The average dividend cash flow amount per investor is 0.,WRONG,Ground truth expects INV-002 average dividend cash flow 2000; output says 0.,"[{""averageDividendCashFlow"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?amount)) AS ?averageDividendCashFlow)
+WHERE {
+  ?cashFlow ex:cashFlowType ""dividend"" ;
+            ex:amount ?amount .
+}"
+117,What would be the average investment goal target amount for Aggressive risk profile investors?,There is no data in raw_data_sample to answer this query.,The average investment goal target amount for Aggressive risk profile investors is 0.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""averageTargetAmount"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?targetAmount)) AS ?averageTargetAmount)
+WHERE {
+  ?investmentGoal a ex:InvestmentGoal ;
+                   ex:hasInvestor ?investorProfile ;
+                   ex:targetAmount ?targetAmount .
+  ?investorProfile a ex:InvestorProfile ;
+                    ex:riskTolerance ""Aggressive""^^xsd:string .
+}"
+119,Provide the count of distinct investment types does investor INV-005 hold?,There is no data in raw_data_sample to answer this query.,The investor INV-005 holds 0 distinct investment types.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""distinctInvestmentTypesCount"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investmentTypeLiteral) AS ?distinctInvestmentTypesCount)
+WHERE {
+  ex:INV004 a ex:InvestorProfile ;
+             ex:hasHolding ?holding .
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentTypeLiteral ?investmentTypeLiteral .
+}"
+127,Can you tell me what the average holding duration in days for investor INV-012?,There is no data in raw_data_sample to answer this query.,A database error prevented data retrieval.,WRONG,"Ground truth says no data; output says database error, not a correct no-data answer.",,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(?holdingDuration) AS ?averageHoldingDuration)
+WHERE {
+  ?portfolioHolding a ex:PortfolioHolding ;
+                     ex:hasInvestor ?investorProfile ;
+                     ex:purchaseDate ?purchaseDate ;
+                     ex:currentValue ?currentValue .
+
+  FILTER(CONTAINS(LCASE(STR(?investorProfile)), ""inv-012""))
+
+  BIND(DATEDIFF(""day"", xsd:date(?purchaseDate), CURRENT_DATE) AS ?holdingDuration)
+}"
+130,What is the average investment goal target amount for Aggressive risk profile investors?,There is no data in raw_data_sample to answer this query.,The average investment goal target amount for Aggressive risk profile investors is 0.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""averageTargetAmount"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?targetAmount)) AS ?averageTargetAmount)
+WHERE {
+  ?investmentGoal a ex:InvestmentGoal ;
+                  ex:goalRiskId ""Aggressive""^^xsd:string ;
+                  ex:targetAmount ?targetAmount .
+}"
+132,What does the system show for holdings purchased in the last 12 months with negative returns.?,(no rows returned),A database error prevented data retrieval.,WRONG,"Ground truth says no rows returned; output says database error, not a correct no-rows answer.",,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentName ?purchaseDate ?returnsPct
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentName ?investmentName ;
+           ex:purchaseDate ?purchaseDate ;
+           ex:returnsPct ?returnsPct .
+  
+  FILTER (xsd:decimal(?returnsPct) < 0)
+  FILTER (YEAR(CURRENT_DATE()) - YEAR(xsd:date(?purchaseDate)) <= 1)
+}"
+133,"Looking at all available records, what is the total taxes paid per sector for all investors combined?","[{""sector"": ""Technology"", ""total_taxes_paid"": 5789}, {""sector"": ""Government"", ""total_taxes_paid"": 4105}, {""sector"": ""Healthcare"", ""total_taxes_paid"": 3352}, {""sector"": ""Infrastructure"", ""total_taxes_paid"": 3253}, {""sector"": ""Banking"", ""total_taxes_paid"": 3144}, {""sector"": ""Private Equity"", ""total_taxes_paid"": 2017}, {""sector"": ""Automobile"", ""total_taxes_paid"": 1607}, {""sector"": ""Corporate"", ""total_taxes_paid"": 1272}]","The total taxes paid per sector for all investors combined are as follows:
+
+- Sector http://example.org/kg#SECTOR001: 4,105
+- Sector http://example.org/kg#SECTOR008: 3,144
+- Sector http://example.org/kg#SECTOR017: 2,017
+- Sector http://example.org/kg#SECTOR015: 1,607
+- Sector http://example.org/kg#SECTOR003: 5,789
+- Sector http://example.org/kg#SECTOR011: 3,253
+- Sector http://example.org/kg#SECTOR016: 3,352
+- Sector http://example.org/kg#SECTOR009: 1,272",PARTIAL,"All tax totals appear present, but sectors are raw IRIs instead of expected sector labels.","[{""sector"": ""http://example.org/kg#SECTOR001"", ""totalTaxesPaid"": ""4105""}, {""sector"": ""http://example.org/kg#SECTOR008"", ""totalTaxesPaid"": ""3144""}, {""sector"": ""http://example.org/kg#SECTOR017"", ""totalTaxesPaid"": ""2017""}, {""sector"": ""http://example.org/kg#SECTOR015"", ""totalTaxesPaid"": ""1607""}, {""sector"": ""http://example.org/kg#SECTOR003"", ""totalTaxesPaid"": ""5789""}, {""sector"": ""http://example.org/kg#SECTOR011"", ""totalTaxesPaid"": ""3253""}, {""sector"": ""http://example.org/kg#SECTOR016"", ""totalTaxesPaid"": ""3352""}, {""sector"": ""http://example.org/kg#SECTOR009"", ""totalTaxesPaid"": ""1272""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sector (SUM(xsd:decimal(?taxesPaid)) AS ?totalTaxesPaid)
+WHERE {
+  ?portfolioHolding a ex:PortfolioHolding ;
+                     ex:hasSector ?sector ;
+                     ex:taxesPaid ?taxesPaid .
+}
+GROUP BY ?sector"
+138,I need to find out how many investors have received dividend cash flows sourced from HDFC Bank?,0,No investors have received dividend cash flows sourced from HDFC Bank.,CORRECT,Ground truth is 0; output correctly says no investors / 0.,"[{""numInvestors"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(DISTINCT ?investor) AS ?numInvestors)
+WHERE {
+  ?cashFlow ex:cashFlowType ""Dividend"" ;
+            ex:source ""HDFC Bank"" ;
+            ex:hasInvestor ?investor .
+}"
+144,Provide the count of Gold holdings does investor INV-005 hold?,There is no data in raw_data_sample to answer this query.,Investor INV-005 holds 0 Gold holdings.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""goldHoldingsCount"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?goldHolding) AS ?goldHoldingsCount)
+WHERE {
+  ?investorProfile ex:investorId ""INV-005"" ;
+                    ex:hasHolding ?portfolioHolding .
+  ?portfolioHolding ex:investmentTypeLiteral ""Gold"" .
+}"
+145,What does the system show for holdings purchased in the last 12 months with negative returns.?,(no rows returned),A database error prevented data retrieval.,WRONG,"Ground truth says no rows returned; output says database error, not a correct no-rows answer.",,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investmentName ?purchaseDate ?returnsPct
+WHERE {
+  ?holding a ex:PortfolioHolding ;
+           ex:investmentName ?investmentName ;
+           ex:purchaseDate ?purchaseDate ;
+           ex:returnsPct ?returnsPct .
+  
+  FILTER (xsd:decimal(?returnsPct) < 0)
+  FILTER (YEAR(CURRENT_DATE()) - YEAR(xsd:date(?purchaseDate)) <= 1)
+}"
+152,Could you show me all Dividend cash flow events in the last 6 months.?,(no rows returned),A database error prevented data retrieval.,WRONG,"Ground truth says no rows returned; output says database error, not a correct no-rows answer.",,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?cashFlowId ?date ?amount ?source ?notes
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:cashFlowType ""Dividend""^^xsd:string ;
+            ex:date ?date ;
+            ex:amount ?amount ;
+            ex:source ?source ;
+            ex:notes ?notes .
+  
+  FILTER (YEAR(?date) = YEAR(CURRENT_DATE()) && MONTH(?date) >= MONTH(CURRENT_DATE()) - 6)
+}
+ORDER BY DESC(?date)"
+157,Can you tell me what the average holding duration in days for investor INV-012?,There is no data in raw_data_sample to answer this query.,A database error prevented data retrieval.,WRONG,"Ground truth says no data; output says database error, not a correct no-data answer.",,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?holdingDuration)) AS ?averageHoldingDuration)
+WHERE {
+  ?portfolioHolding a ex:PortfolioHolding ;
+                     ex:hasInvestor ?investorProfile ;
+                     ex:purchaseDate ?purchaseDate ;
+                     ex:currentValue ?currentValue .
+
+  FILTER(CONTAINS(LCASE(STR(?investorProfile)), ""inv-012""))
+
+  BIND(DATEDIFF(""day"", xsd:date(?purchaseDate), CURRENT_DATE) AS ?holdingDuration)
+}"
+161,Show the monthly total cash inflows (deposits and SIP) for the last 12 months.?,(no rows returned),A database error prevented data retrieval.,WRONG,"Ground truth says no rows returned; output says database error, not a correct no-rows answer.",,"PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?month (SUM(xsd:decimal(?amount)) AS ?totalCashInflow)
+WHERE {
+  ?cashFlow a ex:CashFlow ;
+            ex:cashFlowType ?cashFlowType ;
+            ex:date ?date ;
+            ex:amount ?amount .
+  
+  FILTER(CONTAINS(LCASE(STR(?cashFlowType)), ""deposit"") || CONTAINS(LCASE(STR(?cashFlowType)), ""sip""))
+  
+  BIND(yearMonthFromDateTime(xsd:dateTime(?date)) AS ?yearMonth)
+  BIND(str(?yearMonth) AS ?month)
+}
+GROUP BY ?month
+ORDER BY DESC(?month)
+LIMIT 12"
+167,Identify the sector focus combination is the most common among investors?,"[{""sector_focus"": ""Government, Gold, Debt"", ""investor_count"": 1}, {""sector_focus"": ""Real Estate, Banking, Corporate"", ""investor_count"": 1}, {""sector_focus"": ""Technology, Pharma, Infra"", ""investor_count"": 1}]","The most common sector focus combination among investors is Government, Gold, and Debt.",PARTIAL,Ground truth has three tied sector-focus combinations; output returns only one of the tied combinations.,"[{""sectorFocus"": ""Government, Gold, Debt"", ""count"": ""1""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?sectorFocus (COUNT(?investorProfile) AS ?count)
+WHERE {
+  ?investorProfile a ex:InvestorProfile ;
+                    ex:sectorFocus ?sectorFocus .
+}
+GROUP BY ?sectorFocus
+ORDER BY DESC(?count)
+LIMIT 1"
+179,Show total Lump Sum investments made per investor across all time.?,(no rows returned),"Deepak Sharma has made a total of 35,656,852 in Lump Sum investments across all time.",WRONG,Ground truth says no rows returned; output returns positive Lump Sum result.,"[{""investorName"": ""Deepak Sharma"", ""totalLumpSumInvestments"": ""35656852""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName (SUM(xsd:decimal(?totalInvestment)) AS ?totalLumpSumInvestments)
+WHERE {
+  ?sectorAllocation ex:hasInvestor ?investorProfile .
+  ?investorProfile ex:investorName ?investorName .
+  ?sectorAllocation ex:totalInvestment ?totalInvestment .
+}
+GROUP BY ?investorName"
+185,"Across the entire investor database, how many total holdings do Conservative risk profile investors hold?",There is no data in raw_data_sample to answer this query.,Conservative risk profile investors hold a total of 0 holdings across the entire investor database.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""totalHoldings"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (COUNT(?holding) AS ?totalHoldings)
+WHERE {
+  ?investor a ex:InvestorProfile ;
+            ex:riskTolerance ""Conservative"" .
+  ?investor ex:hasHolding ?holding .
+}"
+189,What is the total dividend cash flow amount for investor INV-049?,There is no data in raw_data_sample to answer this query.,The total dividend cash flow amount for investor INV-049 is 0.,WRONG,Ground truth says no data; output gives numeric 0 as if calculated.,"[{""totalDividendCashFlow"": ""0""}]","PREFIX ex: <http://example.org/kg#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (SUM(xsd:decimal(?amount)) AS ?totalDividendCashFlow)
+WHERE {
+  ?cashFlow ex:cashFlowType ""dividend"" ;
+            ex:hasInvestor ?investor ;
+            ex:amount ?amount .
+  ?investor ex:investorId ""INV-049"" .
+}"

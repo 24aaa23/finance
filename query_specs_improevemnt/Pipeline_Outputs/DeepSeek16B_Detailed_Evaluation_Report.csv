@@ -1,0 +1,56 @@
+section,metric,value
+file,path,/DATAAMAN/financial/Pipeline_Outputs/Pipeline_Retest_Report_deepseek_coder_v2_16b_200.csv
+overall,rows,200
+overall,unique_questions,180
+status,MATCH,43
+status,PARTIAL,33
+status,MISMATCH,124
+status,CRASH,0
+raw_status,MISMATCH,124
+raw_status,MATCH,43
+raw_status,PARTIAL,26
+raw_status,PARTIALLY,7
+grading,deterministic_rows,76
+grading,llm_any_rows,124
+grading,llm_plain_rows,124
+grading,llm_sanity_override_rows,0
+grading,crash_rows,0
+grading,trusted_match_not_llm,41
+grading,llm_match_rows,2
+grading,non_llm_rows,76
+non_llm_status,MATCH,41
+llm_status,MATCH,2
+non_llm_status,PARTIAL,26
+llm_status,PARTIAL,7
+non_llm_status,MISMATCH,9
+llm_status,MISMATCH,115
+non_llm_status,CRASH,0
+llm_status,CRASH,0
+scan,scan_success_rows,149
+scan,scan_error_rows,50
+scan,scan_nan_or_blank_rows,1
+scan,non_empty_scan_rows,81
+scan,empty_or_missing_scan_rows,119
+validation,validation_true_rows,60
+validation,validation_not_true_rows,140
+runtime,short_circuit_rows,139
+failure_stage,Validate,95
+failure_stage,None,61
+failure_stage,Scan,44
+comments,Evaluated via LLM.,124
+comments,Evaluated via deterministic fact comparison.,76
+percent,match_rate_final_pct,21.5
+percent,trusted_match_rate_non_llm_pct,53.95
+percent,match_or_partial_final_pct,38.0
+percent,scan_success_pct,74.5
+percent,non_empty_scan_pct,40.5
+percent,validation_true_pct,30.0
+failure_category,scan_error_or_missing; llm_graded_untrusted; short_circuit,46
+failure_category,empty_result; llm_graded_untrusted; short_circuit,44
+failure_category,match,43
+failure_category,fact_mismatch_or_partial,26
+failure_category,llm_graded_untrusted,22
+failure_category,validation_failed_or_unset; llm_graded_untrusted; short_circuit,10
+failure_category,scan_error_or_missing; short_circuit,4
+failure_category,validation_failed_or_unset; short_circuit,4
+failure_category,empty_result; short_circuit,1

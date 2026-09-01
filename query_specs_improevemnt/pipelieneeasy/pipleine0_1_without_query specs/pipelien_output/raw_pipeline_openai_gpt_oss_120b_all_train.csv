@@ -1,0 +1,32 @@
+Pipeline Version,Sample Row ID,Question,Ground Truth,Difficulty,Category,Query Type,Source CSV,New Pipeline Result,New Status,Old Status,Comparison / Comments,Started At,Elapsed Seconds,DAG Sequence,AOP Operator Sequence,Retrieved Classes,Generated SPARQL,Pre Scan Validation Is Valid,Pre Scan Validation Reason,Pre Scan Warning,Scan Status,Scan Row Count,Scan Error,Scan Raw Rows,Unknown Terms,Term Suggestions,Refine Reason,Validation Is Valid,Validation Reason,Self Heal Attempts,Short Circuit Stage,Failure Stage
+aop-gpt-oss-120b-improvement1-all442,wealth_management_70_question_benchmark:WM-1T-001,What is the name of investor INV-001?,"{""investor_name"":""Arjun Iyer""}",Easy,Investor status,Direct Retrieval,wealth_management_70_question_benchmark.csv,"[{""investorName"": ""Arjun Iyer""}]",PIPELINE_SUCCESS,NEW_BENCHMARK,Raw pipeline output saved; run the separate grader script for MATCH/MISMATCH/PARTIAL.,2026-08-27T09:27:06,41.971,Retrieve -> Generate -> Pre_Scan_Validate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Pre_Scan_Validate -> Scan -> Validate -> Explain,"[""Investor""]","PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?investorName
+WHERE {
+  ?investor rdf:type wm:Investor .
+  ?investor wm:investorId ?invId .
+  FILTER(LCASE(STR(?invId)) = LCASE(""INV-001"")) .
+  ?investor wm:investorName ?investorName .
+}
+LIMIT 1",True,"The query correctly selects the investor's name, filters by the given investor ID, and ensures the subject is typed as wm:Investor.",,success,1,,"[{""investorName"": ""Arjun Iyer""}]",[],{},Validation failed or zero rows,True,"The result provides the investorName field matching the requested investor ID, and the SPARQL correctly filters to INV-001 and returns a single name.",2,,
+aop-gpt-oss-120b-improvement1-all442,wealth_management_70_question_benchmark:WM-1T-002,What are the risk tolerance and time horizon of investor INV-002?,"[{""risk_tolerance"":""Conservative"",""time_horizon"":""Long-term""}]",Easy,Investor status,Direct Retrieval,wealth_management_70_question_benchmark.csv,"[{""riskTolerance"": ""Conservative"", ""timeHorizon"": ""Long-term""}]",PIPELINE_SUCCESS,NEW_BENCHMARK,Raw pipeline output saved; run the separate grader script for MATCH/MISMATCH/PARTIAL.,2026-08-27T09:27:48,19.1,Retrieve -> Generate -> Pre_Scan_Validate -> Scan -> Validate -> Explain,Retrieve -> Generate -> Pre_Scan_Validate -> Scan -> Validate -> Explain,"[""Investor"", ""RiskTolerance"", ""TimeHorizon""]","PREFIX wm: <https://wealth.example.org/ontology/>
+PREFIX kg: <https://wealth.example.org/kg/>
+PREFIX wmmeta: <https://wealth.example.org/metadata/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema1: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?riskTolerance ?timeHorizon WHERE {
+  ?investor rdf:type wm:Investor .
+  ?investor wm:investorId ?invId .
+  FILTER(CONTAINS(LCASE(STR(?invId)), ""inv-002""))
+  OPTIONAL { ?investor wm:riskTolerance ?riskTolerance . }
+  OPTIONAL { ?investor wm:timeHorizon ?timeHorizon . }
+}",True,"The SPARQL correctly selects risk tolerance and time horizon for the investor with ID INV-002, includes the required type and ID filter, and uses OPTIONAL for properties that may be missing.",,success,1,,"[{""riskTolerance"": ""Conservative"", ""timeHorizon"": ""Long-term""}]",[],{},,True,"The result includes both requested fields for the specific investor INV-002, matching the query.",0,,
