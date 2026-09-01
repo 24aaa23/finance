@@ -1,0 +1,16 @@
+name: wealth_management_diverse
+description: >
+  Canonical SQLite asset manifest for the wealth-management benchmark used by the
+  shared SQL/KG pipeline. The physical database still lives in the historical
+  GPT-OSS experiment directory so older runners continue to work unchanged.
+database_path: historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+schema_notes_file: data/sql/wealth_management_diverse/schema_notes.yaml
+tables:
+  - ATOM_ENTITY_INVESTOR_PROFILE_001
+  - ATOM_ENTITY_PORTFOLIO_HEALTH_001
+  - ATOM_EVENT_REBALANCING_ACTION_001
+  - ATOM_EVENT_SCENARIO_REBALANCING_001
+  - ATOM_ENTITY_PORTFOLIO_HOLDING_001
+  - ATOM_ENTITY_SECTOR_ALLOCATION_001
+  - ATOM_ENTITY_INVESTMENT_GOAL_001
+  - ATOM_EVENT_CASH_FLOW_001

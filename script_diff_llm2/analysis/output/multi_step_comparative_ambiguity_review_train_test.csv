@@ -1,0 +1,1082 @@
+ambiguity_status,ambiguity_level,ambiguity_reason,split,global_question_id,source_csv,question_id,question,category,difficulty,query_type,tables_used,number_of_tables_used,sql_query,sql_verdict,sql_reason,ground_truth_answer
+Ambiguous,Medium,"gold maps this to MAX(allocation_pct), then averages by group; gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses AVG(avg_volatility_pct); gold uses AVG(liquidity_score) Formula is given, but component definitions are still implicit: allocation concentration, goal volatility, and scenario change can be computed multiple ways.",train,wealth_management_multi_step_comparative_105_questions:MC-104,wealth_management_multi_step_comparative_105_questions.csv,MC-104,Which ten investors have the highest five-table risk-pressure score where score = risk score + allocation concentration + goal volatility - liquidity + scenario change?,Five-table multi-step comparative,Expert,Ranking,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_EVENT_SCENARIO_REBALANCING_001,5,"WITH 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(avg_volatility_pct) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.investor_id, p.investor_name, ROUND(h.risk_score + alloc.max_allocation_pct + goal.avg_volatility_pct - h.liquidity_score + scen.avg_scenario_change,2) AS risk_pressure_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id ORDER BY risk_pressure_score DESC LIMIT 10;",Correct,"Per-investor CTEs and 1:1 health join avoid fan-out, and the score faithfully implements all five terms (risk + concentration + volatility - liquidity + scenario change).","[{""investor_id"":""INV-073"",""investor_name"":""Abhishek Mehta"",""risk_pressure_score"":168.33},{""investor_id"":""INV-393"",""investor_name"":""Amrita Pandey"",""risk_pressure_score"":146.45},{""investor_id"":""INV-1468"",""investor_name"":""Vikram Arora"",""risk_pressure_score"":142.83},{""investor_id"":""INV-1346"",""investor_name"":""Vikram Kulkarni"",""risk_pressure_score"":141.7},{""investor_id"":""INV-378"",""investor_name"":""Geeta Verma"",""risk_pressure_score"":139.22},{""investor_id"":""INV-794"",""investor_name"":""Sneha Singh"",""risk_pressure_score"":137.64},{""investor_id"":""INV-1547"",""investor_name"":""Deepak Kulkarni"",""risk_pressure_score"":137.41},{""investor_id"":""INV-1364"",""investor_name"":""Amit Patel"",""risk_pressure_score"":136.01},{""investor_id"":""INV-075"",""investor_name"":""Arjun Rao"",""risk_pressure_score"":135.22},{""investor_id"":""INV-477"",""investor_name"":""Vivek Sharma"",""risk_pressure_score"":131.9}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses AVG(progress_pct); gold uses AVG(avg_volatility_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-048,wealth_management_multi_step_comparative_105_questions.csv,MC-048,"Across profile segment, how do scenario change, goal progress, and volatility compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(avg_volatility_pct) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.segment AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_volatility_pct),2) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.segment;",Correct,goal and scen CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics selected.,"[{""group_value"":null,""avg_scenario_change"":-3.64,""avg_progress_pct"":35.71,""avg_volatility_pct"":14.96},{""group_value"":""Diversified"",""avg_scenario_change"":-0.8,""avg_progress_pct"":40.52,""avg_volatility_pct"":14.79},{""group_value"":""Large Cap"",""avg_scenario_change"":0.31,""avg_progress_pct"":40.14,""avg_volatility_pct"":14.35},{""group_value"":""Mid Cap"",""avg_scenario_change"":-1.31,""avg_progress_pct"":41.48,""avg_volatility_pct"":14.33},{""group_value"":""Small Cap"",""avg_scenario_change"":-3.01,""avg_progress_pct"":37.91,""avg_volatility_pct"":13.78}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses SUM(amount) per investor, then AVG by group; gold uses AVG(progress_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-054,wealth_management_multi_step_comparative_105_questions.csv,MC-054,"Across risk_tolerance, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001,4,"WITH 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+    , 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.risk_tolerance AS group_value, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"reb, cash, and goal CTEs pre-aggregate per investor; joins are 1:1 and all four requested metrics are returned.","[{""group_value"":null,""avg_rebalance_amount"":415032.17,""avg_net_cash_flow"":7586.86,""avg_progress_pct"":46.23,""avg_shortfall"":17784667.91},{""group_value"":""Aggressive"",""avg_rebalance_amount"":405853.84,""avg_net_cash_flow"":1386028.27,""avg_progress_pct"":39.85,""avg_shortfall"":22981492.8},{""group_value"":""Conservative"",""avg_rebalance_amount"":414995.35,""avg_net_cash_flow"":1820922.37,""avg_progress_pct"":38.18,""avg_shortfall"":22502348.93},{""group_value"":""Moderate"",""avg_rebalance_amount"":396592.36,""avg_net_cash_flow"":1169578.36,""avg_progress_pct"":41.35,""avg_shortfall"":22184172.72}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold uses SUM(current_value) per investor, then AVG by group; gold uses AVG(returns_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-046,wealth_management_multi_step_comparative_105_questions.csv,MC-046,"Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001,3,"WITH 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+    , 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.segment AS group_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(holding.avg_returns_pct),2) AS avg_returns_pct, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN alloc ON alloc.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id GROUP BY p.segment;",Correct,"alloc and holding CTEs pre-aggregate per investor, neutralizing fan-out; all three metrics selected.","[{""group_value"":null,""avg_max_allocation_pct"":18.67,""avg_returns_pct"":111.12,""avg_holding_value"":8654138.18},{""group_value"":""Diversified"",""avg_max_allocation_pct"":17.47,""avg_returns_pct"":75.63,""avg_holding_value"":8366100.79},{""group_value"":""Large Cap"",""avg_max_allocation_pct"":16.99,""avg_returns_pct"":57.0,""avg_holding_value"":7258009.44},{""group_value"":""Mid Cap"",""avg_max_allocation_pct"":17.7,""avg_returns_pct"":80.41,""avg_holding_value"":8584272.86},{""group_value"":""Small Cap"",""avg_max_allocation_pct"":15.95,""avg_returns_pct"":83.84,""avg_holding_value"":8580495.45}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses SUM(amount) per investor, then AVG by group; gold uses AVG(goal_match_pct) or equivalent measure; wording does not define it “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-091,wealth_management_multi_step_comparative_105_questions.csv,MC-091,"Across time_horizon, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?",Five-table multi-step comparative,Expert,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,"Cash, reb and scen pre-aggregated per investor before 1:1 joins to profile and health, and all five metrics (cash flow, rebalance amount, scenario change, risk, goal match) are output.","[{""group_value"":null,""avg_net_cash_flow"":5918.8,""avg_rebalance_amount"":452996.38,""avg_scenario_change"":-1.4,""avg_risk_score"":48.09,""avg_goal_match_pct"":43.68},{""group_value"":""Long-term"",""avg_net_cash_flow"":-345171.52,""avg_rebalance_amount"":401045.43,""avg_scenario_change"":-0.82,""avg_risk_score"":51.05,""avg_goal_match_pct"":51.23},{""group_value"":""Medium-term"",""avg_net_cash_flow"":1851203.09,""avg_rebalance_amount"":392840.72,""avg_scenario_change"":-1.16,""avg_risk_score"":50.46,""avg_goal_match_pct"":45.83},{""group_value"":""Short-term"",""avg_net_cash_flow"":781992.52,""avg_rebalance_amount"":417474.67,""avg_scenario_change"":-3.14,""avg_risk_score"":53.41,""avg_goal_match_pct"":46.28}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold uses SUM(current_value) per investor, then AVG by group; gold uses AVG(shortfall), not total shortfall; gold uses AVG(liquidity_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-090,wealth_management_multi_step_comparative_105_questions.csv,MC-090,"Across time_horizon, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?",Five-table multi-step comparative,Expert,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+    , 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,"Goal, holding and allocation pre-aggregated per investor before 1:1 joins to profile and health, and all five metrics are output.","[{""group_value"":null,""avg_shortfall"":26236751.87,""avg_holding_value"":9256000.18,""avg_max_allocation_pct"":16.18,""avg_liquidity_score"":44.52,""avg_diversification_score"":49.15},{""group_value"":""Long-term"",""avg_shortfall"":22738558.95,""avg_holding_value"":8476172.69,""avg_max_allocation_pct"":17.59,""avg_liquidity_score"":50.39,""avg_diversification_score"":49.47},{""group_value"":""Medium-term"",""avg_shortfall"":22984243.38,""avg_holding_value"":7810071.33,""avg_max_allocation_pct"":17.64,""avg_liquidity_score"":47.8,""avg_diversification_score"":47.54},{""group_value"":""Short-term"",""avg_shortfall"":22761746.7,""avg_holding_value"":8197553.59,""avg_max_allocation_pct"":16.27,""avg_liquidity_score"":51.32,""avg_diversification_score"":53.09}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses AVG(progress_pct); gold uses AVG(liquidity_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-027,wealth_management_multi_step_comparative_105_questions.csv,MC-027,"Across time_horizon, how do goal progress, health risk, and liquidity compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,3,"WITH goal AS (
+      SELECT investor_id,
+             COUNT(*) AS goal_count,
+             AVG(progress_pct) AS avg_progress_pct,
+             AVG(shortfall) AS avg_shortfall,
+             AVG(avg_sharpe_ratio) AS avg_sharpe_ratio,
+             AVG(avg_volatility_pct) AS avg_volatility_pct,
+             AVG(time_to_goal_months) AS avg_time_to_goal_months
+      FROM ATOM_ENTITY_INVESTMENT_GOAL_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,"goal CTE pre-aggregates and health is one row per investor, so joins are 1:1 with no fan-out; all three metrics returned.","[{""group_value"":null,""avg_progress_pct"":42.13,""avg_risk_score"":46.33,""avg_liquidity_score"":44.52},{""group_value"":""Long-term"",""avg_progress_pct"":40.22,""avg_risk_score"":48.98,""avg_liquidity_score"":50.39},{""group_value"":""Medium-term"",""avg_progress_pct"":39.98,""avg_risk_score"":51.61,""avg_liquidity_score"":47.8},{""group_value"":""Short-term"",""avg_progress_pct"":39.66,""avg_risk_score"":51.08,""avg_liquidity_score"":51.32}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(current_value - cost) per investor, then AVG by group; gold uses AVG(progress_pct); gold uses AVG(liquidity_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-061,wealth_management_multi_step_comparative_105_questions.csv,MC-061,"Across time_horizon, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,goal and holding CTEs pre-aggregate per investor and health is 1:1; all four requested metrics selected with no fan-out.,"[{""group_value"":null,""avg_progress_pct"":42.13,""avg_holding_gain"":4781952.94,""avg_risk_score"":46.33,""avg_liquidity_score"":44.52},{""group_value"":""Long-term"",""avg_progress_pct"":40.22,""avg_holding_gain"":3694674.33,""avg_risk_score"":48.98,""avg_liquidity_score"":50.39},{""group_value"":""Medium-term"",""avg_progress_pct"":39.98,""avg_holding_gain"":3182292.25,""avg_risk_score"":51.61,""avg_liquidity_score"":47.8},{""group_value"":""Short-term"",""avg_progress_pct"":39.66,""avg_holding_gain"":3621147.02,""avg_risk_score"":51.08,""avg_liquidity_score"":51.32}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(amount) per investor, then AVG by group; question does not state final AVG; gold uses AVG(progress_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-045,wealth_management_multi_step_comparative_105_questions.csv,MC-045,"Across profile segment, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.segment AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.segment;",Correct,cash and goal CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics returned.,"[{""group_value"":null,""avg_net_cash_flow"":6821.25,""avg_progress_pct"":36.65,""avg_shortfall"":18935261.08},{""group_value"":""Diversified"",""avg_net_cash_flow"":1395897.51,""avg_progress_pct"":40.73,""avg_shortfall"":22979095.09},{""group_value"":""Large Cap"",""avg_net_cash_flow"":1079159.28,""avg_progress_pct"":40.83,""avg_shortfall"":23884231.44},{""group_value"":""Mid Cap"",""avg_net_cash_flow"":1668695.27,""avg_progress_pct"":40.15,""avg_shortfall"":23449103.75},{""group_value"":""Small Cap"",""avg_net_cash_flow"":1590088.87,""avg_progress_pct"":39.26,""avg_shortfall"":22540136.31}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses SUM(amount) per investor, then AVG by group; gold uses AVG(target_allocation_pct - current_allocation_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-049,wealth_management_multi_step_comparative_105_questions.csv,MC-049,"Across profile segment, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.segment AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.segment;",Correct,reb and scen CTEs pre-aggregate per investor; fan-out neutralized and all three metrics returned.,"[{""group_value"":null,""avg_scenario_change"":-4.47,""avg_rebalance_gap"":3.54,""avg_rebalance_amount"":405614.85},{""group_value"":""Diversified"",""avg_scenario_change"":-0.13,""avg_rebalance_gap"":0.05,""avg_rebalance_amount"":384545.31},{""group_value"":""Large Cap"",""avg_scenario_change"":-0.77,""avg_rebalance_gap"":-0.74,""avg_rebalance_amount"":415953.56},{""group_value"":""Mid Cap"",""avg_scenario_change"":-2.2,""avg_rebalance_gap"":-3.86,""avg_rebalance_amount"":397345.53},{""group_value"":""Small Cap"",""avg_scenario_change"":-2.97,""avg_rebalance_gap"":1.82,""avg_rebalance_amount"":426678.18}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold uses SUM(current_value) per investor, then AVG by group; gold uses AVG(returns_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-038,wealth_management_multi_step_comparative_105_questions.csv,MC-038,"Across profile category, how do allocation concentration, holding return, and holding value compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001,3,"WITH 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+    , 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(holding.avg_returns_pct),2) AS avg_returns_pct, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN alloc ON alloc.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id GROUP BY p.category;",Correct,"alloc and holding CTEs pre-aggregate per investor, neutralizing fan-out; all three metrics selected.","[{""group_value"":null,""avg_max_allocation_pct"":13.71,""avg_returns_pct"":40.39,""avg_holding_value"":6738916.76},{""group_value"":""Debt"",""avg_max_allocation_pct"":16.28,""avg_returns_pct"":81.91,""avg_holding_value"":8445123.62},{""group_value"":""Equity"",""avg_max_allocation_pct"":17.14,""avg_returns_pct"":64.98,""avg_holding_value"":7489841.63},{""group_value"":""Gold"",""avg_max_allocation_pct"":17.81,""avg_returns_pct"":81.56,""avg_holding_value"":8173942.74},{""group_value"":""Hybrid"",""avg_max_allocation_pct"":17.45,""avg_returns_pct"":106.59,""avg_holding_value"":9897724.92},{""group_value"":""Real Estate"",""avg_max_allocation_pct"":17.83,""avg_returns_pct"":53.77,""avg_holding_value"":7437500.82}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses SUM(amount) per investor, then AVG by group; gold uses AVG(target_allocation_pct - current_allocation_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-025,wealth_management_multi_step_comparative_105_questions.csv,MC-025,"Across risk_tolerance, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,reb and scen CTEs pre-aggregate per investor; fan-out neutralized and all three requested metrics returned.,"[{""group_value"":null,""avg_scenario_change"":-1.66,""avg_rebalance_gap"":3.53,""avg_rebalance_amount"":399232.81},{""group_value"":""Aggressive"",""avg_scenario_change"":-1.91,""avg_rebalance_gap"":-0.47,""avg_rebalance_amount"":406728.34},{""group_value"":""Conservative"",""avg_scenario_change"":-2.49,""avg_rebalance_gap"":1.26,""avg_rebalance_amount"":406759.18},{""group_value"":""Moderate"",""avg_scenario_change"":-0.47,""avg_rebalance_gap"":-3.01,""avg_rebalance_amount"":406075.91}]"
+Ambiguous,High,"could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses SUM(amount) per investor, then AVG by group “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-039,wealth_management_multi_step_comparative_105_questions.csv,MC-039,"Across profile category, how do rebalancing amount, cash flow, and transaction count compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(cash.transaction_count),2) AS avg_transaction_count, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id GROUP BY p.category;",Correct,cash and reb CTEs pre-aggregate per investor; fan-out neutralized and all three metrics returned.,"[{""group_value"":null,""avg_net_cash_flow"":1499420.24,""avg_transaction_count"":5.06,""avg_rebalance_amount"":422133.48},{""group_value"":""Debt"",""avg_net_cash_flow"":6477.8,""avg_transaction_count"":5.04,""avg_rebalance_amount"":414827.47},{""group_value"":""Equity"",""avg_net_cash_flow"":1499578.48,""avg_transaction_count"":5.06,""avg_rebalance_amount"":415854.27},{""group_value"":""Gold"",""avg_net_cash_flow"":1851965.06,""avg_transaction_count"":5.06,""avg_rebalance_amount"":396991.7},{""group_value"":""Hybrid"",""avg_net_cash_flow"":2229260.06,""avg_transaction_count"":5.04,""avg_rebalance_amount"":411221.07},{""group_value"":""Real Estate"",""avg_net_cash_flow"":1178440.1,""avg_transaction_count"":5.06,""avg_rebalance_amount"":389076.96}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold uses AVG(shortfall), not total shortfall; gold uses AVG(liquidity_score); gold uses AVG(diversification_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-078,wealth_management_multi_step_comparative_105_questions.csv,MC-078,"Across profile category, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",Correct,"Goal and allocation pre-aggregated per investor before 1:1 joins to profile and health, and all four metrics (shortfall, concentration, liquidity, diversification) are output.","[{""group_value"":null,""avg_shortfall"":22638125.66,""avg_max_allocation_pct"":13.71,""avg_liquidity_score"":49.27,""avg_diversification_score"":51.01},{""group_value"":""Debt"",""avg_shortfall"":25668295.61,""avg_max_allocation_pct"":16.28,""avg_liquidity_score"":49.16,""avg_diversification_score"":52.48},{""group_value"":""Equity"",""avg_shortfall"":17988590.02,""avg_max_allocation_pct"":17.14,""avg_liquidity_score"":50.42,""avg_diversification_score"":48.72},{""group_value"":""Gold"",""avg_shortfall"":23036903.56,""avg_max_allocation_pct"":17.81,""avg_liquidity_score"":51.54,""avg_diversification_score"":53.36},{""group_value"":""Hybrid"",""avg_shortfall"":23317670.2,""avg_max_allocation_pct"":17.45,""avg_liquidity_score"":48.72,""avg_diversification_score"":46.92},{""group_value"":""Real Estate"",""avg_shortfall"":25521919.23,""avg_max_allocation_pct"":17.83,""avg_liquidity_score"":47.96,""avg_diversification_score"":48.68}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses SUM(amount) per investor, then AVG by group; gold uses AVG(goal_match_pct) or equivalent measure; wording does not define it “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-084,wealth_management_multi_step_comparative_105_questions.csv,MC-084,"Across risk_tolerance, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?",Five-table multi-step comparative,Expert,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"Cash, reb and scen pre-aggregated per investor before 1:1 joins to profile and health, and all five metrics (cash flow, rebalance amount, scenario change, risk, goal match) are output.","[{""group_value"":null,""avg_net_cash_flow"":6475.05,""avg_rebalance_amount"":399232.81,""avg_scenario_change"":-1.66,""avg_risk_score"":59.18,""avg_goal_match_pct"":48.79},{""group_value"":""Aggressive"",""avg_net_cash_flow"":6421.1,""avg_rebalance_amount"":406728.34,""avg_scenario_change"":-1.91,""avg_risk_score"":51.66,""avg_goal_match_pct"":48.2},{""group_value"":""Conservative"",""avg_net_cash_flow"":1089910.4,""avg_rebalance_amount"":406759.18,""avg_scenario_change"":-2.49,""avg_risk_score"":52.52,""avg_goal_match_pct"":49.38},{""group_value"":""Moderate"",""avg_net_cash_flow"":1138608.2,""avg_rebalance_amount"":406075.91,""avg_scenario_change"":-0.47,""avg_risk_score"":48.66,""avg_goal_match_pct"":45.19}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(current_value - cost) per investor, then AVG by group; gold uses AVG(diversification_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-044,wealth_management_multi_step_comparative_105_questions.csv,MC-044,"Across profile segment, how do holding gain, health risk, and diversification compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,3,"WITH 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.segment AS group_value, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.segment;",Correct,holding CTE pre-aggregates per investor and health is 1:1; all three requested metrics selected correctly.,"[{""group_value"":null,""avg_holding_gain"":3927279.1,""avg_risk_score"":45.47,""avg_diversification_score"":52.26},{""group_value"":""Diversified"",""avg_holding_gain"":3267371.09,""avg_risk_score"":49.16,""avg_diversification_score"":49.31},{""group_value"":""Large Cap"",""avg_holding_gain"":2784116.9,""avg_risk_score"":50.19,""avg_diversification_score"":49.63},{""group_value"":""Mid Cap"",""avg_holding_gain"":4020469.25,""avg_risk_score"":50.26,""avg_diversification_score"":50.3},{""group_value"":""Small Cap"",""avg_holding_gain"":4117657.73,""avg_risk_score"":52.66,""avg_diversification_score"":50.3}]"
+Ambiguous,Medium,"gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses AVG(progress_pct) Thresholds are mostly clear, but “outliers” and scenario-change/net-cash-flow aggregation are not defined in the question.",train,wealth_management_multi_step_comparative_105_questions:MC-105,wealth_management_multi_step_comparative_105_questions.csv,MC-105,"Which investors are comparative outliers with net cash flow above 100000000, average goal progress below 25, risk_score above 70, and scenario change above 20?",Five-table multi-step comparative,Expert,Rule-Based Detection,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001;ATOM_EVENT_SCENARIO_REBALANCING_001,5,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.investor_id, p.investor_name, ROUND(cash.net_cash_flow,2) AS net_cash_flow, ROUND(goal.avg_progress_pct,2) AS avg_progress_pct, h.risk_score, ROUND(scen.avg_scenario_change,2) AS avg_scenario_change FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id WHERE cash.net_cash_flow>100000000 AND goal.avg_progress_pct<25 AND h.risk_score>70 AND scen.avg_scenario_change>20;",Correct,Per-investor CTEs neutralize fan-out and all four conditions are faithfully encoded; the empty result correctly reflects that no investor meets all extreme thresholds simultaneously.,[]
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses AVG(progress_pct); gold uses AVG(avg_volatility_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-040,wealth_management_multi_step_comparative_105_questions.csv,MC-040,"Across profile category, how do scenario change, goal progress, and volatility compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(avg_volatility_pct) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_volatility_pct),2) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.category;",Correct,goal and scen CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics selected.,"[{""group_value"":null,""avg_scenario_change"":-8.03,""avg_progress_pct"":43.12,""avg_volatility_pct"":15.39},{""group_value"":""Debt"",""avg_scenario_change"":-6.24,""avg_progress_pct"":40.3,""avg_volatility_pct"":15.19},{""group_value"":""Equity"",""avg_scenario_change"":-2.15,""avg_progress_pct"":39.47,""avg_volatility_pct"":14.44},{""group_value"":""Gold"",""avg_scenario_change"":0.74,""avg_progress_pct"":37.58,""avg_volatility_pct"":13.8},{""group_value"":""Hybrid"",""avg_scenario_change"":4.15,""avg_progress_pct"":39.86,""avg_volatility_pct"":14.59},{""group_value"":""Real Estate"",""avg_scenario_change"":-1.78,""avg_progress_pct"":40.89,""avg_volatility_pct"":13.5}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses AVG(progress_pct); gold uses AVG(avg_volatility_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-024,wealth_management_multi_step_comparative_105_questions.csv,MC-024,"Across risk_tolerance, how do scenario change, goal progress, and volatility compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(avg_volatility_pct) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_volatility_pct),2) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,goal and scen CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics are selected correctly.,"[{""group_value"":null,""avg_scenario_change"":-0.71,""avg_progress_pct"":49.93,""avg_volatility_pct"":13.53},{""group_value"":""Aggressive"",""avg_scenario_change"":-1.85,""avg_progress_pct"":39.69,""avg_volatility_pct"":14.72},{""group_value"":""Conservative"",""avg_scenario_change"":-2.22,""avg_progress_pct"":37.99,""avg_volatility_pct"":14.33},{""group_value"":""Moderate"",""avg_scenario_change"":0.07,""avg_progress_pct"":40.13,""avg_volatility_pct"":14.09}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses AVG(shortfall), not total shortfall “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-100,wealth_management_multi_step_comparative_105_questions.csv,MC-100,"Across profile category, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?",Five-table multi-step comparative,Expert,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(cash.inflow_amount),2) AS avg_inflow, ROUND(AVG(cash.outflow_amount),2) AS avg_outflow, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_dividends),2) AS avg_dividends, ROUND(AVG(holding.total_taxes_paid),2) AS avg_taxes_paid FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",Correct,"Cash, goal and holding pre-aggregated per investor before 1:1 joins, and all five metrics (inflow, outflow, shortfall, dividends, taxes) are output.","[{""group_value"":null,""avg_inflow"":1308592.69,""avg_outflow"":2861.92,""avg_shortfall"":22638125.66,""avg_dividends"":154225.14,""avg_taxes_paid"":20116.22},{""group_value"":""Debt"",""avg_inflow"":1108574.6,""avg_outflow"":735602.69,""avg_shortfall"":25668295.61,""avg_dividends"":163453.51,""avg_taxes_paid"":23191.07},{""group_value"":""Equity"",""avg_inflow"":1643624.88,""avg_outflow"":329406.54,""avg_shortfall"":17988590.02,""avg_dividends"":151943.16,""avg_taxes_paid"":22380.15},{""group_value"":""Gold"",""avg_inflow"":2003067.38,""avg_outflow"":335093.07,""avg_shortfall"":23036903.56,""avg_dividends"":184638.44,""avg_taxes_paid"":23655.89},{""group_value"":""Hybrid"",""avg_inflow"":2312348.53,""avg_outflow"":2739.11,""avg_shortfall"":23317670.2,""avg_dividends"":195066.85,""avg_taxes_paid"":26553.45},{""group_value"":""Real Estate"",""avg_inflow"":2085609.53,""avg_outflow"":1040895.06,""avg_shortfall"":25521919.23,""avg_dividends"":164168.97,""avg_taxes_paid"":22879.87}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold uses SUM(current_value) per investor, then AVG by group; gold uses AVG(shortfall), not total shortfall; gold uses AVG(liquidity_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-083,wealth_management_multi_step_comparative_105_questions.csv,MC-083,"Across risk_tolerance, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?",Five-table multi-step comparative,Expert,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+    , 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"Goal, holding and allocation pre-aggregated per investor before 1:1 joins to profile and health, and all five metrics (shortfall, holding value, concentration, liquidity, diversification) are output.","[{""group_value"":null,""avg_shortfall"":18627483.33,""avg_holding_value"":10459250.55,""avg_max_allocation_pct"":16.97,""avg_liquidity_score"":55.9,""avg_diversification_score"":55.79},{""group_value"":""Aggressive"",""avg_shortfall"":23218312.17,""avg_holding_value"":7772076.82,""avg_max_allocation_pct"":17.01,""avg_liquidity_score"":47.17,""avg_diversification_score"":49.05},{""group_value"":""Conservative"",""avg_shortfall"":23686380.49,""avg_holding_value"":7365637.73,""avg_max_allocation_pct"":16.86,""avg_liquidity_score"":50.85,""avg_diversification_score"":49.91},{""group_value"":""Moderate"",""avg_shortfall"":22760174.64,""avg_holding_value"":9186349.25,""avg_max_allocation_pct"":17.48,""avg_liquidity_score"":49.69,""avg_diversification_score"":50.18}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses AVG(target_allocation_pct - current_allocation_pct); gold uses AVG(goal_match_pct) or equivalent measure; wording does not define it “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-065,wealth_management_multi_step_comparative_105_questions.csv,MC-065,"Across time_horizon, how do scenario change, rebalancing gap, health risk, and goal match compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"WITH 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+    , 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN scen ON scen.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,scen and reb CTEs pre-aggregate per investor and health is 1:1; all four requested metrics selected with no fan-out.,"[{""group_value"":null,""avg_scenario_change"":-1.4,""avg_rebalance_gap"":-4.38,""avg_risk_score"":48.09,""avg_goal_match_pct"":43.68},{""group_value"":""Long-term"",""avg_scenario_change"":-0.82,""avg_rebalance_gap"":-2.05,""avg_risk_score"":51.05,""avg_goal_match_pct"":51.23},{""group_value"":""Medium-term"",""avg_scenario_change"":-1.16,""avg_rebalance_gap"":0.98,""avg_risk_score"":50.46,""avg_goal_match_pct"":45.83},{""group_value"":""Short-term"",""avg_scenario_change"":-3.14,""avg_rebalance_gap"":0.37,""avg_risk_score"":53.41,""avg_goal_match_pct"":46.28}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(amount) per investor, then AVG by group; question does not state final AVG; gold uses AVG(progress_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-029,wealth_management_multi_step_comparative_105_questions.csv,MC-029,"Across time_horizon, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.time_horizon AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,cash and goal CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics returned.,"[{""group_value"":null,""avg_net_cash_flow"":1305239.48,""avg_progress_pct"":42.13,""avg_shortfall"":26236751.87},{""group_value"":""Long-term"",""avg_net_cash_flow"":1029435.71,""avg_progress_pct"":40.22,""avg_shortfall"":22738558.95},{""group_value"":""Medium-term"",""avg_net_cash_flow"":1649318.64,""avg_progress_pct"":39.98,""avg_shortfall"":22984243.38},{""group_value"":""Short-term"",""avg_net_cash_flow"":1415496.47,""avg_progress_pct"":39.66,""avg_shortfall"":22761746.7}]"
+Ambiguous,High,"could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses SUM(amount) per investor, then AVG by group “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-023,wealth_management_multi_step_comparative_105_questions.csv,MC-023,"Across risk_tolerance, how do rebalancing amount, cash flow, and transaction count compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(cash.transaction_count),2) AS avg_transaction_count, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"cash and reb CTEs pre-aggregate per investor, neutralizing fan-out; all three requested metrics are returned.","[{""group_value"":null,""avg_net_cash_flow"":7586.86,""avg_transaction_count"":5.05,""avg_rebalance_amount"":415032.17},{""group_value"":""Aggressive"",""avg_net_cash_flow"":1386028.27,""avg_transaction_count"":5.06,""avg_rebalance_amount"":405853.84},{""group_value"":""Conservative"",""avg_net_cash_flow"":1820922.37,""avg_transaction_count"":5.05,""avg_rebalance_amount"":414995.35},{""group_value"":""Moderate"",""avg_net_cash_flow"":1169578.36,""avg_transaction_count"":5.05,""avg_rebalance_amount"":396592.36}]"
+Ambiguous,High,"gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses SUM(amount) per investor, then AVG by group; question does not state final AVG “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-050,wealth_management_multi_step_comparative_105_questions.csv,MC-050,"Across profile segment, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.segment AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(scen.scenario_count),2) AS avg_scenario_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.segment;",Correct,cash and scen CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics selected.,"[{""group_value"":null,""avg_net_cash_flow"":-2166872.13,""avg_scenario_change"":-3.64,""avg_scenario_count"":1.54},{""group_value"":""Diversified"",""avg_net_cash_flow"":1316986.23,""avg_scenario_change"":-0.8,""avg_scenario_count"":1.59},{""group_value"":""Large Cap"",""avg_net_cash_flow"":-418966.48,""avg_scenario_change"":0.31,""avg_scenario_count"":1.58},{""group_value"":""Mid Cap"",""avg_net_cash_flow"":2180634.97,""avg_scenario_change"":-1.31,""avg_scenario_count"":1.61},{""group_value"":""Small Cap"",""avg_net_cash_flow"":428442.16,""avg_scenario_change"":-3.01,""avg_scenario_count"":1.57}]"
+Ambiguous,High,"could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses SUM(amount) per investor, then AVG by group “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-031,wealth_management_multi_step_comparative_105_questions.csv,MC-031,"Across time_horizon, how do rebalancing amount, cash flow, and transaction count compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(cash.transaction_count),2) AS avg_transaction_count, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,cash and reb CTEs pre-aggregate per investor; fan-out neutralized and all three requested metrics returned.,"[{""group_value"":null,""avg_net_cash_flow"":1498722.06,""avg_transaction_count"":5.03,""avg_rebalance_amount"":445694.88},{""group_value"":""Long-term"",""avg_net_cash_flow"":1138071.93,""avg_transaction_count"":5.06,""avg_rebalance_amount"":400132.54},{""group_value"":""Medium-term"",""avg_net_cash_flow"":1862765.52,""avg_transaction_count"":5.05,""avg_rebalance_amount"":386788.99},{""group_value"":""Short-term"",""avg_net_cash_flow"":1169905.13,""avg_transaction_count"":5.05,""avg_rebalance_amount"":425999.62}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses AVG(progress_pct); gold uses AVG(liquidity_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-043,wealth_management_multi_step_comparative_105_questions.csv,MC-043,"Across profile segment, how do goal progress, health risk, and liquidity compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,3,"WITH goal AS (
+      SELECT investor_id,
+             COUNT(*) AS goal_count,
+             AVG(progress_pct) AS avg_progress_pct,
+             AVG(shortfall) AS avg_shortfall,
+             AVG(avg_sharpe_ratio) AS avg_sharpe_ratio,
+             AVG(avg_volatility_pct) AS avg_volatility_pct,
+             AVG(time_to_goal_months) AS avg_time_to_goal_months
+      FROM ATOM_ENTITY_INVESTMENT_GOAL_001
+      GROUP BY investor_id
+    )
+     SELECT p.segment AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.segment;",Correct,"goal CTE pre-aggregates and health is 1:1 per investor, so no fan-out; all three metrics returned.","[{""group_value"":null,""avg_progress_pct"":36.65,""avg_risk_score"":45.47,""avg_liquidity_score"":47.87},{""group_value"":""Diversified"",""avg_progress_pct"":40.73,""avg_risk_score"":49.16,""avg_liquidity_score"":49.89},{""group_value"":""Large Cap"",""avg_progress_pct"":40.83,""avg_risk_score"":50.19,""avg_liquidity_score"":50.03},{""group_value"":""Mid Cap"",""avg_progress_pct"":40.15,""avg_risk_score"":50.26,""avg_liquidity_score"":50.05},{""group_value"":""Small Cap"",""avg_progress_pct"":39.26,""avg_risk_score"":52.66,""avg_liquidity_score"":48.7}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold uses SUM(current_value) per investor, then AVG by group; gold uses AVG(shortfall), not total shortfall; gold uses AVG(liquidity_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-097,wealth_management_multi_step_comparative_105_questions.csv,MC-097,"Across profile category, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?",Five-table multi-step comparative,Expert,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+    , 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",Correct,"Goal, holding and allocation pre-aggregated per investor before 1:1 joins to profile and health, and all five metrics are output.","[{""group_value"":null,""avg_shortfall"":22638125.66,""avg_holding_value"":6738916.76,""avg_max_allocation_pct"":13.71,""avg_liquidity_score"":49.27,""avg_diversification_score"":51.01},{""group_value"":""Debt"",""avg_shortfall"":25668295.61,""avg_holding_value"":8445123.62,""avg_max_allocation_pct"":16.28,""avg_liquidity_score"":49.16,""avg_diversification_score"":52.48},{""group_value"":""Equity"",""avg_shortfall"":17988590.02,""avg_holding_value"":7489841.63,""avg_max_allocation_pct"":17.14,""avg_liquidity_score"":50.42,""avg_diversification_score"":48.72},{""group_value"":""Gold"",""avg_shortfall"":23036903.56,""avg_holding_value"":8173942.74,""avg_max_allocation_pct"":17.81,""avg_liquidity_score"":51.54,""avg_diversification_score"":53.36},{""group_value"":""Hybrid"",""avg_shortfall"":23317670.2,""avg_holding_value"":9897724.92,""avg_max_allocation_pct"":17.45,""avg_liquidity_score"":48.72,""avg_diversification_score"":46.92},{""group_value"":""Real Estate"",""avg_shortfall"":25521919.23,""avg_holding_value"":7437500.82,""avg_max_allocation_pct"":17.83,""avg_liquidity_score"":47.96,""avg_diversification_score"":48.68}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses AVG(progress_pct); gold uses AVG(avg_volatility_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-032,wealth_management_multi_step_comparative_105_questions.csv,MC-032,"Across time_horizon, how do scenario change, goal progress, and volatility compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(avg_volatility_pct) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_volatility_pct),2) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,goal and scen CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics selected.,"[{""group_value"":null,""avg_scenario_change"":0.63,""avg_progress_pct"":42.57,""avg_volatility_pct"":15.5},{""group_value"":""Long-term"",""avg_scenario_change"":-1.25,""avg_progress_pct"":40.53,""avg_volatility_pct"":14.57},{""group_value"":""Medium-term"",""avg_scenario_change"":-0.81,""avg_progress_pct"":39.1,""avg_volatility_pct"":14.04},{""group_value"":""Short-term"",""avg_scenario_change"":-2.29,""avg_progress_pct"":39.26,""avg_volatility_pct"":14.21}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses AVG(progress_pct); gold uses AVG(liquidity_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-035,wealth_management_multi_step_comparative_105_questions.csv,MC-035,"Across profile category, how do goal progress, health risk, and liquidity compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,3,"WITH goal AS (
+      SELECT investor_id,
+             COUNT(*) AS goal_count,
+             AVG(progress_pct) AS avg_progress_pct,
+             AVG(shortfall) AS avg_shortfall,
+             AVG(avg_sharpe_ratio) AS avg_sharpe_ratio,
+             AVG(avg_volatility_pct) AS avg_volatility_pct,
+             AVG(time_to_goal_months) AS avg_time_to_goal_months
+      FROM ATOM_ENTITY_INVESTMENT_GOAL_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",Correct,"goal CTE pre-aggregates and health is 1:1 per investor, so no fan-out; all three metrics returned.","[{""group_value"":null,""avg_progress_pct"":43.84,""avg_risk_score"":53.58,""avg_liquidity_score"":49.27},{""group_value"":""Debt"",""avg_progress_pct"":40.58,""avg_risk_score"":48.96,""avg_liquidity_score"":49.16},{""group_value"":""Equity"",""avg_progress_pct"":39.96,""avg_risk_score"":51.27,""avg_liquidity_score"":50.42},{""group_value"":""Gold"",""avg_progress_pct"":39.36,""avg_risk_score"":48.5,""avg_liquidity_score"":51.54},{""group_value"":""Hybrid"",""avg_progress_pct"":38.47,""avg_risk_score"":51.09,""avg_liquidity_score"":48.72},{""group_value"":""Real Estate"",""avg_progress_pct"":41.05,""avg_risk_score"":50.92,""avg_liquidity_score"":47.96}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses AVG(target_allocation_pct - current_allocation_pct); gold uses AVG(goal_match_pct) or equivalent measure; wording does not define it “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-055,wealth_management_multi_step_comparative_105_questions.csv,MC-055,"Across risk_tolerance, how do scenario change, rebalancing gap, health risk, and goal match compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"WITH 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+    , 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN scen ON scen.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"scen and reb CTEs pre-aggregate per investor and health is 1:1; all four metrics (scenario change, gap, risk, goal match) selected.","[{""group_value"":null,""avg_scenario_change"":-1.66,""avg_rebalance_gap"":3.53,""avg_risk_score"":59.18,""avg_goal_match_pct"":48.79},{""group_value"":""Aggressive"",""avg_scenario_change"":-1.91,""avg_rebalance_gap"":-0.47,""avg_risk_score"":51.66,""avg_goal_match_pct"":48.2},{""group_value"":""Conservative"",""avg_scenario_change"":-2.49,""avg_rebalance_gap"":1.26,""avg_risk_score"":52.52,""avg_goal_match_pct"":49.38},{""group_value"":""Moderate"",""avg_scenario_change"":-0.47,""avg_rebalance_gap"":-3.01,""avg_risk_score"":48.66,""avg_goal_match_pct"":45.19}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses sector total investment aggregate; wording is broad “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-076,wealth_management_multi_step_comparative_105_questions.csv,MC-076,"Across profile category, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_ENTITY_SECTOR_ALLOCATION_001,4,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+    , 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(alloc.total_sector_investment),2) AS avg_sector_investment FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id GROUP BY p.category;",Correct,"Per-investor CTEs neutralize fan-out and all four metrics (cash flow, scenario change, concentration, sector investment) are output.","[{""group_value"":null,""avg_net_cash_flow"":2181672.83,""avg_scenario_change"":-8.03,""avg_max_allocation_pct"":14.56,""avg_sector_investment"":803033.89},{""group_value"":""Debt"",""avg_net_cash_flow"":1169529.06,""avg_scenario_change"":-6.24,""avg_max_allocation_pct"":16.28,""avg_sector_investment"":917501.86},{""group_value"":""Equity"",""avg_net_cash_flow"":530338.73,""avg_scenario_change"":-2.15,""avg_max_allocation_pct"":17.14,""avg_sector_investment"":856162.5},{""group_value"":""Gold"",""avg_net_cash_flow"":552992.73,""avg_scenario_change"":0.74,""avg_max_allocation_pct"":16.55,""avg_sector_investment"":938805.09},{""group_value"":""Hybrid"",""avg_net_cash_flow"":1585541.01,""avg_scenario_change"":4.15,""avg_max_allocation_pct"":17.39,""avg_sector_investment"":874711.48},{""group_value"":""Real Estate"",""avg_net_cash_flow"":-506244.45,""avg_scenario_change"":-1.78,""avg_max_allocation_pct"":17.49,""avg_sector_investment"":920698.89}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses AVG(progress_pct); gold uses AVG(liquidity_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-019,wealth_management_multi_step_comparative_105_questions.csv,MC-019,"Across risk_tolerance, how do goal progress, health risk, and liquidity compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,3,"WITH goal AS (
+      SELECT investor_id,
+             COUNT(*) AS goal_count,
+             AVG(progress_pct) AS avg_progress_pct,
+             AVG(shortfall) AS avg_shortfall,
+             AVG(avg_sharpe_ratio) AS avg_sharpe_ratio,
+             AVG(avg_volatility_pct) AS avg_volatility_pct,
+             AVG(time_to_goal_months) AS avg_time_to_goal_months
+      FROM ATOM_ENTITY_INVESTMENT_GOAL_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"Goal metrics are pre-aggregated per investor and health is one-per-investor, so the joins are fan-out free.","[{""group_value"":null,""avg_progress_pct"":46.45,""avg_risk_score"":55.31,""avg_liquidity_score"":55.9},{""group_value"":""Aggressive"",""avg_progress_pct"":39.76,""avg_risk_score"":49.12,""avg_liquidity_score"":47.17},{""group_value"":""Conservative"",""avg_progress_pct"":38.25,""avg_risk_score"":51.7,""avg_liquidity_score"":50.85},{""group_value"":""Moderate"",""avg_progress_pct"":41.21,""avg_risk_score"":49.29,""avg_liquidity_score"":49.69}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses SUM(amount) per investor, then AVG by group; gold uses AVG(target_allocation_pct - current_allocation_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-033,wealth_management_multi_step_comparative_105_questions.csv,MC-033,"Across time_horizon, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,reb and scen CTEs pre-aggregate per investor; fan-out neutralized and all three metrics returned.,"[{""group_value"":null,""avg_scenario_change"":-1.4,""avg_rebalance_gap"":-4.38,""avg_rebalance_amount"":452996.38},{""group_value"":""Long-term"",""avg_scenario_change"":-0.82,""avg_rebalance_gap"":-2.05,""avg_rebalance_amount"":401045.43},{""group_value"":""Medium-term"",""avg_scenario_change"":-1.16,""avg_rebalance_gap"":0.98,""avg_rebalance_amount"":392840.72},{""group_value"":""Short-term"",""avg_scenario_change"":-3.14,""avg_rebalance_gap"":0.37,""avg_rebalance_amount"":417474.67}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(current_value - cost) per investor, then AVG by group; gold uses AVG(progress_pct); gold uses AVG(liquidity_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-051,wealth_management_multi_step_comparative_105_questions.csv,MC-051,"Across risk_tolerance, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,goal and holding CTEs pre-aggregate per investor and health is 1:1; all four requested metrics are selected with no fan-out.,"[{""group_value"":null,""avg_progress_pct"":46.45,""avg_holding_gain"":5072018.61,""avg_risk_score"":55.31,""avg_liquidity_score"":55.9},{""group_value"":""Aggressive"",""avg_progress_pct"":39.76,""avg_holding_gain"":3274142.41,""avg_risk_score"":49.12,""avg_liquidity_score"":47.17},{""group_value"":""Conservative"",""avg_progress_pct"":38.25,""avg_holding_gain"":2862123.22,""avg_risk_score"":51.7,""avg_liquidity_score"":50.85},{""group_value"":""Moderate"",""avg_progress_pct"":41.21,""avg_holding_gain"":4344139.71,""avg_risk_score"":49.29,""avg_liquidity_score"":49.69}]"
+Ambiguous,High,"gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses SUM(amount) per investor, then AVG by group; question does not state final AVG “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-034,wealth_management_multi_step_comparative_105_questions.csv,MC-034,"Across time_horizon, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(scen.scenario_count),2) AS avg_scenario_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,cash and scen CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics selected.,"[{""group_value"":null,""avg_net_cash_flow"":6285.33,""avg_scenario_change"":0.63,""avg_scenario_count"":1.46},{""group_value"":""Long-term"",""avg_net_cash_flow"":-313426.35,""avg_scenario_change"":-1.25,""avg_scenario_count"":1.6},{""group_value"":""Medium-term"",""avg_net_cash_flow"":1614023.15,""avg_scenario_change"":-0.81,""avg_scenario_count"":1.58},{""group_value"":""Short-term"",""avg_net_cash_flow"":1000147.1,""avg_scenario_change"":-2.29,""avg_scenario_count"":1.59}]"
+Ambiguous,High,"gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses SUM(amount) per investor, then AVG by group; question does not state final AVG “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",train,wealth_management_multi_step_comparative_105_questions:MC-042,wealth_management_multi_step_comparative_105_questions.csv,MC-042,"Across profile category, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(scen.scenario_count),2) AS avg_scenario_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.category;",Correct,cash and scen CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics selected.,"[{""group_value"":null,""avg_net_cash_flow"":2181672.83,""avg_scenario_change"":-8.03,""avg_scenario_count"":1.67},{""group_value"":""Debt"",""avg_net_cash_flow"":1169529.06,""avg_scenario_change"":-6.24,""avg_scenario_count"":1.6},{""group_value"":""Equity"",""avg_net_cash_flow"":530338.73,""avg_scenario_change"":-2.15,""avg_scenario_count"":1.43},{""group_value"":""Gold"",""avg_net_cash_flow"":552992.73,""avg_scenario_change"":0.74,""avg_scenario_count"":1.64},{""group_value"":""Hybrid"",""avg_net_cash_flow"":1585541.01,""avg_scenario_change"":4.15,""avg_scenario_count"":1.63},{""group_value"":""Real Estate"",""avg_net_cash_flow"":-506244.45,""avg_scenario_change"":-1.78,""avg_scenario_count"":1.59}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold uses SUM(current_value) per investor, then AVG by group; gold uses AVG(returns_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-030,wealth_management_multi_step_comparative_105_questions.csv,MC-030,"Across time_horizon, how do allocation concentration, holding return, and holding value compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001,3,"WITH 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+    , 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(holding.avg_returns_pct),2) AS avg_returns_pct, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN alloc ON alloc.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,"alloc and holding CTEs pre-aggregate per investor, neutralizing fan-out; all three metrics selected.","[{""group_value"":null,""avg_max_allocation_pct"":16.18,""avg_returns_pct"":111.83,""avg_holding_value"":9256000.18},{""group_value"":""Long-term"",""avg_max_allocation_pct"":17.59,""avg_returns_pct"":81.18,""avg_holding_value"":8476172.69},{""group_value"":""Medium-term"",""avg_max_allocation_pct"":17.64,""avg_returns_pct"":68.6,""avg_holding_value"":7810071.33},{""group_value"":""Short-term"",""avg_max_allocation_pct"":16.27,""avg_returns_pct"":72.68,""avg_holding_value"":8197553.59}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses AVG(shortfall), not total shortfall “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-093,wealth_management_multi_step_comparative_105_questions.csv,MC-093,"Across time_horizon, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?",Five-table multi-step comparative,Expert,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(cash.inflow_amount),2) AS avg_inflow, ROUND(AVG(cash.outflow_amount),2) AS avg_outflow, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_dividends),2) AS avg_dividends, ROUND(AVG(holding.total_taxes_paid),2) AS avg_taxes_paid FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,"Cash, goal and holding pre-aggregated per investor before 1:1 joins, and all five metrics (inflow, outflow, shortfall, dividends, taxes) are output.","[{""group_value"":null,""avg_inflow"":1308160.79,""avg_outflow"":2921.31,""avg_shortfall"":26236751.87,""avg_dividends"":175517.83,""avg_taxes_paid"":23717.43},{""group_value"":""Long-term"",""avg_inflow"":2054684.34,""avg_outflow"":1025248.64,""avg_shortfall"":22738558.95,""avg_dividends"":173907.65,""avg_taxes_paid"":22519.84},{""group_value"":""Medium-term"",""avg_inflow"":1857511.14,""avg_outflow"":208192.5,""avg_shortfall"":22984243.38,""avg_dividends"":166676.96,""avg_taxes_paid"":23987.55},{""group_value"":""Short-term"",""avg_inflow"":1619503.32,""avg_outflow"":204006.85,""avg_shortfall"":22761746.7,""avg_dividends"":172201.17,""avg_taxes_paid"":24165.49}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold uses SUM(current_value) per investor, then AVG by group; gold uses AVG(returns_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-022,wealth_management_multi_step_comparative_105_questions.csv,MC-022,"Across risk_tolerance, how do allocation concentration, holding return, and holding value compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001,3,"WITH 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+    , 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(holding.avg_returns_pct),2) AS avg_returns_pct, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN alloc ON alloc.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"CTEs pre-aggregate alloc and holding per investor; joins are 1:1 and the three requested metrics (max allocation, avg returns, total value) are all selected.","[{""group_value"":null,""avg_max_allocation_pct"":16.97,""avg_returns_pct"":93.46,""avg_holding_value"":10459250.55},{""group_value"":""Aggressive"",""avg_max_allocation_pct"":17.01,""avg_returns_pct"":72.44,""avg_holding_value"":7772076.82},{""group_value"":""Conservative"",""avg_max_allocation_pct"":16.86,""avg_returns_pct"":67.15,""avg_holding_value"":7365637.73},{""group_value"":""Moderate"",""avg_max_allocation_pct"":17.48,""avg_returns_pct"":86.03,""avg_holding_value"":9186349.25}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold uses AVG(shortfall), not total shortfall; gold uses AVG(liquidity_score); gold uses AVG(diversification_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-068,wealth_management_multi_step_comparative_105_questions.csv,MC-068,"Across time_horizon, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,"Goal and allocation tables are pre-aggregated per investor before 1:1 joins to profile and health, and all four metrics (shortfall, concentration, liquidity, diversification) are output.","[{""group_value"":null,""avg_shortfall"":26236751.87,""avg_max_allocation_pct"":16.18,""avg_liquidity_score"":44.52,""avg_diversification_score"":49.15},{""group_value"":""Long-term"",""avg_shortfall"":22738558.95,""avg_max_allocation_pct"":17.59,""avg_liquidity_score"":50.39,""avg_diversification_score"":49.47},{""group_value"":""Medium-term"",""avg_shortfall"":22984243.38,""avg_max_allocation_pct"":17.64,""avg_liquidity_score"":47.8,""avg_diversification_score"":47.54},{""group_value"":""Short-term"",""avg_shortfall"":22761746.7,""avg_max_allocation_pct"":16.27,""avg_liquidity_score"":51.32,""avg_diversification_score"":53.09}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(amount) per investor, then AVG by group; question does not state final AVG; gold uses AVG(progress_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-021,wealth_management_multi_step_comparative_105_questions.csv,MC-021,"Across risk_tolerance, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"Each CTE pre-aggregates per investor_id, so the 1:1 joins carry no fan-out and outer AVGs correctly compare all three requested metrics.","[{""group_value"":null,""avg_net_cash_flow"":7844.03,""avg_progress_pct"":46.45,""avg_shortfall"":18627483.33},{""group_value"":""Aggressive"",""avg_net_cash_flow"":1652919.38,""avg_progress_pct"":39.76,""avg_shortfall"":23218312.17},{""group_value"":""Conservative"",""avg_net_cash_flow"":1600495.38,""avg_progress_pct"":38.25,""avg_shortfall"":23686380.49},{""group_value"":""Moderate"",""avg_net_cash_flow"":1037620.49,""avg_progress_pct"":41.21,""avg_shortfall"":22760174.64}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses AVG(target_allocation_pct - current_allocation_pct); gold uses AVG(goal_match_pct) or equivalent measure; wording does not define it “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-075,wealth_management_multi_step_comparative_105_questions.csv,MC-075,"Across profile category, how do scenario change, rebalancing gap, health risk, and goal match compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"WITH 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+    , 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN scen ON scen.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",Correct,"Scen and reb pre-aggregated per investor before 1:1 joins to profile and health, and all four metrics (scenario change, rebalance gap, risk, goal match) are output.","[{""group_value"":null,""avg_scenario_change"":-10.65,""avg_rebalance_gap"":2.38,""avg_risk_score"":56.7,""avg_goal_match_pct"":48.85},{""group_value"":""Debt"",""avg_scenario_change"":-6.64,""avg_rebalance_gap"":-1.33,""avg_risk_score"":50.32,""avg_goal_match_pct"":50.54},{""group_value"":""Equity"",""avg_scenario_change"":-1.19,""avg_rebalance_gap"":-4.06,""avg_risk_score"":52.1,""avg_goal_match_pct"":48.64},{""group_value"":""Gold"",""avg_scenario_change"":0.89,""avg_rebalance_gap"":-0.38,""avg_risk_score"":49.53,""avg_goal_match_pct"":47.53},{""group_value"":""Hybrid"",""avg_scenario_change"":2.77,""avg_rebalance_gap"":0.98,""avg_risk_score"":52.98,""avg_goal_match_pct"":46.42},{""group_value"":""Real Estate"",""avg_scenario_change"":-2.63,""avg_rebalance_gap"":1.5,""avg_risk_score"":50.7,""avg_goal_match_pct"":45.52}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses SUM(amount) per investor, then AVG by group; gold uses AVG(progress_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-074,wealth_management_multi_step_comparative_105_questions.csv,MC-074,"Across profile category, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001,4,"WITH 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+    , 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.category AS group_value, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.category;",Correct,"Reb, cash and goal are pre-aggregated per investor before 1:1 joins, and all four metrics (rebalance amount, cash flow, progress, shortfall) are output.","[{""group_value"":null,""avg_rebalance_amount"":422133.48,""avg_net_cash_flow"":1499420.24,""avg_progress_pct"":44.71,""avg_shortfall"":19803537.43},{""group_value"":""Debt"",""avg_rebalance_amount"":414827.47,""avg_net_cash_flow"":6477.8,""avg_progress_pct"":41.04,""avg_shortfall"":24184322.94},{""group_value"":""Equity"",""avg_rebalance_amount"":415854.27,""avg_net_cash_flow"":1499578.48,""avg_progress_pct"":39.16,""avg_shortfall"":16902132.71},{""group_value"":""Gold"",""avg_rebalance_amount"":396991.7,""avg_net_cash_flow"":1851965.06,""avg_progress_pct"":39.82,""avg_shortfall"":23397342.02},{""group_value"":""Hybrid"",""avg_rebalance_amount"":411221.07,""avg_net_cash_flow"":2229260.06,""avg_progress_pct"":38.69,""avg_shortfall"":22569585.08},{""group_value"":""Real Estate"",""avg_rebalance_amount"":389076.96,""avg_net_cash_flow"":1178440.1,""avg_progress_pct"":40.69,""avg_shortfall"":25606484.9}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(current_value - cost) per investor, then AVG by group; gold uses AVG(diversification_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-036,wealth_management_multi_step_comparative_105_questions.csv,MC-036,"Across profile category, how do holding gain, health risk, and diversification compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,3,"WITH 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",Correct,holding CTE pre-aggregates per investor and health is 1:1; all three requested metrics selected correctly.,"[{""group_value"":null,""avg_holding_gain"":2132093.45,""avg_risk_score"":53.58,""avg_diversification_score"":51.01},{""group_value"":""Debt"",""avg_holding_gain"":3496438.37,""avg_risk_score"":48.96,""avg_diversification_score"":52.48},{""group_value"":""Equity"",""avg_holding_gain"":2992201.01,""avg_risk_score"":51.27,""avg_diversification_score"":48.72},{""group_value"":""Gold"",""avg_holding_gain"":3789306.43,""avg_risk_score"":48.5,""avg_diversification_score"":53.36},{""group_value"":""Hybrid"",""avg_holding_gain"":4975031.31,""avg_risk_score"":51.09,""avg_diversification_score"":46.92},{""group_value"":""Real Estate"",""avg_holding_gain"":2898414.74,""avg_risk_score"":50.92,""avg_diversification_score"":48.68}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold uses AVG(shortfall), not total shortfall; gold uses AVG(liquidity_score); gold uses AVG(diversification_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-058,wealth_management_multi_step_comparative_105_questions.csv,MC-058,"Across risk_tolerance, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_SECTOR_ALLOCATION_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,goal and alloc CTEs pre-aggregate per investor and health is 1:1; all four requested metrics are selected with no fan-out.,"[{""group_value"":null,""avg_shortfall"":18627483.33,""avg_max_allocation_pct"":16.97,""avg_liquidity_score"":55.9,""avg_diversification_score"":55.79},{""group_value"":""Aggressive"",""avg_shortfall"":23218312.17,""avg_max_allocation_pct"":17.01,""avg_liquidity_score"":47.17,""avg_diversification_score"":49.05},{""group_value"":""Conservative"",""avg_shortfall"":23686380.49,""avg_max_allocation_pct"":16.86,""avg_liquidity_score"":50.85,""avg_diversification_score"":49.91},{""group_value"":""Moderate"",""avg_shortfall"":22760174.64,""avg_max_allocation_pct"":17.48,""avg_liquidity_score"":49.69,""avg_diversification_score"":50.18}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(current_value - cost) per investor, then AVG by group; gold uses AVG(progress_pct); gold uses AVG(liquidity_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-071,wealth_management_multi_step_comparative_105_questions.csv,MC-071,"Across profile category, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,4,"WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",Correct,"Goal and holding are pre-aggregated per investor before 1:1 joins to profile and health, and all four metrics (progress, holding gain, risk, liquidity) are output.","[{""group_value"":null,""avg_progress_pct"":43.84,""avg_holding_gain"":2132093.45,""avg_risk_score"":53.58,""avg_liquidity_score"":49.27},{""group_value"":""Debt"",""avg_progress_pct"":40.58,""avg_holding_gain"":3496438.37,""avg_risk_score"":48.96,""avg_liquidity_score"":49.16},{""group_value"":""Equity"",""avg_progress_pct"":39.96,""avg_holding_gain"":2992201.01,""avg_risk_score"":51.27,""avg_liquidity_score"":50.42},{""group_value"":""Gold"",""avg_progress_pct"":39.36,""avg_holding_gain"":3789306.43,""avg_risk_score"":48.5,""avg_liquidity_score"":51.54},{""group_value"":""Hybrid"",""avg_progress_pct"":38.47,""avg_holding_gain"":4975031.31,""avg_risk_score"":51.09,""avg_liquidity_score"":48.72},{""group_value"":""Real Estate"",""avg_progress_pct"":41.05,""avg_holding_gain"":2898414.74,""avg_risk_score"":50.92,""avg_liquidity_score"":47.96}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses AVG(shortfall), not total shortfall “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-086,wealth_management_multi_step_comparative_105_questions.csv,MC-086,"Across risk_tolerance, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?",Five-table multi-step comparative,Expert,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.inflow_amount),2) AS avg_inflow, ROUND(AVG(cash.outflow_amount),2) AS avg_outflow, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_dividends),2) AS avg_dividends, ROUND(AVG(holding.total_taxes_paid),2) AS avg_taxes_paid FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"Cash, goal and holding pre-aggregated per investor before 1:1 joins, and all five metrics (inflow, outflow, shortfall, dividends, taxes) are output.","[{""group_value"":null,""avg_inflow"":10271.47,""avg_outflow"":2427.44,""avg_shortfall"":18627483.33,""avg_dividends"":205077.54,""avg_taxes_paid"":31558.13},{""group_value"":""Aggressive"",""avg_inflow"":2067267.71,""avg_outflow"":414348.34,""avg_shortfall"":23218312.17,""avg_dividends"":172729.88,""avg_taxes_paid"":22918.7},{""group_value"":""Conservative"",""avg_inflow"":2001634.22,""avg_outflow"":401138.84,""avg_shortfall"":23686380.49,""avg_dividends"":167570.62,""avg_taxes_paid"":22193.72},{""group_value"":""Moderate"",""avg_inflow"":1659106.63,""avg_outflow"":621486.14,""avg_shortfall"":22760174.64,""avg_dividends"":167933.58,""avg_taxes_paid"":24370.69}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(current_value - cost) per investor, then AVG by group; gold uses AVG(diversification_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-028,wealth_management_multi_step_comparative_105_questions.csv,MC-028,"Across time_horizon, how do holding gain, health risk, and diversification compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,3,"WITH 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,holding CTE pre-aggregates per investor and health is 1:1; all three requested metrics are correctly selected.,"[{""group_value"":null,""avg_holding_gain"":4781952.94,""avg_risk_score"":46.33,""avg_diversification_score"":49.15},{""group_value"":""Long-term"",""avg_holding_gain"":3694674.33,""avg_risk_score"":48.98,""avg_diversification_score"":49.47},{""group_value"":""Medium-term"",""avg_holding_gain"":3182292.25,""avg_risk_score"":51.61,""avg_diversification_score"":47.54},{""group_value"":""Short-term"",""avg_holding_gain"":3621147.02,""avg_risk_score"":51.08,""avg_diversification_score"":53.09}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses sector total investment aggregate; wording is broad “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-066,wealth_management_multi_step_comparative_105_questions.csv,MC-066,"Across time_horizon, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_ENTITY_SECTOR_ALLOCATION_001,4,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+    , 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+     SELECT p.time_horizon AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(alloc.total_sector_investment),2) AS avg_sector_investment FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,"Each many-per-investor table is pre-aggregated per investor in a CTE before 1:1 joins, so AVG across investors is valid and all four requested metrics (cash flow, scenario change, allocation concentration, sector investment) are output.","[{""group_value"":null,""avg_net_cash_flow"":6285.33,""avg_scenario_change"":0.63,""avg_max_allocation_pct"":17.64,""avg_sector_investment"":893611.59},{""group_value"":""Long-term"",""avg_net_cash_flow"":-313426.35,""avg_scenario_change"":-1.25,""avg_max_allocation_pct"":17.11,""avg_sector_investment"":865360.03},{""group_value"":""Medium-term"",""avg_net_cash_flow"":1614023.15,""avg_scenario_change"":-0.81,""avg_max_allocation_pct"":17.43,""avg_sector_investment"":963853.7},{""group_value"":""Short-term"",""avg_net_cash_flow"":1000147.1,""avg_scenario_change"":-2.29,""avg_max_allocation_pct"":15.89,""avg_sector_investment"":862124.85}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses SUM(amount) per investor, then AVG by group; gold uses AVG(goal_match_pct) or equivalent measure; wording does not define it “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-098,wealth_management_multi_step_comparative_105_questions.csv,MC-098,"Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?",Five-table multi-step comparative,Expert,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,5,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",Correct,"Cash, reb and scen pre-aggregated per investor before 1:1 joins to profile and health, and all five metrics are output.","[{""group_value"":null,""avg_net_cash_flow"":2571277.95,""avg_rebalance_amount"":442236.74,""avg_scenario_change"":-10.65,""avg_risk_score"":56.7,""avg_goal_match_pct"":48.85},{""group_value"":""Debt"",""avg_net_cash_flow"":700994.54,""avg_rebalance_amount"":402125.4,""avg_scenario_change"":-6.64,""avg_risk_score"":50.32,""avg_goal_match_pct"":50.54},{""group_value"":""Equity"",""avg_net_cash_flow"":605528.22,""avg_rebalance_amount"":435689.66,""avg_scenario_change"":-1.19,""avg_risk_score"":52.1,""avg_goal_match_pct"":48.64},{""group_value"":""Gold"",""avg_net_cash_flow"":620118.66,""avg_rebalance_amount"":404021.82,""avg_scenario_change"":0.89,""avg_risk_score"":49.53,""avg_goal_match_pct"":47.53},{""group_value"":""Hybrid"",""avg_net_cash_flow"":1750813.19,""avg_rebalance_amount"":397961.76,""avg_scenario_change"":2.77,""avg_risk_score"":52.98,""avg_goal_match_pct"":46.42},{""group_value"":""Real Estate"",""avg_net_cash_flow"":-571663.2,""avg_rebalance_amount"":383518.43,""avg_scenario_change"":-2.63,""avg_risk_score"":50.7,""avg_goal_match_pct"":45.52}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to MAX(allocation_pct), then averages by group; gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses sector total investment aggregate; wording is broad “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-056,wealth_management_multi_step_comparative_105_questions.csv,MC-056,"Across risk_tolerance, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_SCENARIO_REBALANCING_001;ATOM_ENTITY_SECTOR_ALLOCATION_001,4,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+    , 
+    alloc AS (
+      SELECT investor_id,
+             COUNT(*) AS allocation_count,
+             MAX(allocation_pct) AS max_allocation_pct,
+             AVG(allocation_pct) AS avg_allocation_pct,
+             SUM(total_investment) AS total_sector_investment
+      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(alloc.total_sector_investment),2) AS avg_sector_investment FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"cash, scen, and alloc CTEs pre-aggregate per investor; joins are 1:1 and all four requested metrics are returned.","[{""group_value"":null,""avg_net_cash_flow"":6666.76,""avg_scenario_change"":-0.71,""avg_max_allocation_pct"":16.12,""avg_sector_investment"":874742.03},{""group_value"":""Aggressive"",""avg_net_cash_flow"":6677.14,""avg_scenario_change"":-1.85,""avg_max_allocation_pct"":16.47,""avg_sector_investment"":854047.61},{""group_value"":""Conservative"",""avg_net_cash_flow"":1264774.64,""avg_scenario_change"":-2.22,""avg_max_allocation_pct"":16.39,""avg_sector_investment"":868375.25},{""group_value"":""Moderate"",""avg_net_cash_flow"":1003173.45,""avg_scenario_change"":0.07,""avg_max_allocation_pct"":17.79,""avg_sector_investment"":967952.32}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses SUM(amount) per investor, then AVG by group; gold uses AVG(progress_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-064,wealth_management_multi_step_comparative_105_questions.csv,MC-064,"Across time_horizon, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?",Four-table multi-step comparative,Advanced,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001,4,"WITH 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+    , 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.time_horizon AS group_value, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.time_horizon;",Correct,"reb, cash, and goal CTEs pre-aggregate per investor; joins are 1:1 and all four requested metrics are returned.","[{""group_value"":null,""avg_rebalance_amount"":445694.88,""avg_net_cash_flow"":1498722.06,""avg_progress_pct"":43.87,""avg_shortfall"":24309608.13},{""group_value"":""Long-term"",""avg_rebalance_amount"":400132.54,""avg_net_cash_flow"":1138071.93,""avg_progress_pct"":40.63,""avg_shortfall"":21379230.76},{""group_value"":""Medium-term"",""avg_rebalance_amount"":386788.99,""avg_net_cash_flow"":1862765.52,""avg_progress_pct"":39.76,""avg_shortfall"":23420507.92},{""group_value"":""Short-term"",""avg_rebalance_amount"":425999.62,""avg_net_cash_flow"":1169905.13,""avg_progress_pct"":39.25,""avg_shortfall"":21917701.18}]"
+Ambiguous,High,"could mean net cash flow, inflow/outflow, or transaction count depending on row; wording is not always explicit; gold uses SUM(amount) per investor, then AVG by group “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-047,wealth_management_multi_step_comparative_105_questions.csv,MC-047,"Across profile segment, how do rebalancing amount, cash flow, and transaction count compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_REBALANCING_ACTION_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+     SELECT p.segment AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(cash.transaction_count),2) AS avg_transaction_count, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id GROUP BY p.segment;",Correct,cash and reb CTEs pre-aggregate per investor; fan-out neutralized and all three metrics returned.,"[{""group_value"":null,""avg_net_cash_flow"":6362.58,""avg_transaction_count"":5.05,""avg_rebalance_amount"":393922.33},{""group_value"":""Diversified"",""avg_net_cash_flow"":1569423.16,""avg_transaction_count"":5.04,""avg_rebalance_amount"":391374.29},{""group_value"":""Large Cap"",""avg_net_cash_flow"":614695.62,""avg_transaction_count"":5.08,""avg_rebalance_amount"":414632.7},{""group_value"":""Mid Cap"",""avg_net_cash_flow"":1864255.82,""avg_transaction_count"":5.04,""avg_rebalance_amount"":401994.31},{""group_value"":""Small Cap"",""avg_net_cash_flow"":1803416.79,""avg_transaction_count"":5.04,""avg_rebalance_amount"":418806.81}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(current_value - cost) per investor, then AVG by group; gold uses AVG(diversification_score) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-020,wealth_management_multi_step_comparative_105_questions.csv,MC-020,"Across risk_tolerance, how do holding gain, health risk, and diversification compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_ENTITY_PORTFOLIO_HOLDING_001;ATOM_ENTITY_PORTFOLIO_HEALTH_001,3,"WITH 
+    holding AS (
+      SELECT investor_id,
+             COUNT(*) AS holding_count,
+             SUM(current_value) AS total_holding_value,
+             SUM(current_value-cost) AS total_holding_gain,
+             AVG(returns_pct) AS avg_returns_pct,
+             SUM(dividends) AS total_dividends,
+             SUM(taxes_paid) AS total_taxes_paid
+      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,"Holdings are pre-aggregated per investor in a CTE and health is one-per-investor, so no fan-out occurs.","[{""group_value"":null,""avg_holding_gain"":5072018.61,""avg_risk_score"":55.31,""avg_diversification_score"":55.79},{""group_value"":""Aggressive"",""avg_holding_gain"":3274142.41,""avg_risk_score"":49.12,""avg_diversification_score"":49.05},{""group_value"":""Conservative"",""avg_holding_gain"":2862123.22,""avg_risk_score"":51.7,""avg_diversification_score"":49.91},{""group_value"":""Moderate"",""avg_holding_gain"":4344139.71,""avg_risk_score"":49.29,""avg_diversification_score"":50.18}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses SUM(amount) per investor, then AVG by group; gold uses AVG(target_allocation_pct - current_allocation_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-041,wealth_management_multi_step_comparative_105_questions.csv,MC-041,"Across profile category, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_REBALANCING_ACTION_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH 
+    reb AS (
+      SELECT investor_id,
+             COUNT(*) AS rebalance_action_count,
+             SUM(amount) AS total_rebalance_amount,
+             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap
+      FROM ATOM_EVENT_REBALANCING_ACTION_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.category AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.category;",Correct,reb and scen CTEs pre-aggregate per investor; fan-out neutralized and all three metrics returned.,"[{""group_value"":null,""avg_scenario_change"":-10.65,""avg_rebalance_gap"":2.38,""avg_rebalance_amount"":442236.74},{""group_value"":""Debt"",""avg_scenario_change"":-6.64,""avg_rebalance_gap"":-1.33,""avg_rebalance_amount"":402125.4},{""group_value"":""Equity"",""avg_scenario_change"":-1.19,""avg_rebalance_gap"":-4.06,""avg_rebalance_amount"":435689.66},{""group_value"":""Gold"",""avg_scenario_change"":0.89,""avg_rebalance_gap"":-0.38,""avg_rebalance_amount"":404021.82},{""group_value"":""Hybrid"",""avg_scenario_change"":2.77,""avg_rebalance_gap"":0.98,""avg_rebalance_amount"":397961.76},{""group_value"":""Real Estate"",""avg_scenario_change"":-2.63,""avg_rebalance_gap"":1.5,""avg_rebalance_amount"":383518.43}]"
+Ambiguous,High,"Question asks to compare metrics but does not state aggregation/statistic; gold SQL chooses AVG/SUM per-investor aggregates. gold uses SUM(amount) per investor, then AVG by group; question does not state final AVG; gold uses AVG(progress_pct) “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-037,wealth_management_multi_step_comparative_105_questions.csv,MC-037,"Across profile category, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_ENTITY_INVESTMENT_GOAL_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.category AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.category;",Correct,cash and goal CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics returned.,"[{""group_value"":null,""avg_net_cash_flow"":1305730.77,""avg_progress_pct"":43.84,""avg_shortfall"":22638125.66},{""group_value"":""Debt"",""avg_net_cash_flow"":372971.91,""avg_progress_pct"":40.58,""avg_shortfall"":25668295.61},{""group_value"":""Equity"",""avg_net_cash_flow"":1314218.34,""avg_progress_pct"":39.96,""avg_shortfall"":17988590.02},{""group_value"":""Gold"",""avg_net_cash_flow"":1667974.31,""avg_progress_pct"":39.36,""avg_shortfall"":23036903.56},{""group_value"":""Hybrid"",""avg_net_cash_flow"":2309609.43,""avg_progress_pct"":38.47,""avg_shortfall"":23317670.2},{""group_value"":""Real Estate"",""avg_net_cash_flow"":1044714.47,""avg_progress_pct"":41.05,""avg_shortfall"":25521919.23}]"
+Ambiguous,High,"gold maps this to AVG(new_allocation_pct - current_allocation_pct), not max/latest/absolute change; gold uses SUM(amount) per investor, then AVG by group; question does not state final AVG “using N related tables” does not specify join grain, null handling, or whether to pre-aggregate before joining.",test,wealth_management_multi_step_comparative_105_questions:MC-026,wealth_management_multi_step_comparative_105_questions.csv,MC-026,"Across risk_tolerance, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?",Three-table multi-step comparative,Hard,Multi-step Comparative,ATOM_ENTITY_INVESTOR_PROFILE_001;ATOM_EVENT_CASH_FLOW_001;ATOM_EVENT_SCENARIO_REBALANCING_001,3,"WITH 
+    cash AS (
+      SELECT investor_id,
+             COUNT(*) AS transaction_count,
+             SUM(amount) AS net_cash_flow,
+             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,
+             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,
+             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025
+      FROM ATOM_EVENT_CASH_FLOW_001
+      GROUP BY investor_id
+    )
+    , 
+    scen AS (
+      SELECT investor_id,
+             COUNT(*) AS scenario_count,
+             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,
+             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change
+      FROM ATOM_EVENT_SCENARIO_REBALANCING_001
+      GROUP BY investor_id
+    )
+     SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(scen.scenario_count),2) AS avg_scenario_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.risk_tolerance;",Correct,cash and scen CTEs pre-aggregate per investor; 1:1 joins avoid fan-out and all three metrics are selected.,"[{""group_value"":null,""avg_net_cash_flow"":6666.76,""avg_scenario_change"":-0.71,""avg_scenario_count"":1.76},{""group_value"":""Aggressive"",""avg_net_cash_flow"":6677.14,""avg_scenario_change"":-1.85,""avg_scenario_count"":1.6},{""group_value"":""Conservative"",""avg_net_cash_flow"":1264774.64,""avg_scenario_change"":-2.22,""avg_scenario_count"":1.53},{""group_value"":""Moderate"",""avg_net_cash_flow"":1003173.45,""avg_scenario_change"":0.07,""avg_scenario_count"":1.6}]"

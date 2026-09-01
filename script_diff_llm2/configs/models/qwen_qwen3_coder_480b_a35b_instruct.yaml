@@ -1,0 +1,23 @@
+name: qwen.qwen3-coder-480b-a35b-instruct-aman
+slug: qwen.qwen3-coder-480b-a35b-instruct-aman
+provider: aws-bedrock-openai-compatible
+default_model: qwen.qwen3-coder-480b-a35b-instruct
+model_env: TARGET_MODEL
+api_key_env:
+  - BEDROCK_MANTLE_API_KEY
+  - AWS_BEDROCK_API_KEY
+  - BEDROCK_API_KEY
+base_url_env: BEDROCK_MANTLE_BASE_URL
+region_env:
+  - BEDROCK_REGION
+  - AWS_REGION
+  - AWS_DEFAULT_REGION
+stage_models:
+  rag: qwen.qwen3-coder-480b-a35b-instruct
+  planner: qwen.qwen3-coder-480b-a35b-instruct
+  query_spec: qwen.qwen3-coder-480b-a35b-instruct
+  sparql_generation: qwen.qwen3-coder-480b-a35b-instruct
+  refine: qwen.qwen3-coder-480b-a35b-instruct
+  validate: qwen.qwen3-coder-480b-a35b-instruct
+  explain: qwen.qwen3-coder-480b-a35b-instruct
+  llm_grader: openai.gpt-oss-120b-1:0

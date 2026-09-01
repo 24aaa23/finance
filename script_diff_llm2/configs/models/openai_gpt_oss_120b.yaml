@@ -1,0 +1,23 @@
+name: openai.gpt-oss-120b-aman
+slug: openai.gpt-oss-120b-aman
+provider: aws-bedrock-openai-compatible
+default_model: openai.gpt-oss-120b-1:0
+model_env: BEDROCK_GPT_OSS_MODEL
+api_key_env:
+  - AWS_BEDROCK_API_KEY
+  - AWS_Bedrock_API_gpt_oss_120b
+  - BEDROCK_API_KEY
+base_url_env: BEDROCK_BASE_URL
+region_env:
+  - BEDROCK_REGION
+  - AWS_REGION
+  - AWS_DEFAULT_REGION
+stage_models:
+  rag: openai.gpt-oss-120b-1:0
+  planner: openai.gpt-oss-120b-1:0
+  query_spec: openai.gpt-oss-120b-1:0
+  sparql_generation: openai.gpt-oss-120b-1:0
+  refine: openai.gpt-oss-120b-1:0
+  validate: openai.gpt-oss-120b-1:0
+  explain: openai.gpt-oss-120b-1:0
+  llm_grader: openai.gpt-oss-120b-1:0

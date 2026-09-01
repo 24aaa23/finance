@@ -1,0 +1,23 @@
+name: deepseek.v3.2-abhinav
+slug: deepseek.v3.2-abhinav
+provider: aws-bedrock-openai-compatible
+default_model: deepseek.v3.2
+model_env: TARGET_MODEL
+api_key_env:
+  - BEDROCK_MANTLE_API_KEY
+  - AWS_BEDROCK_API_KEY
+  - BEDROCK_API_KEY
+base_url_env: BEDROCK_MANTLE_BASE_URL
+region_env:
+  - BEDROCK_REGION
+  - AWS_REGION
+  - AWS_DEFAULT_REGION
+stage_models:
+  rag: deepseek.v3.2
+  planner: deepseek.v3.2
+  query_spec: deepseek.v3.2
+  sparql_generation: deepseek.v3.2
+  refine: deepseek.v3.2
+  validate: deepseek.v3.2
+  explain: deepseek.v3.2
+  llm_grader: openai.gpt-oss-120b-1:0

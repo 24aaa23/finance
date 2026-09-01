@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+
+# Local credentials and machine-specific configuration.
+.env
+**/.env
+env/.env
+*/.env.local
+
+# New generated runtime outputs. Historical tracked output CSVs remain in git.
+outputs/
+pipeline_output/
+*/pipeline_output/
+api_usage_log_*.json
+
+# Local Fuseki runtime state.
+tools/apache-jena-fuseki-6.1.0/run/logs/

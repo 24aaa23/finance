@@ -1,0 +1,906 @@
+import json
+import re
+from typing import Any, Callable
+
+
+PROFILE_DIMENSION_HINTS = {
+    "risk_tolerance": {
+        "phrases": ["risk_tolerance", "risk tolerance"],
+        "sql": {"source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001", "field": "risk_tolerance", "output_name": "risk_tolerance"},
+        "kg": {"source_class": "Investor", "field": "riskTolerance", "output_name": "risk_tolerance"},
+    },
+    "time_horizon": {
+        "phrases": ["time_horizon", "time horizon"],
+        "sql": {"source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001", "field": "time_horizon", "output_name": "time_horizon"},
+        "kg": {"source_class": "Investor", "field": "timeHorizon", "output_name": "time_horizon"},
+    },
+    "segment": {
+        "phrases": [" profile segment", " investor segment", " by segment", " across segment", " per segment", " for each segment"],
+        "sql": {"source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001", "field": "segment", "output_name": "segment"},
+        "kg": {"source_class": "Investor", "field": "segment", "output_name": "segment"},
+    },
+    "category": {
+        "phrases": [" profile category", " investor category", " by category", " across category", " per category", " for each category"],
+        "sql": {"source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001", "field": "category", "output_name": "category"},
+        "kg": {"source_class": "Investor", "field": "category", "output_name": "category"},
+    },
+}
+
+
+def _has_output_name(output_schema: list[Any], name: str) -> bool:
+    target = str(name or "").strip().lower()
+    return any(str(item or "").strip().lower() == target for item in output_schema)
+
+
+def _append_unique(values: list[Any], value: Any) -> None:
+    if value not in values:
+        values.append(value)
+
+
+def _normalize_name_for_contract(value: Any) -> str:
+    return re.sub(r"[^a-z0-9]+", "", str(value or "").lower())
+
+
+def _entity_label_output_name(entity_key: str) -> str | None:
+    text = str(entity_key or "").strip()
+    if not text:
+        return None
+    explicit = {
+        "investor_id": "investor_name",
+        "investorId": "investorName",
+        "portfolio_id": "portfolio_name",
+        "portfolioId": "portfolioName",
+        "goal_id": "goal_name",
+        "goalId": "goalName",
+    }
+    if text in explicit:
+        return explicit[text]
+    if text.endswith("_id"):
+        return text[:-3] + "_name"
+    if text.endswith("Id"):
+        return text[:-2] + "Name"
+    return None
+
+
+def _query_mentions_named_entity(query_text: str, entity_key: str) -> bool:
+    q = f" {query_text} "
+    entity_key = str(entity_key or "").lower()
+    if "investor" in q and "investor" in entity_key:
+        return True
+    if "portfolio" in q and "portfolio" in entity_key:
+        return True
+    if "goal" in q and "goal" in entity_key:
+        return True
+    return False
+
+
+def _has_any_phrase(query_text: str, phrases: list[str]) -> bool:
+    return any(phrase in query_text for phrase in phrases)
+
+
+def _measure_prefix(base_name: str) -> str:
+    lowered = str(base_name or "").lower()
+    for prefix in ["avg_", "average_", "total_", "sum_", "count_", "max_", "min_"]:
+        if lowered.startswith(prefix):
+            return prefix
+    if lowered.endswith("_total"):
+        return "_total"
+    return ""
+
+
+def _average_style_name(name: str) -> str:
+    lowered = str(name or "").strip()
+    if not lowered:
+        return lowered
+    if lowered.lower().startswith("total_"):
+        return "avg_" + lowered[6:]
+    if lowered.lower().startswith("sum_"):
+        return "avg_" + lowered[4:]
+    if lowered.lower().endswith("_total"):
+        return "avg_" + lowered[:-6]
+    if lowered.lower().startswith(("avg_", "average_")):
+        return lowered
+    return f"avg_{lowered}"
+
+
+def _field_prefers_max(measure: dict[str, Any]) -> bool:
+    """True for measures that mean "the entity's peak share", not its mean.
+
+    "Allocation concentration" is how concentrated an investor's portfolio is,
+    which is the single largest allocation they hold, not the average of their
+    allocations. Averaging within the entity understates it for every investor.
+    """
+    field_text = f"{measure.get('field', '')} {measure.get('output_name', '')}".lower()
+    max_markers = ["concentration", "max_allocation", "largest", "peak", "highest_"]
+    return any(marker in field_text for marker in max_markers)
+
+
+def _field_prefers_average(measure: dict[str, Any]) -> bool:
+    field_text = f"{measure.get('field', '')} {measure.get('output_name', '')}".lower()
+    if _field_prefers_max(measure):
+        return False
+    average_markers = [
+        "pct", "percent", "percentage", "score", "progress", "shortfall",
+        "volatility", "liquidity", "diversification", "goal_match",
+        "return",
+    ]
+    return any(marker in field_text for marker in average_markers)
+
+
+def _field_prefers_sum(measure: dict[str, Any]) -> bool:
+    field_text = f"{measure.get('field', '')} {measure.get('output_name', '')}".lower()
+    sum_markers = [
+        "amount", "value", "cost", "dividend", "tax", "investment", "cash_flow",
+        "cashflow", "rebalance",
+    ]
+    return any(marker in field_text for marker in sum_markers)
+
+
+def _measure_source_classes(measures: list[Any]) -> list[str]:
+    sources = []
+    for measure in measures:
+        if not isinstance(measure, dict):
+            continue
+        source = str(measure.get("source_class") or "").strip()
+        if source and source not in sources:
+            sources.append(source)
+    return sources
+
+
+def _group_source_classes(group_by: list[Any]) -> list[str]:
+    sources = []
+    for group in group_by:
+        if not isinstance(group, dict):
+            continue
+        source = str(group.get("source_class") or "").strip()
+        if source and source not in sources:
+            sources.append(source)
+    return sources
+
+
+def _default_per_entity_operation(measure: dict[str, Any]) -> str:
+    """Pick the within-entity rollup for a measure using field semantics.
+
+    Rate-like fields (pct/score/ratio) average within an entity; additive money
+    fields (amount/value/cost) sum within an entity. This is the first half of
+    the two-level `pre_aggregate_by -> final_group_by` contract.
+    """
+    declared = str(measure.get("per_entity_operation") or "").upper()
+    if declared in {"SUM", "AVG", "COUNT", "MIN", "MAX"}:
+        return declared
+    final_operation = str(measure.get("final_operation") or "").upper()
+    if final_operation == "COUNT":
+        return "COUNT"
+    if _field_prefers_max(measure):
+        return "MAX"
+    if _field_prefers_average(measure):
+        return "AVG"
+    if _field_prefers_sum(measure):
+        return "SUM"
+    return final_operation if final_operation in {"SUM", "AVG", "MIN", "MAX"} else "AVG"
+
+
+def _requires_two_level_aggregation(
+    group_by: list[Any],
+    measures: list[Any],
+    entity_key: str,
+    grouped_compare: bool,
+) -> bool:
+    """True when a grouped query would fan out if executed as one flat join.
+
+    A flat join over an entity table plus one-to-many event/detail tables
+    duplicates each entity row once per related record, so a single final
+    AVG/SUM is weighted by related-record counts instead of by entity. When the
+    measures live outside the grouping entity's own table, the query must
+    aggregate per entity_key first and only then aggregate across groups.
+    """
+    if not (grouped_compare and group_by and measures and entity_key):
+        return False
+    measure_sources = _measure_source_classes(measures)
+    group_sources = _group_source_classes(group_by)
+    if len(measure_sources) > 1:
+        return True
+    if measure_sources and group_sources and measure_sources[0] not in group_sources:
+        return True
+    return False
+
+
+ANALYTIC_QUERY_TYPES = {"aggregation", "comparative", "ranking", "multi_step"}
+
+ANALYTIC_QUESTION_MARKERS = [
+    "how do ", "how does ", "compare", "comparison", "average", "avg ", "total ",
+    "sum ", "count", "how many", "highest", "lowest", "top ", "bottom ",
+    "maximum", "minimum", "rank", "across ", "per ", "for each ",
+]
+
+
+def spec_is_analytic_without_measures(query_spec: dict[str, Any], question_text: str) -> bool:
+    """True when an analytic question produced a Query_Spec carrying no measures.
+
+    An aggregation or comparative question whose spec has no measures has no
+    semantic contract at all: generation is then unconstrained and post-scan
+    validation has nothing to check against. That is a recoverable Query_Spec
+    failure, not a legitimately measure-free query, so it is worth one retry.
+    """
+    if not isinstance(query_spec, dict):
+        return False
+    measures = query_spec.get("measures")
+    if isinstance(measures, list) and measures:
+        return False
+    query_type = str(query_spec.get("query_type", "")).strip().lower()
+    lowered = f" {str(question_text or '').lower()} "
+    return query_type in ANALYTIC_QUERY_TYPES or any(
+        marker in lowered for marker in ANALYTIC_QUESTION_MARKERS
+    )
+
+
+def cleanup_query_spec(
+    query_spec: dict[str, Any],
+    query: str,
+    retrieved_tables: list,
+    normalize_for_compare_fn: Callable[[Any], str],
+    *,
+    schema_kind: str = "kg",
+) -> dict[str, Any]:
+    """Normalize LLM Query_Spec output using generic, schema-agnostic execution rules."""
+    if not isinstance(query_spec, dict):
+        return query_spec
+
+    cleaned = json.loads(json.dumps(query_spec))
+    q = normalize_for_compare_fn(query)
+    cleanup_notes = []
+
+    if cleaned.get("execution_strategy") not in {"single_sparql", "preaggregate_sparql"}:
+        cleaned["execution_strategy"] = "preaggregate_sparql"
+        cleanup_notes.append("unsupported execution_strategy was downgraded to preaggregate_sparql")
+
+    if not cleaned.get("required_classes"):
+        cleaned["required_classes"] = retrieved_tables
+        cleanup_notes.append("required_classes filled from retrieved classes")
+
+    if cleaned.get("base_entity") and cleaned.get("base_entity") not in cleaned.get("required_classes", []):
+        cleaned.setdefault("required_classes", []).insert(0, cleaned.get("base_entity"))
+        cleanup_notes.append("base_entity added to required_classes")
+
+    distinct_requested = any(marker in q for marker in ["distinct", "unique", "different"])
+    for measure in cleaned.get("measures", []) if isinstance(cleaned.get("measures"), list) else []:
+        final_operation = str(measure.get("final_operation") or "").upper()
+        per_entity_operation = str(measure.get("per_entity_operation") or "").upper()
+        output_name = normalize_for_compare_fn(measure.get("output_name", ""))
+        if final_operation == "COUNT" or per_entity_operation == "COUNT" or "count" in output_name:
+            if measure.get("requires_distinct") and not distinct_requested:
+                measure["requires_distinct"] = False
+                cleanup_notes.append("COUNT requires_distinct disabled because query did not request distinct/unique values")
+
+    query_type = str(cleaned.get("query_type", "")).lower()
+    group_by = cleaned.get("group_by", [])
+    group_by = group_by if isinstance(group_by, list) else []
+    if group_by and any(marker in q for marker in ["for each", " by ", " per ", " across ", "grouped by"]):
+        cleaned["preserve_null_groups"] = True
+        cleanup_notes.append("group-by query marked to preserve NULL groups")
+
+    grain = cleaned.get("grain", {})
+    grain = grain if isinstance(grain, dict) else {}
+    pre_aggregate_by = grain.get("pre_aggregate_by", [])
+    pre_aggregate_by = pre_aggregate_by if isinstance(pre_aggregate_by, list) else []
+    final_group_by = grain.get("final_group_by", [])
+    final_group_by = final_group_by if isinstance(final_group_by, list) else []
+    if group_by and not final_group_by:
+        inferred_final_group_by = [
+            group.get("field")
+            for group in group_by
+            if isinstance(group, dict) and group.get("field")
+        ]
+        if inferred_final_group_by:
+            grain["final_group_by"] = inferred_final_group_by
+            cleaned["grain"] = grain
+            cleanup_notes.append("grain.final_group_by filled from group_by fields")
+
+    grouped_compare = bool(group_by) and (
+        query_type in {"comparative", "multi_step", "ranking"}
+        or _has_any_phrase(q, [" compare ", " comparison ", " how do ", " how does ", " average ", " avg "])
+    )
+    explicit_total_query = _has_any_phrase(q, [
+        " total ", " totals ", " sum ", " summed ", " cumulative ",
+        " overall total ", " combined total ", " total number ",
+    ])
+    band_query = _has_any_phrase(q, [" band", " bands", " bucket", " buckets", " range", " ranges"])
+
+    for group in group_by:
+        if not isinstance(group, dict):
+            continue
+        if band_query and not group.get("bucket_strategy"):
+            output_name = str(group.get("output_name") or group.get("field") or "group_band")
+            if not output_name.lower().endswith(("_band", "_bucket", "_range")):
+                group["output_name"] = f"{output_name}_band"
+            group["bucket_strategy"] = "three_band_33_66"
+            group["bucket_boundaries"] = [33, 66]
+            cleanup_notes.append("numeric group-by field marked for three-band bucketization")
+
+    month_level_requested = bool(re.search(
+        r"\b(per month|for each month|monthly|month of|months of 20\d{2}|for each month of 20\d{2})\b",
+        q,
+    ))
+    if month_level_requested:
+        cleaned["month_grain"] = True
+        cleanup_notes.append("month-level query marked for YYYY-MM extraction")
+
+    measures = cleaned.get("measures", [])
+    measures = measures if isinstance(measures, list) else []
+
+    if cleaned.get("month_grain"):
+        month_group_exists = any(
+            isinstance(group, dict)
+            and normalize_for_compare_fn(group.get("output_name", "")) == "month"
+            for group in group_by
+        )
+        if not month_group_exists:
+            month_source = str(cleaned.get("base_entity") or "")
+            if not month_source and measures and isinstance(measures[0], dict):
+                month_source = str(measures[0].get("source_class") or "")
+            group_by.append({
+                "output_name": "month",
+                "source_class": month_source,
+                "field": "date",
+            })
+            cleaned["group_by"] = group_by
+            cleanup_notes.append("month added to group_by for month-level query")
+        if "month" not in final_group_by:
+            final_group_by.append("month")
+            grain["final_group_by"] = final_group_by
+            cleaned["grain"] = grain
+            cleanup_notes.append("grain.final_group_by includes month for month-level query")
+
+        filtered_group_by = []
+        removed_date_group = False
+        seen_group_names = set()
+        for group in group_by:
+            if not isinstance(group, dict):
+                continue
+            output_name_norm = _normalize_name_for_contract(group.get("output_name", ""))
+            field_norm = _normalize_name_for_contract(group.get("field", ""))
+            if output_name_norm == "date" or (field_norm == "date" and output_name_norm != "month"):
+                removed_date_group = True
+                continue
+            canonical_name = "risktolerance" if output_name_norm in {"risktolerance", "risktolerance"} else output_name_norm
+            if canonical_name in seen_group_names:
+                continue
+            seen_group_names.add(canonical_name)
+            filtered_group_by.append(group)
+        if removed_date_group:
+            group_by = filtered_group_by
+            cleaned["group_by"] = group_by
+            cleanup_notes.append("date-level grouping removed for month-level query")
+
+    existing_group_outputs = {
+        normalize_for_compare_fn(group.get("output_name", ""))
+        for group in group_by
+        if isinstance(group, dict)
+    }
+    for hint in PROFILE_DIMENSION_HINTS.values():
+        if not _has_any_phrase(q, hint["phrases"]):
+            continue
+        mapping = hint["sql"] if schema_kind == "sql" else hint["kg"]
+        if normalize_for_compare_fn(mapping["output_name"]) in existing_group_outputs:
+            continue
+        group_by.append({
+            "output_name": mapping["output_name"],
+            "source_class": mapping["source_class"],
+            "field": mapping["field"],
+        })
+        cleaned["group_by"] = group_by
+        _append_unique(cleaned.setdefault("required_classes", []), mapping["source_class"])
+        if mapping["field"] not in final_group_by:
+            final_group_by.append(mapping["field"])
+            grain["final_group_by"] = final_group_by
+            cleaned["grain"] = grain
+        cleanup_notes.append(
+            f"group_by inferred as {mapping['output_name']} from question text"
+        )
+        break
+
+    # Positional, not filtered: a rename is only ever detected by comparing the
+    # same measure's name before and after cleanup at the same list index.
+    original_measure_names_by_index = [
+        measure.get("output_name") if isinstance(measure, dict) else None
+        for measure in measures
+    ]
+
+    entity_key = str(cleaned.get("entity_key") or "").strip()
+    if _requires_two_level_aggregation(group_by, measures, entity_key, grouped_compare):
+        if not pre_aggregate_by:
+            pre_aggregate_by = [entity_key]
+            grain["pre_aggregate_by"] = pre_aggregate_by
+            cleaned["grain"] = grain
+            cleanup_notes.append(
+                f"grain.pre_aggregate_by set to [{entity_key}] because measures span tables outside the grouping entity"
+            )
+        for measure in measures:
+            if not isinstance(measure, dict):
+                continue
+            if not str(measure.get("per_entity_operation") or "").strip():
+                measure["per_entity_operation"] = _default_per_entity_operation(measure)
+                cleanup_notes.append(
+                    f"measure {measure.get('output_name', '')} per_entity_operation inferred as "
+                    f"{measure['per_entity_operation']} for entity-level pre-aggregation"
+                )
+        cleaned["fanout_control"] = {
+            "required": True,
+            "pre_aggregate_by": list(pre_aggregate_by),
+            "reason": "Aggregate each measure to entity grain in its own table before joining and grouping.",
+        }
+
+    if grouped_compare:
+        for measure in measures:
+            if not isinstance(measure, dict):
+                continue
+            per_entity_operation = str(measure.get("per_entity_operation") or "").upper()
+            final_operation = str(measure.get("final_operation") or "").upper()
+            if per_entity_operation == "COUNT":
+                continue
+            if explicit_total_query:
+                if not final_operation:
+                    measure["final_operation"] = per_entity_operation or "SUM"
+                    cleanup_notes.append(f"measure {measure.get('output_name', '')} final_operation preserved for explicit-total query")
+                continue
+            if pre_aggregate_by and per_entity_operation in {"SUM", "AVG", "MIN", "MAX"}:
+                if _field_prefers_average(measure) and per_entity_operation == "SUM":
+                    measure["per_entity_operation"] = "AVG"
+                    per_entity_operation = "AVG"
+                    cleanup_notes.append(f"measure {measure.get('output_name', '')} per_entity_operation normalized to AVG from field semantics")
+                if final_operation in {"", "SUM"}:
+                    measure["final_operation"] = "AVG"
+                    if _measure_prefix(measure.get("output_name", "")) in {"total_", "sum_", "_total", ""}:
+                        measure["output_name"] = _average_style_name(measure.get("output_name", ""))
+                    cleanup_notes.append(f"measure {measure.get('output_name', '')} normalized to AVG over pre-aggregated entities")
+                if _field_prefers_average(measure) and _measure_prefix(measure.get("output_name", "")) in {"total_", "sum_", "_total"}:
+                    measure["output_name"] = _average_style_name(measure.get("output_name", ""))
+            elif grouped_compare and not pre_aggregate_by and _field_prefers_average(measure):
+                if not final_operation and per_entity_operation:
+                    measure["final_operation"] = "AVG"
+                    cleanup_notes.append(f"measure {measure.get('output_name', '')} final_operation normalized to AVG for comparative query")
+            elif not final_operation and per_entity_operation:
+                measure["final_operation"] = per_entity_operation
+                cleanup_notes.append(f"measure {measure.get('output_name', '')} inherited final_operation from per_entity_operation")
+        cleaned["measures"] = measures
+
+    for measure in measures:
+        if not isinstance(measure, dict):
+            continue
+        source_class = str(measure.get("source_class") or "").lower()
+        field = str(measure.get("field") or "").lower()
+        formula = str(measure.get("formula") or "")
+        cashflow_context = normalize_for_compare_fn(f"{source_class} {measure.get('output_name', '')} {query}")
+        if "cash flow" not in cashflow_context and "cashflow" not in cashflow_context and "cash_flow" not in cashflow_context:
+            continue
+        if field != "amount" or not formula:
+            continue
+        if "inflow" in formula.lower() or "outflow" in formula.lower():
+            measure["formula"] = None
+            measure["formula_fields"] = []
+            if not str(measure.get("per_entity_operation") or "").strip():
+                measure["per_entity_operation"] = "SUM"
+            if not str(measure.get("final_operation") or "").strip():
+                measure["final_operation"] = measure.get("per_entity_operation") or "SUM"
+            cleanup_notes.append("cash-flow amount formula simplified to signed SUM(amount) because the dataset already stores net sign in amount")
+
+    output_schema = cleaned.get("output_schema", [])
+    if not isinstance(output_schema, list):
+        output_schema = []
+    if not output_schema:
+        output_schema = []
+        for group in group_by:
+            if isinstance(group, dict) and group.get("output_name"):
+                output_schema.append(group["output_name"])
+        for measure in measures:
+            if isinstance(measure, dict) and measure.get("output_name"):
+                output_schema.append(measure["output_name"])
+        cleaned["output_schema"] = output_schema
+        if output_schema:
+            cleanup_notes.append("output_schema filled from group_by and measures")
+    else:
+        # Merge, never replace: output_schema may legitimately name identity or
+        # filter columns (investor_id, investor_name) that are neither a
+        # group_by dimension nor a measure. Discarding those here silently
+        # strips them from the downstream SQL/SPARQL SELECT contract, which
+        # produces answers missing the exact columns grading keys on. The only
+        # thing this refresh needs to do is follow a measure through a cleanup
+        # rename (e.g. total_holding_value -> avg_holding_value) so the schema
+        # doesn't keep pointing at a name the measure no longer produces.
+        group_names = [
+            group.get("output_name")
+            for group in group_by
+            if isinstance(group, dict) and group.get("output_name")
+        ]
+        current_measure_names = [
+            measure.get("output_name")
+            for measure in measures
+            if isinstance(measure, dict) and measure.get("output_name")
+        ]
+        rename_map = {}
+        for index, measure in enumerate(measures):
+            if not isinstance(measure, dict):
+                continue
+            old_name = original_measure_names_by_index[index]
+            new_name = measure.get("output_name")
+            if old_name and new_name and old_name != new_name:
+                rename_map[old_name] = new_name
+        refreshed_schema = []
+        used = set()
+        for name in output_schema:
+            resolved = rename_map.get(name, name)
+            if not resolved or resolved in used:
+                continue
+            refreshed_schema.append(resolved)
+            used.add(resolved)
+        for name in [*group_names, *current_measure_names]:
+            if not name or name in used:
+                continue
+            refreshed_schema.append(name)
+            used.add(name)
+        if refreshed_schema != output_schema:
+            cleanup_notes.append("output_schema measure names re-aligned to renamed measure aliases")
+        cleaned["output_schema"] = refreshed_schema
+
+    output_schema = cleaned.get("output_schema", [])
+    output_schema = output_schema if isinstance(output_schema, list) else []
+    if cleaned.get("month_grain"):
+        filtered_schema = []
+        seen_schema = set()
+        removed_date_schema = False
+        for name in output_schema:
+            norm = _normalize_name_for_contract(name)
+            if norm == "date":
+                removed_date_schema = True
+                continue
+            canonical = "risktolerance" if norm == "risktolerance" else norm
+            if canonical in seen_schema:
+                continue
+            seen_schema.add(canonical)
+            filtered_schema.append(name)
+        if removed_date_schema or len(filtered_schema) != len(output_schema):
+            output_schema = filtered_schema
+            cleaned["output_schema"] = output_schema
+            if removed_date_schema:
+                cleanup_notes.append("date removed from output_schema for month-level query")
+    entity_key = str(cleaned.get("entity_key") or "").strip()
+    query_type = str(cleaned.get("query_type", "")).lower()
+    list_like = _has_any_phrase(f" {q} ", [" which ", " show ", " list ", " identify ", " find "])
+    if entity_key and not group_by and (query_type in {"ranking", "set_logic", "point_lookup"} or list_like):
+        if not _has_output_name(output_schema, entity_key):
+            output_schema.insert(0, entity_key)
+            cleanup_notes.append(f"entity_key {entity_key} added to output_schema for entity-returning query")
+        label_output = _entity_label_output_name(entity_key)
+        if label_output and _query_mentions_named_entity(f" {q} ", entity_key) and not _has_output_name(output_schema, label_output):
+            insert_at = 1 if output_schema and output_schema[0] == entity_key else 0
+            output_schema.insert(insert_at, label_output)
+            cleanup_notes.append(f"label field {label_output} added to output_schema for named entity query")
+        cleaned["output_schema"] = output_schema
+
+    if any(isinstance(group, dict) and group.get("bucket_strategy") for group in group_by):
+        if cleaned.get("preserve_null_groups"):
+            cleaned["preserve_null_groups"] = False
+            cleanup_notes.append("preserve_null_groups disabled for bucketed band query")
+
+    if cleanup_notes:
+        prior_reason = str(cleaned.get("reason", "")).strip()
+        cleaned["cleanup_notes"] = cleanup_notes
+        cleaned["reason"] = (prior_reason + " Cleanup: " + "; ".join(cleanup_notes)).strip()
+
+    return cleaned
+
+
+def semantic_build_query_spec(
+    inputs: dict[str, Any],
+    client: Any,
+    model: str,
+    *,
+    parse_json_fn: Callable[[str, Any, str], Any],
+    normalize_for_compare_fn: Callable[[Any], str],
+    log_call_fn: Callable[[str, str], None],
+) -> dict[str, Any]:
+    """
+    Operator: Query_Spec
+    Convert the natural language question into a schema-grounded computation plan.
+    This does not generate SPARQL; Generate uses this JSON as its contract.
+    """
+
+    query = inputs.get("query", "")
+    root_query = inputs.get("root_query", "") or query
+    retrieved_tables = inputs.get("retrieved_tables", [])
+    schema_kind = inputs.get("schema_kind", "kg")
+    schema_label = "Retrieved Tables" if schema_kind == "sql" else "Retrieved Classes"
+    schema_unit = "tables and columns" if schema_kind == "sql" else "classes and fields"
+    execution_strategy_options = (
+        '"single_sql|preaggregate_sql"'
+        if schema_kind == "sql"
+        else '"single_sparql|preaggregate_sparql"'
+    )
+
+    schema_details = inputs.get("schema_details")
+    if not schema_details:
+        global_schema = inputs.get("global_schema", {})
+        schema_details = {
+            cls: global_schema[cls]
+            for cls in retrieved_tables
+            if cls in global_schema
+        }
+        if not schema_details:
+            schema_details = global_schema
+
+    prompt = f"""
+You are the Query_Spec operator.
+
+Your task is NOT to write SPARQL.
+Your task is to convert the user question into a schema-grounded JSON computation plan.
+
+Subquery Description:
+{query}
+
+Original User Query:
+{root_query}
+
+{schema_label}:
+{retrieved_tables}
+
+Schema Details:
+{json.dumps(schema_details, indent=2)}
+
+IMPORTANT:
+- Use only classes and fields present in Schema Details.
+- Use only {schema_unit} present in Schema Details.
+- Do not invent schema objects.
+- Do not invent fields or columns.
+- Do not write SPARQL or SQL.
+- Return only valid JSON.
+
+INSTRUCTIONS:
+
+1. Identify the base entity.
+   Usually this is the entity over which records should be compared, such as Investor or investor_id.
+
+2. Identify the entity key.
+   This is the field used to connect related records, for example investor_id, goal_id, portfolio_id, holding_id, etc.
+   Use only a key visible in Schema Details.
+
+3. Identify grouping.
+   If the question says "across X", "by X", "per X", "for each X", or "grouped by X",
+   put that field in group_by.
+
+4. Identify all requested measures.
+   A measure is a value the answer must compute or compare.
+   Examples: average cash flow, total dividend, risk score, goal match, scenario change,
+   rebalancing amount, count of investors.
+
+5. For each measure, map it to source_class, field, formula, per_entity_operation,
+   and final_operation.
+
+6. Formula rules:
+   If the user asks for "change", "difference", "gap", "movement", or "progress difference",
+   infer a formula using available numeric fields only.
+
+7. Aggregation grain rules:
+   If the query compares groups using event tables, prefer two-level aggregation:
+   first aggregate per entity_key, then aggregate by group_by.
+
+8. Join policy rules:
+   - Use "inner_join" when the query asks comparison using related tables and does not mention missing records.
+   - Use "left_join" only if the question asks to include entities even when related records are missing.
+   - Use "anti_join" for questions containing "without", "never", "no", or "not having".
+   - Use "union_required" if the question asks for combined records from alternative sources.
+
+9. Ranking rules:
+   If the question asks highest, lowest, top, bottom, maximum, minimum, best, or worst,
+   specify ranking.metric, ranking.direction, and ranking.limit.
+
+10. Execution strategy:
+   Choose one of:
+   - "single_sparql" for simple one-table or safe joins.
+   - "preaggregate_sparql" for multi-table aggregation where each event table should be grouped before final grouping.
+   Do not output unsupported multi-scan or pandas-merge strategies.
+   The current executor supports only one executable SPARQL query.
+   For complex multi-table questions, choose preaggregate_sparql and keep the query small.
+
+11. Output schema:
+   List the exact expected final answer columns. Downstream generation and validation must preserve this contract.
+
+12. Comparative aggregation rule:
+   If the query compares groups such as "across risk_tolerance" or "by segment" and does not explicitly ask for totals,
+   aggregate first per entity_key and then average those entity-level measures across the final groups.
+
+13. Band/bucket rule:
+   If the query asks for bands, buckets, or ranges of a numeric percentage/score field, represent the grouped output as
+   explicit bucket labels rather than raw numeric values.
+
+Return JSON in exactly this structure:
+
+{{
+  "query_type": "point_lookup|aggregation|comparative|ranking|boolean|set_logic|multi_step",
+  "base_entity": "...",
+  "entity_key": "...",
+  "join_policy": "inner_join|left_join|anti_join|union_required",
+  "grain": {{
+    "pre_aggregate_by": ["..."],
+    "final_group_by": ["..."]
+  }},
+  "group_by": [
+    {{
+      "output_name": "group_value",
+      "source_class": "...",
+      "field": "..."
+    }}
+  ],
+  "filters": [
+    {{
+      "source_class": "...",
+      "field": "...",
+      "operator": "=|>|<|>=|<=|contains|not_contains|between|in|not_in",
+      "value": "...",
+      "value_type": "string|number|date|list"
+    }}
+  ],
+  "measures": [
+    {{
+      "output_name": "...",
+      "source_class": "...",
+      "field": "...",
+      "formula": null,
+      "formula_fields": [],
+      "per_entity_operation": "SUM|AVG|COUNT|MIN|MAX|null",
+      "final_operation": "SUM|AVG|COUNT|MIN|MAX|null",
+      "requires_distinct": false
+    }}
+  ],
+  "ranking": {{
+    "required": false,
+    "metric": null,
+    "direction": null,
+    "limit": null
+  }},
+  "required_classes": ["..."],
+  "execution_strategy": {execution_strategy_options},
+  "output_schema": ["..."],
+  "reason": "short explanation of how the query was converted into this plan"
+}}
+"""
+
+    default_spec = {
+        "query_type": "multi_step",
+        "base_entity": None,
+        "entity_key": None,
+        "join_policy": "inner_join",
+        "grain": {
+            "pre_aggregate_by": [],
+            "final_group_by": [],
+        },
+        "group_by": [],
+        "filters": [],
+        "measures": [],
+        "ranking": {
+            "required": False,
+            "metric": None,
+            "direction": None,
+            "limit": None,
+        },
+        "required_classes": retrieved_tables,
+        "execution_strategy": "single_sparql",
+        "output_schema": [],
+        "reason": "Query_Spec failed to parse model output.",
+    }
+
+    log_call_fn(root_query, "Query_Spec")
+    request = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+    }
+    if not model.lower().startswith("gpt-5"):
+        request["temperature"] = 0.0
+    response = client.chat.completions.create(**request)
+    raw_response = response.choices[0].message.content
+
+    parsed_spec = parse_json_fn(
+        raw_response,
+        default_spec,
+        "Query_Spec",
+    )
+    if not isinstance(parsed_spec, dict):
+        parsed_spec = {**default_spec, "reason": "Query_Spec returned non-dict output."}
+    if parsed_spec == default_spec or str(parsed_spec.get("reason", "")).startswith("Query_Spec returned non-dict output"):
+        repair_prompt = f"""
+You previously returned malformed or non-JSON Query_Spec output.
+Rewrite it as ONE valid JSON object matching the required Query_Spec schema.
+Do not add markdown, prose, or reasoning tags.
+
+Subquery Description:
+{query}
+
+Original User Query:
+{root_query}
+
+Retrieved Schema Objects:
+{retrieved_tables}
+
+Schema Details:
+{json.dumps(schema_details, indent=2)}
+
+Previous malformed output:
+{raw_response}
+"""
+        repair_request = {
+            "model": model,
+            "messages": [{"role": "user", "content": repair_prompt}],
+        }
+        if not model.lower().startswith("gpt-5"):
+            repair_request["temperature"] = 0.0
+        repair_response = client.chat.completions.create(**repair_request)
+        repaired_spec = parse_json_fn(
+            repair_response.choices[0].message.content,
+            parsed_spec,
+            "Query_Spec_Repair",
+        )
+        if isinstance(repaired_spec, dict):
+            parsed_spec = repaired_spec
+    if spec_is_analytic_without_measures(parsed_spec, f"{query} {root_query}"):
+        measures_prompt = f"""
+Your previous Query_Spec for this analytic question contained no measures.
+An aggregation, comparative, or ranking question must state every value it computes.
+
+Subquery Description:
+{query}
+
+Original User Query:
+{root_query}
+
+Retrieved Schema Objects:
+{retrieved_tables}
+
+Schema Details:
+{json.dumps(schema_details, indent=2)}
+
+Previous Query_Spec:
+{json.dumps(parsed_spec, indent=2)}
+
+Return the SAME Query_Spec JSON object with a non-empty "measures" list.
+Name one measure for every value the question asks to compute or compare, in the order asked.
+Map each to a real source_class and field from Schema Details, and set per_entity_operation
+and final_operation. Keep every other field unchanged. Return only valid JSON.
+"""
+        measures_request = {
+            "model": model,
+            "messages": [{"role": "user", "content": measures_prompt}],
+        }
+        if not model.lower().startswith("gpt-5"):
+            measures_request["temperature"] = 0.0
+        try:
+            measures_response = client.chat.completions.create(**measures_request)
+            recovered_spec = parse_json_fn(
+                measures_response.choices[0].message.content,
+                None,
+                "Query_Spec_Measures",
+            )
+        except Exception as error:
+            print(f"   [!] Query_Spec measure recovery failed: {error}")
+            recovered_spec = None
+        # Only accept the retry if it actually supplied measures, so a failed
+        # recovery can never be worse than the spec we already had.
+        if isinstance(recovered_spec, dict) and recovered_spec.get("measures"):
+            recovered_spec["measure_recovery"] = True
+            parsed_spec = recovered_spec
+        else:
+            parsed_spec["measure_recovery_failed"] = True
+
+    if parsed_spec.get("execution_strategy") in {"decomposed_metric_scan", "post_scan_pandas_merge"}:
+        parsed_spec["execution_strategy"] = "preaggregate_sparql"
+        parsed_spec["reason"] = (
+            f"{parsed_spec.get('reason', '')} Executor supports one SPARQL query; "
+            "unsupported decomposed execution was downgraded to preaggregate_sparql."
+        ).strip()
+    parsed_spec = cleanup_query_spec(
+        parsed_spec,
+        root_query,
+        retrieved_tables,
+        normalize_for_compare_fn=normalize_for_compare_fn,
+        schema_kind=schema_kind,
+    )
+
+    return {"query_spec": parsed_spec}

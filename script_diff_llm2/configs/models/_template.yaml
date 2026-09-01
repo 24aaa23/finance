@@ -1,0 +1,19 @@
+name: provider.model-owner
+slug: provider.model-owner
+provider: aws-bedrock-openai-compatible
+default_model: provider-model-id
+model_env: MODEL_ID_ENV
+api_key_env:
+  - API_KEY_ENV_NAME
+base_url_env: BASE_URL_ENV_NAME
+region_env:
+  - REGION_ENV_NAME
+stage_models:
+  rag: provider-model-id
+  planner: provider-model-id
+  query_spec: provider-model-id
+  sparql_generation: provider-model-id
+  refine: provider-model-id
+  validate: provider-model-id
+  explain: provider-model-id
+  llm_grader: provider-model-id

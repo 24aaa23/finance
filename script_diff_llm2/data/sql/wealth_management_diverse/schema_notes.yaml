@@ -1,0 +1,34 @@
+schema_kind: physical_sqlite
+join_key_guidance:
+  primary_entity_key: investor_id
+  notes:
+    - Use physical ATOM_* table names only.
+    - Do not invent semantic tables such as Investor or CashFlow.
+    - SQL schema and KG metadata are intentionally separate concepts.
+tables:
+  ATOM_ENTITY_INVESTOR_PROFILE_001:
+    purpose: Investor profile and demographic-style attributes.
+    typical_columns:
+      - investor_id
+      - investor_name
+      - investment_goal
+      - risk_tolerance
+      - time_horizon
+      - sector_focus
+      - segment
+      - category
+      - notes
+  ATOM_ENTITY_PORTFOLIO_HEALTH_001:
+    purpose: Portfolio health metrics such as risk and liquidity.
+  ATOM_EVENT_REBALANCING_ACTION_001:
+    purpose: Rebalancing action events and allocation changes.
+  ATOM_EVENT_SCENARIO_REBALANCING_001:
+    purpose: Scenario-triggered rebalancing actions.
+  ATOM_ENTITY_PORTFOLIO_HOLDING_001:
+    purpose: Holdings, investment names, and position-level performance fields.
+  ATOM_ENTITY_SECTOR_ALLOCATION_001:
+    purpose: Sector-level allocation percentages and investment amounts.
+  ATOM_ENTITY_INVESTMENT_GOAL_001:
+    purpose: Goal tracking, progress, volatility, returns, and target metrics.
+  ATOM_EVENT_CASH_FLOW_001:
+    purpose: Cash-flow transactions, dates, sources, and amounts.
