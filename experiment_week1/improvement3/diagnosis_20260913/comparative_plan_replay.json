@@ -1,0 +1,776 @@
+{
+  "scope": "Current compiler and executor, historical V4 comparative plans, saved samples only. No model run or correctness grading. Empty sample outputs do not establish correct joins.",
+  "sources": [
+    {
+      "file": "v4_simple_non_success_part1_69_debug.csv",
+      "sha256": "d42131eafedb4fee27002ef3893c6785cb6bcc41ccee2aa2d0eae57a18b1f825"
+    },
+    {
+      "file": "v4_simple_non_success_part2_68_debug.csv",
+      "sha256": "a53ad879751bd40c856c0fe5dced82b352422cb669c5ae92d0de392da4f45def"
+    },
+    {
+      "file": "v4_simple_success_55_debug.csv",
+      "sha256": "293ba74111bea0c0854eb9d06e8d9c7056caa6570c7643805dbdf0f11da1972e"
+    }
+  ],
+  "source_hashes": {
+    "__init__.py": "d7b27f1eaf39c316acec39e2e7a95c87bf7d2d6372e712a4e383f59d9a6003bb",
+    "__main__.py": "a9eddcfe110d37d22df9c2870e6fc17df83144e20ce9c4aaa1e7574a8c06912d",
+    "clients.py": "e780d43ed8d54a3c463b484f388adf64f349bdf125553d78f07804f19b6b0b7e",
+    "common.py": "6bd45c234088926007d03778a52796b0f19b7035c59a41c66dad680f61f20c6d",
+    "config.py": "c6210c006f7e8e06b668a9254289c0fbdec09d98b5b50a85468c1f433cf2b16c",
+    "connections.py": "793596cbc68c6f1377ec873c689eb6ad2dfd15c5f211033105f0a893127c4c24",
+    "dag.py": "44c3432d23a2d53a03b99d3e606a951df84727770506869ded929ec4e585bd29",
+    "docs\\completed_run_audit\\audit_completed.py": "1b4c379ede21616ed29a2e10024b6f3d3cb2dad14ea555710800d0fbe1d96a35",
+    "docs\\completed_run_audit\\replay_final_plans.py": "c24937e4e7a77af8284029f17e5fc68c53ba407a8b3b44fed8a697fd10a5179b",
+    "execution.py": "09eb8cc3060ac3147354d50ea41baf4dabfbe297bec8ce8ff3e1d3b7b99045d6",
+    "executor.py": "9cfa21f0ff411e082b318ce56fe08f4888e27792715e3bf8dc6d58e907d31b93",
+    "grade_final_answers.py": "b638aad6867e5019d8317058bd26f4254a3ff6587ac73340f02970a59031be06",
+    "llm_operators\\__init__.py": "407e38f143b9ada7f1de2a5c3e4611d0b189244584efb25ab00d4e73e09e2a3e",
+    "llm_operators\\decompose.py": "92d6e70b67699934061aa651749b020647812b6aa55e87a8c6aba505cee3ffbf",
+    "llm_operators\\explain.py": "5b9cd2179fcd223e7e4e98fa48bb469a4c21fa60efb6b862c4286473de01690f",
+    "llm_operators\\filter_aggregate.py": "738abd5ac2baa5b7d49e5d2ad4f2ee92cc5e7c0a9a04deba7c2d00610eb42824",
+    "llm_operators\\final_spec.py": "47a2a0c7c034fbf745e041c5190e5525b6ea802be787852b3cc5538c5d468028",
+    "llm_operators\\generate.py": "8549c43c3fd3328f6cc49c5102ead33db7982fc52c586c1b639ab8b77fbb4e09",
+    "llm_operators\\integrate.py": "e18afebe4d7909537872739fdbf510b7fea508aca3110b7bd262a4eb4218c69e",
+    "llm_operators\\link.py": "dfea8d4ec31019db9cdb92affe074fb158109810c39935e7ba2458b0403385e5",
+    "llm_operators\\order_by.py": "bba31191e032fcce7d34e04b587cf13cbf74ee05bfe81894a6f0d8a6ec1f2abb",
+    "llm_operators\\pre_scan_validate.py": "f2abbe57373496060f1d0207bb7b1b1e63c2fdaf57bd3ee1887d0cfb26d682ad",
+    "llm_operators\\processing_spec.py": "f04c242c65dee0b6bdd26ca551e5f335d6ef8b364cbb118f95a3c11e22510654",
+    "llm_operators\\query_spec.py": "83184c87dd861e5579cb4ae1293d638fc0bdc55b188f73c689ec2d1d5bc3b853",
+    "llm_operators\\query_spec_validate.py": "5f493fb1f2d9babcfc39554425da8831fc90df207ebe3f1afa6a3c21d0ac1c08",
+    "llm_operators\\refine.py": "3d5aa472c5572f838f737c430a6170e92ed5ec41d8f5215b9acafa26d70380e1",
+    "llm_operators\\retrieve.py": "aab0f901cbb26a8f86d77cee30aed8acb18a76948ba0f427350926c85aaa52e3",
+    "llm_operators\\validate.py": "ebf8d92fe6759e55cd292c85a3a8d8a910535042fa592a909ffd2e4beda680d2",
+    "main.py": "5c24c2c2a4e1d176a4dad54cb17464f8cf6294432176dc6e28608f58b453b6f3",
+    "non_llm_operators\\__init__.py": "7f6d2c92838a959b584796df16fc0123666aa73db3f2b5a7ff3debaf0e983893",
+    "non_llm_operators\\bucket.py": "f1ecf10ef31f59a579b992c079bac07cb3e0412ed9a084338d23d1ce4365de60",
+    "non_llm_operators\\check_schema.py": "694a54eec1319f6e4edd8a36a95a01efdb406ae10c5fe7a486b13e839916acb2",
+    "non_llm_operators\\date_extract.py": "614ef1d66ef42871fecb3acb76b1911933b5ac376dad980a0a37ce89f7986702",
+    "non_llm_operators\\difference.py": "ffa293592d70d94bc891e77ebb6438bd7cd660b8f5ba03c40d91faaa882ba96b",
+    "non_llm_operators\\fuseki.py": "1f0a44c5edcffa8cbd59a22adb3f95b0a583c830ea40da4a6299e3f580079027",
+    "non_llm_operators\\math_compute.py": "ee8b13891f652bbfe25363d816c86d2b3c772b3d76032f7b2588011e0a0d431c",
+    "non_llm_operators\\scan.py": "69401a26ded5f6934ace2111cc48451ce78eac43640a4ef5f8328ec127258a7d",
+    "non_llm_operators\\set_intersect.py": "7dd3c61bdb5f5045d2f0c911ce96f71af54d1380c1e845841acd13b28dabf781",
+    "non_llm_operators\\union.py": "7615da5d8ea2ad8769b11c65206f5ac1bf671ceb4207212a708a694119158e63",
+    "planner.py": "4b6061371c8e4b85237d8b1513de848a6fbdce166b50611cf1930c0d7209696f",
+    "relational.py": "779a13b367ce7531a1e1f24abde97647cff013f27c29f4108640f53e68311b17",
+    "reporting.py": "12c08a2e9cacf3b4ec1a79f28f0a6355de601d99fb7e765d32ab682530c93920",
+    "run.py": "1b7510fbc71fd7a91e18ff8a72585cf08b189f5f2aa2f264d5012c9aeab7c832",
+    "run_identity.py": "e82c64cdda3a1447248c36f4042de94e9a03ee104d2d227bf7977c4828f19aa3",
+    "schema_loader.py": "fa1e23d0f8bb6c3b52f2aa3d6435afd23b22e8ac19f29c57eea39aca18270402",
+    "spec_contracts.py": "e9de37063a39ee88b5565936019e726bb632c4d1dc60ecc9233b1398c1c6578b",
+    "spec_runtime.py": "0844f6b111cb17e1770fa0f3b57f52ef2911aaae9d7cabbc93e351448119144d",
+    "utils.py": "6c914c5595bc9876539b0b502d1fcbbb7d85092c1143f7a5e061f73a190fb789"
+  },
+  "cases": 76,
+  "saved_statuses": {
+    "PIPELINE_SUCCESS": 39,
+    "FINAL_SPEC_ERROR": 28,
+    "QUERY_SPEC_ERROR": 9
+  },
+  "replay_statuses": {
+    "sample_execution_pass": 39,
+    "no_saved_plan": 35,
+    "compile_error": 2
+  },
+  "records": [
+    {
+      "id": "MC-001",
+      "source": "v4_simple_non_success_part1_69_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 4
+      }
+    },
+    {
+      "id": "MC-002",
+      "source": "v4_simple_non_success_part1_69_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 5
+      }
+    },
+    {
+      "id": "MC-003",
+      "source": "v4_simple_non_success_part1_69_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 4
+      }
+    },
+    {
+      "id": "MC-004",
+      "source": "v4_simple_non_success_part1_69_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 3
+      }
+    },
+    {
+      "id": "MC-005",
+      "source": "v4_simple_non_success_part1_69_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 1
+      }
+    },
+    {
+      "id": "MC-006",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 1
+      }
+    },
+    {
+      "id": "MC-008",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-009",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-010",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-011",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "compile_error",
+        "errors": [
+          "__spec_step_3: invalid expression: invalid syntax (<unknown>, line 1)"
+        ]
+      }
+    },
+    {
+      "id": "MC-012",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 4
+      }
+    },
+    {
+      "id": "MC-013",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-014",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-016",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-018",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-019",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-020",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-021",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-022",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "QUERY_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-023",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-024",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-025",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "QUERY_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-026",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "QUERY_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-027",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-028",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-029",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 3
+      }
+    },
+    {
+      "id": "MC-030",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-031",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-032",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "QUERY_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-033",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "QUERY_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-034",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-035",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-036",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-037",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 8
+      }
+    },
+    {
+      "id": "MC-038",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-039",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-040",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-041",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-042",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 5
+      }
+    },
+    {
+      "id": "MC-043",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-044",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-045",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-046",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-047",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "compile_error",
+        "errors": [
+          "steps must be a list.",
+          "projection: field does not exist on the selected input: hasSegment",
+          "projection: field does not exist on the selected input: rebalance_total",
+          "projection: field does not exist on the selected input: cashflow_total",
+          "projection: field does not exist on the selected input: transaction_count"
+        ]
+      }
+    },
+    {
+      "id": "MC-048",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-049",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-050",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "QUERY_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-051",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-054",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-055",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "QUERY_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-056",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-058",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-061",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-064",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-065",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-066",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-068",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 2
+      }
+    },
+    {
+      "id": "MC-071",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 1
+      }
+    },
+    {
+      "id": "MC-074",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-075",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "QUERY_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-076",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-078",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-083",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "QUERY_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-084",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-086",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-090",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-091",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "FINAL_SPEC_ERROR",
+      "replay": {
+        "status": "no_saved_plan"
+      }
+    },
+    {
+      "id": "MC-093",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 2
+      }
+    },
+    {
+      "id": "MC-097",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-098",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 20
+      }
+    },
+    {
+      "id": "MC-100",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 4
+      }
+    },
+    {
+      "id": "MC-104",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 5
+      }
+    },
+    {
+      "id": "MC-105",
+      "source": "v4_simple_non_success_part2_68_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-007",
+      "source": "v4_simple_success_55_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-015",
+      "source": "v4_simple_success_55_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 0
+      }
+    },
+    {
+      "id": "MC-017",
+      "source": "v4_simple_success_55_debug.csv",
+      "saved_status": "PIPELINE_SUCCESS",
+      "replay": {
+        "status": "sample_execution_pass",
+        "errors": [],
+        "sample_output_rows": 2
+      }
+    }
+  ]
+}

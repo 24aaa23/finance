@@ -1,0 +1,133 @@
+{
+  "scope": "Current source, synthetic offline probes; no production changes or API calls",
+  "source_sha256": {
+    "executor.py": "5d906df11e435155e2885f0c6bd31dad6d1e837804189154bca9fd3673d8b085",
+    "spec_contracts.py": "90533e33c8f1eb648190b49b816806adfbc725cde6b8529b6f69a3c5275f5bd8",
+    "non_llm_operators/math_compute.py": "6c62717e7f697c9f574bfdcb4ec13965d2d996424daa2da9df915f8b2db907da",
+    "llm_operators/order_by.py": "bf779c1b4f2f1e3161458016547c74200dad93fb8c6e8c97a49d7a19327d9b0c",
+    "llm_operators/filter_aggregate.py": "bf43215f86337de8187643c00b9823bd5705bbe5c041e55f5234dc67184b26e8",
+    "llm_operators/final_spec.py": "d5b04de1a6bec596d50f0e1f112b94a34465db1e4d8375934f5dc264389cf4c3"
+  },
+  "observations": [
+    {
+      "probe": "Logged TT-033 Math_Compute shape",
+      "actual": [],
+      "expected": [
+        {
+          "combined_amount": 10,
+          "rebalance_amount": 20,
+          "total_combined": 30
+        }
+      ],
+      "issue_reproduced": true,
+      "diagnosis": "Math_Compute never reads expression; returns missing-column error.",
+      "evidence": {
+        "data": [],
+        "computed_result": null,
+        "error": "Columns None and/or None not found in data."
+      }
+    },
+    {
+      "probe": "List-shaped Order_By input",
+      "actual": {
+        "exception": "TypeError",
+        "message": "unhashable type: 'list'"
+      },
+      "expected": [
+        {
+          "total": 3
+        }
+      ],
+      "issue_reproduced": true,
+      "diagnosis": "Order_By treats a list as a column key and raises TypeError.",
+      "evidence": {
+        "exception": "TypeError",
+        "message": "unhashable type: 'list'"
+      }
+    },
+    {
+      "probe": "Combine_Scalars consumes stale inputs",
+      "actual": [],
+      "expected": [
+        {
+          "a_sum": 30,
+          "b_sum": 3
+        }
+      ],
+      "issue_reproduced": true,
+      "diagnosis": "Combine_Scalars reads selected before resolving its own inputs; sees two raw rows instead of scalar measures.",
+      "evidence": [
+        {
+          "id": "final_measure_1",
+          "operator": "Filter_Aggregate",
+          "row_count": 1
+        },
+        {
+          "id": "final_measure_2",
+          "operator": "Filter_Aggregate",
+          "row_count": 1
+        },
+        {
+          "stage": "Spec_Execution",
+          "code": "CANNOT_COMBINE_NONSCALAR_MEASURES",
+          "step": "__final_combined_measures"
+        }
+      ]
+    },
+    {
+      "probe": "Spec executor propagates operator errors",
+      "actual": false,
+      "expected": true,
+      "issue_reproduced": true,
+      "diagnosis": "Math operator returns error, but executor records only id/operator/row_count; empty data masks failure.",
+      "evidence": null
+    },
+    {
+      "probe": "COUNT(column) excludes nulls",
+      "actual": [
+        {
+          "n": 2
+        }
+      ],
+      "expected": [
+        {
+          "n": 1
+        }
+      ],
+      "issue_reproduced": true,
+      "diagnosis": "Current count branch always counts rows, ignoring target_column; SQL COUNT(column) needs different semantics.",
+      "evidence": null
+    },
+    {
+      "probe": "Final_Spec preserves post-aggregate filter",
+      "actual": 0,
+      "expected": 1,
+      "issue_reproduced": true,
+      "diagnosis": "Canonicalization deletes the required filter whenever final_measures is present.",
+      "evidence": {
+        "merge_steps": [],
+        "final_group_by": [
+          "investorId"
+        ],
+        "final_measures": [
+          {
+            "output_column": "total_amount",
+            "operation": "sum",
+            "input_column": "amount",
+            "input": "q1_processed"
+          }
+        ],
+        "final_steps": [],
+        "projection": [
+          "investorId",
+          "total_amount"
+        ],
+        "final_output": "q1_processed",
+        "preserve_null_groups": true,
+        "rounding": 2,
+        "execution_name_map": {},
+        "contract_errors": []
+      }
+    }
+  ]
+}

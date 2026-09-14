@@ -1,0 +1,1075 @@
+{
+  "scope": "76 MC questions in supplied 442-row workbook; original 105-question generation source not located",
+  "table_counts": {
+    "1": 4,
+    "2": 14,
+    "3": 32,
+    "4": 15,
+    "5": 11
+  },
+  "with_cte": 71,
+  "profile_sql": 65,
+  "profile_missing_in_saved_branches": [
+    "MC-006",
+    "MC-008",
+    "MC-010",
+    "MC-019",
+    "MC-020",
+    "MC-021",
+    "MC-022",
+    "MC-024",
+    "MC-025",
+    "MC-026",
+    "MC-027",
+    "MC-028",
+    "MC-029",
+    "MC-030",
+    "MC-031",
+    "MC-032",
+    "MC-033",
+    "MC-034",
+    "MC-035",
+    "MC-036",
+    "MC-037",
+    "MC-038",
+    "MC-039",
+    "MC-040",
+    "MC-041",
+    "MC-042",
+    "MC-043",
+    "MC-044",
+    "MC-045",
+    "MC-046",
+    "MC-048",
+    "MC-050",
+    "MC-051",
+    "MC-054",
+    "MC-055",
+    "MC-056",
+    "MC-058",
+    "MC-061",
+    "MC-064",
+    "MC-065",
+    "MC-066",
+    "MC-071",
+    "MC-074",
+    "MC-075",
+    "MC-076",
+    "MC-078",
+    "MC-083",
+    "MC-084",
+    "MC-090",
+    "MC-091",
+    "MC-097",
+    "MC-098",
+    "MC-105"
+  ],
+  "cases": [
+    {
+      "id": "MC-001",
+      "tables": "1",
+      "question": "Within investment goals, how do average progress_pct, average shortfall, and average volatility compare by investment_goal?",
+      "sql": "SELECT investment_goal, ROUND(AVG(progress_pct),2) AS avg_progress_pct, ROUND(AVG(shortfall),2) AS avg_shortfall, ROUND(AVG(avg_volatility_pct),2) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investment_goal;",
+      "sources": [
+        "InvestmentGoal"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-002",
+      "tables": "1",
+      "question": "Within portfolio health, how do average risk_score, liquidity_score, and diversification_score compare across goal_match_pct bands?",
+      "sql": "SELECT CASE WHEN goal_match_pct<33 THEN 'goal_match < 33' WHEN goal_match_pct<67 THEN 'goal_match 33-66' ELSE 'goal_match >= 67' END AS goal_match_band, ROUND(AVG(risk_score),2) AS avg_risk_score, ROUND(AVG(liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_PORTFOLIO_HEALTH_001 GROUP BY goal_match_band;",
+      "sources": [
+        "PortfolioHealth"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-003",
+      "tables": "1",
+      "question": "Within holdings, how do total current value, average returns_pct, and total dividends compare by investment_type?",
+      "sql": "SELECT investment_type, ROUND(SUM(current_value),2) AS total_current_value, ROUND(AVG(returns_pct),2) AS avg_returns_pct, ROUND(SUM(dividends),2) AS total_dividends FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 GROUP BY investment_type;",
+      "sources": [
+        "PortfolioHolding"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-004",
+      "tables": "1",
+      "question": "Within cash flows, how do transaction count, inflow, outflow, and net cash flow compare by type?",
+      "sql": "SELECT type, COUNT(*) AS transaction_count, ROUND(SUM(CASE WHEN amount>0 THEN amount ELSE 0 END),2) AS inflow_amount, ROUND(-SUM(CASE WHEN amount<0 THEN amount ELSE 0 END),2) AS outflow_amount, ROUND(SUM(amount),2) AS net_cash_flow FROM ATOM_EVENT_CASH_FLOW_001 GROUP BY type;",
+      "sources": [
+        "CashFlow",
+        "CashFlowType"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-005",
+      "tables": "2",
+      "question": "Across risk_tolerance, how do goal progress and shortfall compare using two related tables?",
+      "sql": "WITH goal AS (\n      SELECT investor_id,\n             COUNT(*) AS goal_count,\n             AVG(progress_pct) AS avg_progress_pct,\n             AVG(shortfall) AS avg_shortfall,\n             AVG(avg_sharpe_ratio) AS avg_sharpe_ratio,\n             AVG(avg_volatility_pct) AS avg_volatility_pct,\n             AVG(time_to_goal_months) AS avg_time_to_goal_months\n      FROM ATOM_ENTITY_INVESTMENT_GOAL_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "InvestmentGoal",
+        "Investor"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-006",
+      "tables": "2",
+      "question": "Across category, how do holding value and holding gain compare using two related tables?",
+      "sql": "WITH \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.category, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN holding ON holding.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "PortfolioHolding",
+        "Category"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-007",
+      "tables": "2",
+      "question": "Across time_horizon, how do cash-flow inflow and outflow compare using two related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon, ROUND(AVG(cash.inflow_amount),2) AS avg_inflow, ROUND(AVG(cash.outflow_amount),2) AS avg_outflow, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "CashFlow",
+        "CashFlowType",
+        "Investor",
+        "TimeHorizon"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-008",
+      "tables": "2",
+      "question": "Across segment, how do health scores compare using two related tables?",
+      "sql": "SELECT p.segment, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.segment;",
+      "sources": [
+        "PortfolioHealth",
+        "Segment"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-009",
+      "tables": "2",
+      "question": "Across category, how do allocation concentration compare using two related tables?",
+      "sql": "WITH \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n     SELECT p.category, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(alloc.total_sector_investment),2) AS avg_sector_investment FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN alloc ON alloc.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "SectorAllocation",
+        "Investor",
+        "Category",
+        "PortfolioHolding"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-010",
+      "tables": "2",
+      "question": "Across risk_tolerance, how do rebalancing action amount and gap compare using two related tables?",
+      "sql": "WITH \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_total_rebalance_amount, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "RebalancingAction"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-011",
+      "tables": "2",
+      "question": "Across time_horizon, how do scenario allocation change compare using two related tables?",
+      "sql": "WITH \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(scen.max_scenario_change),2) AS avg_max_scenario_change FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "Investor",
+        "TimeHorizon",
+        "ScenarioRebalancing",
+        "SectorAllocation"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-012",
+      "tables": "2",
+      "question": "Across investment_goal, how do cash flow compare using two related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, investment_goal, AVG(progress_pct) AS avg_progress_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id, investment_goal), \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n     SELECT goal.investment_goal, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow FROM goal JOIN cash ON cash.investor_id=goal.investor_id GROUP BY goal.investment_goal;",
+      "sources": [
+        "InvestmentGoal",
+        "CashFlow"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-013",
+      "tables": "2",
+      "question": "Across investment_type, how do health scores compare using two related tables?",
+      "sql": "WITH holding_type AS (SELECT investor_id, investment_type, AVG(returns_pct) AS avg_returns_pct FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 GROUP BY investor_id, investment_type) SELECT holding_type.investment_type, ROUND(AVG(holding_type.avg_returns_pct),2) AS avg_returns_pct, ROUND(AVG(h.risk_score),2) AS avg_risk_score FROM holding_type JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=holding_type.investor_id GROUP BY holding_type.investment_type;",
+      "sources": [
+        "PortfolioHealth",
+        "PortfolioHolding"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-014",
+      "tables": "2",
+      "question": "Across cash-flow type, how do rebalancing amount compare using two related tables?",
+      "sql": "WITH cash_type AS (SELECT investor_id, type, SUM(amount) AS net_amount FROM ATOM_EVENT_CASH_FLOW_001 GROUP BY investor_id, type), \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n     SELECT cash_type.type, ROUND(AVG(cash_type.net_amount),2) AS avg_type_net_amount, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM cash_type JOIN reb ON reb.investor_id=cash_type.investor_id GROUP BY cash_type.type;",
+      "sources": [
+        "CashFlow",
+        "RebalancingAction",
+        "CashFlowType"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-015",
+      "tables": "2",
+      "question": "Across scenario, how do goal shortfall compare using two related tables?",
+      "sql": "WITH scen_by_investor AS (SELECT investor_id, scenario, AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change FROM ATOM_EVENT_SCENARIO_REBALANCING_001 GROUP BY investor_id, scenario), goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT scen_by_investor.scenario, ROUND(AVG(scen_by_investor.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM scen_by_investor JOIN goal ON goal.investor_id=scen_by_investor.investor_id GROUP BY scen_by_investor.scenario;",
+      "sources": [
+        "InvestmentGoal",
+        "ScenarioRebalancing",
+        "MarketScenario"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-016",
+      "tables": "2",
+      "question": "Across rebalance logic, how do scenario change compare using two related tables?",
+      "sql": "WITH reb_logic AS (SELECT investor_id, logic, AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap FROM ATOM_EVENT_REBALANCING_ACTION_001 GROUP BY investor_id, logic), scen AS (SELECT investor_id, AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change FROM ATOM_EVENT_SCENARIO_REBALANCING_001 GROUP BY investor_id) SELECT reb_logic.logic, ROUND(AVG(reb_logic.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change FROM reb_logic JOIN scen ON scen.investor_id=reb_logic.investor_id GROUP BY reb_logic.logic;",
+      "sources": [
+        "ScenarioRebalancing",
+        "RebalancingAction"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-017",
+      "tables": "2",
+      "question": "Across sector allocation, how do holding returns compare using two related tables?",
+      "sql": "WITH alloc_sector AS (SELECT investor_id, sector, AVG(allocation_pct) AS avg_allocation_pct FROM ATOM_ENTITY_SECTOR_ALLOCATION_001 GROUP BY investor_id, sector), holding_sector AS (SELECT investor_id, sector, AVG(returns_pct) AS avg_returns_pct FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 GROUP BY investor_id, sector) SELECT alloc_sector.sector, ROUND(AVG(alloc_sector.avg_allocation_pct),2) AS avg_allocation_pct, ROUND(AVG(holding_sector.avg_returns_pct),2) AS avg_returns_pct FROM alloc_sector JOIN holding_sector ON holding_sector.investor_id=alloc_sector.investor_id AND holding_sector.sector=alloc_sector.sector GROUP BY alloc_sector.sector;",
+      "sources": [
+        "SectorAllocation",
+        "PortfolioHolding"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-018",
+      "tables": "2",
+      "question": "Across cash source, how do scenario change compare using two related tables?",
+      "sql": "WITH cash_source AS (SELECT investor_id, source, SUM(amount) AS net_cash_flow FROM ATOM_EVENT_CASH_FLOW_001 GROUP BY investor_id, source), scen AS (SELECT investor_id, AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change FROM ATOM_EVENT_SCENARIO_REBALANCING_001 GROUP BY investor_id) SELECT cash_source.source, ROUND(AVG(cash_source.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change FROM cash_source JOIN scen ON scen.investor_id=cash_source.investor_id GROUP BY cash_source.source;",
+      "sources": [
+        "CashFlow",
+        "ScenarioRebalancing"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": false
+    },
+    {
+      "id": "MC-019",
+      "tables": "3",
+      "question": "Across risk_tolerance, how do goal progress, health risk, and liquidity compare using three related tables?",
+      "sql": "WITH goal AS (\n      SELECT investor_id,\n             COUNT(*) AS goal_count,\n             AVG(progress_pct) AS avg_progress_pct,\n             AVG(shortfall) AS avg_shortfall,\n             AVG(avg_sharpe_ratio) AS avg_sharpe_ratio,\n             AVG(avg_volatility_pct) AS avg_volatility_pct,\n             AVG(time_to_goal_months) AS avg_time_to_goal_months\n      FROM ATOM_ENTITY_INVESTMENT_GOAL_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "InvestmentGoal",
+        "PortfolioHealth"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-020",
+      "tables": "3",
+      "question": "Across risk_tolerance, how do holding gain, health risk, and diversification compare using three related tables?",
+      "sql": "WITH \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "PortfolioHolding",
+        "PortfolioHealth"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-021",
+      "tables": "3",
+      "question": "Across risk_tolerance, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "CashFlow",
+        "InvestmentGoal"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-022",
+      "tables": "3",
+      "question": "Across risk_tolerance, how do allocation concentration, holding return, and holding value compare using three related tables?",
+      "sql": "WITH \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n    , \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(holding.avg_returns_pct),2) AS avg_returns_pct, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN alloc ON alloc.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "SectorAllocation",
+        "PortfolioHolding",
+        "RiskTolerance"
+      ],
+      "status": "QUERY_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-023",
+      "tables": "3",
+      "question": "Across risk_tolerance, how do rebalancing amount, cash flow, and transaction count compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(cash.transaction_count),2) AS avg_transaction_count, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "Investor",
+        "RebalancingAction",
+        "CashFlow"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-024",
+      "tables": "3",
+      "question": "Across risk_tolerance, how do scenario change, goal progress, and volatility compare using three related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(avg_volatility_pct) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_volatility_pct),2) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "ScenarioRebalancing",
+        "InvestmentGoal"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-025",
+      "tables": "3",
+      "question": "Across risk_tolerance, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?",
+      "sql": "WITH \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        null
+      ],
+      "status": "QUERY_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-026",
+      "tables": "3",
+      "question": "Across risk_tolerance, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(scen.scenario_count),2) AS avg_scenario_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        null
+      ],
+      "status": "QUERY_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-027",
+      "tables": "3",
+      "question": "Across time_horizon, how do goal progress, health risk, and liquidity compare using three related tables?",
+      "sql": "WITH goal AS (\n      SELECT investor_id,\n             COUNT(*) AS goal_count,\n             AVG(progress_pct) AS avg_progress_pct,\n             AVG(shortfall) AS avg_shortfall,\n             AVG(avg_sharpe_ratio) AS avg_sharpe_ratio,\n             AVG(avg_volatility_pct) AS avg_volatility_pct,\n             AVG(time_to_goal_months) AS avg_time_to_goal_months\n      FROM ATOM_ENTITY_INVESTMENT_GOAL_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "InvestmentGoal",
+        "PortfolioHealth",
+        "TimeHorizon"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-028",
+      "tables": "3",
+      "question": "Across time_horizon, how do holding gain, health risk, and diversification compare using three related tables?",
+      "sql": "WITH \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "PortfolioHolding",
+        "PortfolioHealth",
+        "TimeHorizon"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-029",
+      "tables": "3",
+      "question": "Across time_horizon, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.time_horizon AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "TimeHorizon",
+        "CashFlow",
+        "InvestmentGoal"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-030",
+      "tables": "3",
+      "question": "Across time_horizon, how do allocation concentration, holding return, and holding value compare using three related tables?",
+      "sql": "WITH \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n    , \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(holding.avg_returns_pct),2) AS avg_returns_pct, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN alloc ON alloc.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "TimeHorizon",
+        "SectorAllocation",
+        "PortfolioHolding"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-031",
+      "tables": "3",
+      "question": "Across time_horizon, how do rebalancing amount, cash flow, and transaction count compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(cash.transaction_count),2) AS avg_transaction_count, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "TimeHorizon",
+        "RebalancingAction",
+        "CashFlow"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-032",
+      "tables": "3",
+      "question": "Across time_horizon, how do scenario change, goal progress, and volatility compare using three related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(avg_volatility_pct) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_volatility_pct),2) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "TimeHorizon",
+        "ScenarioRebalancing",
+        "InvestmentGoal"
+      ],
+      "status": "QUERY_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-033",
+      "tables": "3",
+      "question": "Across time_horizon, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?",
+      "sql": "WITH \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "ScenarioRebalancing",
+        "RebalancingAction",
+        "TimeHorizon"
+      ],
+      "status": "QUERY_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-034",
+      "tables": "3",
+      "question": "Across time_horizon, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(scen.scenario_count),2) AS avg_scenario_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "CashFlow",
+        "ScenarioRebalancing",
+        "TimeHorizon"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-035",
+      "tables": "3",
+      "question": "Across profile category, how do goal progress, health risk, and liquidity compare using three related tables?",
+      "sql": "WITH goal AS (\n      SELECT investor_id,\n             COUNT(*) AS goal_count,\n             AVG(progress_pct) AS avg_progress_pct,\n             AVG(shortfall) AS avg_shortfall,\n             AVG(avg_sharpe_ratio) AS avg_sharpe_ratio,\n             AVG(avg_volatility_pct) AS avg_volatility_pct,\n             AVG(time_to_goal_months) AS avg_time_to_goal_months\n      FROM ATOM_ENTITY_INVESTMENT_GOAL_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "Category",
+        "InvestmentGoal",
+        "PortfolioHealth"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-036",
+      "tables": "3",
+      "question": "Across profile category, how do holding gain, health risk, and diversification compare using three related tables?",
+      "sql": "WITH \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "Category",
+        "PortfolioHolding",
+        "PortfolioHealth"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-037",
+      "tables": "3",
+      "question": "Across profile category, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.category AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "CashFlow",
+        "InvestmentGoal",
+        "Category"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-038",
+      "tables": "3",
+      "question": "Across profile category, how do allocation concentration, holding return, and holding value compare using three related tables?",
+      "sql": "WITH \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n    , \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(holding.avg_returns_pct),2) AS avg_returns_pct, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN alloc ON alloc.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "Category",
+        "SectorAllocation",
+        "PortfolioHolding"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-039",
+      "tables": "3",
+      "question": "Across profile category, how do rebalancing amount, cash flow, and transaction count compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(cash.transaction_count),2) AS avg_transaction_count, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "RebalancingAction",
+        "CashFlow",
+        "Category"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-040",
+      "tables": "3",
+      "question": "Across profile category, how do scenario change, goal progress, and volatility compare using three related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(avg_volatility_pct) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_volatility_pct),2) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "Category",
+        "ScenarioRebalancing",
+        "InvestmentGoal"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-041",
+      "tables": "3",
+      "question": "Across profile category, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?",
+      "sql": "WITH \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "Category",
+        "ScenarioRebalancing",
+        "RebalancingAction"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-042",
+      "tables": "3",
+      "question": "Across profile category, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(scen.scenario_count),2) AS avg_scenario_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "Category",
+        "CashFlow",
+        "ScenarioRebalancing"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-043",
+      "tables": "3",
+      "question": "Across profile segment, how do goal progress, health risk, and liquidity compare using three related tables?",
+      "sql": "WITH goal AS (\n      SELECT investor_id,\n             COUNT(*) AS goal_count,\n             AVG(progress_pct) AS avg_progress_pct,\n             AVG(shortfall) AS avg_shortfall,\n             AVG(avg_sharpe_ratio) AS avg_sharpe_ratio,\n             AVG(avg_volatility_pct) AS avg_volatility_pct,\n             AVG(time_to_goal_months) AS avg_time_to_goal_months\n      FROM ATOM_ENTITY_INVESTMENT_GOAL_001\n      GROUP BY investor_id\n    )\n     SELECT p.segment AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.segment;",
+      "sources": [
+        "InvestmentGoal",
+        "PortfolioHealth",
+        "Segment"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-044",
+      "tables": "3",
+      "question": "Across profile segment, how do holding gain, health risk, and diversification compare using three related tables?",
+      "sql": "WITH \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.segment AS group_value, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.segment;",
+      "sources": [
+        "PortfolioHolding",
+        "PortfolioHealth",
+        "Segment"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-045",
+      "tables": "3",
+      "question": "Across profile segment, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.segment AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.segment;",
+      "sources": [
+        "CashFlow",
+        "InvestmentGoal",
+        "Segment"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-046",
+      "tables": "3",
+      "question": "Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?",
+      "sql": "WITH \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n    , \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.segment AS group_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(holding.avg_returns_pct),2) AS avg_returns_pct, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN alloc ON alloc.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id GROUP BY p.segment;",
+      "sources": [
+        "Segment",
+        "SectorAllocation",
+        "PortfolioHolding"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-047",
+      "tables": "3",
+      "question": "Across profile segment, how do rebalancing amount, cash flow, and transaction count compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n     SELECT p.segment AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(cash.transaction_count),2) AS avg_transaction_count, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id GROUP BY p.segment;",
+      "sources": [
+        "Investor",
+        "RebalancingAction",
+        "CashFlow"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-048",
+      "tables": "3",
+      "question": "Across profile segment, how do scenario change, goal progress, and volatility compare using three related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(avg_volatility_pct) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.segment AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_volatility_pct),2) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.segment;",
+      "sources": [
+        "Segment",
+        "ScenarioRebalancing",
+        "InvestmentGoal"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-049",
+      "tables": "3",
+      "question": "Across profile segment, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?",
+      "sql": "WITH \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.segment AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.segment;",
+      "sources": [
+        "ScenarioRebalancing",
+        "RebalancingAction",
+        "Investor"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-050",
+      "tables": "3",
+      "question": "Across profile segment, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.segment AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(scen.scenario_count),2) AS avg_scenario_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id GROUP BY p.segment;",
+      "sources": [
+        "CashFlow",
+        "ScenarioRebalancing",
+        "Segment"
+      ],
+      "status": "QUERY_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-051",
+      "tables": "4",
+      "question": "Across risk_tolerance, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "InvestmentGoal",
+        "PortfolioHolding",
+        "PortfolioHealth"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-054",
+      "tables": "4",
+      "question": "Across risk_tolerance, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?",
+      "sql": "WITH \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n    , \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.risk_tolerance AS group_value, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "RebalancingAction",
+        "CashFlow",
+        "InvestmentGoal"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-055",
+      "tables": "4",
+      "question": "Across risk_tolerance, how do scenario change, rebalancing gap, health risk, and goal match compare using four related tables?",
+      "sql": "WITH \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n    , \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN scen ON scen.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "ScenarioRebalancing",
+        "PortfolioHealth",
+        "InvestmentGoal"
+      ],
+      "status": "QUERY_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-056",
+      "tables": "4",
+      "question": "Across risk_tolerance, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n    , \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(alloc.total_sector_investment),2) AS avg_sector_investment FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "CashFlow",
+        "ScenarioRebalancing",
+        "SectorAllocation",
+        "RiskTolerance"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-058",
+      "tables": "4",
+      "question": "Across risk_tolerance, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "InvestmentGoal",
+        "SectorAllocation",
+        "PortfolioHealth"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-061",
+      "tables": "4",
+      "question": "Across time_horizon, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "InvestmentGoal",
+        "PortfolioHolding",
+        "PortfolioHealth",
+        "TimeHorizon"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-064",
+      "tables": "4",
+      "question": "Across time_horizon, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?",
+      "sql": "WITH \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n    , \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.time_horizon AS group_value, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "TimeHorizon",
+        "RebalancingAction",
+        "CashFlow",
+        "InvestmentGoal"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-065",
+      "tables": "4",
+      "question": "Across time_horizon, how do scenario change, rebalancing gap, health risk, and goal match compare using four related tables?",
+      "sql": "WITH \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n    , \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN scen ON scen.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "ScenarioRebalancing",
+        "RebalancingAction",
+        "PortfolioHealth",
+        "InvestmentGoal"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-066",
+      "tables": "4",
+      "question": "Across time_horizon, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n    , \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(alloc.total_sector_investment),2) AS avg_sector_investment FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "CashFlow",
+        "ScenarioRebalancing",
+        "SectorAllocation",
+        "Sector",
+        "TimeHorizon"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-068",
+      "tables": "4",
+      "question": "Across time_horizon, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "InvestmentGoal",
+        "SectorAllocation",
+        "PortfolioHealth",
+        "Investor"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-071",
+      "tables": "4",
+      "question": "Across profile category, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(holding.total_holding_gain),2) AS avg_holding_gain, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "InvestmentGoal",
+        "PortfolioHolding",
+        "PortfolioHealth",
+        "Category"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-074",
+      "tables": "4",
+      "question": "Across profile category, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?",
+      "sql": "WITH \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n    , \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT p.category AS group_value, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(goal.avg_progress_pct),2) AS avg_progress_pct, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN reb ON reb.investor_id=p.investor_id JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "Category",
+        "RebalancingAction",
+        "CashFlow",
+        "InvestmentGoal"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-075",
+      "tables": "4",
+      "question": "Across profile category, how do scenario change, rebalancing gap, health risk, and goal match compare using four related tables?",
+      "sql": "WITH \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n    , \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(reb.avg_rebalance_gap),2) AS avg_rebalance_gap, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN scen ON scen.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        null
+      ],
+      "status": "QUERY_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-076",
+      "tables": "4",
+      "question": "Across profile category, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n    , \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(alloc.total_sector_investment),2) AS avg_sector_investment FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "CashFlow",
+        "ScenarioRebalancing",
+        "SectorAllocation",
+        "Category"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-078",
+      "tables": "4",
+      "question": "Across profile category, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "Category",
+        "InvestmentGoal",
+        "SectorAllocation",
+        "PortfolioHealth"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-083",
+      "tables": "5",
+      "question": "Across risk_tolerance, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n    , \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "InvestorRiskTolerance",
+        "InvestmentGoal",
+        "PortfolioHolding",
+        "SectorAllocation",
+        "PortfolioHealth"
+      ],
+      "status": "QUERY_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-084",
+      "tables": "5",
+      "question": "Across risk_tolerance, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "CashFlow",
+        "RebalancingAction",
+        "ScenarioRebalancing",
+        "PortfolioHealth"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-086",
+      "tables": "5",
+      "question": "Across risk_tolerance, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.risk_tolerance AS group_value, ROUND(AVG(cash.inflow_amount),2) AS avg_inflow, ROUND(AVG(cash.outflow_amount),2) AS avg_outflow, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_dividends),2) AS avg_dividends, ROUND(AVG(holding.total_taxes_paid),2) AS avg_taxes_paid FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.risk_tolerance;",
+      "sources": [
+        "RiskTolerance",
+        "CashFlow",
+        "InvestmentGoal",
+        "PortfolioHolding",
+        "Investor"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-090",
+      "tables": "5",
+      "question": "Across time_horizon, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n    , \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "InvestmentGoal",
+        "PortfolioHolding",
+        "SectorAllocation",
+        "PortfolioHealth",
+        "TimeHorizon"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-091",
+      "tables": "5",
+      "question": "Across time_horizon, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "TimeHorizon",
+        "CashFlow",
+        "RebalancingAction",
+        "ScenarioRebalancing",
+        "PortfolioHealth",
+        "InvestmentGoal"
+      ],
+      "status": "FINAL_SPEC_ERROR",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-093",
+      "tables": "5",
+      "question": "Across time_horizon, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.time_horizon AS group_value, ROUND(AVG(cash.inflow_amount),2) AS avg_inflow, ROUND(AVG(cash.outflow_amount),2) AS avg_outflow, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_dividends),2) AS avg_dividends, ROUND(AVG(holding.total_taxes_paid),2) AS avg_taxes_paid FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.time_horizon;",
+      "sources": [
+        "CashFlow",
+        "InvestmentGoal",
+        "PortfolioHolding",
+        "Investor",
+        "TimeHorizon"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-097",
+      "tables": "5",
+      "question": "Across profile category, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?",
+      "sql": "WITH goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n    , \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_holding_value),2) AS avg_holding_value, ROUND(AVG(alloc.max_allocation_pct),2) AS avg_max_allocation_pct, ROUND(AVG(h.liquidity_score),2) AS avg_liquidity_score, ROUND(AVG(h.diversification_score),2) AS avg_diversification_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "Category",
+        "InvestmentGoal",
+        "PortfolioHolding",
+        "SectorAllocation",
+        "PortfolioHealth"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-098",
+      "tables": "5",
+      "question": "Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , \n    reb AS (\n      SELECT investor_id,\n             COUNT(*) AS rebalance_action_count,\n             SUM(amount) AS total_rebalance_amount,\n             AVG(target_allocation_pct-current_allocation_pct) AS avg_rebalance_gap\n      FROM ATOM_EVENT_REBALANCING_ACTION_001\n      GROUP BY investor_id\n    )\n    , \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(cash.net_cash_flow),2) AS avg_net_cash_flow, ROUND(AVG(reb.total_rebalance_amount),2) AS avg_rebalance_amount, ROUND(AVG(scen.avg_scenario_change),2) AS avg_scenario_change, ROUND(AVG(h.risk_score),2) AS avg_risk_score, ROUND(AVG(h.goal_match_pct),2) AS avg_goal_match_pct FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN reb ON reb.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "CashFlow",
+        "RebalancingAction",
+        "ScenarioRebalancing",
+        "PortfolioHealth",
+        "InvestmentGoal"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-100",
+      "tables": "5",
+      "question": "Across profile category, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(shortfall) AS avg_shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    holding AS (\n      SELECT investor_id,\n             COUNT(*) AS holding_count,\n             SUM(current_value) AS total_holding_value,\n             SUM(current_value-cost) AS total_holding_gain,\n             AVG(returns_pct) AS avg_returns_pct,\n             SUM(dividends) AS total_dividends,\n             SUM(taxes_paid) AS total_taxes_paid\n      FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001\n      GROUP BY investor_id\n    )\n     SELECT p.category AS group_value, ROUND(AVG(cash.inflow_amount),2) AS avg_inflow, ROUND(AVG(cash.outflow_amount),2) AS avg_outflow, ROUND(AVG(goal.avg_shortfall),2) AS avg_shortfall, ROUND(AVG(holding.total_dividends),2) AS avg_dividends, ROUND(AVG(holding.total_taxes_paid),2) AS avg_taxes_paid FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id JOIN holding ON holding.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id GROUP BY p.category;",
+      "sources": [
+        "CashFlow",
+        "CashFlow",
+        "InvestmentGoal",
+        "PortfolioHolding",
+        "Investor"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-104",
+      "tables": "5",
+      "question": "Which ten investors have the highest five-table risk-pressure score where score = risk score + allocation concentration + goal volatility - liquidity + scenario change?",
+      "sql": "WITH \n    alloc AS (\n      SELECT investor_id,\n             COUNT(*) AS allocation_count,\n             MAX(allocation_pct) AS max_allocation_pct,\n             AVG(allocation_pct) AS avg_allocation_pct,\n             SUM(total_investment) AS total_sector_investment\n      FROM ATOM_ENTITY_SECTOR_ALLOCATION_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(avg_volatility_pct) AS avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.investor_id, p.investor_name, ROUND(h.risk_score + alloc.max_allocation_pct + goal.avg_volatility_pct - h.liquidity_score + scen.avg_scenario_change,2) AS risk_pressure_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id JOIN alloc ON alloc.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id ORDER BY risk_pressure_score DESC LIMIT 10;",
+      "sources": [
+        "PortfolioHealth",
+        "SectorAllocation",
+        "InvestmentGoal",
+        "ScenarioRebalancing",
+        "Investor"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    },
+    {
+      "id": "MC-105",
+      "tables": "5",
+      "question": "Which investors are comparative outliers with net cash flow above 100000000, average goal progress below 25, risk_score above 70, and scenario change above 20?",
+      "sql": "WITH \n    cash AS (\n      SELECT investor_id,\n             COUNT(*) AS transaction_count,\n             SUM(amount) AS net_cash_flow,\n             SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS inflow_amount,\n             -SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) AS outflow_amount,\n             SUM(CASE WHEN date >= '2025-01-01' AND date < '2026-01-01' THEN amount ELSE 0 END) AS net_cash_flow_2025\n      FROM ATOM_EVENT_CASH_FLOW_001\n      GROUP BY investor_id\n    )\n    , goal AS (SELECT investor_id, AVG(progress_pct) AS avg_progress_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id), \n    scen AS (\n      SELECT investor_id,\n             COUNT(*) AS scenario_count,\n             AVG(new_allocation_pct-current_allocation_pct) AS avg_scenario_change,\n             MAX(new_allocation_pct-current_allocation_pct) AS max_scenario_change\n      FROM ATOM_EVENT_SCENARIO_REBALANCING_001\n      GROUP BY investor_id\n    )\n     SELECT p.investor_id, p.investor_name, ROUND(cash.net_cash_flow,2) AS net_cash_flow, ROUND(goal.avg_progress_pct,2) AS avg_progress_pct, h.risk_score, ROUND(scen.avg_scenario_change,2) AS avg_scenario_change FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN cash ON cash.investor_id=p.investor_id JOIN goal ON goal.investor_id=p.investor_id JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON h.investor_id=p.investor_id JOIN scen ON scen.investor_id=p.investor_id WHERE cash.net_cash_flow>100000000 AND goal.avg_progress_pct<25 AND h.risk_score>70 AND scen.avg_scenario_change>20;",
+      "sources": [
+        "CashFlow",
+        "InvestmentGoal",
+        "PortfolioHealth",
+        "ScenarioRebalancing"
+      ],
+      "status": "PIPELINE_SUCCESS",
+      "sql_uses_profile": true
+    }
+  ]
+}

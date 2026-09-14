@@ -1,0 +1,758 @@
+{
+  "interpretation": "Counts of existing grader labels, not independent exact regrading. New evaluation covers only 192 of 442 queries.",
+  "source_sha256": {
+    "new_first100": {
+      "path": "experiment_week1\\improvement3\\pipelien_output\\v1_queries_1_to_100_debug.csv",
+      "sha256": "a47977d92514b23834e6b70074ba9b61bd0f2763550ad0b1b4166561bdf79b4e"
+    },
+    "new_last92": {
+      "path": "experiment_week1\\improvement3\\pipelien_output\\v1_queries_351_to_442_debug.csv",
+      "sha256": "490d08d8226b9384579297c72e815a5d7e8708fd53945d1e5c46d9532109bd04"
+    },
+    "new_grades": {
+      "path": "experiment_week1\\improvement3\\pipelien_output\\graded_v1_pipeline_success_terra.csv",
+      "sha256": "ff6f4e9c35f34ed3b389c96bd6435c5adceac9cdb3c72af600f3b7b6e350eeea"
+    },
+    "old_grades": {
+      "path": "query_specs_improevemnt\\improvement1\\pipelien_output\\graded_raw_pipeline_442_improvement1_gpt_5_6_terra.csv",
+      "sha256": "5985ea70ff459cab05587544c3b214f7543078b073b8cbb7d3ddf54c2913b313"
+    },
+    "baseline_grades": {
+      "path": "query_specs_improevemnt\\improvement0\\base_pipeline_gpt_oss_120b_terra (1).csv",
+      "sha256": "cb0a90722722b67b807014fed1d882de96ed0f8628a7276a57c1b7d59e016e66"
+    }
+  },
+  "rows": 192,
+  "status_counts": {
+    "PIPELINE_SUCCESS": 55,
+    "QUERY_SPEC_ERROR": 15,
+    "PROCESSING_SPEC_ERROR": 21,
+    "FINAL_SPEC_ERROR": 93,
+    "CRASH": 6,
+    "SCAN_ERROR": 2
+  },
+  "new_grade_counts": {
+    "MATCH": 28,
+    "MISMATCH": 9,
+    "PARTIAL": 18
+  },
+  "same_id_comparison": {
+    "new": {
+      "same192_matches": 28,
+      "same192_percent": 14.58,
+      "file_rows": 55,
+      "file_grade_counts": {
+        "MATCH": 28,
+        "MISMATCH": 9,
+        "PARTIAL": 18
+      },
+      "version_labels": [
+        "aop-gpt-oss-120b-improvement3-strict-contracts-v3"
+      ]
+    },
+    "old": {
+      "same192_matches": 70,
+      "same192_percent": 36.46,
+      "file_rows": 442,
+      "file_grade_counts": {
+        "MATCH": 232,
+        "PARTIAL": 102,
+        "OTHER": 7,
+        "MISMATCH": 93,
+        "SCAN_ERROR": 6,
+        "PRE_SCAN_ERROR": 2
+      },
+      "version_labels": [
+        "aop-gpt-oss-120b-improvement1-all442"
+      ]
+    },
+    "baseline": {
+      "same192_matches": 80,
+      "same192_percent": 41.67,
+      "file_rows": 442,
+      "file_grade_counts": {
+        "MISMATCH": 129,
+        "MATCH": 252,
+        "PARTIAL": 61
+      },
+      "version_labels": [
+        "base-pipeline-qwen3-235b-v1"
+      ]
+    }
+  },
+  "per_range": {
+    "new_first100": {
+      "rows": 100,
+      "status_counts": {
+        "PIPELINE_SUCCESS": 47,
+        "QUERY_SPEC_ERROR": 4,
+        "PROCESSING_SPEC_ERROR": 11,
+        "FINAL_SPEC_ERROR": 30,
+        "CRASH": 6,
+        "SCAN_ERROR": 2
+      },
+      "grade_counts": {
+        "MATCH": 27,
+        "MISMATCH": 4,
+        "PARTIAL": 16
+      }
+    },
+    "new_last92": {
+      "rows": 92,
+      "status_counts": {
+        "FINAL_SPEC_ERROR": 63,
+        "PIPELINE_SUCCESS": 8,
+        "PROCESSING_SPEC_ERROR": 10,
+        "QUERY_SPEC_ERROR": 11
+      },
+      "grade_counts": {
+        "MISMATCH": 5,
+        "PARTIAL": 2,
+        "MATCH": 1
+      }
+    }
+  },
+  "repairs": {
+    "queries_with_stage_repairs": 147,
+    "stage_events": 462,
+    "queries_with_decomposition_repairs": 53,
+    "decomposition_events": 81,
+    "queries_repeating_identical_same_stage_errors": 49,
+    "overlapping_error_families": {
+      "missing_step_dataset": {
+        "queries": 55,
+        "ids": [
+          "wealth_management_70_question_benchmark:WM-3T-008",
+          "wealth_management_70_question_benchmark:WM-3T-009",
+          "wealth_management_70_question_benchmark:WM-3T-011",
+          "wealth_management_70_question_benchmark:WM-3T-012",
+          "wealth_management_70_question_benchmark:WM-3T-014",
+          "wealth_management_70_question_benchmark:WM-3T-015",
+          "wealth_management_70_question_benchmark:WM-4T-003",
+          "wealth_management_70_question_benchmark:WM-4T-005",
+          "wealth_management_70_question_benchmark:WM-4T-006",
+          "wealth_management_70_question_benchmark:WM-4T-007",
+          "wealth_management_70_question_benchmark:WM-4T-010",
+          "wealth_management_batch_status_40_questions:BSQ-1T-008",
+          "wealth_management_batch_status_40_questions:BSQ-2T-001",
+          "wealth_management_batch_status_40_questions:BSQ-2T-010",
+          "wealth_management_batch_status_40_questions:BSQ-4T-001",
+          "wealth_management_batch_status_40_questions:BSQ-4T-003",
+          "wealth_management_multi_step_comparative_105_questions:MC-009",
+          "wealth_management_multi_step_comparative_105_questions:MC-011",
+          "wealth_management_multi_step_comparative_105_questions:MC-012",
+          "wealth_management_multi_step_comparative_105_questions:MC-013",
+          "wealth_management_multi_step_comparative_105_questions:MC-014",
+          "wealth_management_multi_step_comparative_105_questions:MC-020",
+          "wealth_management_multi_step_comparative_105_questions:MC-021",
+          "wealth_management_multi_step_comparative_105_questions:MC-022",
+          "wealth_management_multi_step_comparative_105_questions:MC-028",
+          "wealth_management_multi_step_comparative_105_questions:MC-033",
+          "wealth_management_multi_step_comparative_105_questions:MC-036",
+          "wealth_management_multi_step_comparative_105_questions:MC-037",
+          "wealth_management_multi_step_comparative_105_questions:MC-038",
+          "wealth_management_multi_step_comparative_105_questions:MC-039",
+          "wealth_management_multi_step_comparative_105_questions:MC-040",
+          "wealth_management_multi_step_comparative_105_questions:MC-045",
+          "wealth_management_multi_step_comparative_105_questions:MC-046",
+          "wealth_management_multi_step_comparative_105_questions:MC-047",
+          "wealth_management_multi_step_comparative_105_questions:MC-049",
+          "wealth_management_multi_step_comparative_105_questions:MC-050",
+          "wealth_management_multi_step_comparative_105_questions:MC-058",
+          "wealth_management_multi_step_comparative_105_questions:MC-061",
+          "wealth_management_multi_step_comparative_105_questions:MC-064",
+          "wealth_management_multi_step_comparative_105_questions:MC-066",
+          "wealth_management_multi_step_comparative_105_questions:MC-068",
+          "wealth_management_multi_step_comparative_105_questions:MC-071",
+          "wealth_management_multi_step_comparative_105_questions:MC-075",
+          "wealth_management_multi_step_comparative_105_questions:MC-076",
+          "wealth_management_multi_step_comparative_105_questions:MC-083",
+          "wealth_management_multi_step_comparative_105_questions:MC-086",
+          "wealth_management_multi_step_comparative_105_questions:MC-098",
+          "wealth_management_multi_step_comparative_105_questions:MC-100",
+          "wealth_management_multi_step_comparative_105_questions:MC-104",
+          "wealth_management_temporal_transaction_65_questions:TT-033",
+          "wealth_management_temporal_transaction_65_questions:TT-041",
+          "wealth_management_temporal_transaction_65_questions:TT-053",
+          "wealth_management_temporal_transaction_65_questions:TT-054",
+          "wealth_management_temporal_transaction_65_questions:TT-057",
+          "wealth_management_temporal_transaction_65_questions:TT-063"
+        ]
+      },
+      "missing_final_measure_dataset": {
+        "queries": 44,
+        "ids": [
+          "wealth_management_70_question_benchmark:WM-1T-014",
+          "wealth_management_70_question_benchmark:WM-1T-015",
+          "wealth_management_70_question_benchmark:WM-1T-017",
+          "wealth_management_70_question_benchmark:WM-2T-013",
+          "wealth_management_70_question_benchmark:WM-3T-002",
+          "wealth_management_70_question_benchmark:WM-3T-003",
+          "wealth_management_70_question_benchmark:WM-4T-004",
+          "wealth_management_batch_status_40_questions:BSQ-1T-004",
+          "wealth_management_batch_status_40_questions:BSQ-1T-006",
+          "wealth_management_batch_status_40_questions:BSQ-1T-008",
+          "wealth_management_batch_status_40_questions:BSQ-2T-009",
+          "wealth_management_batch_status_40_questions:BSQ-4T-003",
+          "wealth_management_multi_step_comparative_105_questions:MC-008",
+          "wealth_management_multi_step_comparative_105_questions:MC-012",
+          "wealth_management_multi_step_comparative_105_questions:MC-013",
+          "wealth_management_multi_step_comparative_105_questions:MC-015",
+          "wealth_management_multi_step_comparative_105_questions:MC-017",
+          "wealth_management_multi_step_comparative_105_questions:MC-019",
+          "wealth_management_multi_step_comparative_105_questions:MC-021",
+          "wealth_management_multi_step_comparative_105_questions:MC-022",
+          "wealth_management_multi_step_comparative_105_questions:MC-025",
+          "wealth_management_multi_step_comparative_105_questions:MC-028",
+          "wealth_management_multi_step_comparative_105_questions:MC-031",
+          "wealth_management_multi_step_comparative_105_questions:MC-033",
+          "wealth_management_multi_step_comparative_105_questions:MC-035",
+          "wealth_management_multi_step_comparative_105_questions:MC-037",
+          "wealth_management_multi_step_comparative_105_questions:MC-041",
+          "wealth_management_multi_step_comparative_105_questions:MC-044",
+          "wealth_management_multi_step_comparative_105_questions:MC-045",
+          "wealth_management_multi_step_comparative_105_questions:MC-050",
+          "wealth_management_multi_step_comparative_105_questions:MC-051",
+          "wealth_management_multi_step_comparative_105_questions:MC-055",
+          "wealth_management_multi_step_comparative_105_questions:MC-058",
+          "wealth_management_multi_step_comparative_105_questions:MC-061",
+          "wealth_management_multi_step_comparative_105_questions:MC-064",
+          "wealth_management_multi_step_comparative_105_questions:MC-066",
+          "wealth_management_multi_step_comparative_105_questions:MC-075",
+          "wealth_management_multi_step_comparative_105_questions:MC-083",
+          "wealth_management_multi_step_comparative_105_questions:MC-090",
+          "wealth_management_multi_step_comparative_105_questions:MC-091",
+          "wealth_management_multi_step_comparative_105_questions:MC-097",
+          "wealth_management_multi_step_comparative_105_questions:MC-098",
+          "wealth_management_multi_step_comparative_105_questions:MC-100",
+          "wealth_management_temporal_transaction_65_questions:TT-042"
+        ]
+      },
+      "missing_projection_source": {
+        "queries": 54,
+        "ids": [
+          "wealth_management_70_question_benchmark:WM-1T-016",
+          "wealth_management_70_question_benchmark:WM-1T-017",
+          "wealth_management_70_question_benchmark:WM-2T-013",
+          "wealth_management_70_question_benchmark:WM-3T-003",
+          "wealth_management_70_question_benchmark:WM-4T-004",
+          "wealth_management_batch_status_40_questions:BSQ-1T-004",
+          "wealth_management_batch_status_40_questions:BSQ-1T-008",
+          "wealth_management_batch_status_40_questions:BSQ-2T-009",
+          "wealth_management_batch_status_40_questions:BSQ-3T-005",
+          "wealth_management_batch_status_40_questions:BSQ-4T-003",
+          "wealth_management_multi_step_comparative_105_questions:MC-008",
+          "wealth_management_multi_step_comparative_105_questions:MC-012",
+          "wealth_management_multi_step_comparative_105_questions:MC-013",
+          "wealth_management_multi_step_comparative_105_questions:MC-014",
+          "wealth_management_multi_step_comparative_105_questions:MC-016",
+          "wealth_management_multi_step_comparative_105_questions:MC-018",
+          "wealth_management_multi_step_comparative_105_questions:MC-019",
+          "wealth_management_multi_step_comparative_105_questions:MC-021",
+          "wealth_management_multi_step_comparative_105_questions:MC-022",
+          "wealth_management_multi_step_comparative_105_questions:MC-025",
+          "wealth_management_multi_step_comparative_105_questions:MC-028",
+          "wealth_management_multi_step_comparative_105_questions:MC-031",
+          "wealth_management_multi_step_comparative_105_questions:MC-033",
+          "wealth_management_multi_step_comparative_105_questions:MC-035",
+          "wealth_management_multi_step_comparative_105_questions:MC-036",
+          "wealth_management_multi_step_comparative_105_questions:MC-037",
+          "wealth_management_multi_step_comparative_105_questions:MC-038",
+          "wealth_management_multi_step_comparative_105_questions:MC-039",
+          "wealth_management_multi_step_comparative_105_questions:MC-040",
+          "wealth_management_multi_step_comparative_105_questions:MC-041",
+          "wealth_management_multi_step_comparative_105_questions:MC-044",
+          "wealth_management_multi_step_comparative_105_questions:MC-045",
+          "wealth_management_multi_step_comparative_105_questions:MC-046",
+          "wealth_management_multi_step_comparative_105_questions:MC-047",
+          "wealth_management_multi_step_comparative_105_questions:MC-049",
+          "wealth_management_multi_step_comparative_105_questions:MC-050",
+          "wealth_management_multi_step_comparative_105_questions:MC-051",
+          "wealth_management_multi_step_comparative_105_questions:MC-055",
+          "wealth_management_multi_step_comparative_105_questions:MC-058",
+          "wealth_management_multi_step_comparative_105_questions:MC-061",
+          "wealth_management_multi_step_comparative_105_questions:MC-064",
+          "wealth_management_multi_step_comparative_105_questions:MC-066",
+          "wealth_management_multi_step_comparative_105_questions:MC-068",
+          "wealth_management_multi_step_comparative_105_questions:MC-074",
+          "wealth_management_multi_step_comparative_105_questions:MC-075",
+          "wealth_management_multi_step_comparative_105_questions:MC-076",
+          "wealth_management_multi_step_comparative_105_questions:MC-083",
+          "wealth_management_multi_step_comparative_105_questions:MC-086",
+          "wealth_management_multi_step_comparative_105_questions:MC-091",
+          "wealth_management_multi_step_comparative_105_questions:MC-097",
+          "wealth_management_multi_step_comparative_105_questions:MC-098",
+          "wealth_management_multi_step_comparative_105_questions:MC-100",
+          "wealth_management_multi_step_comparative_105_questions:MC-104",
+          "wealth_management_temporal_transaction_65_questions:TT-063"
+        ]
+      },
+      "processing_output_no_lineage": {
+        "queries": 25,
+        "ids": [
+          "wealth_management_70_question_benchmark:WM-1T-013",
+          "wealth_management_70_question_benchmark:WM-2T-002",
+          "wealth_management_batch_status_40_questions:BSQ-1T-005",
+          "wealth_management_batch_status_40_questions:BSQ-2T-008",
+          "wealth_management_batch_status_40_questions:BSQ-3T-001",
+          "wealth_management_batch_status_40_questions:BSQ-3T-005",
+          "wealth_management_batch_status_40_questions:BSQ-4T-004",
+          "wealth_management_multi_step_comparative_105_questions:MC-001",
+          "wealth_management_multi_step_comparative_105_questions:MC-002",
+          "wealth_management_multi_step_comparative_105_questions:MC-006",
+          "wealth_management_multi_step_comparative_105_questions:MC-013",
+          "wealth_management_multi_step_comparative_105_questions:MC-025",
+          "wealth_management_multi_step_comparative_105_questions:MC-034",
+          "wealth_management_multi_step_comparative_105_questions:MC-038",
+          "wealth_management_multi_step_comparative_105_questions:MC-039",
+          "wealth_management_multi_step_comparative_105_questions:MC-041",
+          "wealth_management_multi_step_comparative_105_questions:MC-045",
+          "wealth_management_multi_step_comparative_105_questions:MC-047",
+          "wealth_management_multi_step_comparative_105_questions:MC-074",
+          "wealth_management_multi_step_comparative_105_questions:MC-086",
+          "wealth_management_multi_step_comparative_105_questions:MC-093",
+          "wealth_management_temporal_transaction_65_questions:TT-044",
+          "wealth_management_temporal_transaction_65_questions:TT-056",
+          "wealth_management_temporal_transaction_65_questions:TT-061",
+          "wealth_management_temporal_transaction_65_questions:TT-063"
+        ]
+      },
+      "output_overwrites_field": {
+        "queries": 28,
+        "ids": [
+          "wealth_management_70_question_benchmark:WM-1T-005",
+          "wealth_management_70_question_benchmark:WM-3T-004",
+          "wealth_management_70_question_benchmark:WM-3T-005",
+          "wealth_management_70_question_benchmark:WM-3T-007",
+          "wealth_management_70_question_benchmark:WM-3T-011",
+          "wealth_management_70_question_benchmark:WM-3T-014",
+          "wealth_management_70_question_benchmark:WM-3T-016",
+          "wealth_management_70_question_benchmark:WM-4T-001",
+          "wealth_management_70_question_benchmark:WM-4T-002",
+          "wealth_management_70_question_benchmark:WM-4T-006",
+          "wealth_management_70_question_benchmark:WM-4T-007",
+          "wealth_management_70_question_benchmark:WM-4T-008",
+          "wealth_management_70_question_benchmark:WM-4T-010",
+          "wealth_management_70_question_benchmark:WM-5T-001",
+          "wealth_management_70_question_benchmark:WM-5T-003",
+          "wealth_management_batch_status_40_questions:BSQ-2T-006",
+          "wealth_management_batch_status_40_questions:BSQ-2T-007",
+          "wealth_management_batch_status_40_questions:BSQ-3T-001",
+          "wealth_management_batch_status_40_questions:BSQ-4T-001",
+          "wealth_management_batch_status_40_questions:BSQ-4T-002",
+          "wealth_management_multi_step_comparative_105_questions:MC-048",
+          "wealth_management_multi_step_comparative_105_questions:MC-054",
+          "wealth_management_multi_step_comparative_105_questions:MC-061",
+          "wealth_management_multi_step_comparative_105_questions:MC-078",
+          "wealth_management_multi_step_comparative_105_questions:MC-105",
+          "wealth_management_temporal_transaction_65_questions:TT-047",
+          "wealth_management_temporal_transaction_65_questions:TT-050",
+          "wealth_management_temporal_transaction_65_questions:TT-053"
+        ]
+      }
+    }
+  },
+  "invalid_truth_json": [
+    {
+      "id": "wealth_management_70_question_benchmark:WM-1T-008",
+      "characters": 32767,
+      "new_success": true
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-1T-009",
+      "characters": 32767,
+      "new_success": true
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-2T-011",
+      "characters": 32767,
+      "new_success": true
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-2T-017",
+      "characters": 32767,
+      "new_success": true
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-2T-006",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-3T-009",
+      "characters": 32767,
+      "new_success": true
+    },
+    {
+      "id": "wealth_management_at_risk_critical_70_questions:ARC-1T-001",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_at_risk_critical_70_questions:ARC-1T-002",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_scoring_quantitative_65_questions:SQA-1T-004",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_scoring_quantitative_65_questions:SQA-2T-004",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_reference_compliance_55_questions:RC-009",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_reference_compliance_55_questions:RC-010",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_reference_compliance_55_questions:RC-011",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_reference_compliance_55_questions:RC-012",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_reference_compliance_55_questions:RC-020",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_reference_compliance_55_questions:RC-032",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_reference_compliance_55_questions:RC-035",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_reference_compliance_55_questions:RC-053",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_reference_compliance_55_questions:RC-054",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_reference_compliance_55_questions:RC-055",
+      "characters": 32767,
+      "new_success": false
+    },
+    {
+      "id": "wealth_management_temporal_transaction_65_questions:TT-005",
+      "characters": 32767,
+      "new_success": false
+    }
+  ],
+  "paired_old_new": {
+    "old_True_new_True": 22,
+    "old_False_new_False": 116,
+    "old_False_new_True": 6,
+    "old_True_new_False": 48
+  },
+  "old_match_regressions": [
+    {
+      "id": "wealth_management_70_question_benchmark:WM-1T-013",
+      "question": "What are the transaction count and total amount for each cash-flow type?",
+      "new_status": "PROCESSING_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-1T-015",
+      "question": "How many scenario-rebalancing records exist for each market scenario?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-1T-016",
+      "question": "What are the average risk, liquidity, and diversification scores across all portfolio-health records?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-1T-018",
+      "question": "Which five sectors have the highest total recorded investment in sector allocation?",
+      "new_status": "CRASH",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-1T-020",
+      "question": "What was the total cash-flow amount in each month of 2025?",
+      "new_status": "PROCESSING_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-2T-002",
+      "question": "Which Conservative investors have a risk score above 75?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "MISMATCH"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-2T-004",
+      "question": "How many investment goals of each type belong to each investor risk-tolerance group?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-2T-007",
+      "question": "Which investors have at least one goal with a shortfall above 100 million?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-2T-008",
+      "question": "Which investors have a Technology sector allocation above 30%?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-2T-012",
+      "question": "How does average goal progress compare across investor risk-tolerance groups?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-2T-015",
+      "question": "Which five investors have the greatest total goal shortfall?",
+      "new_status": "CRASH",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-2T-017",
+      "question": "Which investors had at least one cash-flow transaction during calendar year 2025?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-3T-001",
+      "question": "Which investors have goal progress below 20% and a portfolio risk score above 70?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-3T-008",
+      "question": "For each risk-tolerance group, how do average goal progress and average portfolio risk compare?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-3T-010",
+      "question": "Which five investors have the highest current holding value among those with a portfolio risk score above 70?",
+      "new_status": "CRASH",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-3T-011",
+      "question": "Which five investors have the highest 2025 cash-flow amount among those whose average goal progress is below 40%?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-3T-014",
+      "question": "Which investors have average goal progress below 20% and both risk and liquidity scores below 30?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-3T-015",
+      "question": "Which investors have a sector allocation above 50% and a diversification score below 25?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-4T-002",
+      "question": "Which investors have a sector allocation above 20%, a 'Rebalance Sell' action, and a Bear Market scenario?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-4T-005",
+      "question": "Which five investors with risk scores above 60 have the largest combined holding value and goal shortfall?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-4T-007",
+      "question": "Which investors have average goal progress below 25%, a sector allocation above 40%, and a diversification score below 30?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_70_question_benchmark:WM-4T-008",
+      "question": "Which Conservative investors have a negative-return holding, risk score above 70, and a 'Tactical Increase' action?",
+      "new_status": "PROCESSING_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-1T-003",
+      "question": "Which portfolio-health records have a risk score above 80 and diversification below 20?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-1T-004",
+      "question": "How many investors belong to each segment and category combination?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-1T-007",
+      "question": "For each sector, how do average allocation percentage and maximum allocation percentage compare?",
+      "new_status": "QUERY_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-2T-001",
+      "question": "Which Long-term investors have at least four investment goals?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-2T-003",
+      "question": "For each risk-tolerance group, how many investors have one, two, three, or more investment goals?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-2T-004",
+      "question": "For each investor category, what are the number of holdings and number of distinct investors represented?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-2T-005",
+      "question": "For each investor risk-tolerance group and cash-flow source, how many transactions are recorded?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-2T-006",
+      "question": "Which investors have at least three underfunded investment goals?",
+      "new_status": "PROCESSING_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-2T-007",
+      "question": "Which investors have at least one sector allocation above 40%?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-2T-009",
+      "question": "How do average risk, liquidity, and diversification scores compare across investor time horizons?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-2T-011",
+      "question": "Which ten investors have earned the highest total dividends from their holdings?",
+      "new_status": "SCAN_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-2T-012",
+      "question": "How many distinct investors had cash-flow activity in each month of 2025?",
+      "new_status": "PROCESSING_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-3T-004",
+      "question": "Which investors have a Withdrawal cash flow and at least one De-risking rebalancing action?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-3T-008",
+      "question": "Which five investors with diversification below 30 have the greatest total goal shortfall?",
+      "new_status": "CRASH",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-3T-010",
+      "question": "Which investors have a risk score above 70, diversification below 30, and a sector allocation above 40%?",
+      "new_status": "SCAN_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_batch_status_40_questions:BSQ-4T-001",
+      "question": "Which investors have an underfunded goal, liquidity below 30, and at least one Sell rebalancing action?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_temporal_transaction_65_questions:TT-033",
+      "question": "Which ten investors have the largest combined amount where combined amount is cash-flow net amount plus rebalancing action amount?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_temporal_transaction_65_questions:TT-036",
+      "question": "Which investors have Tax Refund cash-flow transactions and Interest Rate Hike scenario rebalancing?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "MISMATCH"
+    },
+    {
+      "id": "wealth_management_temporal_transaction_65_questions:TT-039",
+      "question": "Which investors have goals due within 12 months and De-risking rebalancing actions?",
+      "new_status": "PIPELINE_SUCCESS",
+      "new_grade": "PARTIAL"
+    },
+    {
+      "id": "wealth_management_temporal_transaction_65_questions:TT-041",
+      "question": "Which investors have Bear Market scenario rebalancing and goals with progress_pct below 25?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_temporal_transaction_65_questions:TT-053",
+      "question": "Which investors have goals with shortfall above 1000000, De-risking actions, and Bear Market scenarios?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_temporal_transaction_65_questions:TT-054",
+      "question": "For each rebalancing logic and triggered_action, how many distinct investors are linked to both action and scenario records?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_temporal_transaction_65_questions:TT-057",
+      "question": "Which ten investors have the highest combined transaction-rebalance score where score = net cash flow + rebalancing amount + scenario allocation change?",
+      "new_status": "FINAL_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_temporal_transaction_65_questions:TT-061",
+      "question": "Which investors have Withdrawal transactions, goals due within 12 months, De-risking actions, and Bear Market scenarios?",
+      "new_status": "PROCESSING_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_temporal_transaction_65_questions:TT-065",
+      "question": "Which investors have Tax Refund transactions after 2026-04-28, Growth goals, Tactical actions, and Bull Market scenarios?",
+      "new_status": "PROCESSING_SPEC_ERROR",
+      "new_grade": "not graded"
+    },
+    {
+      "id": "wealth_management_multi_step_comparative_105_questions:MC-105",
+      "question": "Which investors are comparative outliers with net cash flow above 100000000, average goal progress below 25, risk_score above 70, and scenario change above 20?",
+      "new_status": "PROCESSING_SPEC_ERROR",
+      "new_grade": "not graded"
+    }
+  ]
+}

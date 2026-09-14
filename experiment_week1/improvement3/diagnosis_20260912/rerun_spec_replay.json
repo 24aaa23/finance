@@ -1,0 +1,1513 @@
+{
+  "replayed_at_utc": "2026-09-12T09:31:42.965690+00:00",
+  "snapshot_captured_at_utc": "2026-09-12T09:20:49.777829+00:00",
+  "scope": "Offline compilation of logged final-plan declarations against logged input schemas; deterministic execution on recorded per-branch samples when available. No API calls, SPARQL queries, full datasets, final semantic validation, or answer grading.",
+  "comparison_caveat": "Recorded errors include the former Final_Spec builder's inferred-requirement gates; new errors are compiler errors only. These counts do not establish pipeline success or accuracy.",
+  "sources": [
+    {
+      "path": "pipelien_output\\v3_rerun_v1_non_success_debug.csv",
+      "sha256": "5aa31ebce01aebdb3af499a60f4b14d29fed7521dfca7a2eea923a21a816d84b",
+      "bytes": 1047616,
+      "complete_rows": 41,
+      "incomplete_rows_excluded": 0
+    },
+    {
+      "path": "pipelien_output\\v3_rerun_v1_success_debug.csv",
+      "sha256": "9214da931a9dd8455dd99db22175f39b0fa392d5d8c47e07a5ad396671e905ba",
+      "bytes": 1033966,
+      "complete_rows": 45,
+      "incomplete_rows_excluded": 0
+    }
+  ],
+  "compiler_source_sha256": {
+    "spec_runtime.py": "a13674d02d3858dfdf78d7742f0bf84c97ee742fbbb23178ce6c7647c3736b58",
+    "spec_contracts.py": "8210af3109f8a2b76efb68b804c3d522cb8a462a811d66e55417e0af7901e014"
+  },
+  "snapshot_rows": 86,
+  "recorded_pipeline_status_counts": {
+    "QUERY_SPEC_ERROR": 21,
+    "FINAL_SPEC_ERROR": 31,
+    "PROCESSING_SPEC_ERROR": 26,
+    "PIPELINE_SUCCESS": 6,
+    "DECOMPOSITION_ERROR": 1,
+    "PRE_SCAN_ERROR": 1
+  },
+  "replay_status_counts": {
+    "no_recorded_final_spec": 49,
+    "compile_pass": 34,
+    "no_recorded_declarations": 1,
+    "compile_error": 2
+  },
+  "plans_recompiled": 36,
+  "recorded_final_contract_pass": 6,
+  "new_compile_pass": 34,
+  "sample_execution_status_counts": {
+    "not_recompiled": 50,
+    "runtime_pass": 34,
+    "skipped_compile_error": 2
+  },
+  "previously_accepted_compile_regressions": [],
+  "records": [
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-012",
+      "question": "How many holdings belong to each investment type?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-013",
+      "question": "What are the transaction count and total amount for each cash-flow type?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "__spec_step_1: unsupported aggregate/filter operation: ",
+        "Final_Spec omits required output field: amount"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "hasCashFlowType",
+        "transaction_count",
+        "total_amount"
+      ],
+      "new_step_count": 4,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5
+      },
+      "sample_output_rows": 4
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-015",
+      "question": "How many scenario-rebalancing records exist for each market scenario?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-016",
+      "question": "What are the average risk, liquidity, and diversification scores across all portfolio-health records?",
+      "pipeline_status": "PIPELINE_SUCCESS",
+      "recorded_contract_errors": [],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "avgRiskScore",
+        "avgLiquidityScore",
+        "avgDiversificationScore"
+      ],
+      "new_step_count": 4,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5
+      },
+      "sample_output_rows": 1
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-017",
+      "question": "For each investment type, how do total cost and total current value compare?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-018",
+      "question": "Which five sectors have the highest total recorded investment in sector allocation?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-019",
+      "question": "Which five holdings have the highest return percentage?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-020",
+      "question": "What was the total cash-flow amount in each month of 2025?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-013",
+      "question": "For each risk-tolerance group, how do total holding cost and total current value compare?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-014",
+      "question": "How do total Deposit and Withdrawal amounts compare for each risk-tolerance group?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-015",
+      "question": "Which five investors have the greatest total goal shortfall?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1: left_on/right_on requires exactly two datasets.",
+        "__spec_step_1 left join key: field does not exist on the selected input: investorId",
+        "__spec_step_2 group_by: field does not exist on the selected input: investorId",
+        "__spec_step_2 group_by: field does not exist on the selected input: investorName",
+        "__spec_step_2 aggregate source: field does not exist on the selected input: shortfall",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName",
+        "total_shortfall"
+      ],
+      "new_step_count": 3,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-016",
+      "question": "Which five investors have the highest total current holding value?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-002",
+      "question": "For each risk-tolerance group and portfolio-risk band, how many distinct investors hold investments?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-003",
+      "question": "For each investor category and cash-flow type, how many investors also have rebalancing actions?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-008",
+      "question": "For each risk-tolerance group, how do average goal progress and average portfolio risk compare?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1 left join key: field does not exist on the selected input: investorId",
+        "__spec_step_2: Integrate requires at least two input datasets.",
+        "__spec_step_2 left join key: field does not exist on the selected input: investorId",
+        "__spec_step_3 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_3 aggregate source: field does not exist on the selected input: progressPct",
+        "__spec_step_4 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_4 aggregate source: field does not exist on the selected input: riskScore",
+        "__spec_step_6: Integrate requires at least two input datasets.",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed', 'q3_processed']"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "riskTolerance",
+        "avg_progressPct",
+        "avg_riskScore"
+      ],
+      "new_step_count": 5,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5,
+        "q3_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-009",
+      "question": "For each risk-tolerance group, how do total holding value and total sector-allocation investment compare?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Final_Spec must declare an explicit final plan."
+      ],
+      "replay_status": "no_recorded_declarations"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-010",
+      "question": "Which five investors have the highest current holding value among those with a portfolio risk score above 70?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-011",
+      "question": "Which five investors have the highest 2025 cash-flow amount among those whose average goal progress is below 40%?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_1: None requires exactly one input dataset.",
+        "__spec_step_2: unsupported operator: None",
+        "__spec_step_3: unsupported operator: None",
+        "__spec_step_4: unsupported operator: None",
+        "__spec_step_5: unsupported operator: None",
+        "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+        "Final output does not depend on required input branches: ['q1_processed', 'q3_processed']",
+        "projection: field does not exist on the selected input: investorName",
+        "projection: field does not exist on the selected input: cash_flow_sum_2025",
+        "Final_Spec omits required metric: avg_progress"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName",
+        "cash_flow_sum_2025"
+      ],
+      "new_step_count": 5,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 0,
+        "q3_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-013",
+      "question": "For each risk-tolerance group, what were total 2024 holding purchases and total 2024 cash-flow amounts?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_2: Integrate requires at least two input datasets.",
+        "__spec_step_2: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_3 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_3 aggregate source: field does not exist on the selected input: cost",
+        "__spec_step_4 aggregate source: field does not exist on the selected input: amount",
+        "__spec_step_5: Integrate requires at least two input datasets.",
+        "__spec_step_5: explicit equal-length join_key or left_on/right_on keys are required.",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed', 'q3_processed']",
+        "projection: field does not exist on the selected input: total_holding_purchases"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "riskTolerance",
+        "total_holding_purchases",
+        "total_cash_flow"
+      ],
+      "new_step_count": 5,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 0,
+        "q2_processed": 0,
+        "q3_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-014",
+      "question": "Which investors have average goal progress below 20% and both risk and liquidity scores below 30?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-015",
+      "question": "Which investors have a sector allocation above 50% and a diversification score below 25?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_1: None requires exactly one input dataset.",
+        "__spec_step_2: unsupported operator: None",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']",
+        "projection: field does not exist on the selected input: investorId",
+        "projection: field does not exist on the selected input: investorName"
+      ],
+      "new_compile_errors": [
+        "Step input dataset does not exist: Investor",
+        "__spec_step_2 right join key: field does not exist on the selected input: investorId",
+        "projection: field does not exist on the selected input: investorName"
+      ],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 2,
+      "replay_status": "compile_error",
+      "sample_execution_status": "skipped_compile_error"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-016",
+      "question": "Which investors have a positive total goal shortfall, negative total holding gain, and net cash flow below 10,000?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_3 aggregate source: field does not exist on the selected input: holding_gain",
+        "__spec_step_6: unsupported operator: None",
+        "__spec_step_6: None requires exactly one input dataset.",
+        "__spec_step_7: unsupported operator: None",
+        "Independent measures have duplicate output columns: total_shortfall",
+        "Final_Spec omits required metric: total_shortfall",
+        "Final_Spec omits required metric: total_holding_gain",
+        "Final_Spec omits required metric: total_cash_flow"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId"
+      ],
+      "new_step_count": 6,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5,
+        "q3_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-4T-003",
+      "question": "For each risk-tolerance group, how do average goal progress, average risk score, and total holding value compare?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_2: Integrate requires at least two input datasets.",
+        "__spec_step_2: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_3: Integrate requires at least two input datasets.",
+        "__spec_step_3: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_4 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_4 aggregate source: field does not exist on the selected input: progressPct",
+        "__spec_step_5 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_5 aggregate source: field does not exist on the selected input: riskScore",
+        "__spec_step_6 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_6 aggregate source: field does not exist on the selected input: currentValue",
+        "__spec_step_8: Integrate requires at least two input datasets.",
+        "__spec_step_8: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_9: Integrate requires at least two input datasets.",
+        "__spec_step_9: explicit equal-length join_key or left_on/right_on keys are required.",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed']"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "riskTolerance",
+        "avg_goal_progress",
+        "avg_risk_score",
+        "total_holding_value"
+      ],
+      "new_step_count": 8,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5,
+        "q3_processed": 5,
+        "q4_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-4T-004",
+      "question": "For each investor category, how do total holding value, total sector allocation, and total cash-flow amount compare?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-4T-005",
+      "question": "Which five investors with risk scores above 60 have the largest combined holding value and goal shortfall?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "__spec_step_3: Integrate requires at least two input datasets.",
+        "__spec_step_3: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_4: Integrate requires at least two input datasets.",
+        "__spec_step_4: explicit equal-length join_key or left_on/right_on keys are required.",
+        "Step input dataset does not exist: join_all",
+        "__spec_step_5 expression: field does not exist on the selected input: totalGoalShortfall",
+        "__spec_step_5 expression: field does not exist on the selected input: totalHoldingValue",
+        "Step input dataset does not exist: compute_combined",
+        "__spec_step_6 order_by: field does not exist on the selected input: combinedMetric",
+        "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed', 'q3_processed']",
+        "projection: field does not exist on the selected input: investorId",
+        "projection: field does not exist on the selected input: totalHoldingValue",
+        "projection: field does not exist on the selected input: totalGoalShortfall",
+        "projection: field does not exist on the selected input: combinedMetric"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "totalHoldingValue",
+        "totalGoalShortfall",
+        "combinedMetric"
+      ],
+      "new_step_count": 6,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5,
+        "q3_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-4T-007",
+      "question": "Which investors have average goal progress below 25%, a sector allocation above 40%, and a diversification score below 30?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-4T-008",
+      "question": "Which Conservative investors have a negative-return holding, risk score above 70, and a 'Tactical Increase' action?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-4T-010",
+      "question": "Which investors have positive total goal shortfall, net negative cash flow, and at least one 'De-risking' rebalancing action?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_2: unsupported operator: None",
+        "__spec_step_3: unsupported operator: None",
+        "__spec_step_4: unsupported operator: None",
+        "__spec_step_5: unsupported operator: None",
+        "__spec_step_6: unsupported operator: None",
+        "__spec_step_7: unsupported operator: None",
+        "__spec_step_8: unsupported operator: None",
+        "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+        "Final output does not depend on required input branches: ['q0_processed', 'q1_processed', 'q3_processed']",
+        "projection: field does not exist on the selected input: investorName"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 9,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q0_processed": 5,
+        "q1_processed": 5,
+        "q2_processed": 5,
+        "q3_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-5T-001",
+      "question": "Which Aggressive investors have an underfunded goal, a Gold holding, risk score above 60, and sector allocation above 30%?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_1: None requires exactly one input dataset.",
+        "__spec_step_2: unsupported operator: None",
+        "__spec_step_3: unsupported operator: None",
+        "__spec_step_4: unsupported operator: None",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed', 'q5_processed']",
+        "projection: field does not exist on the selected input: investorId",
+        "projection: field does not exist on the selected input: investorName"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 4,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5,
+        "q3_processed": 0,
+        "q4_processed": 5,
+        "q5_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-1T-004",
+      "question": "How many investors belong to each segment and category combination?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-1T-005",
+      "question": "For each cash-flow source, what are the transaction count and total amount?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-1T-007",
+      "question": "For each sector, how do average allocation percentage and maximum allocation percentage compare?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-1T-008",
+      "question": "Which five market scenarios have the largest average absolute allocation change?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-2T-001",
+      "question": "Which Long-term investors have at least four investment goals?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-2T-003",
+      "question": "For each risk-tolerance group, how many investors have one, two, three, or more investment goals?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1 left join key: field does not exist on the selected input: investorId",
+        "__spec_step_2: unsupported aggregate/filter operation: ",
+        "__spec_step_2 group_by: field does not exist on the selected input: investorId",
+        "__spec_step_2 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_3 source: field does not exist on the selected input: goal_count",
+        "__spec_step_4 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_4 aggregate source: field does not exist on the selected input: investorId",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "riskTolerance",
+        "goal_bucket",
+        "investor_count"
+      ],
+      "new_step_count": 4,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-2T-004",
+      "question": "For each investor category, what are the number of holdings and number of distinct investors represented?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-2T-005",
+      "question": "For each investor risk-tolerance group and cash-flow source, how many transactions are recorded?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1: left_on/right_on requires exactly two datasets.",
+        "__spec_step_1 left join key: field does not exist on the selected input: investorId",
+        "Step input dataset does not exist: join1",
+        "__spec_step_2 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_2 group_by: field does not exist on the selected input: hasCashFlowSource",
+        "__spec_step_2 aggregate source: field does not exist on the selected input: cashFlowId",
+        "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "riskTolerance",
+        "hasCashFlowSource",
+        "transaction_count"
+      ],
+      "new_step_count": 2,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-2T-006",
+      "question": "Which investors have at least three underfunded investment goals?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_1: None requires exactly one input dataset.",
+        "__spec_step_2 group_by: field does not exist on the selected input: investorId",
+        "__spec_step_2 group_by: field does not exist on the selected input: investorName",
+        "__spec_step_2 aggregate source: field does not exist on the selected input: goalId",
+        "__spec_step_3: unsupported operator: None",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName",
+        "underfundedGoalCount"
+      ],
+      "new_step_count": 3,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-2T-008",
+      "question": "Which investors have at least one Automated Trigger rebalancing record?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-2T-009",
+      "question": "How do average risk, liquidity, and diversification scores compare across investor time horizons?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_2 group_by: field does not exist on the selected input: timeHorizon",
+        "__spec_step_2 aggregate source: field does not exist on the selected input: riskScore",
+        "__spec_step_3 group_by: field does not exist on the selected input: timeHorizon",
+        "__spec_step_3 aggregate source: field does not exist on the selected input: liquidityScore",
+        "__spec_step_4 group_by: field does not exist on the selected input: timeHorizon",
+        "__spec_step_4 aggregate source: field does not exist on the selected input: diversificationScore",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "timeHorizon",
+        "avg_riskScore",
+        "avg_liquidityScore",
+        "avg_diversificationScore"
+      ],
+      "new_step_count": 5,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_non_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-2T-010",
+      "question": "For each investor category, how do total Deposit and Withdrawal amounts compare?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-001",
+      "question": "What is the name of investor INV-001?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-002",
+      "question": "What are the risk tolerance and time horizon of investor INV-002?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-003",
+      "question": "What are the risk, liquidity, and diversification scores of investor INV-003?",
+      "pipeline_status": "PIPELINE_SUCCESS",
+      "recorded_contract_errors": [],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "riskScore",
+        "liquidityScore",
+        "diversificationScore"
+      ],
+      "new_step_count": 0,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 1
+      },
+      "sample_output_rows": 1
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-004",
+      "question": "What are the target amount and current value for investment goal 0006aef2-ab21-43d6-8885-4730e21c870b?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-005",
+      "question": "What are the date, type, amount, and source of cash flow 000d1e47-195d-4b5a-96d9-0ea20b081a36?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "__spec_step_1: unsupported operator: None"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "date",
+        "type",
+        "amount",
+        "source"
+      ],
+      "new_step_count": 1,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 0
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-006",
+      "question": "What logic and action are recorded for rebalancing event 0000aba5-8fe8-4dcf-b422-fd78608ffddb?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-007",
+      "question": "Which investors have Conservative risk tolerance and a Short-term horizon?",
+      "pipeline_status": "PIPELINE_SUCCESS",
+      "recorded_contract_errors": [],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 0,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5
+      },
+      "sample_output_rows": 5
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-008",
+      "question": "Which investment goals have progress below 5% and a positive shortfall?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-009",
+      "question": "Which holdings have negative returns but positive dividends?",
+      "pipeline_status": "PIPELINE_SUCCESS",
+      "recorded_contract_errors": [],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "holdingId",
+        "investmentName",
+        "returnsPct",
+        "dividends"
+      ],
+      "new_step_count": 0,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5
+      },
+      "sample_output_rows": 5
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-011",
+      "question": "How many investors are in each risk-tolerance category?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "__spec_step_1: unsupported aggregate/filter operation: "
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "riskTolerance",
+        "investor_count"
+      ],
+      "new_step_count": 2,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5
+      },
+      "sample_output_rows": 3
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-1T-014",
+      "question": "How many rebalancing actions use each rebalancing logic?",
+      "pipeline_status": "PIPELINE_SUCCESS",
+      "recorded_contract_errors": [],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "hasRebalancingLogic",
+        "action_count"
+      ],
+      "new_step_count": 1,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5
+      },
+      "sample_output_rows": 3
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-001",
+      "question": "What are the name, risk tolerance, and portfolio-health scores of investor INV-001?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-002",
+      "question": "Which Conservative investors have a risk score above 75?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-003",
+      "question": "Which investors with an Aggressive risk tolerance hold at least one Gold investment?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_1: None requires exactly one input dataset.",
+        "Step input dataset does not exist: intersect_aggressive_gold",
+        "__spec_step_2: unsupported operator: None",
+        "__spec_step_3 distinct_on: field does not exist on the selected input: investorId",
+        "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']",
+        "projection: field does not exist on the selected input: investorId",
+        "projection: field does not exist on the selected input: investorName",
+        "distinct_on: field does not exist on the selected input: investorId"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 3,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-004",
+      "question": "How many investment goals of each type belong to each investor risk-tolerance group?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "__spec_step_1: explicit equal-length join_key or left_on/right_on keys are required."
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "hasInvestmentGoalType",
+        "riskTolerance",
+        "goal_count"
+      ],
+      "new_step_count": 2,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-005",
+      "question": "What is the total current holding value for each investor risk-tolerance group?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_2 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_2 aggregate source: field does not exist on the selected input: currentValue",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "riskTolerance",
+        "total_current_value"
+      ],
+      "new_step_count": 2,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-006",
+      "question": "How many cash-flow transactions from each source belong to each investor category?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_2 group_by: field does not exist on the selected input: source",
+        "__spec_step_2 group_by: field does not exist on the selected input: category",
+        "__spec_step_2 aggregate source: field does not exist on the selected input: cashFlowId",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "source",
+        "category",
+        "transaction_count"
+      ],
+      "new_step_count": 2,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-007",
+      "question": "Which investors have at least one goal with a shortfall above 100 million?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-008",
+      "question": "Which investors have a Technology sector allocation above 30%?",
+      "pipeline_status": "DECOMPOSITION_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-009",
+      "question": "Which investors have at least one rebalancing action recorded as 'Sell'?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-010",
+      "question": "Which investors have a Market Volatility scenario that triggers 'Increase Cash Position'?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-011",
+      "question": "Which investors have a holding sector that also appears in their sector-allocation records?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_1: None requires exactly one input dataset.",
+        "__spec_step_2: unsupported operator: None",
+        "__spec_step_2: None requires exactly one input dataset.",
+        "__spec_step_3: unsupported operator: None",
+        "projection: field does not exist on the selected input: investorName"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 4,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5,
+        "q3_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-012",
+      "question": "How does average goal progress compare across investor risk-tolerance groups?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-017",
+      "question": "Which investors had at least one cash-flow transaction during calendar year 2025?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "__spec_step_2: Integrate requires at least two input datasets.",
+        "__spec_step_2: explicit equal-length join_key or left_on/right_on keys are required.",
+        "Final output does not depend on required input branches: ['q2_processed']",
+        "projection: field does not exist on the selected input: investorName"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 3,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-018",
+      "question": "Which investors purchased holdings during calendar year 2024?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-019",
+      "question": "What was the monthly cash-flow total for each risk-tolerance group during 2025?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1: explicit equal-length join_key or left_on/right_on keys are required.",
+        "__spec_step_2 source: field does not exist on the selected input: date",
+        "__spec_step_3 group_by: field does not exist on the selected input: riskTolerance",
+        "__spec_step_3 aggregate source: field does not exist on the selected input: amount",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "riskTolerance",
+        "month",
+        "total_cash_flow"
+      ],
+      "new_step_count": 4,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-2T-020",
+      "question": "Which Conservative investors have both a risk score above 80 and a liquidity score below 20?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-001",
+      "question": "Which investors have goal progress below 20% and a portfolio risk score above 70?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_1: None requires exactly one input dataset.",
+        "__spec_step_2: unsupported operator: None",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']",
+        "projection: field does not exist on the selected input: investorId",
+        "projection: field does not exist on the selected input: investorName"
+      ],
+      "new_compile_errors": [
+        "Step input dataset does not exist: Investor",
+        "__spec_step_2 right join key: field does not exist on the selected input: investorId",
+        "projection: field does not exist on the selected input: investorName"
+      ],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 2,
+      "replay_status": "compile_error",
+      "sample_execution_status": "skipped_compile_error"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-004",
+      "question": "Which Aggressive investors have an underfunded goal and at least one Gold holding?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1 left join key: field does not exist on the selected input: investorId",
+        "__spec_step_2: Integrate requires at least two input datasets.",
+        "__spec_step_2 left join key: field does not exist on the selected input: investorId",
+        "__spec_step_3 distinct_on: field does not exist on the selected input: investorId",
+        "__spec_step_3 distinct_on: field does not exist on the selected input: investorName",
+        "__spec_step_4 distinct_on: field does not exist on the selected input: investorId",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed', 'q3_processed']",
+        "projection: field does not exist on the selected input: investorId",
+        "projection: field does not exist on the selected input: investorName",
+        "distinct_on: field does not exist on the selected input: investorId"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 4,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5,
+        "q3_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-005",
+      "question": "Which investors have a sector allocation above 35% and a rebalancing action of 'Portfolio Trim'?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: Integrate requires at least two input datasets.",
+        "__spec_step_1: left_on/right_on requires exactly two datasets.",
+        "__spec_step_1 left join key: field does not exist on the selected input: investorId",
+        "__spec_step_2 distinct_on: field does not exist on the selected input: investorId",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']",
+        "projection: field does not exist on the selected input: investorId"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId"
+      ],
+      "new_step_count": 2,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-006",
+      "question": "Which investors have a Withdrawal cash flow and a Bear Market scenario?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-007",
+      "question": "Which investors have goal progress below 25%, a negative-return holding, and a risk score above 60?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-3T-012",
+      "question": "Which investors both purchased a holding and had a cash-flow transaction during 2025?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_1: None requires exactly one input dataset.",
+        "__spec_step_2 distinct_on: field does not exist on the selected input: investorId",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']",
+        "projection: field does not exist on the selected input: investorId",
+        "distinct_on: field does not exist on the selected input: investorId"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId"
+      ],
+      "new_step_count": 2,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 0,
+        "q2_processed": 0
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-4T-001",
+      "question": "Which Aggressive investors have an underfunded goal, at least one negative-return holding, and a risk score above 65?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-4T-002",
+      "question": "Which investors have a sector allocation above 20%, a 'Rebalance Sell' action, and a Bear Market scenario?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-4T-006",
+      "question": "Which investors had cash-flow activity and purchased a negative-return holding during 2025 while also having an underfunded goal?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_70_question_benchmark:WM-5T-003",
+      "question": "Which investors have positive goal shortfall, negative holding gain, net cash flow below 10,000, and a portfolio risk score above 65?",
+      "pipeline_status": "PRE_SCAN_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-1T-001",
+      "question": "Which investor profiles are missing both risk tolerance and category?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-1T-003",
+      "question": "Which portfolio-health records have a risk score above 80 and diversification below 20?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-1T-006",
+      "question": "How many rebalancing records exist for each logic and action combination?",
+      "pipeline_status": "PIPELINE_SUCCESS",
+      "recorded_contract_errors": [],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "logic",
+        "action",
+        "record_count"
+      ],
+      "new_step_count": 1,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5
+      },
+      "sample_output_rows": 5
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-2T-002",
+      "question": "Which investors have both liquidity and diversification scores below 25?",
+      "pipeline_status": "QUERY_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-2T-007",
+      "question": "Which investors have at least one sector allocation above 40%?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_1: None requires exactly one input dataset.",
+        "Step input dataset does not exist: joined",
+        "__spec_step_2: unsupported operator: None",
+        "__spec_step_3 distinct_on: field does not exist on the selected input: investorId",
+        "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed']",
+        "projection: field does not exist on the selected input: investorId",
+        "projection: field does not exist on the selected input: investorName",
+        "distinct_on: field does not exist on the selected input: investorId"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 3,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-3T-003",
+      "question": "Which investors have at least one underfunded goal and a sector allocation above 35%?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-3T-004",
+      "question": "Which investors have a Withdrawal cash flow and at least one De-risking rebalancing action?",
+      "pipeline_status": "FINAL_SPEC_ERROR",
+      "recorded_contract_errors": [
+        "Step requires an explicit input dataset; 'previous' has no predecessor.",
+        "__spec_step_1: unsupported operator: None",
+        "__spec_step_1: None requires exactly one input dataset.",
+        "__spec_step_2: unsupported operator: None",
+        "__spec_step_3 distinct_on: field does not exist on the selected input: investorId",
+        "Final output does not depend on required input branches: ['q1_processed', 'q2_processed', 'q3_processed']",
+        "projection: field does not exist on the selected input: investorId",
+        "projection: field does not exist on the selected input: investorName",
+        "distinct_on: field does not exist on the selected input: investorId"
+      ],
+      "new_compile_errors": [],
+      "new_output_schema": [
+        "investorId",
+        "investorName"
+      ],
+      "new_step_count": 3,
+      "replay_status": "compile_pass",
+      "sample_execution_status": "runtime_pass",
+      "sample_execution_errors": [],
+      "sample_input_rows": {
+        "q1_processed": 5,
+        "q2_processed": 5,
+        "q3_processed": 5
+      },
+      "sample_output_rows": 0
+    },
+    {
+      "source": "v3_rerun_v1_success_debug.csv",
+      "sample_id": "wealth_management_batch_status_40_questions:BSQ-3T-009",
+      "question": "Which investors had cash-flow activity during 2025 but purchased no holdings during 2025?",
+      "pipeline_status": "PROCESSING_SPEC_ERROR",
+      "recorded_contract_errors": [],
+      "replay_status": "no_recorded_final_spec"
+    }
+  ],
+  "snapshot_sha256": "339d800f89ea59f04ab71bae1b828cb96cad3c4b70ace93ebc525afb799959b8"
+}

@@ -1,0 +1,253 @@
+Pipeline Version,Sample Row ID,Question,New Status,Started At,Elapsed Seconds,Failure Stage,Scan Status,Scan Error,Validation Is Valid,Validation Reason,Answer Review Status,Debug DAG Sequence,Debug Operator Sequence,Debug Retrieved Classes,Debug Subquestions,Debug Query Specs,Debug SPARQL,Debug Scan Summary,Debug Processing Specs,Debug Final Spec,Debug Execution Log,Debug Repair Log,Debug Validation Feedback,Debug Exception,Debug Answer Requirements,Debug Operator Audit
+aop-improvement3-v9,wealth_management_multi_step_comparative_105_questions:MC-024,"Across risk_tolerance, how do scenario change, goal progress, and volatility compare using three related tables?",TRANSIENT_ERROR,2026-09-14T03:49:33,16.45,Exception,,,,,,,,[],[],[],"""""","{""row_count"": 0, ""columns"": [], ""sample_rows"": [], ""status"": """", ""error"": """"}",[],{},[],"{""stage_repairs"": [], ""decomposition_repairs"": []}",,"Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 101, in map_httpcore_exceptions
+    yield
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection_pool.py"", line 256, in handle_request
+    raise exc from None
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection_pool.py"", line 236, in handle_request
+    response = connection.handle_request(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 101, in handle_request
+    raise exc
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 78, in handle_request
+    stream = self._connect(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_backends\sync.py"", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\contextlib.py"", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_exceptions.py"", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 982, in request
+    response = self._client.send(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 914, in send
+    response = self._send_handling_auth(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\contextlib.py"", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\main.py"", line 328, in run_single_test
+    retrieve_result = operator_registry[""Retrieve""]({""query"": safe_query})
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\main.py"", line 162, in <lambda>
+    ""Retrieve"": lambda inputs: semantic_retrieve({**inputs, ""table_index"": lightweight_index}, retrieve_client, RAG_MODEL),
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\llm_operators\retrieve.py"", line 49, in semantic_retrieve
+    response = client.chat.completions.create(**request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_utils\_utils.py"", line 287, in wrapper
+    return func(*args, **kwargs)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\resources\chat\completions\completions.py"", line 1147, in create
+    return self._post(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 1014, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+",{},[]
+aop-improvement3-v9,wealth_management_multi_step_comparative_105_questions:MC-025,"Across risk_tolerance, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?",TRANSIENT_ERROR,2026-09-14T03:49:50,14.518,Exception,,,,,,,,[],[],[],"""""","{""row_count"": 0, ""columns"": [], ""sample_rows"": [], ""status"": """", ""error"": """"}",[],{},[],"{""stage_repairs"": [], ""decomposition_repairs"": []}",,"Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 101, in map_httpcore_exceptions
+    yield
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection_pool.py"", line 256, in handle_request
+    raise exc from None
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection_pool.py"", line 236, in handle_request
+    response = connection.handle_request(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 101, in handle_request
+    raise exc
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 78, in handle_request
+    stream = self._connect(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_backends\sync.py"", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\contextlib.py"", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_exceptions.py"", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 982, in request
+    response = self._client.send(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 914, in send
+    response = self._send_handling_auth(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\contextlib.py"", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\main.py"", line 328, in run_single_test
+    retrieve_result = operator_registry[""Retrieve""]({""query"": safe_query})
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\main.py"", line 162, in <lambda>
+    ""Retrieve"": lambda inputs: semantic_retrieve({**inputs, ""table_index"": lightweight_index}, retrieve_client, RAG_MODEL),
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\llm_operators\retrieve.py"", line 49, in semantic_retrieve
+    response = client.chat.completions.create(**request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_utils\_utils.py"", line 287, in wrapper
+    return func(*args, **kwargs)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\resources\chat\completions\completions.py"", line 1147, in create
+    return self._post(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 1014, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+",{},[]
+aop-improvement3-v9,wealth_management_multi_step_comparative_105_questions:MC-038,"Across profile category, how do allocation concentration, holding return, and holding value compare using three related tables?",TRANSIENT_ERROR,2026-09-14T03:50:05,14.989,Exception,,,,,,,,[],[],[],"""""","{""row_count"": 0, ""columns"": [], ""sample_rows"": [], ""status"": """", ""error"": """"}",[],{},[],"{""stage_repairs"": [], ""decomposition_repairs"": []}",,"Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 101, in map_httpcore_exceptions
+    yield
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection_pool.py"", line 256, in handle_request
+    raise exc from None
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection_pool.py"", line 236, in handle_request
+    response = connection.handle_request(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 101, in handle_request
+    raise exc
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 78, in handle_request
+    stream = self._connect(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_backends\sync.py"", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\contextlib.py"", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_exceptions.py"", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 982, in request
+    response = self._client.send(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 914, in send
+    response = self._send_handling_auth(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\contextlib.py"", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\main.py"", line 328, in run_single_test
+    retrieve_result = operator_registry[""Retrieve""]({""query"": safe_query})
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\main.py"", line 162, in <lambda>
+    ""Retrieve"": lambda inputs: semantic_retrieve({**inputs, ""table_index"": lightweight_index}, retrieve_client, RAG_MODEL),
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\llm_operators\retrieve.py"", line 49, in semantic_retrieve
+    response = client.chat.completions.create(**request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_utils\_utils.py"", line 287, in wrapper
+    return func(*args, **kwargs)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\resources\chat\completions\completions.py"", line 1147, in create
+    return self._post(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 1014, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+",{},[]
+aop-improvement3-v9,wealth_management_multi_step_comparative_105_questions:MC-068,"Across time_horizon, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?",TRANSIENT_ERROR,2026-09-14T03:50:20,16.406,Exception,,,,,,,,[],[],[],"""""","{""row_count"": 0, ""columns"": [], ""sample_rows"": [], ""status"": """", ""error"": """"}",[],{},[],"{""stage_repairs"": [], ""decomposition_repairs"": []}",,"Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 101, in map_httpcore_exceptions
+    yield
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection_pool.py"", line 256, in handle_request
+    raise exc from None
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection_pool.py"", line 236, in handle_request
+    response = connection.handle_request(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 101, in handle_request
+    raise exc
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 78, in handle_request
+    stream = self._connect(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py"", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_backends\sync.py"", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\contextlib.py"", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_exceptions.py"", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 982, in request
+    response = self._client.send(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 914, in send
+    response = self._send_handling_auth(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py"", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\contextlib.py"", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py"", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\main.py"", line 328, in run_single_test
+    retrieve_result = operator_registry[""Retrieve""]({""query"": safe_query})
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\main.py"", line 162, in <lambda>
+    ""Retrieve"": lambda inputs: semantic_retrieve({**inputs, ""table_index"": lightweight_index}, retrieve_client, RAG_MODEL),
+  File ""C:\Users\AMAN KUMAR SINGH\Desktop\financial\experiment_week1\improvement3\run_pipeline_v9\llm_operators\retrieve.py"", line 49, in semantic_retrieve
+    response = client.chat.completions.create(**request)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_utils\_utils.py"", line 287, in wrapper
+    return func(*args, **kwargs)
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\resources\chat\completions\completions.py"", line 1147, in create
+    return self._post(
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File ""C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py"", line 1014, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+",{},[]
