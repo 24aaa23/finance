@@ -1,0 +1,2040 @@
+{
+    "Within investment goals, how do average progress_pct, average shortfall, and average volatility compare by investment_goal?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each InvestmentGoal record with its investment goal type and the numeric fields needed to compute averages.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Within portfolio health, how do average risk_score, liquidity_score, and diversification_score compare across goal_match_pct bands?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each PortfolioHealth record with its riskScore, liquidityScore, diversificationScore and goalMatchPct.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Within holdings, how do total current value, average returns_pct, and total dividends compare by investment_type?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each portfolio holding with its investment type reference and the numeric fields needed for aggregation.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the label for each investment type.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Within cash flows, how do transaction count, inflow, outflow, and net cash flow compare by type?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow transaction with its amount, the categorical type field, and the reference to its CashFlowType.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the label for each CashFlowType entity.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do goal progress and shortfall compare using two related tables?": {
+        "total_calls": 5,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investor's risk tolerance": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Spec": 4
+        }
+    },
+    "Retrieve each investor's identifier and risk tolerance classification.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment goal's investor reference, progress percentage, and shortfall amount.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across category, how do holding value and holding gain compare using two related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each portfolio holding with its cost, current market value and the category reference it belongs to.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each category label.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do cash-flow inflow and outflow compare using two related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow transaction with its signed amount and the investor it belongs to.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s time\u2011horizon classification.": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Across segment, how do health scores compare using two related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each portfolio health record with its numeric scores and the investor it belongs to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s segment classification": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across category, how do allocation concentration compare using two related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve all category records": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio holdings with their category label and current market value": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve sector allocation percentages and sector names": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do rebalancing action amount and gap compare using two related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 3
+        }
+    },
+    "Retrieve each investor\u2019s risk tolerance classification": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve each investor's risk tolerance classification": {
+        "total_calls": 6,
+        "functions": {
+            "Query_Spec": 6
+        }
+    },
+    "Retrieve each investor\u2019s identifier and risk tolerance classification.": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Spec": 5
+        }
+    },
+    "Across time_horizon, how do scenario allocation change compare using two related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's identifier and their time horizon": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each scenario rebalancing event's investor reference and allocation percentages": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across investment_goal, how do cash flow compare using two related tables?": {
+        "total_calls": 5,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 3
+        }
+    },
+    "Retrieve each cash\u2011flow transaction with its investor identifier and amount.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor with its identifier and the investment\u2011goal name assigned to the investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment\u2011goal record with its investor identifier and goal type.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across investment_type, how do health scores compare using two related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investment type\u2019s identifier and display label.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio holding\u2019s link to its investment type and the owning investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s pre\u2011computed health scores.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across cash-flow type, how do rebalancing amount compare using two related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow event with its amount and its cash\u2011flow\u2011type reference": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each rebalancing action with its amount and the investor it belongs to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the label of each cash\u2011flow\u2011type": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across scenario, how do goal shortfall compare using two related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investment goal's shortfall and its owning investor": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve each scenario rebalance event's scenario type and the investor it applies to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across rebalance logic, how do scenario change compare using two related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve raw ScenarioRebalancing records needed to compute allocation change per scenario": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve raw RebalancingAction records needed to compute allocation drift per rebalancing logic": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve RebalancingLogic labels for the logic references used in RebalancingAction": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across sector allocation, how do holding returns compare using two related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each portfolio holding with its investor, sector and percentage return": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each sector\u2011allocation record with its investor, sector and allocation percentage": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across cash source, how do scenario change compare using two related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow records with their investor and cash\u2011source label": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing records with allocation before/after values": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do goal progress, health risk, and liquidity compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's risk tolerance classification.": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve each investment goal's progress percentage for every investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor's portfolio health scores: risk (health) and liquidity.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do holding gain, health risk, and diversification compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each holding's gain metric for the investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor's portfolio health risk and diversification scores.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve every cash\u2011flow transaction amount for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment\u2011goal progress percentage and shortfall for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do allocation concentration, holding return, and holding value compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve sector allocation concentration for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve holding return and current market value for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do rebalancing amount, cash flow, and transaction count compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve every rebalancing action\u2019s investor reference and the amount rebalanced.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every cash\u2011flow event\u2019s investor reference, transaction amount, and a unique transaction key for counting.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do scenario change, goal progress, and volatility compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing allocation before and after the trigger": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each goal's progress and volatility metrics": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "retrieve risk\u2011tolerance labels": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve each investor and the risk\u2011tolerance it is linked to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve scenario\u2011rebalancing allocation before and after the scenario": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve rebalancing\u2011action amount and target allocation": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?": {
+        "total_calls": 5,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 2
+        }
+    },
+    "retrieve each risk tolerance label and its IRI": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "retrieve each risk tolerance category label": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "retrieve investor identifier and its risk\u2011tolerance label": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve cash\u2011flow events with amount per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve scenario\u2011rebalancing events with allocation before/after per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do goal progress, health risk, and liquidity compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investor\u2019s identifier and their time horizon category.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment\u2011goal record\u2019s investor link and the goal\u2011progress percentage.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio\u2011health record\u2019s investor link, risk score and liquidity score.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do holding gain, health risk, and diversification compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's identifier and their time horizon category.": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve every portfolio holding's cost and current market value together with the owning investor identifier.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor's portfolio health risk score and diversification score.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow transaction with its amount and the investor it belongs to.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment\u2011goal record with its progress percentage, shortfall amount and the investor it belongs to.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do allocation concentration, holding return, and holding value compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each Time Horizon label": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each Investor and the Time Horizon it belongs to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each Sector Allocation (allocation concentration and total investment) for every investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each Portfolio Holding (return % and current market value) for every investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do rebalancing amount, cash flow, and transaction count compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "retrieve each investor's identifier and their time horizon": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve every rebalancing action with its investor reference and amount": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve every cash\u2011flow event with its investor reference, amount and unique id": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do scenario change, goal progress, and volatility compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's identifier and their time horizon category": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario rebalancing records needed to calculate allocation change per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal records needed for progress and volatility per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor with its time\u2011horizon reference": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011based rebalancing events for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve regular rebalancing actions for each investor": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve the label of each time\u2011horizon": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investor with its time horizon": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow events with amount and owning investor": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve scenario\u2011rebalancing events with allocation before/after and owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do goal progress, health risk, and liquidity compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor with its profile category reference": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment goal\u2019s progress percentage": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio health record\u2019s risk and liquidity scores": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the display label for each category": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do holding gain, health risk, and diversification compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each portfolio holding with its investor reference and gain information": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio health record with its investor reference, risk and diversification scores": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor with its profile category": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Spec": 5
+        }
+    },
+    "Across profile category, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 3
+        }
+    },
+    "Retrieve each investor\u2019s profile category": {
+        "total_calls": 12,
+        "functions": {
+            "Query_Spec": 12
+        }
+    },
+    "Retrieve each investor's profile category": {
+        "total_calls": 17,
+        "functions": {
+            "Query_Spec": 17
+        }
+    },
+    "Across profile category, how do allocation concentration, holding return, and holding value compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 3
+        }
+    },
+    "Across profile category, how do rebalancing amount, cash flow, and transaction count compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve every rebalancing action amount per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every cash\u2011flow transaction amount per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do scenario change, goal progress, and volatility compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve scenario\u2011rebalancing events to compute allocation change": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal records for progress and volatility": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve raw scenario\u2011rebalancing events with their before/after allocation percentages and the investor they belong to.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve raw rebalancing\u2011action records with the amount moved and the current/target allocation percentages for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s profile category.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s profile category and identifier": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Spec": 4
+        }
+    },
+    "Retrieve scenario\u2011rebalancing events with before/after allocation percentages and owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile segment, how do goal progress, health risk, and liquidity compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investment goal record with its investor identifier and progress percentage.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio\u2011health record with its investor identifier, risk score and liquidity score.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor record with its identifier and segment classification.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile segment, how do holding gain, health risk, and diversification compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each holding\u2019s return percentage and the investor it belongs to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s portfolio health scores (risk and diversification)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s profile segment": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve segment labels for display": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile segment, how do cash-flow net amount, goal progress, and shortfall compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow transaction with its amount and owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment goal with its progress percentage, shortfall and owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor with its segment classification": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile segment, how do allocation concentration, holding return, and holding value compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's profile segment": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve each sector allocation record with its investor reference and allocation metrics": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio holding record with its investor reference, return percentage and current market value": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor record with its segment classification": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile segment, how do rebalancing amount, cash flow, and transaction count compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each rebalancing action with its amount and owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow event with its amount, identifier and owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor with its profile segment": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile segment, how do scenario change, goal progress, and volatility compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve raw scenario\u2011rebalancing events needed to compute allocation change per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment goal\u2019s progress and volatility for every investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the segment label assigned to each investor profile": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile segment, how do scenario change, rebalancing gap, and rebalancing amount compare using three related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve raw scenario rebalancing events with allocation before and after the scenario": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve raw rebalancing actions with current, target allocations and the trade amount": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile segment, how do cash-flow net amount, scenario change, and scenario count compare using three related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor with its identifier and linked segment reference": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "retrieve raw cash\u2011flow records": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve raw scenario\u2011rebalancing records": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve investor profile segment": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve goal progress percentages for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve holding gain percentages for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio risk and liquidity scores for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "retrieve each investor's risk tolerance classification": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "retrieve every rebalancing action amount per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve every cash\u2011flow transaction amount per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve each investment goal's progress percentage and shortfall per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do scenario change, rebalancing gap, health risk, and goal match compare using four related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's risk tolerance and identifier": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing records needed to compute allocation change": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action records needed to compute allocation drift (gap)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio\u2011health records needed for risk score and goal\u2011match percentage": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve every cash\u2011flow transaction amount for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing allocation before and after values for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve sector\u2011allocation percentages (concentration) for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investment goal's shortfall amount": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each sector allocation percentage for every investor (used as allocation concentration)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health scores: liquidity and diversification": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investment goal's progress percentage linked to its investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio holding's return percentage (gain) linked to its investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio health record's risk and liquidity scores linked to its investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?": {
+        "total_calls": 5,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 3,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s identifier and their time horizon": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve each investor with its identifier and linked time\u2011horizon reference": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve each investor's identifier and their time horizon classification": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every rebalancing action amount together with the investor it belongs to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every cash\u2011flow transaction amount together with the investor it belongs to": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve each investment\u2011goal progress percentage and shortfall together with the investor it belongs to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do scenario change, rebalancing gap, health risk, and goal match compare using four related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor and its linked time horizon": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the label for each time horizon": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011based rebalancing allocations for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health scores for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investor's identifier and their time horizon classification.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every cash\u2011flow event with its amount and the investor it belongs to.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each scenario\u2011rebalancing record with the before\u2011 and after\u2011allocation percentages for the investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each sector\u2011allocation record with the sector name, allocation percentage and total invested amount for the investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each sector allocation percentage for every investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health scores (liquidity and diversification) for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor's time horizon classification": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do goal progress, holding gain, risk score, and liquidity compare using four related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investment\u2011goal progress percentage for every investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio\u2011holding return percentage (gain) for every investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s portfolio health risk and liquidity scores": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do rebalancing amount, cash flow, goal progress, and shortfall compare using four related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each profile category label": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Map each investor to its profile category": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve each investor\u2019s identifier and profile category": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Spec": 4
+        }
+    },
+    "Retrieve every rebalancing action\u2019s amount together with the investor it belongs to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment goal\u2019s progress percentage and shortfall together with the investor it belongs to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do scenario change, rebalancing gap, health risk, and goal match compare using four related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011based allocation changes for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action allocation gaps for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health risk and goal\u2011match scores for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do cash flow, scenario change, allocation concentration, and sector investment compare using four related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's identifier and profile category": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve cash\u2011flow transactions linked to each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing events linked to each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve sector\u2011allocation records linked to each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do goal shortfall, allocation concentration, health liquidity, and diversification compare using four related tables?": {
+        "total_calls": 5,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 3
+        }
+    },
+    "Retrieve goal shortfall values for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve sector allocation percentages for each investor (to later compute allocation concentration)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health liquidity and diversification scores for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s risk tolerance": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each goal\u2019s shortfall": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each holding\u2019s current market value": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each sector allocation percentage (concentration)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio liquidity and diversification scores": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investor's identifier and risk tolerance classification": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow transaction amounts for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing action amounts for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011based allocation before and after values for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health scores (risk score and goal\u2011match percent) for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across risk_tolerance, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor with its identifier, risk\u2011tolerance string and the reference to its RiskTolerance entity": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the label of each RiskTolerance entity": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve every cash\u2011flow event with its investor reference, amount and type (to distinguish inflow vs outflow)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment goal with its investor reference and shortfall amount": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio holding with its investor reference, dividends received and taxes paid": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s identifier and time horizon": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment\u2011goal record\u2019s shortfall and its owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio\u2011holding record\u2019s current market value and its owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each sector\u2011allocation record\u2019s allocation percentage and its owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio\u2011health record\u2019s liquidity and diversification scores and its owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?": {
+        "total_calls": 5,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 3
+        }
+    },
+    "Retrieve each investor's identifier and linked time\u2011horizon reference": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the label for each time\u2011horizon entity": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Get raw cash\u2011flow amounts per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Get raw rebalancing action amounts per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Get scenario\u2011based allocation before and after values per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Get portfolio health scores (risk and goal\u2011match) per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across time_horizon, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?": {
+        "total_calls": 5,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investor with its identifier and associated time\u2011horizon": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve each investor\u2019s identifier and their time\u2011horizon category.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every cash\u2011flow event with its amount and owning investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment\u2011goal record with its shortfall and owning investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio\u2011holding record with dividends received, taxes paid and owning investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do goal shortfall, holding value, allocation concentration, liquidity, and diversification compare using five related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve goal shortfall for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve current value of each holding for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve sector allocation percentages for each investor": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve liquidity and diversification scores for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do cash flow, rebalancing amount, scenario change, risk score, and goal match compare using five related tables?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each profile category record": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investor records with their linked category": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow events per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action records per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing records per investor (need current and new allocation to compute change)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio\u2011health scores per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Across profile category, how do cash-flow inflow, outflow, goal shortfall, holding dividends, and taxes paid compare using five related tables?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 3
+        }
+    },
+    "Retrieve each investor with its profile category (string) and the IRI reference to its Category record.": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve each investor\u2019s identifier and the reference to its profile category": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Which ten investors have the highest five-table risk-pressure score where score = risk score + allocation concentration + goal volatility - liquidity + scenario change?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve investor identifiers and display name": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health scores needed for the formula": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal volatility for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing allocation changes for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors are comparative outliers with net cash flow above 100000000, average goal progress below 25, risk_score above 70, and scenario change above 20?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "retrieve investor identity and name": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve cash\u2011flow amounts per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve goal\u2011progress percentages per investor": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "retrieve portfolio risk scores per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve scenario rebalancing allocation changes per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    }
+}

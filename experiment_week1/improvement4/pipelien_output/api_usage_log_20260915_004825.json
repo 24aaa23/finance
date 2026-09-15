@@ -1,0 +1,856 @@
+{
+    "For each month in the cash-flow table, what is the transaction count and net amount?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow transaction record with its date and amount.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each cash-flow type, what is the transaction count and net amount?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow transaction with its amount and the reference to its cash\u2011flow type.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow type label.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each cash-flow source, what is the transaction count and net amount?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow transaction with its amount and linked cash\u2011flow source reference.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow source with its label for display.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each goal time_to_goal_months value, how many investment goals are present and what is the average progress_pct?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each InvestmentGoal record with its time-to-goal (months) and progress percentage.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investment goals have time_to_goal_months equal to 1?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve raw InvestmentGoal records where timeToGoalMonths = 1": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each rebalancing logic, how many rebalancing actions are present and what is the total amount?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each RebalancingLogic record": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve each RebalancingAction with its amount and linked RebalancingLogic": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each rebalancing action, what is the count and average allocation gap where allocation_gap = target_allocation_pct - current_allocation_pct?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each RebalancingAction record with its action type and allocation percentages": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each scenario, how many scenario-rebalancing records are present and what is the average allocation change where allocation_change = new_allocation_pct - current_allocation_pct?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each ScenarioRebalancing record with its scenario label and allocation percentages": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each profile risk_tolerance, what is the monthly net cash flow?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's risk tolerance classification": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every cash\u2011flow transaction with its amount, date and owning investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each profile category, what is the 2025 monthly net cash flow?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve cash\u2011flow events that occurred in 2025 with their amounts and the investor they belong to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s profile category (both the literal value and the linked Category IRI)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the label of each Category referenced by investors": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each cash-flow type, how many distinct investors have that transaction type?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow event with its associated cash\u2011flow type reference and investor reference.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow type with its human\u2011readable label.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have at least one Withdrawal transaction and at least one goal with progress_pct below 25?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor record": {
+        "total_calls": 6,
+        "functions": {
+            "Query_Spec": 6
+        }
+    },
+    "Retrieve cash\u2011flow records that are withdrawals": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve investment\u2011goal records with progress below 25\u202f%": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have a Redemption cash-flow transaction and a De-risking rebalancing action?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Cash\u2011flow records of type Redemption": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Rebalancing\u2011action records with action De\u2011risking": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Investor identity and display name": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Bear Market scenario rebalancing and Withdrawal cash-flow transactions?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor identity records": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing events that were triggered by a Bear Market": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow transactions that are Withdrawals": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each scenario, how does average current_allocation_pct compare with average new_allocation_pct?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each scenario\u2011rebalancing event with its scenario label and the before/after allocation percentages.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each profile time_horizon, what is the average time_to_goal_months and average progress_pct?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investor profile with its time horizon": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investment goal with its time\u2011to\u2011goal (months) and progress percent": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which ten investors have the highest 2025 net cash flow?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve all cash\u2011flow events that occurred in calendar year\u202f2025": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s display name": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which ten investors have the largest total rebalancing action amount?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each rebalancing action with its investor identifier and amount.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s identifier and display name.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have cash-flow dates after 2026-04-28?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow records with a transaction date after 2026\u201104\u201128": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investor identity and name": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Deposit cash-flow transactions and goals with shortfall above 1000000?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow records that are Deposits": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal records with shortfall > 1,000,000": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Withdrawal cash-flow transactions and Rebalance Sell actions?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve raw CashFlow records where the transaction type is Withdrawal": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve raw RebalancingAction records where the action is Rebalance Sell": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve Investor identity and display fields": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which ten investors have the largest combined amount where combined amount is cash-flow net amount plus rebalancing action amount?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "retrieve investor identifiers and display names": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve cash\u2011flow amounts per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve rebalancing\u2011action amounts per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Tax Refund cash-flow transactions and Interest Rate Hike scenario rebalancing?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow records of type Tax Refund": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing records with scenario Interest Rate Hike": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve basic investor identity fields": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have goals due within 12 months and De-risking rebalancing actions?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal records that are due within the next 12 months": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action records whose action is De\u2011risking": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Bear Market scenario rebalancing and goals with progress_pct below 25?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalance events that are triggered by a Bear Market scenario": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal records whose progress percentage is below 25": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve basic investor identity information for joining": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each rebalancing logic and scenario, how many investors have both records?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each RebalancingAction with its investor identifier and linked RebalancingLogic reference": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each RebalancingLogic label (human\u2011readable name)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each ScenarioRebalancing with its investor identifier and scenario type": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Manual Override rebalancing actions and Flash Crash scenario records?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action records where the trigger logic is a Manual Override": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing records where the scenario type is Flash Crash": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Withdrawal transactions, goals due within 12 months, and Rebalance Sell actions?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal records whose remaining time to goal is 12\u202fmonths or less": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action records that are \u2018Rebalance Sell\u2019 actions": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have SIP transactions, Growth goals, and Bull Market scenario rebalancing?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve all SIP cash\u2011flow records": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve all Growth investment\u2011goal records": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve all Bull Market scenario\u2011rebalancing records": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investor identity details": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have goals with shortfall above 1000000, De-risking actions, and Bear Market scenarios?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal records where shortfall exceeds 1,000,000": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action records where action is De\u2011risking": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing records where scenario is Bear Market": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each rebalancing logic and triggered_action, how many distinct investors are linked to both action and scenario records?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each rebalancing action record with its investor identifier and the logic that generated the action.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each scenario\u2011rebalancing record with its investor identifier and the triggered action label.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Redemption transactions, Manual Override actions, and Flash Crash scenarios?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow records that are Redemptions": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action records that were triggered by a Manual Override": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing records that occurred under a Flash Crash scenario": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investor identity and display name": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Which ten investors have the highest combined transaction-rebalance score where score = net cash flow + rebalancing amount + scenario allocation change?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor identifiers and display names": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve cash\u2011flow amounts for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action amounts for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing allocation changes for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Deposit transactions, Scenario-based actions, and Economic Growth scenario records?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow records that are Deposits and the investor they belong to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action records whose logic is Scenario\u2011based and the investor they belong to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing records whose scenario is Economic Growth and the investor they belong to": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Withdrawal transactions, goals due within 12 months, De-risking actions, and Bear Market scenarios?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve cash\u2011flow events that are withdrawals": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal records whose time\u2011to\u2011goal is 12\u202fmonths or less": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action events whose action is De\u2011risking": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing events that were triggered by a Bear Market scenario": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which ten investors have the highest temporal pressure score where score = 2025 net cash flow + rebalance amount - goal shortfall + scenario allocation change?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s identity": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow events for the year 2025": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve all cash\u2011flow records for the year 2025": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve all rebalancing\u2011action amounts": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve goal shortfall values": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve scenario\u2011rebalancing allocation changes (new \u2013 current)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which investors have Tax Refund transactions after 2026-04-28, Growth goals, Tactical actions, and Bull Market scenarios?": {
+        "total_calls": 6,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 4
+        }
+    },
+    "CashFlow records where type is Tax Refund and date is after 2026\u201104\u201128": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "InvestmentGoal records where investmentGoal is Growth": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "RebalancingAction records with a Tactical action (Tactical Increase or Tactical Decrease)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "ScenarioRebalancing records where scenario is Bull Market": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    }
+}
