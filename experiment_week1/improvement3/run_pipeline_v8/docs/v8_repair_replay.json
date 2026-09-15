@@ -1,0 +1,586 @@
+[
+  {
+    "id": "MC-021",
+    "before": [
+      "comparative_contract: metric total_cash_amount aggregates before joining its required population ['investor_processed', 'cash_processed', 'goal_processed', 'risk_processed'].",
+      "comparative_contract: metric avg_progress_pct aggregates before joining its required population ['investor_processed', 'cash_processed', 'goal_processed', 'risk_processed'].",
+      "comparative_contract: metric avg_shortfall aggregates before joining its required population ['investor_processed', 'cash_processed', 'goal_processed', 'risk_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric total_cash_amount at __spec_step_4 is missing required population ['goal_processed', 'investor_processed', 'risk_processed'] before aggregation. Guaranteed participants: ['cash_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_progress_pct at __spec_step_9 is missing required population ['cash_processed', 'investor_processed', 'risk_processed'] before aggregation. Guaranteed participants: ['goal_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_shortfall at __spec_step_10 is missing required population ['cash_processed', 'investor_processed', 'risk_processed'] before aggregation. Guaranteed participants: ['goal_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-022",
+    "before": [
+      "comparative_contract: metric avg_allocation_pct must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_allocation_pct aggregates before joining its required population ['rt_processed', 'inv_processed', 'alloc_processed', 'hold_processed'].",
+      "comparative_contract: metric avg_allocation_pct inner grain must be alloc_processed.['investorId'].",
+      "comparative_contract: metric avg_holding_return must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_holding_return aggregates before joining its required population ['rt_processed', 'inv_processed', 'alloc_processed', 'hold_processed'].",
+      "comparative_contract: metric avg_holding_return inner grain must be hold_processed.['investorId'].",
+      "comparative_contract: metric sum_holding_value must group at the declared comparison dimension.",
+      "comparative_contract: metric sum_holding_value aggregates before joining its required population ['rt_processed', 'inv_processed', 'alloc_processed', 'hold_processed'].",
+      "comparative_contract: metric sum_holding_value inner grain must be hold_processed.['investorId']."
+    ],
+    "after": [
+      "comparative_contract: metric avg_allocation_pct must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_allocation_pct at __spec_step_8 is missing required population ['rt_processed'] before aggregation. Guaranteed participants: ['alloc_processed', 'hold_processed', 'inv_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_allocation_pct inner grain must be alloc_processed.['investorId'].",
+      "comparative_contract: metric avg_holding_return must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_holding_return at __spec_step_9 is missing required population ['rt_processed'] before aggregation. Guaranteed participants: ['alloc_processed', 'hold_processed', 'inv_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_holding_return inner grain must be hold_processed.['investorId'].",
+      "comparative_contract: metric sum_holding_value must group at the declared comparison dimension.",
+      "comparative_contract: metric sum_holding_value at __spec_step_10 is missing required population ['rt_processed'] before aggregation. Guaranteed participants: ['alloc_processed', 'hold_processed', 'inv_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric sum_holding_value inner grain must be hold_processed.['investorId']."
+    ]
+  },
+  {
+    "id": "MC-023",
+    "before": [
+      "comparative_contract: metric total_rebal_amount must end with its declared outer aggregate none.",
+      "comparative_contract: metric rebal_txn_count uses different source columns from its declaration.",
+      "comparative_contract: metric rebal_txn_count must end with its declared outer aggregate none.",
+      "comparative_contract: metric total_cash_flow must end with its declared outer aggregate none."
+    ],
+    "after": [
+      "comparative_contract: metric total_rebal_amount: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric rebal_txn_count uses different source columns from its declaration.",
+      "comparative_contract: metric rebal_txn_count: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric total_cash_flow: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate."
+    ]
+  },
+  {
+    "id": "MC-024",
+    "before": [
+      "comparative_contract: metric scenario_count uses different source columns from its declaration.",
+      "comparative_contract: metric scenario_count must end with its declared outer aggregate none.",
+      "comparative_contract: metric mean_progressPct aggregates before joining its required population ['q2_processed', 'q1_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric mean_progressPct needs source_grain using actual fields on q4_processed.",
+      "comparative_contract: metric mean_volatilityPct aggregates before joining its required population ['q2_processed', 'q1_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric mean_volatilityPct needs source_grain using actual fields on q4_processed."
+    ],
+    "after": [
+      "comparative_contract: metric scenario_count uses different source columns from its declaration.",
+      "comparative_contract: metric scenario_count: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric mean_progressPct at __spec_step_8 is missing required population ['q3_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed', 'q4_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric mean_progressPct needs source_grain using actual fields on q4_processed.",
+      "comparative_contract: metric mean_volatilityPct at __spec_step_9 is missing required population ['q3_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed', 'q4_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric mean_volatilityPct needs source_grain using actual fields on q4_processed."
+    ]
+  },
+  {
+    "id": "MC-025",
+    "before": [
+      "comparative_contract: metric avg_scenario_change aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric avg_rebalancing_gap aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric avg_rebalancing_amount aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric avg_scenario_change at __spec_step_5 is missing required population ['q4_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed', 'q3_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_rebalancing_gap at __spec_step_8 is missing required population ['q3_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed', 'q4_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_rebalancing_amount at __spec_step_9 is missing required population ['q3_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed', 'q4_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-026",
+    "before": [
+      "comparative_contract: required_population must name actual source tables.",
+      "comparative_contract: dimension must identify an actual source column.",
+      "comparative_contract: each metric needs output_column and an actual source table."
+    ],
+    "after": [
+      "comparative_contract: metric cash_net_amount at __spec_step_7 is missing required population ['q_scen_processed'] before aggregation. Guaranteed participants: ['q_cash_processed', 'q_inv_processed', 'q_risk_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric scenario_change at __spec_step_9 is missing required population ['q_cash_processed'] before aggregation. Guaranteed participants: ['q_inv_processed', 'q_risk_processed', 'q_scen_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric scenario_count at __spec_step_11 is missing required population ['q_cash_processed'] before aggregation. Guaranteed participants: ['q_inv_processed', 'q_risk_processed', 'q_scen_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-029",
+    "before": [
+      "comparative_contract: metric net_cash_flow must group at the declared comparison dimension.",
+      "comparative_contract: metric net_cash_flow aggregates before joining its required population ['q_cashflow_processed', 'q_goal_processed', 'q_investor_processed', 'q_timehorizon_processed'].",
+      "comparative_contract: metric avg_progress_pct must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_progress_pct aggregates before joining its required population ['q_cashflow_processed', 'q_goal_processed', 'q_investor_processed', 'q_timehorizon_processed'].",
+      "comparative_contract: metric avg_shortfall must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_shortfall aggregates before joining its required population ['q_cashflow_processed', 'q_goal_processed', 'q_investor_processed', 'q_timehorizon_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric net_cash_flow must group at the declared comparison dimension.",
+      "comparative_contract: metric net_cash_flow at __spec_step_3 is missing required population ['q_goal_processed', 'q_timehorizon_processed'] before aggregation. Guaranteed participants: ['q_cashflow_processed', 'q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_progress_pct must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_progress_pct at __spec_step_8 is missing required population ['q_cashflow_processed', 'q_timehorizon_processed'] before aggregation. Guaranteed participants: ['q_goal_processed', 'q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_shortfall must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_shortfall at __spec_step_9 is missing required population ['q_cashflow_processed', 'q_timehorizon_processed'] before aggregation. Guaranteed participants: ['q_goal_processed', 'q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-031",
+    "before": [
+      "comparative_contract: metric total_rebal_amount aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed'].",
+      "comparative_contract: metric rebal_txn_count uses different source columns from its declaration.",
+      "comparative_contract: metric rebal_txn_count aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed'].",
+      "comparative_contract: metric total_cash_amount aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric total_rebal_amount at __spec_step_6 is missing required population ['q2_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q3_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric rebal_txn_count at __spec_step_7 is missing required population ['q2_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q3_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_cash_amount at __spec_step_10 is missing required population ['q1_processed'] before aggregation. Guaranteed participants: ['q2_processed', 'q3_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-033",
+    "before": [
+      "comparative_contract: metric distinct_scenarios must end with its declared outer aggregate none.",
+      "comparative_contract: metric total_gap must end with its declared outer aggregate none.",
+      "comparative_contract: metric total_amount must end with its declared outer aggregate none."
+    ],
+    "after": [
+      "comparative_contract: metric distinct_scenarios: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric total_gap: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric total_amount: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate."
+    ]
+  },
+  {
+    "id": "MC-034",
+    "before": [
+      "comparative_contract: metric total_cash_flow must end with its declared outer aggregate none.",
+      "comparative_contract: metric avg_scenario_change must end with its declared outer aggregate none.",
+      "comparative_contract: metric scenario_count must end with its declared outer aggregate none."
+    ],
+    "after": [
+      "comparative_contract: metric total_cash_flow: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric avg_scenario_change: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric scenario_count: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate."
+    ]
+  },
+  {
+    "id": "MC-035",
+    "before": [
+      "comparative_contract: dimension category must retain provenance from q1_processed.rdfs_label and be projected.",
+      "comparative_contract: metric avg_progress_pct must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_progress_pct aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q1_processed'].",
+      "comparative_contract: metric avg_risk_score must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_risk_score aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q1_processed'].",
+      "comparative_contract: metric avg_liquidity_score must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_liquidity_score aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q1_processed']."
+    ],
+    "after": [
+      "comparative_contract: dimension category must retain provenance from q1_processed.rdfs_label and be projected.",
+      "comparative_contract: metric avg_progress_pct must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_progress_pct at __spec_step_8 is missing required population ['q1_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_risk_score must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_risk_score at __spec_step_9 is missing required population ['q1_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_liquidity_score must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_liquidity_score at __spec_step_10 is missing required population ['q1_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-037",
+    "before": [
+      "comparative_contract: metric net_cash_flow_amount must group at the declared comparison dimension.",
+      "comparative_contract: metric net_cash_flow_amount aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric average_goal_progress must end with its declared outer aggregate none.",
+      "comparative_contract: metric average_shortfall must end with its declared outer aggregate none."
+    ],
+    "after": [
+      "comparative_contract: metric net_cash_flow_amount must group at the declared comparison dimension.",
+      "comparative_contract: metric net_cash_flow_amount at __spec_step_3 is missing required population ['q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric average_goal_progress: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric average_shortfall: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate."
+    ]
+  },
+  {
+    "id": "MC-038",
+    "before": [
+      "comparative_contract: dimension must identify an actual source column.",
+      "comparative_contract: each metric needs output_column and an actual source table."
+    ],
+    "after": []
+  },
+  {
+    "id": "MC-040",
+    "before": [
+      "comparative_contract: metric mean_scenario_change needs source_grain using actual fields on q_scenario_processed.",
+      "comparative_contract: metric mean_progress needs source_grain using actual fields on q_goal_processed.",
+      "comparative_contract: metric mean_volatility needs source_grain using actual fields on q_goal_processed.",
+      "comparative_contract: metric investor_count uses different source columns from its declaration.",
+      "comparative_contract: metric investor_count must end with its declared outer aggregate none."
+    ],
+    "after": [
+      "comparative_contract: metric mean_scenario_change needs source_grain using actual fields on q_scenario_processed.",
+      "comparative_contract: metric mean_progress needs source_grain using actual fields on q_goal_processed.",
+      "comparative_contract: metric mean_volatility needs source_grain using actual fields on q_goal_processed.",
+      "comparative_contract: metric investor_count uses different source columns from its declaration.",
+      "comparative_contract: metric investor_count: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate."
+    ]
+  },
+  {
+    "id": "MC-042",
+    "before": [
+      "comparative_contract: metric scenario_count uses different source columns from its declaration."
+    ],
+    "after": []
+  },
+  {
+    "id": "MC-043",
+    "before": [
+      "comparative_contract: metric segment_goal_progress must end with its declared outer aggregate none.",
+      "comparative_contract: metric segment_health_risk must end with its declared outer aggregate none.",
+      "comparative_contract: metric segment_liquidity must end with its declared outer aggregate none."
+    ],
+    "after": [
+      "comparative_contract: metric segment_goal_progress: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric segment_health_risk: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric segment_liquidity: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate."
+    ]
+  },
+  {
+    "id": "MC-044",
+    "before": [
+      "comparative_contract: metric total_gain must end with its declared outer aggregate none.",
+      "comparative_contract: metric avg_risk must end with its declared outer aggregate none.",
+      "comparative_contract: metric avg_div must end with its declared outer aggregate none."
+    ],
+    "after": [
+      "comparative_contract: metric total_gain: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric avg_risk: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric avg_div: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate."
+    ]
+  },
+  {
+    "id": "MC-046",
+    "before": [
+      "comparative_contract: metric mean_allocation_concentration aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric mean_holding_return aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric mean_holding_value aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric mean_allocation_concentration at __spec_step_4 is missing required population ['q3_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed', 'q4_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric mean_holding_return at __spec_step_6 is missing required population ['q1_processed', 'q2_processed'] before aggregation. Guaranteed participants: ['q3_processed', 'q4_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric mean_holding_value at __spec_step_7 is missing required population ['q1_processed', 'q2_processed'] before aggregation. Guaranteed participants: ['q3_processed', 'q4_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-047",
+    "before": [
+      "comparative_contract: metric total_rebal_amount aggregates before joining its required population ['q_investor_processed', 'q_rebalancing_processed', 'q_cashflow_processed', 'q_holding_processed'].",
+      "comparative_contract: metric total_cash_flow aggregates before joining its required population ['q_investor_processed', 'q_rebalancing_processed', 'q_cashflow_processed', 'q_holding_processed'].",
+      "comparative_contract: metric total_transaction_count aggregates before joining its required population ['q_investor_processed', 'q_rebalancing_processed', 'q_cashflow_processed', 'q_holding_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric total_rebal_amount at __spec_step_7 is missing required population ['q_cashflow_processed', 'q_holding_processed', 'q_rebalancing_processed'] before aggregation. Guaranteed participants: ['q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_cash_flow at __spec_step_8 is missing required population ['q_cashflow_processed', 'q_holding_processed', 'q_rebalancing_processed'] before aggregation. Guaranteed participants: ['q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_transaction_count at __spec_step_9 is missing required population ['q_cashflow_processed', 'q_holding_processed', 'q_rebalancing_processed'] before aggregation. Guaranteed participants: ['q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-048",
+    "before": [
+      "comparative_contract: required_population must name actual source tables.",
+      "comparative_contract: dimension must identify an actual source column.",
+      "comparative_contract: each metric needs output_column and an actual source table."
+    ],
+    "after": [
+      "comparative_contract: metric avg_scenario_change must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_scenario_change at __spec_step_3 is missing required population ['q3_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_progress must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_progress at __spec_step_5 is missing required population ['q2_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q3_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_volatility must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_volatility at __spec_step_6 is missing required population ['q2_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q3_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-050",
+    "before": [
+      "comparative_contract: metric net_cash_flow_amount must end with its declared outer aggregate none.",
+      "comparative_contract: metric scenario_change must end with its declared outer aggregate none.",
+      "comparative_contract: metric scenario_count needs actual source_columns on q_scenario_processed."
+    ],
+    "after": [
+      "comparative_contract: metric net_cash_flow_amount: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric scenario_change: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric scenario_count needs actual source_columns on q_scenario_processed."
+    ]
+  },
+  {
+    "id": "MC-051",
+    "before": [
+      "final: aggregations must be a nonempty list.",
+      "Step input dataset does not exist: investor_profile",
+      "__spec_step_7 left join key: field does not exist on the selected input: investorId",
+      "__spec_step_10 group_by: field does not exist on the selected input: riskTolerance",
+      "__spec_step_11 group_by: field does not exist on the selected input: riskTolerance",
+      "__spec_step_12 group_by: field does not exist on the selected input: riskTolerance",
+      "__spec_step_13 group_by: field does not exist on the selected input: riskTolerance"
+    ],
+    "after": [
+      "final: aggregations must be a nonempty list.",
+      "Step input dataset does not exist: investor_profile",
+      "__spec_step_7 left join key: field does not exist on the selected input: investorId",
+      "__spec_step_10 group_by: field does not exist on the selected input: riskTolerance",
+      "__spec_step_11 group_by: field does not exist on the selected input: riskTolerance",
+      "__spec_step_12 group_by: field does not exist on the selected input: riskTolerance",
+      "__spec_step_13 group_by: field does not exist on the selected input: riskTolerance"
+    ]
+  },
+  {
+    "id": "MC-054",
+    "before": [
+      "comparative_contract: declare the comparison dimension, population and metric calculations."
+    ],
+    "after": [
+      "comparative_contract: declare the comparison dimension, population and metric calculations."
+    ]
+  },
+  {
+    "id": "MC-056",
+    "before": [
+      "comparative_contract: metric avg_cash_flow must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_cash_flow aggregates before joining its required population ['q_investor_processed', 'q_cash_processed', 'q_scenario_processed', 'q_sector_alloc_processed'].",
+      "comparative_contract: metric avg_cash_flow needs source_grain using actual fields on q_cash_processed.",
+      "comparative_contract: metric avg_scenario_change must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_scenario_change aggregates before joining its required population ['q_investor_processed', 'q_cash_processed', 'q_scenario_processed', 'q_sector_alloc_processed'].",
+      "comparative_contract: metric avg_scenario_change needs source_grain using actual fields on q_scenario_processed.",
+      "comparative_contract: metric avg_allocation_concentration must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_allocation_concentration aggregates before joining its required population ['q_investor_processed', 'q_cash_processed', 'q_scenario_processed', 'q_sector_alloc_processed'].",
+      "comparative_contract: metric avg_allocation_concentration inner grain must be q_sector_alloc_processed.['investorId'].",
+      "comparative_contract: metric avg_sector_allocation_pct must end with its declared outer aggregate none."
+    ],
+    "after": [
+      "comparative_contract: metric avg_cash_flow must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_cash_flow at __spec_step_2 is missing required population ['q_scenario_processed', 'q_sector_alloc_processed'] before aggregation. Guaranteed participants: ['q_cash_processed', 'q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_cash_flow needs source_grain using actual fields on q_cash_processed.",
+      "comparative_contract: metric avg_scenario_change must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_scenario_change at __spec_step_5 is missing required population ['q_cash_processed', 'q_sector_alloc_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_scenario_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_scenario_change needs source_grain using actual fields on q_scenario_processed.",
+      "comparative_contract: metric avg_allocation_concentration must group at the declared comparison dimension.",
+      "comparative_contract: metric avg_allocation_concentration at __spec_step_8 is missing required population ['q_cash_processed', 'q_scenario_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_sector_alloc_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_allocation_concentration inner grain must be q_sector_alloc_processed.['investorId'].",
+      "comparative_contract: metric avg_sector_allocation_pct: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate."
+    ]
+  },
+  {
+    "id": "MC-058",
+    "before": [
+      "comparative_contract: metric avgShortfall aggregates before joining its required population ['q_investor_processed', 'q_risktol_processed', 'q_goal_processed', 'q_alloc_processed', 'q_health_processed'].",
+      "comparative_contract: metric avgAllocationConcentration aggregates before joining its required population ['q_investor_processed', 'q_risktol_processed', 'q_goal_processed', 'q_alloc_processed', 'q_health_processed'].",
+      "comparative_contract: metric avgLiquidityScore aggregates before joining its required population ['q_investor_processed', 'q_risktol_processed', 'q_goal_processed', 'q_alloc_processed', 'q_health_processed'].",
+      "comparative_contract: metric avgDiversificationScore aggregates before joining its required population ['q_investor_processed', 'q_risktol_processed', 'q_goal_processed', 'q_alloc_processed', 'q_health_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric avgShortfall at __spec_step_7 is missing required population ['q_alloc_processed', 'q_goal_processed', 'q_health_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_risktol_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avgAllocationConcentration at __spec_step_8 is missing required population ['q_alloc_processed', 'q_goal_processed', 'q_health_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_risktol_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avgLiquidityScore at __spec_step_9 is missing required population ['q_alloc_processed', 'q_goal_processed', 'q_health_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_risktol_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avgDiversificationScore at __spec_step_10 is missing required population ['q_alloc_processed', 'q_goal_processed', 'q_health_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_risktol_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-061",
+    "before": [
+      "final: duplicate or invalid dataset name: __spec_step_3",
+      "__spec_step_6: duplicate or invalid dataset name: __spec_step_4",
+      "__spec_step_7: duplicate or invalid dataset name: __spec_step_5",
+      "__spec_step_8: duplicate or invalid dataset name: __spec_step_6",
+      "__spec_step_9: duplicate or invalid dataset name: __spec_step_7",
+      "__spec_step_13 aggregate source: field does not exist on the selected input: avg_liquidity_score",
+      "final: duplicate or invalid dataset name: __spec_step_8",
+      "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+    ],
+    "after": [
+      "comparative_contract: dimension time_horizon must retain provenance from q_time_horizon_processed.rdfs_label and be projected."
+    ]
+  },
+  {
+    "id": "MC-068",
+    "before": [
+      "comparative_contract: metric avg_shortfall aggregates before joining its required population ['ig_processed', 'sa_processed', 'ph_processed', 'inv_processed', 'th_processed'].",
+      "comparative_contract: metric avg_allocation_concentration aggregates before joining its required population ['ig_processed', 'sa_processed', 'ph_processed', 'inv_processed', 'th_processed'].",
+      "comparative_contract: metric avg_liquidity_score aggregates before joining its required population ['ig_processed', 'sa_processed', 'ph_processed', 'inv_processed', 'th_processed'].",
+      "comparative_contract: metric avg_diversification_score aggregates before joining its required population ['ig_processed', 'sa_processed', 'ph_processed', 'inv_processed', 'th_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric avg_shortfall at __spec_step_3 is missing required population ['ph_processed', 'sa_processed'] before aggregation. Guaranteed participants: ['ig_processed', 'inv_processed', 'th_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_allocation_concentration at __spec_step_7 is missing required population ['ig_processed', 'ph_processed'] before aggregation. Guaranteed participants: ['inv_processed', 'sa_processed', 'th_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_liquidity_score at __spec_step_10 is missing required population ['ig_processed', 'sa_processed'] before aggregation. Guaranteed participants: ['inv_processed', 'ph_processed', 'th_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_diversification_score at __spec_step_11 is missing required population ['ig_processed', 'sa_processed'] before aggregation. Guaranteed participants: ['inv_processed', 'ph_processed', 'th_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-071",
+    "before": [
+      "comparative_contract: metric avg_goal_progress aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q5_processed', 'q1_processed'].",
+      "comparative_contract: metric avg_holding_gain aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q5_processed', 'q1_processed'].",
+      "comparative_contract: metric avg_risk_score aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q5_processed', 'q1_processed'].",
+      "comparative_contract: metric avg_liquidity_score aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q5_processed', 'q1_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric avg_goal_progress at __spec_step_8 is missing required population ['q1_processed', 'q3_processed', 'q4_processed', 'q5_processed'] before aggregation. Guaranteed participants: ['q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_holding_gain at __spec_step_9 is missing required population ['q1_processed', 'q3_processed', 'q4_processed', 'q5_processed'] before aggregation. Guaranteed participants: ['q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_risk_score at __spec_step_10 is missing required population ['q1_processed', 'q3_processed', 'q4_processed', 'q5_processed'] before aggregation. Guaranteed participants: ['q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_liquidity_score at __spec_step_11 is missing required population ['q1_processed', 'q3_processed', 'q4_processed', 'q5_processed'] before aggregation. Guaranteed participants: ['q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-074",
+    "before": [
+      "comparative_contract: metric total_rebal_amount aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric total_cash_flow aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric avg_goal_progress aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric avg_shortfall aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric total_rebal_amount at __spec_step_9 is missing required population ['q2_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q1_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_cash_flow at __spec_step_10 is missing required population ['q2_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q1_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_goal_progress at __spec_step_11 is missing required population ['q2_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q1_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_shortfall at __spec_step_12 is missing required population ['q2_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q1_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-076",
+    "before": [
+      "comparative_contract: metric total_cash_flow aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_scenario_processed', 'q_sectoralloc_processed', 'q_category_processed'].",
+      "comparative_contract: metric total_scenarios uses different source columns from its declaration.",
+      "comparative_contract: metric total_scenarios aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_scenario_processed', 'q_sectoralloc_processed', 'q_category_processed'].",
+      "comparative_contract: metric avg_scenario_change aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_scenario_processed', 'q_sectoralloc_processed', 'q_category_processed'].",
+      "comparative_contract: metric avg_allocation_concentration aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_scenario_processed', 'q_sectoralloc_processed', 'q_category_processed'].",
+      "comparative_contract: metric total_sector_investment aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_scenario_processed', 'q_sectoralloc_processed', 'q_category_processed'].",
+      "comparative_contract: metric investor_count uses different source columns from its declaration.",
+      "comparative_contract: metric investor_count aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_scenario_processed', 'q_sectoralloc_processed', 'q_category_processed'].",
+      "comparative_contract: metric investor_count needs count_distinct per source entity before count_distinct; a sibling summary cannot satisfy this."
+    ],
+    "after": [
+      "comparative_contract: metric total_cash_flow at __spec_step_14 is missing required population ['q_cashflow_processed', 'q_category_processed', 'q_scenario_processed', 'q_sectoralloc_processed'] before aggregation. Guaranteed participants: ['q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_scenarios at __spec_step_15 is missing required population ['q_cashflow_processed', 'q_category_processed', 'q_scenario_processed', 'q_sectoralloc_processed'] before aggregation. Guaranteed participants: ['q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_scenario_change at __spec_step_16 is missing required population ['q_cashflow_processed', 'q_category_processed', 'q_scenario_processed', 'q_sectoralloc_processed'] before aggregation. Guaranteed participants: ['q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_allocation_concentration at __spec_step_17 is missing required population ['q_cashflow_processed', 'q_category_processed', 'q_scenario_processed', 'q_sectoralloc_processed'] before aggregation. Guaranteed participants: ['q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_sector_investment at __spec_step_18 is missing required population ['q_cashflow_processed', 'q_category_processed', 'q_scenario_processed', 'q_sectoralloc_processed'] before aggregation. Guaranteed participants: ['q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric investor_count uses different source columns from its declaration.",
+      "comparative_contract: metric investor_count at __spec_step_19 is missing required population ['q_cashflow_processed', 'q_category_processed', 'q_scenario_processed', 'q_sectoralloc_processed'] before aggregation. Guaranteed participants: ['q_investor_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric investor_count needs count_distinct per source entity before count_distinct; a sibling summary cannot satisfy this."
+    ]
+  },
+  {
+    "id": "MC-078",
+    "before": [
+      "comparative_contract: metric avg_shortfall aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed', 'q5_processed'].",
+      "comparative_contract: metric avg_alloc_conc aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed', 'q5_processed'].",
+      "comparative_contract: metric avg_liquidity aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed', 'q5_processed'].",
+      "comparative_contract: metric avg_diversification aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed', 'q5_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric avg_shortfall at __spec_step_7 is missing required population ['q2_processed', 'q3_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q4_processed', 'q5_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_alloc_conc at __spec_step_4 is missing required population ['q1_processed', 'q3_processed'] before aggregation. Guaranteed participants: ['q2_processed', 'q4_processed', 'q5_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_liquidity at __spec_step_10 is missing required population ['q1_processed', 'q2_processed'] before aggregation. Guaranteed participants: ['q3_processed', 'q4_processed', 'q5_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_diversification at __spec_step_11 is missing required population ['q1_processed', 'q2_processed'] before aggregation. Guaranteed participants: ['q3_processed', 'q4_processed', 'q5_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-084",
+    "before": [
+      "comparative_contract: metric total_cash_flow aggregates before joining its required population ['q_investor_processed', 'q_cash_processed', 'q_rebal_processed', 'q_scenario_processed', 'q_portfolio_processed'].",
+      "comparative_contract: metric total_rebal_amount aggregates before joining its required population ['q_investor_processed', 'q_cash_processed', 'q_rebal_processed', 'q_scenario_processed', 'q_portfolio_processed'].",
+      "comparative_contract: metric distinct_scenario_count aggregates before joining its required population ['q_investor_processed', 'q_cash_processed', 'q_rebal_processed', 'q_scenario_processed', 'q_portfolio_processed'].",
+      "comparative_contract: metric avg_risk_score aggregates before joining its required population ['q_investor_processed', 'q_cash_processed', 'q_rebal_processed', 'q_scenario_processed', 'q_portfolio_processed'].",
+      "comparative_contract: metric avg_goal_match_pct aggregates before joining its required population ['q_investor_processed', 'q_cash_processed', 'q_rebal_processed', 'q_scenario_processed', 'q_portfolio_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric total_cash_flow at __spec_step_13 is missing required population ['q_cash_processed', 'q_portfolio_processed', 'q_rebal_processed', 'q_scenario_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_risk_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_rebal_amount at __spec_step_14 is missing required population ['q_cash_processed', 'q_portfolio_processed', 'q_rebal_processed', 'q_scenario_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_risk_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric distinct_scenario_count at __spec_step_15 is missing required population ['q_cash_processed', 'q_portfolio_processed', 'q_rebal_processed', 'q_scenario_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_risk_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_risk_score at __spec_step_16 is missing required population ['q_cash_processed', 'q_portfolio_processed', 'q_rebal_processed', 'q_scenario_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_risk_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_goal_match_pct at __spec_step_17 is missing required population ['q_cash_processed', 'q_portfolio_processed', 'q_rebal_processed', 'q_scenario_processed'] before aggregation. Guaranteed participants: ['q_investor_processed', 'q_risk_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-086",
+    "before": [
+      "comparative_contract: metric total_inflow aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric total_outflow aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric total_shortfall aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric total_dividends aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed'].",
+      "comparative_contract: metric total_taxesPaid aggregates before joining its required population ['q1_processed', 'q2_processed', 'q3_processed', 'q4_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric total_inflow at __spec_step_15 is missing required population ['q2_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q1_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_outflow at __spec_step_16 is missing required population ['q2_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q1_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_shortfall at __spec_step_17 is missing required population ['q2_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q1_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_dividends at __spec_step_18 is missing required population ['q2_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q1_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_taxesPaid at __spec_step_19 is missing required population ['q2_processed', 'q3_processed', 'q4_processed'] before aggregation. Guaranteed participants: ['q1_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-091",
+    "before": [
+      "comparative_contract: metric total_cashflow aggregates before joining its required population ['q_investor_processed', 'q_time_horizon_processed', 'q_cashflow_processed', 'q_rebalancing_processed', 'q_scenario_processed', 'q_portfolio_health_processed'].",
+      "comparative_contract: metric total_rebalancing aggregates before joining its required population ['q_investor_processed', 'q_time_horizon_processed', 'q_cashflow_processed', 'q_rebalancing_processed', 'q_scenario_processed', 'q_portfolio_health_processed'].",
+      "comparative_contract: metric distinct_scenarios must end with its declared outer aggregate none.",
+      "comparative_contract: metric avg_riskScore aggregates before joining its required population ['q_investor_processed', 'q_time_horizon_processed', 'q_cashflow_processed', 'q_rebalancing_processed', 'q_scenario_processed', 'q_portfolio_health_processed'].",
+      "comparative_contract: metric avg_goalMatchPct aggregates before joining its required population ['q_investor_processed', 'q_time_horizon_processed', 'q_cashflow_processed', 'q_rebalancing_processed', 'q_scenario_processed', 'q_portfolio_health_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric total_cashflow at __spec_step_11 is missing required population ['q_scenario_processed'] before aggregation. Guaranteed participants: ['q_cashflow_processed', 'q_investor_processed', 'q_portfolio_health_processed', 'q_rebalancing_processed', 'q_time_horizon_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_rebalancing at __spec_step_12 is missing required population ['q_scenario_processed'] before aggregation. Guaranteed participants: ['q_cashflow_processed', 'q_investor_processed', 'q_portfolio_health_processed', 'q_rebalancing_processed', 'q_time_horizon_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric distinct_scenarios: outer_aggregate must name the final grouping operation, not 'none'. For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.",
+      "comparative_contract: metric avg_riskScore at __spec_step_13 is missing required population ['q_scenario_processed'] before aggregation. Guaranteed participants: ['q_cashflow_processed', 'q_investor_processed', 'q_portfolio_health_processed', 'q_rebalancing_processed', 'q_time_horizon_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_goalMatchPct at __spec_step_14 is missing required population ['q_scenario_processed'] before aggregation. Guaranteed participants: ['q_cashflow_processed', 'q_investor_processed', 'q_portfolio_health_processed', 'q_rebalancing_processed', 'q_time_horizon_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-093",
+    "before": [
+      "__spec_step_9 expression: field does not exist on the selected input: rdfs_label_right",
+      "__spec_step_13 expression: field does not exist on the selected input: rdfs_label_right"
+    ],
+    "after": [
+      "__spec_step_9 expression: field does not exist on the selected input: rdfs_label_right",
+      "__spec_step_13 expression: field does not exist on the selected input: rdfs_label_right"
+    ]
+  },
+  {
+    "id": "MC-097",
+    "before": [
+      "comparative_contract: metric total_shortfall aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q5_processed', 'q6_processed'].",
+      "comparative_contract: metric total_holding_value aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q5_processed', 'q6_processed'].",
+      "comparative_contract: metric avg_allocation_pct aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q5_processed', 'q6_processed'].",
+      "comparative_contract: metric avg_liquidity aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q5_processed', 'q6_processed'].",
+      "comparative_contract: metric avg_diversification aggregates before joining its required population ['q2_processed', 'q3_processed', 'q4_processed', 'q5_processed', 'q6_processed']."
+    ],
+    "after": [
+      "comparative_contract: metric total_shortfall at __spec_step_12 is missing required population ['q3_processed', 'q4_processed', 'q5_processed', 'q6_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_holding_value at __spec_step_13 is missing required population ['q3_processed', 'q4_processed', 'q5_processed', 'q6_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_allocation_pct at __spec_step_14 is missing required population ['q3_processed', 'q4_processed', 'q5_processed', 'q6_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_liquidity at __spec_step_15 is missing required population ['q3_processed', 'q4_processed', 'q5_processed', 'q6_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric avg_diversification at __spec_step_16 is missing required population ['q3_processed', 'q4_processed', 'q5_processed', 'q6_processed'] before aggregation. Guaranteed participants: ['q1_processed', 'q2_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population."
+    ]
+  },
+  {
+    "id": "MC-100",
+    "before": [
+      "comparative_contract: metric total_inflow aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_investmentgoal_processed', 'q_holding_processed', 'q_category_processed'].",
+      "comparative_contract: metric total_inflow needs source_grain using actual fields on q_cashflow_processed.",
+      "comparative_contract: metric total_outflow aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_investmentgoal_processed', 'q_holding_processed', 'q_category_processed'].",
+      "comparative_contract: metric total_outflow needs source_grain using actual fields on q_cashflow_processed.",
+      "comparative_contract: metric total_shortfall aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_investmentgoal_processed', 'q_holding_processed', 'q_category_processed'].",
+      "comparative_contract: metric total_shortfall needs source_grain using actual fields on q_investmentgoal_processed.",
+      "comparative_contract: metric total_dividends aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_investmentgoal_processed', 'q_holding_processed', 'q_category_processed'].",
+      "comparative_contract: metric total_dividends needs source_grain using actual fields on q_holding_processed.",
+      "comparative_contract: metric total_taxes aggregates before joining its required population ['q_investor_processed', 'q_cashflow_processed', 'q_investmentgoal_processed', 'q_holding_processed', 'q_category_processed'].",
+      "comparative_contract: metric total_taxes needs source_grain using actual fields on q_holding_processed."
+    ],
+    "after": [
+      "comparative_contract: metric total_inflow at __spec_step_4 is missing required population ['q_category_processed', 'q_holding_processed', 'q_investmentgoal_processed', 'q_investor_processed'] before aggregation. Guaranteed participants: ['q_cashflow_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_inflow needs source_grain using actual fields on q_cashflow_processed.",
+      "comparative_contract: metric total_outflow at __spec_step_6 is missing required population ['q_category_processed', 'q_holding_processed', 'q_investmentgoal_processed', 'q_investor_processed'] before aggregation. Guaranteed participants: ['q_cashflow_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_outflow needs source_grain using actual fields on q_cashflow_processed.",
+      "comparative_contract: metric total_shortfall at __spec_step_9 is missing required population ['q_cashflow_processed', 'q_category_processed', 'q_holding_processed', 'q_investor_processed'] before aggregation. Guaranteed participants: ['q_investmentgoal_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_shortfall needs source_grain using actual fields on q_investmentgoal_processed.",
+      "comparative_contract: metric total_dividends at __spec_step_12 is missing required population ['q_cashflow_processed', 'q_category_processed', 'q_investmentgoal_processed', 'q_investor_processed'] before aggregation. Guaranteed participants: ['q_holding_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_dividends needs source_grain using actual fields on q_holding_processed.",
+      "comparative_contract: metric total_taxes at __spec_step_13 is missing required population ['q_cashflow_processed', 'q_category_processed', 'q_investmentgoal_processed', 'q_investor_processed'] before aggregation. Guaranteed participants: ['q_holding_processed']. Join required entity summaries before this aggregate; optional label tables do not belong in required_population.",
+      "comparative_contract: metric total_taxes needs source_grain using actual fields on q_holding_processed."
+    ]
+  }
+]

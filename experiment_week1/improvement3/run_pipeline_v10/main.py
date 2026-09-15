@@ -105,7 +105,7 @@ def main():
     print(f"[SYSTEM] Validate model: {VALIDATE_MODEL}")
     print(f"[SYSTEM] Explain model: {EXPLAIN_MODEL}")
     print("[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py")
-    print("[SYSTEM] DAG planner mode: fixed V4 flow (no model-generated DAG)")
+    print("[SYSTEM] DAG planner mode: fixed V10 flow (no model-generated DAG)")
     print(f"[SYSTEM] Report file: {REPORT_FILE}")
     script_start_time = time.perf_counter()
     input_manifest = os.getenv("INPUT_QUERY_CSV", "").strip()
@@ -114,7 +114,7 @@ def main():
         os.path.dirname(__file__),
         {"questions": input_manifest or INPUT_SAMPLE_FILE, "schema": SCHEMA_FILE, "instances": INSTANCE_FILE},
         {"model": GPT_OSS_MODEL, "pipeline_version": PIPELINE_VERSION,
-         "spec_first": "fixed_v4",
+         "spec_first": "fixed_v10",
          "final_semantic_review": os.getenv("FINAL_SEMANTIC_REVIEW", "0"),
          "query_offset": TEST_QUERY_OFFSET, "query_limit": TEST_QUERY_LIMIT,
          "shuffle_seed": os.getenv("QUERY_SHUFFLE_SEED", ""),

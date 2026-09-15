@@ -71,7 +71,7 @@ SPARQL_GENERATION_MODEL = GPT_OSS_MODEL
 LLM_GRADER_MODEL = GPT_OSS_MODEL
 
 DETERMINISTIC_EXPLAIN = os.getenv("DETERMINISTIC_EXPLAIN", "1").strip().lower() not in {"0", "false", "no"}
-PIPELINE_VERSION = os.getenv("GPT_OSS_LLM_GRADER_PIPELINE_VERSION", "aop-improvement3-v4-short-prompts")
+PIPELINE_VERSION = os.getenv("GPT_OSS_LLM_GRADER_PIPELINE_VERSION", "aop-improvement3-v10")
 
 TEST_QUERY_LIMIT = int(os.getenv("TEST_QUERY_LIMIT", "100"))
 TEST_QUERY_OFFSET = int(os.getenv("TEST_QUERY_OFFSET", "0"))
@@ -89,7 +89,7 @@ SPARQL_SCAN_PROCESS_START_METHOD = os.getenv("SPARQL_SCAN_PROCESS_START_METHOD",
 
 BASE_DIR = os.getenv("BASE_DIR", SCRIPT_DIR)
 EXPERIMENT_DIR = SCRIPT_DIR
-OUTPUT_DIR = os.getenv("PIPELINE_OUTPUT_DIR", os.path.join(SCRIPT_DIR, "pipelien_output"))
+OUTPUT_DIR = os.getenv("PIPELINE_OUTPUT_DIR", os.path.join(PACKAGE_DIR, "outputs"))
 SCHEMA_FILE = os.getenv(
     "SCHEMA_FILE",
     os.path.join(SCRIPT_DIR, "kg_output_fixed", "wealth_management_diverse_schema.ttl"),
@@ -100,12 +100,13 @@ INSTANCE_FILE = os.getenv(
 )
 INPUT_SAMPLE_FILE = os.getenv(
     "INPUT_SAMPLE_FILE",
-    os.path.join(SCRIPT_DIR, "dataset", "verification_results_v2_sql_correct_442.xlsx"),
+    os.path.join(os.path.dirname(os.path.dirname(SCRIPT_DIR)), "query_specs_improevemnt", "improvement1",
+                 "dataset", "verification_results_v2_sql_correct_442.xlsx"),
 )
 INPUT_SAMPLE_SHEET = os.getenv("INPUT_SAMPLE_SHEET", "").strip()
 REPORT_FILE = os.getenv(
     "REPORT_FILE",
-    os.path.join(OUTPUT_DIR, "raw_pipeline_v4.csv"),
+    os.path.join(OUTPUT_DIR, "raw_pipeline_v10.csv"),
 )
 ALIAS_MAP_FILE = os.getenv("RDF_ALIAS_MAP_FILE", os.path.join(SCRIPT_DIR, "rdf_id_alias_map.json"))
 def _resolve_alias_map_file() -> str:

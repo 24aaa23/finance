@@ -66,16 +66,17 @@ Rules:
   value, not an identity key. Do not invent properties or replace fields by labels.
 - Wrap each optional_fields binding in OPTIONAL, including the full path if it
   retrieves a label. Do not also require the same binding outside OPTIONAL.
-  When a field is listed in optional_fields, its binding AND any filter on it
-  must both be inside the same OPTIONAL block. A filter outside OPTIONAL on an
-  unbound variable silently drops all rows.
 - Apply every declared filter with its exact values and boundaries. Preserve
-  AND/OR/NOT scope. Equality is not substring matching. is_null tests an unbound
-  value (use !BOUND(?var)); is_not_null tests a bound value (use BOUND(?var)).
-  Other missing values remain unbound.
-- For filters on optional fields, place the FILTER inside the OPTIONAL block so
-  that rows missing the field are not dropped. Only exclude rows when the filter
-  explicitly requires a specific value (equality, range, in).
+  AND/OR/NOT scope. Equality is not substring matching. Place row-eligibility
+  FILTERs in the enclosing group, outside the OPTIONAL binding, including
+  equality, range, negation, is_null (!BOUND), and is_not_null (BOUND) tests.
+  A FILTER inside OPTIONAL only controls that binding; it keeps nonmatching rows.
+  Preserve unbound values unless a declared filter excludes them; only add an
+  OR !BOUND condition when the requested condition explicitly includes missing values.
+  Examples (illustrative names; use actual schema fields, IRIs, and boundaries):
+  Range: OPTIONAL {{ ?record <urn:value> ?value }} FILTER(?value > 10)
+  Missing: OPTIONAL {{ ?record <urn:value> ?value }} FILTER(!BOUND(?value))
+  Present: OPTIONAL {{ ?record <urn:value> ?value }} FILTER(BOUND(?value))
 - Match numeric/date comparison literals to the RDF datatype. Cast in the filter
   only when necessary; preserve raw selected values. Never compare an RDF date
   with an xsd:string boundary. Preserve the requested date interval.

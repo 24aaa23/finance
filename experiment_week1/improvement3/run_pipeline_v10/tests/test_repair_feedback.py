@@ -227,9 +227,9 @@ class PlanningContextTests(unittest.TestCase):
     def test_worked_comparison_plan_matches_sql_with_unequal_counts_and_nulls(self):
         datasets = {
             "Payments": [{"customer_ref": customer, "amount": amount} for customer, amount in
-                         [("a", 10), ("a", 20), ("b", 90), ("b", None), ("c", 500), ("d", 12)]],
+                         [("a", 10), ("a", 20), ("b", 90), ("b", None), ("c", 500), ("d", 12), ("e", 30)]],
             "Reviews": [{"customer_ref": customer, "score": score} for customer, score in
-                        [("a", 2), ("a", 4), ("b", 9), ("b", None), ("d", None)]],
+                        [("a", 2), ("a", 4), ("b", 9), ("b", None), ("d", None), ("e", 6)]],
             "Customers": [{"customer_iri": customer, "region": region} for customer, region in
                           [("a", "north"), ("b", "north"), ("c", "north"), ("d", None)]],
         }
@@ -253,7 +253,7 @@ class PlanningContextTests(unittest.TestCase):
                      scores AS (SELECT customer_ref, AVG(score) AS score FROM reviews GROUP BY customer_ref)
                 SELECT c.region, AVG(p.total), AVG(r.score)
                 FROM spend p JOIN scores r ON p.customer_ref = r.customer_ref
-                JOIN customers c ON p.customer_ref = c.customer_iri GROUP BY c.region
+                LEFT JOIN customers c ON p.customer_ref = c.customer_iri GROUP BY c.region
             """)]
         self.assertCountEqual(actual, expected)
 

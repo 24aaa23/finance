@@ -201,11 +201,10 @@ Rules:
 - entity_key identifies a raw record. Prefer schema subject_field, the RDF subject
   itself. A link to another entity is not the identity of this record.
 - optional_fields is the subset of fields that may be missing. Keep measures,
-  display values, and grouping/dimension attributes (risk_tolerance, category,
-  segment, time_horizon, etc.) optional unless an explicit equality condition
-  needs them present. An entity without a grouping label must still be retrieved
-  so it appears in the null group. Missing one measure must not remove rows
-  needed by another measure.
+  display values, and grouping/dimension attributes optional so missing labels
+  can form a null group. Missing one measure must not remove rows needed by
+  another measure. Optional bindings do not cancel explicit filters: equality,
+  ranges, negation, and presence/absence tests still determine row eligibility.
 - filters contains only requested raw-field conditions. Preserve literal values,
   boundaries, AND/OR and negation scope. Use equality for exact categories, contains
   only for requested substrings, and is_null/is_not_null for missing/present values.

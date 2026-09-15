@@ -23,6 +23,28 @@ def _boolean(value: Any) -> bool:
     return value is True or (isinstance(value, str) and value.lower() == "true")
 
 
+def _normalize_source_names(value, schema):
+    """Resolve only unique catalogue spellings, without changing question literals."""
+    def resolve(name):
+        if not isinstance(name, str) or name in schema:
+            return name
+        key = "".join(c for c in name.casefold() if c.isalnum())
+        matches = [s for s in schema if "".join(c for c in s.casefold() if c.isalnum()) == key]
+        return matches[0] if len(matches) == 1 else name
+
+    if isinstance(value, list):
+        for item in value:
+            _normalize_source_names(item, schema)
+    elif isinstance(value, dict):
+        for key, item in value.items():
+            if key == "source_class":
+                value[key] = resolve(item)
+            elif key in {"source_classes", "required_classes"} and isinstance(item, list):
+                value[key] = [resolve(name) for name in item]
+            else:
+                _normalize_source_names(item, schema)
+
+
 def _cleanup_decomposition(raw_decomposition: Any, query: str, retrieved_tables: list) -> Dict[str, Any]:
     errors = []
     if isinstance(raw_decomposition, list):
@@ -242,6 +264,7 @@ Connection shape: {{"left_branch":"q1", "right_branch":"q2",
     )
     cleaned = _cleanup_decomposition(parsed, query, retrieved_tables)
     if global_schema:
+        _normalize_source_names(cleaned["selected_decomposition"], global_schema)
         for branch in cleaned["selected_decomposition"]["subquestions"]:
             if branch.get("source_class") not in global_schema:
                 cleaned["selected_decomposition"]["contract_errors"].append(

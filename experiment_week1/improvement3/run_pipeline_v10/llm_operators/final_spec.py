@@ -99,10 +99,10 @@ Choose the calculation grain before joining or aggregating:
   entity's profile, then group by the requested profile attribute.
 - Choose each inner calculation from the question: total holdings is SUM per
   investor; maximum allocation is MAX per investor; mean goal progress is AVG of
-  that investor's non-null progress values. When the question says "compare"
-  metrics across groups without saying "total" or "sum", compute per-entity
-  averages and then average those across groups. Use SUM only when the question
-  explicitly asks for totals, counts, or aggregate amounts.
+  that investor's non-null progress values. Apply an outer AVG when an average
+  across entities is requested, keeping the requested inner SUM/MAX/AVG intact.
+  "Compare" alone does not specify the operation or weighting. Follow the metric
+  definition and question; use count/count_rows/count_distinct for counts.
 - A mean across observations and a mean across entity summaries have different
   weights. For an observation mean, aggregate raw observations at the requested
   group or carry SUM and non-null COUNT through summaries and divide their totals.
@@ -131,10 +131,10 @@ Operators and exact syntax (replace example field/table names with available one
   join_type is inner|left|right|outer. Use both left_on and right_on for different names.
   Same-name non-key columns from the right get _right, then _right_2 if already occupied.
   Use inner join when both sides must participate (e.g., investors with BOTH holdings
-  AND goals). Use left join when attaching dimension labels or profile attributes
-  (risk_tolerance, category, segment, time_horizon) to fact summaries — entities
-  without a label should appear as a null group, not be silently dropped. A missing
-  related metric remains null unless the question defines a default.
+  AND goals). Use left join from the requested base population when attaching
+  optional dimension labels or profile attributes; missing labels form a null
+  group. A required profile/metric participant or explicit filter must still be
+  enforced. A missing related metric remains null unless a default is requested.
 - Aggregate: {{"id":"totals","operator":"Filter_Aggregate","input":"joined",
   "group_by":["category"],"aggregations":[
   {{"operation":"count_rows","input_column":"*","output_column":"n"}},
@@ -177,18 +177,19 @@ customer_iri/region. These are separate sources; region belongs to Customers.
  {{"id":"metrics","operator":"Integrate","inputs":["spend","scores"],
    "left_on":["customer_ref"],"right_on":["customer_ref"],"join_type":"inner"}},
  {{"id":"profiles","operator":"Integrate","inputs":["metrics","Customers"],
-   "left_on":["customer_ref"],"right_on":["customer_iri"],"join_type":"inner"}},
+   "left_on":["customer_ref"],"right_on":["customer_iri"],"join_type":"left"}},
  {{"operator":"Filter_Aggregate","input":"profiles","group_by":["region"],
    "aggregations":[
    {{"operation":"avg","input_column":"customer_spend","output_column":"mean_spend"}},
    {{"operation":"avg","input_column":"customer_score","output_column":"mean_score"}}]}}
 ],"projection":["region","mean_spend","mean_score"]}}
 
-Group by the label or text field for the requested dimension (e.g., the rdfs_label
-or category string), not by the entity IRI. If the dimension label comes from a
-joined table, it is already available after the join — do not group by the IRI
-that was used as a join key. Entities with null/missing labels form a separate
-null group; do not filter them out unless the question explicitly excludes them.
+For category/region comparisons, group by the requested dimension's label or text
+field from its owning source, not the individual fact record's IRI. Keep identity
+keys for joins and per-entity summaries: two entities may share a display label.
+For output per entity, retain its identity in the grouping even if only its label
+is displayed. Missing dimension labels form a null group unless excluded by the
+question; an inner join to required participants is a separate population rule.
 
 Preserve the question's predicates, population, null groups, weighting, and limits.
 Keep each branch's responsibility and declared connection meaning; the original

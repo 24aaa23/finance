@@ -7,12 +7,24 @@ from ..clients import build_llm_messages
 from ..utils import parse_llm_json
 from ..spec_contracts import normalize_spec
 from ..spec_runtime import compile_spec
-from ..comparative_contract import needs_comparative_contract, COMPARATIVE_INSTRUCTIONS
+from ..comparative_contract import needs_comparative_contract, COMPARATIVE_INSTRUCTIONS, MISSING_CONTRACT_ERROR
 
 
 PLAN_KEYS = {"final_steps", "merge_steps", "pre_steps", "final_measures", "final_group_by",
              "projection", "final_output", "distinct", "distinct_on", "rounding", "missing_requirements",
-             "comparative_contract"}
+             "comparative_contract", "preserve_null_groups"}
+
+EXAMPLE_CONTRACT = {
+    "version": 1,
+    "dimensions": [{"source": "Customers", "column": "region", "output_column": "region"}],
+    "required_population": ["Payments", "Reviews", "Customers"],
+    "metrics": [
+        {"source": "Payments", "source_columns": ["amount"], "source_grain": ["customer_ref"],
+         "inner_aggregate": "sum", "outer_aggregate": "avg", "output_column": "mean_spend"},
+        {"source": "Reviews", "source_columns": ["score"], "source_grain": ["customer_ref"],
+         "inner_aggregate": "avg", "outer_aggregate": "avg", "output_column": "mean_score"}],
+    "assumptions": [],
+}
 
 
 def _branch_context(branches, schema):
@@ -68,10 +80,27 @@ def normalize_final_plan(payload, branches):
                 candidates.setdefault(str(name), set()).add(str(branch["id"]))
     aliases = {name: next(iter(ids)) for name, ids in candidates.items() if len(ids) == 1 and name not in originals}
     normalized = normalize_spec(payload)
+    # Model-written IDs must not collide with names allocated by the compiler.
+    # Rename declarations and their references together; duplicates still fail.
+    declarations = [s for key in ("final_steps", "merge_steps", "pre_steps", "final_measures")
+                    for s in (normalized[key] if isinstance(normalized.get(key), list) else []) if isinstance(s, dict)]
+    declared_names = {s[k] for s in declarations for k in ("id", "output") if isinstance(s.get(k), str)}
+    reserved = {}
+    for name in sorted(declared_names - originals):
+        if name.startswith("__spec_step_"):
+            replacement = "declared" + name
+            while replacement in declared_names or replacement in originals:
+                replacement = "declared_" + replacement
+            reserved[name] = replacement
+            declared_names.add(replacement)
+    for step in declarations:
+        for key in ("id", "output"):
+            if isinstance(step.get(key), str):
+                step[key] = reserved.get(step[key], step[key])
     def dataset_id(value):
         if isinstance(value, list):
             return [dataset_id(item) for item in value]
-        return aliases.get(value, value) if isinstance(value, str) else value
+        return reserved.get(value, aliases.get(value, value)) if isinstance(value, str) else value
     for key in ("final_steps", "merge_steps", "pre_steps", "final_measures"):
         for step in normalized.get(key, []) if isinstance(normalized.get(key), list) else []:
             if isinstance(step, dict):
@@ -80,6 +109,14 @@ def normalize_final_plan(payload, branches):
                         step[field] = dataset_id(step[field])
     if "final_output" in normalized:
         normalized["final_output"] = dataset_id(normalized["final_output"])
+    contract = normalized.get("comparative_contract")
+    if isinstance(contract, dict):
+        if "required_population" in contract:
+            contract["required_population"] = dataset_id(contract["required_population"])
+        for key in ("dimensions", "metrics"):
+            for item in contract.get(key, []) if isinstance(contract.get(key), list) else []:
+                if isinstance(item, dict) and "source" in item:
+                    item["source"] = dataset_id(item["source"])
     return normalized
 
 
@@ -93,6 +130,10 @@ def semantic_build_final_spec(inputs: Dict[str, Any], client: Any, model: str = 
     comparison_required = needs_comparative_contract(query)
     comparison_instructions = COMPARATIVE_INSTRUCTIONS if comparison_required else ""
     previous = {key: value for key, value in inputs.get("previous_final_spec", {}).items() if key in PLAN_KEYS}
+    metadata_only = bool(previous) and inputs.get("previous_final_spec", {}).get("contract_errors") == [MISSING_CONTRACT_ERROR]
+    response_format = ('{"comparative_contract": {...}, "final_steps": [...], "projection": [...]}'
+                       if comparison_required else '{"final_steps": [], "projection": ["requested output columns"]}')
+    example_contract = ',"comparative_contract":' + json.dumps(EXAMPLE_CONTRACT) if comparison_required else ""
     prompt = f"""Return one JSON calculation plan answering the question from the available tables.
 A table is a list of retrieved records. A step applies one operation and names its
 result so later steps can use it. Python executes these steps; do not write SQL or SPARQL.
@@ -122,9 +163,11 @@ Repair errors, if any: {inputs.get('spec_feedback', '')}
 Previous plan, if any: {json.dumps(previous, default=str)}
 {comparison_instructions}
 
-Use this single format: {{"final_steps": [], "projection": ["requested output columns"]}}
+Use this single format: {response_format}
 final_steps is the ordered list of operations. projection lists columns to return.
 Steps run in listed order. Use id for a step result, input for one table, inputs for joins.
+Give steps short names such as totals or joined. Names starting __spec_step_ are
+internal compiler names shown in errors; do not declare them as your step IDs.
 Use actual table IDs or earlier step IDs; previous means the preceding result. With one
 raw table, omitted input uses it. With multiple raw tables the first input must be explicit.
 A lookup needs no steps. Output is the last step, or final_output for a chosen table.
@@ -185,7 +228,7 @@ customer_iri/region. These are separate sources; region belongs to Customers.
    "aggregations":[
    {{"operation":"avg","input_column":"customer_spend","output_column":"mean_spend"}},
    {{"operation":"avg","input_column":"customer_score","output_column":"mean_score"}}]}}
-],"projection":["region","mean_spend","mean_score"]}}
+],"projection":["region","mean_spend","mean_score"]{example_contract}}}
 
 Preserve the question's predicates, population, null groups, weighting, and limits.
 Keep each branch's responsibility and declared connection meaning; the original
@@ -211,6 +254,21 @@ If required source data or a connector is truly absent, return
 {{"missing_requirements":[{{"source_class":"needed source", "field":"needed field"}}]}}.
 missing_requirements describes data to retrieve; never invent that data. Return JSON only.
 """
+    if metadata_only:
+        # Missing bookkeeping is not permission to replace a calculation. This
+        # uses the existing bounded retry, without another critic/model stage.
+        prompt = f"""The previous response omitted comparative_contract. Add that object only.
+The calculation steps are preserved by Python. Do not return replacement steps.
+Read the question and tables to state the intended metrics. Do not change their
+meaning just to describe a wrong plan; any disagreement will get a separate plan repair.
+Question: {query}
+Available tables: {json.dumps([{k: p.get(k) for k in ('id', 'source_class', 'fields')} for p in profiles])}
+Comparison notes: {json.dumps(source_contract, default=str)}
+Existing plan: {json.dumps(previous, default=str)}
+{COMPARATIVE_INSTRUCTIONS}
+Example contract shape (replace illustrative names): {json.dumps(EXAMPLE_CONTRACT)}
+Return one JSON object with only the comparative_contract key.
+"""
     api_logger.log_call(query, "Final_Spec")
     response = client.chat.completions.create(model=model,
         messages=build_llm_messages("final_spec", prompt),
@@ -220,6 +278,12 @@ missing_requirements describes data to retrieve; never invent that data. Return 
     parsed = normalize_final_plan(parse_llm_json(content, None, "Final_Spec"), branches)
     diagnostics = {"finish_reason": getattr(choice, "finish_reason", None), "raw_response": content[:16000],
                    "response_chars": len(content), "response_truncated_in_log": len(content) > 16000}
+    if metadata_only:
+        contract = parsed.get("comparative_contract")
+        parsed = normalize_final_plan(previous, branches)
+        if contract is not None:
+            parsed["comparative_contract"] = contract
+        diagnostics["repair_scope"] = "contract_only"
     if not parsed or not PLAN_KEYS.intersection(parsed):
         return {"final_spec": {"contract_errors": ["Final_Spec must return a JSON plan with final_steps or projection."],
                                "response_diagnostics": diagnostics}}

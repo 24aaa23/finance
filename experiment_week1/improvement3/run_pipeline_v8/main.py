@@ -297,7 +297,7 @@ def main():
             "Debug Repair Log": _compact_debug_json({
                 "stage_repairs": trace.get("repair_log", []),
                 "decomposition_repairs": trace.get("decomposition_repair_log", []),
-            }),
+            }, max_chars=None),
             "Debug Validation Feedback": str(trace.get("validation_reason", "") or trace.get("pre_scan_validation_reason", "")),
             "Debug Exception": str(exception or ""),
             "Debug Answer Requirements": _compact_debug_json(trace.get("decomposition", {}).get("answer_requirements", {})),

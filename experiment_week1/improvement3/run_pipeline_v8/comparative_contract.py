@@ -9,54 +9,33 @@ import re
 from .relational import join_column_maps
 
 
+MISSING_CONTRACT_ERROR = "comparative_contract: declare the comparison dimension, population and metric calculations."
+
 COMPARATIVE_INSTRUCTIONS = """
-This is a grouped multi-source comparison. Include a comparative_contract beside
-final_steps and projection, resolving its names against ACTUAL available tables.
-It records your interpretation. Do not copy speculative output aliases or a
-universal entity-key spelling from decomposition; each source has its own keys.
+Include comparative_contract with version:1, dimensions, required_population,
+metrics, and assumptions, as in the worked example.
+Each dimension names its source table, column, and displayed output_column.
+Each metric names its source table, source_columns, source_grain,
+inner_aggregate, outer_aggregate, and output_column. Use actual available names.
 
-Exact shape (illustrative, replace every name):
-"comparative_contract": {
-  "version": 1,
-  "dimensions": [{"source":"Customers", "column":"region", "output_column":"region_name"}],
-  "required_population": ["Customers", "Payments", "Reviews"],
-  "metrics": [
-    {"source":"Payments", "source_columns":["amount"], "source_grain":["customer_ref"],
-     "inner_aggregate":"sum", "outer_aggregate":"avg", "output_column":"mean_customer_spend"},
-    {"source":"Reviews", "source_columns":["score"], "source_grain":["owner"],
-     "inner_aggregate":"avg", "outer_aggregate":"avg", "output_column":"mean_customer_score"}
-  ],
-  "assumptions": []
-}
-Here the question requests customers WITH BOTH payments and reviews. required_population
-names the sources each metric must join before its outer aggregation. If metrics
-intentionally use separate populations, name only their shared required base
-sources and explain that interpretation in assumptions. Required participation
-normally uses inner joins between entity summaries; optional labels use left joins.
-Every metric and dimension output_column must appear in projection.
+inner_aggregate means the per-entity calculation BEFORE the final grouping.
+outer_aggregate means the calculation AT the final grouping.
+Allowed aggregates: sum, avg, min, max, count, count_rows, count_distinct.
+For one grouping only, set inner_aggregate:"none", source_grain:[], and
+outer_aggregate to that grouping's operation. outer_aggregate cannot be none.
+For AVG of per-entity SUMs, use inner_aggregate:"sum", outer_aggregate:"avg",
+and the source's entity key in source_grain. For row counts use source_columns:["*"].
+For formulas list the raw operands. SUM(value-cost) preserves different null
+semantics from SUM(value)-SUM(cost).
 
-inner_aggregate is sum|avg|min|max|count|count_rows|count_distinct|none.
-Use none for a record-weighted comparison or an already one-row-per-entity measure.
-For entity-weighted comparisons use the appropriate inner calculation, THEN join
-eligible entity summaries, THEN apply the outer calculation by the profile attribute.
-Independent group summaries can use different populations and change the answer.
-For a formula, source_columns lists its raw operands. Compute it before its inner
-aggregate and preserve null propagation: SUM(value-cost) can differ from
-SUM(value)-SUM(cost) when missing-value patterns differ. A maximum concentration
-uses MAX, not the average/sum of every allocation. Explain unspecified definitions.
-
-Alias display fields by copying their owning column. Profile attributes and fact
-attributes can differ; an unrelated label table cannot replace a missing profile.
-Preserve null groups. For dimension joins expected to be many-to-one, set
-validate:"many_to_one"; for entity-summary joins use validate:"one_to_one" when
-appropriate. These checks apply to actual data. Sort/limit after the final metrics.
-
-A metric must descend from its own declared source, inner aggregate/grain and
-outer aggregate. A summary on an unused path does not satisfy it. Repair calculated
-aliases in the plan rather than requesting them from retrieval. All source IDs
-must be actual available table IDs. The original question and schema outrank
-comparison_notes. Record ambiguous choices in assumptions. No reference answers
-are available to this planner. Do not use none to bypass an entity-level metric.
+required_population lists the base and fact sources that MUST participate in
+every metric. Do not list optional label dictionaries. Join required entity
+summaries before the outer aggregate. Separate group summaries may use different
+entities. Preserve null labels with left joins. Follow the question's population;
+do not change all joins to inner or all joins to left.
+Use the profile's grouping attribute when the question asks about profiles.
+State unspecified metric definitions in assumptions. Never change a calculation
+only to make its metadata pass. Project every requested metric and dimension.
 """
 
 
@@ -81,7 +60,7 @@ def _refs(node):
 def validate_comparative_contract(spec, originals):
     contract = spec.get("comparative_contract")
     if not contract:
-        return ["comparative_contract: declare the comparison dimension, population and metric calculations."] if spec.get("comparative_contract_required") else []
+        return [MISSING_CONTRACT_ERROR] if spec.get("comparative_contract_required") else []
     errors = []
 
     def fail(message):
@@ -144,7 +123,7 @@ def validate_comparative_contract(spec, originals):
         elif op == "Filter_Aggregate" and _operation(step.get("operation")) not in {"filter", "where"}:
             groups = _names(step.get("group_by"))
             child = source.get(step.get("target_column"), {})
-            if step.get("target_column") == "*":
+            if step.get("target_column") == "*" or step.get("operation") == "count_rows":
                 child = {"kind": "raw", "sources": {(i, "*") for i in deps}}
             result = {col: source[col] for col in groups}
             result[step["output_column"]] = {
@@ -204,17 +183,30 @@ def validate_comparative_contract(spec, originals):
             fail(f"metric {alias} needs actual source_columns on {branch}.")
             continue
         expected_sources = {(branch, c) for c in fields}
-        if _refs(node) != expected_sources:
+        # COUNT(*) counts a source's records, not values in a particular column.
+        # A record identity in metadata may describe the same count. Keep the
+        # relation exact, and still check count_rows versus count/count_distinct.
+        row_count = _refs(node) == {(branch, "*")} and (
+            _operation(metric.get("inner_aggregate")) == "count_rows"
+            or _operation(metric.get("outer_aggregate")) == "count_rows")
+        if _refs(node) != expected_sources and not row_count:
             fail(f"metric {alias} uses different source columns from its declaration.")
         outer = _operation(metric.get("outer_aggregate"))
+        if outer not in {"sum", "avg", "min", "max", "count", "count_rows", "count_distinct"}:
+            fail(f"metric {alias}: outer_aggregate must name the final grouping operation, not {outer!r}. "
+                 "For one grouping, use inner_aggregate='none' and outer_aggregate='sum', 'avg', or another supported aggregate.")
+            continue
         if node.get("kind") != "aggregate" or node.get("operation") != outer:
             fail(f"metric {alias} must end with its declared outer aggregate {outer}.")
             continue
         groups = node.get("groups", [])
         if len(groups) != len(dimension_refs) or any(not any(ref in g for g in groups) for ref in dimension_refs):
             fail(f"metric {alias} must group at the declared comparison dimension.")
-        if not set(population).issubset(node.get("population", set())):
-            fail(f"metric {alias} aggregates before joining its required population {population}.")
+        missing_population = sorted(set(population) - node.get("population", set()))
+        if missing_population:
+            fail(f"metric {alias} at {node.get('step')} is missing required population {missing_population} before aggregation. "
+                 f"Guaranteed participants: {sorted(node.get('population', set()))}. "
+                 "Join required entity summaries before this aggregate; optional label tables do not belong in required_population.")
         inner = _operation(metric.get("inner_aggregate"))
         if inner not in {"none", ""}:
             child = node.get("child", {})

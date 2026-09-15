@@ -1,5 +1,17 @@
 # V8 comparative analysis and implementation
 
+> **Repair update:** The response format, missing-contract retries, name normalization
+> and row-count checks have now been updated inside V8. See
+> [implemented repair changes and validation](docs/V8_REPAIR_CHANGES.md).
+> The 38-skip result below is the saved pre-repair baseline, not a measurement of
+> the repaired code.
+
+> **Post-run update:** The completed V8 run has 3 MATCH and 38 skipped questions
+> on part 2 (68 MC questions). The implementation-stage expectations below are
+> superseded by the [completed-run skip analysis](docs/V8_MC_SKIP_ANALYSIS.md),
+> which identifies contract-format failures, validator limitations, and remaining
+> calculation errors. Production code was not changed during that follow-up review.
+
 ## Verified results
 
 The saved results support the reported tradeoff. MATCH is the independent grader's

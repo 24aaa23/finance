@@ -37,6 +37,8 @@ Schema: {json.dumps(schema_details)}
 - Select every required field using its declared alias. Keep optional bindings
   OPTIONAL; preserve raw duplicates and missing values.
 - Preserve every filter's value, operator, AND/OR/NOT scope, and date boundary.
+  Keep row-eligibility FILTERs outside OPTIONAL bindings, including !BOUND/BOUND
+  tests for missing/present values; moving them inside would retain excluded rows.
   Use numeric/date literals compatible with the RDF field datatype. Do not
   compare dates to strings or change equality to substring matching.
 - Fix syntax or invalid schema terms using the supplied evidence. A timeout does
