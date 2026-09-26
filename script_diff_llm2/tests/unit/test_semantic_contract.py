@@ -231,6 +231,118 @@ class QuerySpecCleanupTest(unittest.TestCase):
         )
         self.assertFalse(cleaned.get("preserve_null_groups", False))
 
+    def test_filter_mention_does_not_infer_group_by(self):
+        spec = {
+            "query_type": "set_logic",
+            "base_entity": "Investor",
+            "entity_key": "investorId",
+            "grain": {"pre_aggregate_by": [], "final_group_by": []},
+            "group_by": [],
+            "filters": [{"source_class": "Investor", "field": "category", "operator": "=", "value": "Equity"}],
+            "measures": [],
+            "output_schema": ["investorId", "investorName"],
+            "required_classes": ["Investor"],
+            "execution_strategy": "single_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Which Equity-profile investors violate this rule?",
+            ["Investor"],
+            _normalize,
+            schema_kind="kg",
+        )
+        self.assertEqual(cleaned["group_by"], [])
+
+    def test_non_grouped_entity_query_drops_accidental_group_by_and_helper_count(self):
+        spec = {
+            "query_type": "set_logic",
+            "base_entity": "Investor",
+            "entity_key": "investorId",
+            "join_policy": "anti_join",
+            "grain": {"pre_aggregate_by": ["investorId"], "final_group_by": ["investorId", "investorName", "category"]},
+            "group_by": [
+                {"output_name": "investorId", "source_class": "Investor", "field": "investorId"},
+                {"output_name": "investorName", "source_class": "Investor", "field": "investorName"},
+                {"output_name": "category", "source_class": "Investor", "field": "category"},
+            ],
+            "filters": [
+                {"source_class": "Investor", "field": "category", "operator": "=", "value": "Equity", "value_type": "string"},
+                {"source_class": "measure", "field": "equity_holding_count", "operator": "=", "value": "0", "value_type": "number"},
+            ],
+            "measures": [
+                {
+                    "output_name": "equity_holding_count",
+                    "source_class": "PortfolioHolding",
+                    "field": "holdingId",
+                    "per_entity_operation": "COUNT",
+                    "final_operation": None,
+                }
+            ],
+            "output_schema": ["investorId", "investorName", "category", "equity_holding_count"],
+            "required_classes": ["Investor", "PortfolioHolding"],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Using the consistency rule that an Equity profile category should have at least one Equity holding category, which Equity-profile investors violate this rule?",
+            ["Investor", "PortfolioHolding"],
+            _normalize,
+            schema_kind="kg",
+        )
+        self.assertEqual(cleaned["group_by"], [])
+        self.assertEqual(cleaned["grain"]["final_group_by"], [])
+        self.assertEqual(cleaned["measures"], [])
+        self.assertEqual(cleaned["output_schema"], ["investorId", "investorName", "category"])
+        self.assertFalse(any(f.get("source_class") == "measure" for f in cleaned["filters"]))
+
+    def test_singular_subquery_collapses_over_broad_in_filter(self):
+        spec = {
+            "query_type": "set_logic",
+            "base_entity": "Investor",
+            "entity_key": "investorId",
+            "grain": {"pre_aggregate_by": [], "final_group_by": []},
+            "group_by": [],
+            "filters": [
+                {
+                    "source_class": "RebalancingAction",
+                    "field": "action",
+                    "operator": "in",
+                    "value": ["Redemption", "Manual Override", "Flash Crash"],
+                    "value_type": "list",
+                },
+                {
+                    "source_class": "measure",
+                    "field": "action_type_count",
+                    "operator": "=",
+                    "value": "3",
+                    "value_type": "number",
+                },
+            ],
+            "measures": [
+                {
+                    "output_name": "action_type_count",
+                    "source_class": "RebalancingAction",
+                    "field": "action",
+                    "per_entity_operation": "COUNT",
+                    "final_operation": None,
+                }
+            ],
+            "output_schema": ["investorId", "investorName", "action_type_count"],
+            "required_classes": ["Investor", "RebalancingAction"],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Investors that have performed a Manual Override action",
+            ["Investor", "RebalancingAction"],
+            _normalize,
+            schema_kind="kg",
+        )
+        self.assertEqual(cleaned["filters"][0]["operator"], "=")
+        self.assertEqual(cleaned["filters"][0]["value"], "Manual Override")
+        self.assertEqual(cleaned["measures"], [])
+        self.assertEqual(cleaned["output_schema"], ["investorId", "investorName"])
+
 
 class SemanticContractValidationTest(unittest.TestCase):
     def test_detects_missing_bucketization(self):
@@ -352,6 +464,114 @@ class SemanticContractValidationTest(unittest.TestCase):
                 {"field_name": "category", "missing_count": 755},
             ],
         )
+
+    def test_complex_empty_result_is_not_treated_as_valid(self):
+        query_spec = {
+            "query_type": "set_logic",
+            "join_policy": "anti_join",
+            "required_classes": ["Investor", "PortfolioHolding"],
+            "filters": [{"source_class": "Investor", "field": "category", "operator": "=", "value": "Equity"}],
+            "measures": [{"output_name": "equity_holding_count", "per_entity_operation": "COUNT"}],
+            "output_schema": ["investorId", "investorName"],
+        }
+        result = validate_semantic_result(
+            "Which Equity-profile investors violate this rule?",
+            query_spec,
+            [],
+        )
+        self.assertFalse(result["is_valid"])
+        self.assertIn("no rows", result["reason"].lower())
+
+    def test_rebalancing_logic_value_remaps_action_field(self):
+        spec = {
+            "query_type": "set_logic",
+            "base_entity": "Investor",
+            "entity_key": "investorId",
+            "grain": {"pre_aggregate_by": [], "final_group_by": []},
+            "group_by": [],
+            "filters": [
+                {
+                    "source_class": "RebalancingAction",
+                    "field": "action",
+                    "operator": "=",
+                    "value": "Manual Override",
+                    "value_type": "string",
+                }
+            ],
+            "measures": [],
+            "output_schema": ["investorId", "investorName"],
+            "required_classes": ["Investor", "RebalancingAction"],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Which investors have Manual Override actions?",
+            ["Investor", "RebalancingAction"],
+            _normalize,
+            schema_kind="kg",
+        )
+        self.assertEqual(cleaned["filters"][0]["field"], "logic")
+
+    def test_scenario_logic_value_remaps_to_rebalancing_logic(self):
+        spec = {
+            "query_type": "set_logic",
+            "base_entity": "Investor",
+            "entity_key": "investorId",
+            "grain": {"pre_aggregate_by": [], "final_group_by": []},
+            "group_by": [],
+            "filters": [
+                {
+                    "source_class": "ScenarioRebalancing",
+                    "field": "triggeredAction",
+                    "operator": "=",
+                    "value": "Automated Trigger",
+                    "value_type": "string",
+                }
+            ],
+            "measures": [],
+            "output_schema": ["investorId"],
+            "required_classes": ["Investor", "ScenarioRebalancing", "RebalancingAction"],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Retrieve investor IDs that are linked to Automated Trigger actions.",
+            ["Investor", "ScenarioRebalancing", "RebalancingAction"],
+            _normalize,
+            schema_kind="kg",
+        )
+        self.assertEqual(cleaned["filters"][0]["source_class"], "RebalancingAction")
+        self.assertEqual(cleaned["filters"][0]["field"], "logic")
+
+    def test_scenario_label_remaps_triggered_action_back_to_scenario(self):
+        spec = {
+            "query_type": "set_logic",
+            "base_entity": "Investor",
+            "entity_key": "investorId",
+            "grain": {"pre_aggregate_by": [], "final_group_by": []},
+            "group_by": [],
+            "filters": [
+                {
+                    "source_class": "ScenarioRebalancing",
+                    "field": "triggeredAction",
+                    "operator": "=",
+                    "value": "Flash Crash",
+                    "value_type": "string",
+                }
+            ],
+            "measures": [],
+            "output_schema": ["investorId"],
+            "required_classes": ["Investor", "ScenarioRebalancing"],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Which investors have Flash Crash scenarios?",
+            ["Investor", "ScenarioRebalancing"],
+            _normalize,
+            schema_kind="kg",
+        )
+        self.assertEqual(cleaned["filters"][0]["field"], "scenario")
 
 
 class FallbackPlannerTest(unittest.TestCase):

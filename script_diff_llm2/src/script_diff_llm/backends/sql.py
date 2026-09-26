@@ -154,10 +154,16 @@ CRITICAL SQL SCHEMA RULES:
 - Generate SQLite-compatible SQL.
 - Use investor_id as the common join key when joining investor-related tables.
 - Do not confuse KG class/property names with SQLite table/column names.
+- Treat User Query and Query Spec as the local subquery scope.
+- Use Original User Query Context only for shared context such as the year or the outer question wording.
+- Do not add sibling conditions from the original decomposed query unless they are explicitly present in User Query or Query Spec.
 
 Bound Upstream Inputs (Values from previous nodes):
 {json.dumps(bound_inputs, indent=2)}
 Use these bound inputs in WHERE clauses if provided, matching values to real physical columns such as investor_id.
+If Bound Upstream Inputs are non-empty, they are hard constraints from upstream nodes.
+Do not recompute a broader universe when the subquery is clearly meant to refine, subtract from, or select within those upstream values.
+If an upstream input is a list of category-like or investor-like values, constrain the SQL to those values with IN/NOT IN logic where appropriate.
 
 QUERY SPEC CONTRACT RULES:
 - Treat Query Spec as the semantic contract for the SQL query, not as optional guidance.

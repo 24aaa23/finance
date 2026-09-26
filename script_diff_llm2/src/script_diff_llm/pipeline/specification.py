@@ -5,25 +5,95 @@ from typing import Any, Callable
 
 PROFILE_DIMENSION_HINTS = {
     "risk_tolerance": {
-        "phrases": ["risk_tolerance", "risk tolerance"],
+        "phrases": [
+            " by risk tolerance", " across risk tolerance", " per risk tolerance",
+            " for each risk tolerance", " grouped by risk tolerance",
+            " by profile risk tolerance", " across profile risk tolerance",
+            " per profile risk tolerance", " for each profile risk tolerance",
+        ],
         "sql": {"source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001", "field": "risk_tolerance", "output_name": "risk_tolerance"},
         "kg": {"source_class": "Investor", "field": "riskTolerance", "output_name": "risk_tolerance"},
     },
     "time_horizon": {
-        "phrases": ["time_horizon", "time horizon"],
+        "phrases": [
+            " by time horizon", " across time horizon", " per time horizon",
+            " for each time horizon", " grouped by time horizon",
+            " by profile time horizon", " across profile time horizon",
+            " per profile time horizon", " for each profile time horizon",
+        ],
         "sql": {"source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001", "field": "time_horizon", "output_name": "time_horizon"},
         "kg": {"source_class": "Investor", "field": "timeHorizon", "output_name": "time_horizon"},
     },
     "segment": {
-        "phrases": [" profile segment", " investor segment", " by segment", " across segment", " per segment", " for each segment"],
+        "phrases": [
+            " by segment", " across segment", " per segment", " for each segment",
+            " grouped by segment", " by profile segment", " across profile segment",
+            " per profile segment", " for each profile segment",
+        ],
         "sql": {"source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001", "field": "segment", "output_name": "segment"},
         "kg": {"source_class": "Investor", "field": "segment", "output_name": "segment"},
     },
     "category": {
-        "phrases": [" profile category", " investor category", " by category", " across category", " per category", " for each category"],
+        "phrases": [
+            " by category", " across category", " per category", " for each category",
+            " grouped by category", " by profile category", " across profile category",
+            " per profile category", " for each profile category",
+        ],
         "sql": {"source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001", "field": "category", "output_name": "category"},
         "kg": {"source_class": "Investor", "field": "category", "output_name": "category"},
     },
+}
+
+REBALANCING_LOGIC_VALUES = {
+    "manual override",
+    "valuation-based",
+    "calendar-based",
+    "momentum-driven",
+    "mean-reversion",
+    "threshold-based",
+    "tactical",
+    "scenario-based",
+    "risk-parity",
+    "automated trigger",
+}
+
+REBALANCING_ACTION_VALUES = {
+    "goal alignment buy",
+    "buy",
+    "profit booking",
+    "tactical increase",
+    "de-risking",
+    "goal alignment sell",
+    "rebalance sell",
+    "cash deployment",
+    "asset reallocation",
+    "hold",
+    "dividend reinvestment",
+    "tactical decrease",
+    "sector rotation sell",
+    "switch in",
+    "partial exit",
+    "defensive shift",
+    "switch out",
+    "rebalance buy",
+    "sector rotation buy",
+    "stop loss exit",
+    "aggressive entry",
+    "portfolio trim",
+    "sell",
+}
+
+SCENARIO_VALUES = {
+    "approaching goal",
+    "bear market",
+    "economic growth",
+    "interest rate hike",
+    "sector rotation",
+    "inflation surge",
+    "flash crash",
+    "currency depreciation",
+    "bull market",
+    "market volatility",
 }
 
 
@@ -76,6 +146,13 @@ def _query_mentions_named_entity(query_text: str, entity_key: str) -> bool:
 
 def _has_any_phrase(query_text: str, phrases: list[str]) -> bool:
     return any(phrase in query_text for phrase in phrases)
+
+
+def _explicit_grouping_requested(query_text: str) -> bool:
+    return _has_any_phrase(
+        query_text,
+        [" for each ", " grouped by ", " across ", " per ", " by "],
+    )
 
 
 def _measure_prefix(base_name: str) -> str:
@@ -145,6 +222,252 @@ def _measure_source_classes(measures: list[Any]) -> list[str]:
         if source and source not in sources:
             sources.append(source)
     return sources
+
+
+def _number_word_to_int(token: str) -> int | None:
+    mapping = {
+        "zero": 0,
+        "one": 1,
+        "two": 2,
+        "three": 3,
+        "four": 4,
+        "five": 5,
+        "six": 6,
+        "seven": 7,
+        "eight": 8,
+        "nine": 9,
+        "ten": 10,
+    }
+    token = str(token or "").strip().lower()
+    if token.isdigit():
+        return int(token)
+    return mapping.get(token)
+
+
+def _query_requires_nontrivial_count_logic(query_text: str) -> bool:
+    q = f" {query_text} "
+    if any(marker in q for marker in [" how many ", " count ", " counts ", " number of "]):
+        return True
+    for match in re.finditer(
+        r"\b(at least|at most|more than|less than|exactly|equal to|no fewer than|no more than)\s+([a-z0-9]+)\b",
+        q,
+    ):
+        value = _number_word_to_int(match.group(2))
+        if value is None or value > 1:
+            return True
+    return False
+
+
+def _count_like_measure(measure: dict[str, Any]) -> bool:
+    if not isinstance(measure, dict):
+        return False
+    per_entity_operation = str(measure.get("per_entity_operation") or "").upper()
+    final_operation = str(measure.get("final_operation") or "").upper()
+    output_name = _normalize_name_for_contract(measure.get("output_name", ""))
+    field_name = _normalize_name_for_contract(measure.get("field", ""))
+    return (
+        per_entity_operation == "COUNT"
+        or final_operation == "COUNT"
+        or "count" in output_name
+        or field_name.endswith("count")
+    )
+
+
+def _filter_string_values(filter_item: dict[str, Any]) -> set[str]:
+    value = filter_item.get("value")
+    values = value if isinstance(value, list) else [value]
+    return {
+        str(item).strip().lower()
+        for item in values
+        if isinstance(item, str) and str(item).strip()
+    }
+
+
+def _repair_filter_field_domains(
+    cleaned: dict[str, Any],
+    retrieved_tables: list[Any],
+    cleanup_notes: list[str],
+    *,
+    schema_kind: str,
+) -> None:
+    filters = cleaned.get("filters")
+    filters = filters if isinstance(filters, list) else []
+    if not filters:
+        return
+
+    required_classes = cleaned.get("required_classes")
+    required_classes = required_classes if isinstance(required_classes, list) else []
+    available_classes = {
+        str(value).strip()
+        for value in [*retrieved_tables, *required_classes]
+        if str(value).strip()
+    }
+
+    if schema_kind == "sql":
+        rebalancing_class = "ATOM_EVENT_REBALANCING_ACTION_001"
+        scenario_class = "ATOM_EVENT_SCENARIO_REBALANCING_001"
+        triggered_action_field = "triggered_action"
+    else:
+        rebalancing_class = "RebalancingAction"
+        scenario_class = "ScenarioRebalancing"
+        triggered_action_field = "triggeredAction"
+
+    for item in filters:
+        if not isinstance(item, dict):
+            continue
+        source_class = str(item.get("source_class") or "").strip()
+        field_name = str(item.get("field") or "").strip()
+        values = _filter_string_values(item)
+        if not values:
+            continue
+
+        if source_class == rebalancing_class and field_name == "action" and values <= REBALANCING_LOGIC_VALUES:
+            item["field"] = "logic"
+            cleanup_notes.append(
+                f"{source_class}.action re-mapped to {source_class}.logic because filter values are rebalancing logic labels"
+            )
+            continue
+
+        if source_class == rebalancing_class and field_name == "logic" and values <= REBALANCING_ACTION_VALUES:
+            item["field"] = "action"
+            cleanup_notes.append(
+                f"{source_class}.logic re-mapped to {source_class}.action because filter values are concrete action labels"
+            )
+            continue
+
+        if source_class == scenario_class and field_name == "scenario" and values <= REBALANCING_ACTION_VALUES:
+            item["field"] = triggered_action_field
+            cleanup_notes.append(
+                f"{scenario_class}.scenario re-mapped to {scenario_class}.{triggered_action_field} because filter values are triggered-action labels"
+            )
+            continue
+
+        if source_class == scenario_class and field_name == triggered_action_field and values <= SCENARIO_VALUES:
+            item["field"] = "scenario"
+            cleanup_notes.append(
+                f"{scenario_class}.{triggered_action_field} re-mapped to {scenario_class}.scenario because filter values are scenario labels"
+            )
+            continue
+
+        if (
+            source_class == scenario_class
+            and field_name == triggered_action_field
+            and values <= REBALANCING_LOGIC_VALUES
+            and rebalancing_class in available_classes
+        ):
+            item["source_class"] = rebalancing_class
+            item["field"] = "logic"
+            _append_unique(required_classes, rebalancing_class)
+            cleaned["required_classes"] = required_classes
+            cleanup_notes.append(
+                f"{scenario_class}.{triggered_action_field} re-mapped to {rebalancing_class}.logic because filter values are rebalancing logic labels"
+            )
+
+
+def _collapse_singular_value_filters(
+    cleaned: dict[str, Any],
+    query_text: str,
+    normalize_for_compare_fn: Callable[[Any], str],
+    cleanup_notes: list[str],
+) -> None:
+    filters = cleaned.get("filters")
+    filters = filters if isinstance(filters, list) else []
+    collapsed_measure_fields: set[str] = set()
+    for item in filters:
+        if not isinstance(item, dict):
+            continue
+        operator = str(item.get("operator", "")).strip().lower()
+        values = item.get("value")
+        if operator not in {"in", "not_in"} or not isinstance(values, list) or len(values) < 2:
+            continue
+        string_values = [value for value in values if isinstance(value, str) and value.strip()]
+        if len(string_values) < 2:
+            continue
+        matches = []
+        for value in string_values:
+            normalized_value = normalize_for_compare_fn(value)
+            if normalized_value and normalized_value in query_text:
+                matches.append(value)
+        if len(matches) != 1:
+            continue
+        selected_value = matches[0]
+        item["operator"] = "=" if operator == "in" else "!="
+        item["value"] = selected_value
+        item["value_type"] = "string"
+        cleanup_notes.append(
+            f"multi-value filter collapsed to '{selected_value}' because the subquery text names only one condition"
+        )
+        field_name = str(item.get("field") or "").strip()
+        if field_name:
+            collapsed_measure_fields.add(_normalize_name_for_contract(field_name))
+
+    if not collapsed_measure_fields:
+        return
+
+    filtered = []
+    for item in filters:
+        if not isinstance(item, dict):
+            filtered.append(item)
+            continue
+        if (
+            _normalize_name_for_contract(item.get("source_class", "")) == "measure"
+            and _normalize_name_for_contract(item.get("field", "")) in collapsed_measure_fields
+        ):
+            cleanup_notes.append(
+                f"helper measure filter '{item.get('field', '')}' removed after singular filter collapse"
+            )
+            continue
+        filtered.append(item)
+    cleaned["filters"] = filtered
+
+
+def _strip_helper_count_measures(
+    cleaned: dict[str, Any],
+    query_text: str,
+    cleanup_notes: list[str],
+) -> None:
+    query_type = str(cleaned.get("query_type", "")).lower()
+    if query_type not in {"point_lookup", "set_logic"}:
+        return
+    if _query_requires_nontrivial_count_logic(query_text):
+        return
+
+    measures = cleaned.get("measures")
+    measures = measures if isinstance(measures, list) else []
+    removable_names = {
+        str(measure.get("output_name") or "").strip()
+        for measure in measures
+        if _count_like_measure(measure)
+    }
+    if not removable_names:
+        return
+
+    cleaned["measures"] = [
+        measure for measure in measures
+        if str(measure.get("output_name") or "").strip() not in removable_names
+    ]
+
+    output_schema = cleaned.get("output_schema")
+    output_schema = output_schema if isinstance(output_schema, list) else []
+    cleaned["output_schema"] = [
+        name for name in output_schema
+        if str(name or "").strip() not in removable_names
+    ]
+
+    filters = cleaned.get("filters")
+    filters = filters if isinstance(filters, list) else []
+    removable_norms = {_normalize_name_for_contract(name) for name in removable_names}
+    cleaned["filters"] = [
+        item for item in filters
+        if not (
+            isinstance(item, dict)
+            and _normalize_name_for_contract(item.get("source_class", "")) == "measure"
+            and _normalize_name_for_contract(item.get("field", "")) in removable_norms
+        )
+    ]
+    cleanup_notes.append(
+        "helper COUNT measures removed from entity-returning query so generation follows existence semantics instead of support counts"
+    )
 
 
 def _group_source_classes(group_by: list[Any]) -> list[str]:
@@ -275,7 +598,8 @@ def cleanup_query_spec(
     query_type = str(cleaned.get("query_type", "")).lower()
     group_by = cleaned.get("group_by", [])
     group_by = group_by if isinstance(group_by, list) else []
-    if group_by and any(marker in q for marker in ["for each", " by ", " per ", " across ", "grouped by"]):
+    explicit_grouping_requested = _explicit_grouping_requested(f" {q} ")
+    if group_by and explicit_grouping_requested:
         cleaned["preserve_null_groups"] = True
         cleanup_notes.append("group-by query marked to preserve NULL groups")
 
@@ -328,6 +652,12 @@ def cleanup_query_spec(
     measures = cleaned.get("measures", [])
     measures = measures if isinstance(measures, list) else []
 
+    list_like = _has_any_phrase(f" {q} ", [" which ", " show ", " list ", " identify ", " find "])
+    numeric_required = any(marker in q for marker in [
+        "count", "how many", "average", "avg", "sum", "total",
+        "highest", "lowest", "maximum", "minimum",
+    ])
+
     if cleaned.get("month_grain"):
         month_group_exists = any(
             isinstance(group, dict)
@@ -378,7 +708,7 @@ def cleanup_query_spec(
         if isinstance(group, dict)
     }
     for hint in PROFILE_DIMENSION_HINTS.values():
-        if not _has_any_phrase(q, hint["phrases"]):
+        if not _has_any_phrase(f" {q} ", hint["phrases"]):
             continue
         mapping = hint["sql"] if schema_kind == "sql" else hint["kg"]
         if normalize_for_compare_fn(mapping["output_name"]) in existing_group_outputs:
@@ -398,6 +728,28 @@ def cleanup_query_spec(
             f"group_by inferred as {mapping['output_name']} from question text"
         )
         break
+
+    if list_like and not numeric_required and not explicit_grouping_requested and query_type in {"point_lookup", "set_logic"} and group_by:
+        cleaned["group_by"] = []
+        group_by = []
+        grain["final_group_by"] = []
+        cleaned["grain"] = grain
+        cleanup_notes.append("non-grouped entity query had accidental group_by fields removed")
+
+    _collapse_singular_value_filters(cleaned, f" {q} ", normalize_for_compare_fn, cleanup_notes)
+    _repair_filter_field_domains(
+        cleaned,
+        retrieved_tables,
+        cleanup_notes,
+        schema_kind=schema_kind,
+    )
+    _strip_helper_count_measures(cleaned, f" {q} ", cleanup_notes)
+    measures = cleaned.get("measures", [])
+    measures = measures if isinstance(measures, list) else []
+    grouped_compare = bool(group_by) and (
+        query_type in {"comparative", "multi_step", "ranking"}
+        or _has_any_phrase(q, [" compare ", " comparison ", " how do ", " how does ", " average ", " avg "])
+    )
 
     # Positional, not filtered: a rename is only ever detected by comparing the
     # same measure's name before and after cleanup at the same list index.
@@ -608,6 +960,7 @@ def semantic_build_query_spec(
     query = inputs.get("query", "")
     root_query = inputs.get("root_query", "") or query
     retrieved_tables = inputs.get("retrieved_tables", [])
+    bound_inputs = inputs.get("bound_inputs", {})
     schema_kind = inputs.get("schema_kind", "kg")
     schema_label = "Retrieved Tables" if schema_kind == "sql" else "Retrieved Classes"
     schema_unit = "tables and columns" if schema_kind == "sql" else "classes and fields"
@@ -640,6 +993,9 @@ Subquery Description:
 Original User Query:
 {root_query}
 
+Bound Upstream Inputs:
+{json.dumps(bound_inputs, indent=2)}
+
 {schema_label}:
 {retrieved_tables}
 
@@ -653,6 +1009,13 @@ IMPORTANT:
 - Do not invent fields or columns.
 - Do not write SPARQL or SQL.
 - Return only valid JSON.
+- Treat the Subquery Description as the binding scope for this Query_Spec.
+- Use Original User Query only for shared context such as the overall user wording, year, or entity family.
+- If Original User Query contains additional conditions that are not explicitly present in the Subquery Description, do NOT add them to this Query_Spec.
+- Do not merge sibling conditions from other decomposed subqueries into this subquery plan.
+- If Bound Upstream Inputs are present, treat them as already-computed constraints from upstream nodes.
+- Preserve those constraints in the Query_Spec instead of recomputing a broader universe from scratch.
+- Do not ignore Bound Upstream Inputs when this subquery is refining, subtracting, or intersecting upstream results.
 
 INSTRUCTIONS:
 
@@ -817,6 +1180,9 @@ Subquery Description:
 Original User Query:
 {root_query}
 
+Bound Upstream Inputs:
+{json.dumps(bound_inputs, indent=2)}
+
 Retrieved Schema Objects:
 {retrieved_tables}
 
@@ -850,6 +1216,9 @@ Subquery Description:
 
 Original User Query:
 {root_query}
+
+Bound Upstream Inputs:
+{json.dumps(bound_inputs, indent=2)}
 
 Retrieved Schema Objects:
 {retrieved_tables}

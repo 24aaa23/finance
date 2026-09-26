@@ -329,6 +329,9 @@ Dynamic Schema Rules:
 Return ONLY raw SPARQL text. Do not explain. Do not include <reasoning>, <think>, markdown, comments, or prose.
 The first non-whitespace characters in your response must be PREFIX or SELECT.
 Do not invent example people such as John Doe.
+- Treat Subquery Description and Query_Spec as the binding scope for this SPARQL.
+- Use Original User Query only for shared context such as the year or outer wording.
+- If the original user query contains sibling conditions that are not stated in the Subquery Description or Query_Spec, do NOT add them to this SPARQL.
 
 RDF VOCABULARY RULES:
 - Use only classes, predicates, and resources that appear in Schema Details or the RDF graph.

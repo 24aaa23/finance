@@ -15,6 +15,15 @@ Available backends for subqueries: SQL, KG.
 Use SQL for aggregation, ranking, or conventional relational filters.
 Use KG for relationship traversal and multi-hop entity connections.
 
+DECOMPOSITION RULES:
+- Prefer the smallest correct DAG. If one subquery can answer the question directly, keep it as one node.
+- Do not introduce abstract intermediate nodes (for example category-level or label-level nodes) when the final answer target is already investor-level and can be retrieved directly.
+- For queries asking which entities violate a rule, have no matching related record, are missing something, or satisfy a direct anti-condition, prefer a single anti-join style subquery over a multi-node DAG unless different backends are genuinely required.
+- Use set operators only when the user query truly requires combining independently meaningful result sets.
+- Do not decompose a direct anti-join or existence test into upstream "all X", "all Y", then a downstream recomputation if one direct filtered subquery would preserve semantics better.
+- If downstream nodes depend on upstream outputs, the downstream descriptions must explicitly refine or transform those outputs rather than restating the original broad query.
+- Every declared output field should correspond to something a backend can realistically emit. Avoid invented semantic names when a simple key like investor_id or category is enough.
+
 User Query: "{query}"
 
 Output ONLY a JSON object representing the DAG with this exact structure:

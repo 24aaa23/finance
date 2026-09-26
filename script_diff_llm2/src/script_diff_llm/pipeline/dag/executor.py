@@ -1,6 +1,7 @@
 import concurrent.futures
 import json
 import os
+import re
 import threading
 import time
 from typing import Any
@@ -113,6 +114,60 @@ class AOPExecutor:
                     f"subquery={node_data.get('description', '')}"
                 )
 
+    @staticmethod
+    def _normalize_bound_field_name(value: Any) -> str:
+        return re.sub(r"[^a-z0-9]+", "", str(value or "").lower())
+
+    @classmethod
+    def _field_tokens(cls, value: Any) -> list[str]:
+        text = str(value or "")
+        text = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", text)
+        tokens = [token.lower() for token in re.split(r"[^a-zA-Z0-9]+", text) if token]
+        normalized = []
+        for token in tokens:
+            if token.endswith("ids"):
+                token = token[:-1]
+            normalized.append(token)
+        return normalized
+
+    @classmethod
+    def _best_matching_row_key(cls, source_field: str, rows: list[dict[str, Any]]) -> str | None:
+        if not rows or not isinstance(rows[0], dict):
+            return None
+        row_keys = [str(key) for key in rows[0].keys()]
+        if source_field in row_keys:
+            return source_field
+
+        source_norm = cls._normalize_bound_field_name(source_field)
+        source_tokens = cls._field_tokens(source_field)
+        source_token_set = set(source_tokens)
+        if not source_norm or not source_token_set:
+            return None
+
+        best_key = None
+        best_score = 0
+        for row_key in row_keys:
+            row_norm = cls._normalize_bound_field_name(row_key)
+            row_tokens = cls._field_tokens(row_key)
+            row_token_set = set(row_tokens)
+            score = 0
+            if row_norm == source_norm:
+                score = 100
+            elif row_token_set == source_token_set:
+                score = 90
+            elif row_token_set and row_token_set <= source_token_set:
+                score = 70 + len(row_token_set)
+            elif source_token_set and source_token_set <= row_token_set:
+                score = 60 + len(source_token_set)
+            elif source_tokens and row_tokens and source_tokens[-1] == row_tokens[-1]:
+                overlap = len(source_token_set & row_token_set)
+                if overlap:
+                    score = 50 + overlap
+            if score > best_score:
+                best_key = row_key
+                best_score = score
+        return best_key if best_score >= 71 else None
+
     def _resolve_bound_inputs(self, node_id: str, dag: nx.DiGraph, results_cache: dict[str, Any]) -> dict[str, Any]:
         node_data = dag.nodes[node_id]
         declared_inputs = node_data.get("inputs", [])
@@ -126,7 +181,8 @@ class AOPExecutor:
             if isinstance(upstream_result, dict):
                 value = upstream_result.get(src_field)
                 if value is None and isinstance(upstream_result.get("data"), list):
-                    col_vals = [r.get(src_field) for r in upstream_result["data"] if src_field in r]
+                    resolved_field = self._best_matching_row_key(src_field, upstream_result["data"]) or src_field
+                    col_vals = [r.get(resolved_field) for r in upstream_result["data"] if resolved_field in r]
                     value = col_vals if col_vals else None
                 if value is not None:
                     bound[inp["name"]] = value

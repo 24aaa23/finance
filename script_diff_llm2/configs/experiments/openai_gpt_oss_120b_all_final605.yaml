@@ -1,0 +1,13 @@
+name: openai_gpt_oss_120b_all_final605
+slug: openai_gpt_oss_120b_all_final605
+model_config: configs/models/openai_gpt_oss_120b.yaml
+mode: all
+split: train
+input_sample_file: final_605_question.csv
+test_query_limit: 605
+sql_asset_file: data/sql/wealth_management_diverse/asset.yaml
+kg_schema_file: data/kg/wealth_management_diverse_schema.ttl
+kg_instance_file: data/kg/wealth_management_diverse_kg.ttl
+rdf_alias_map_file: data/kg/rdf_id_alias_map.json
+fuseki_endpoint: http://127.0.0.1:3030/wealth/query
+report_basename: openai_gpt_oss_120b_all_final605.csv

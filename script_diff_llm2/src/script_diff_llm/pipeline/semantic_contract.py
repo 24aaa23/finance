@@ -11,6 +11,29 @@ def normalize_compare_text(value: Any) -> str:
     return re.sub(r"[^a-z0-9.]+", " ", str(value or "").lower()).strip()
 
 
+def _query_has_multiple_conditions(query: str) -> bool:
+    q = f" {normalize_compare_text(query)} "
+    return any(marker in q for marker in [" and ", " both ", " also ", " as well as "])
+
+
+def _has_helper_count_measure(query_spec: dict[str, Any]) -> bool:
+    measures = query_spec.get("measures")
+    measures = measures if isinstance(measures, list) else []
+    for measure in measures:
+        if not isinstance(measure, dict):
+            continue
+        output_name = normalize_semantic_text(measure.get("output_name", ""))
+        per_entity_operation = str(measure.get("per_entity_operation") or "").upper()
+        final_operation = str(measure.get("final_operation") or "").upper()
+        if (
+            "count" in output_name
+            or per_entity_operation == "COUNT"
+            or final_operation == "COUNT"
+        ):
+            return True
+    return False
+
+
 def empty_answer_can_be_valid(query: str, query_spec: dict[str, Any]) -> bool:
     q = normalize_compare_text(query)
     qtype = str(query_spec.get("query_type", "")).lower()
@@ -25,9 +48,32 @@ def empty_answer_can_be_valid(query: str, query_spec: dict[str, Any]) -> bool:
         "count", "how many", "average", "avg", "sum", "total",
         "highest", "lowest", "maximum", "minimum",
     ])
-    return (list_like or negative_existence) and not numeric_required and qtype in {
-        "set_logic", "point_lookup", "ranking", "comparative", "aggregation",
-    }
+    if not ((list_like or negative_existence) and not numeric_required):
+        return False
+    if qtype not in {"set_logic", "point_lookup", "ranking", "comparative", "aggregation"}:
+        return False
+
+    group_by = query_spec.get("group_by")
+    group_by = group_by if isinstance(group_by, list) else []
+    ranking = query_spec.get("ranking")
+    ranking = ranking if isinstance(ranking, dict) else {}
+    filters = query_spec.get("filters")
+    filters = filters if isinstance(filters, list) else []
+    required_classes = query_spec.get("required_classes")
+    required_classes = required_classes if isinstance(required_classes, list) else []
+    join_policy = str(query_spec.get("join_policy", "")).lower()
+
+    if group_by or ranking.get("required"):
+        return False
+    if join_policy in {"anti_join", "union_required"}:
+        return False
+    if len(required_classes) > 1:
+        return False
+    if len(filters) > 1 or _query_has_multiple_conditions(query):
+        return False
+    if _has_helper_count_measure(query_spec):
+        return False
+    return True
 
 
 def _equivalent_column(expected: str, actual_columns: list[str]) -> str | None:
