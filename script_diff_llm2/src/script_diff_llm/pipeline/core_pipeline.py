@@ -87,6 +87,8 @@ PIPELINE_VERSION = CONFIG.pipeline_version
 TEST_QUERY_LIMIT = CONFIG.test_query_limit
 TEST_QUERY_OFFSET = CONFIG.test_query_offset
 TEST_MAX_WORKERS = CONFIG.test_max_workers
+BENCHMARK_START_DELAY_SECONDS = CONFIG.benchmark_start_delay_seconds
+REPORT_SAVE_EVERY = CONFIG.report_save_every
 SPARQL_SCAN_TIMEOUT_SECONDS = CONFIG.sparql_scan_timeout_seconds
 FUSEKI_ENDPOINT = CONFIG.fuseki_endpoint
 FUSEKI_SCAN_TIMEOUT_SECONDS = CONFIG.fuseki_scan_timeout_seconds
@@ -441,16 +443,21 @@ def semantic_classify_query(inputs: Dict[str, Any], client: Any, model: str = LO
     return final_result
 
 def _run_kg_scan(inputs: Dict[str, Any], rdf_graph: rdflib.Graph, known_terms_cache: Dict[str, Any]) -> Dict[str, Any]:
-    result, known_terms_cache["value"] = pre_programmed_scan_operator(
+    cache_lock = known_terms_cache.setdefault("_lock", threading.Lock())
+    with cache_lock:
+        cached_terms = known_terms_cache.get("value")
+    result, next_cache = pre_programmed_scan_operator(
         inputs,
         rdf_graph,
         rdf_id_alias_map=RDF_ID_ALIAS_MAP,
-        known_terms_cache=known_terms_cache.get("value"),
+        known_terms_cache=cached_terms,
         fuseki_endpoint=FUSEKI_ENDPOINT,
         fuseki_scan_timeout_seconds=FUSEKI_SCAN_TIMEOUT_SECONDS,
         fuseki_metadata_timeout_seconds=FUSEKI_METADATA_TIMEOUT_SECONDS,
         logger=print,
     )
+    with cache_lock:
+        known_terms_cache["value"] = next_cache
     return result
 
 # Acts as a pre-execution safety check by verifying that the prefixes and syntax
@@ -519,6 +526,9 @@ def main():
     print(f"[SYSTEM] Explain model: {EXPLAIN_MODEL}")
     print("[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py")
     print(f"[SYSTEM] DAG planner mode: {os.getenv('DAG_PLANNER_MODE', 'multi_candidate')}")
+    print(f"[SYSTEM] Benchmark query workers: {TEST_MAX_WORKERS}")
+    print(f"[SYSTEM] Benchmark start delay: {BENCHMARK_START_DELAY_SECONDS:g} seconds")
+    print(f"[SYSTEM] Report save interval: every {REPORT_SAVE_EVERY} completed row(s)")
     print(f"[SYSTEM] Report file: {REPORT_FILE}")
     script_start_time = time.perf_counter()
 
@@ -705,6 +715,7 @@ def main():
                 executor=executor,
                 pipeline_version=PIPELINE_VERSION,
                 is_quota_exhaustion_error=is_quota_exhaustion_error,
+                start_delay_seconds=BENCHMARK_START_DELAY_SECONDS,
             )
             for rec in pending_records
         ]
@@ -724,7 +735,8 @@ def main():
             )
 
 
-            save_report(results_list, output_filename, report_columns)
+            if idx % REPORT_SAVE_EVERY == 0 or idx == len(pending_records):
+                save_report(results_list, output_filename, report_columns)
 
             if idx % 10 == 0 or idx == len(pending_records):
                 api_logger.save()

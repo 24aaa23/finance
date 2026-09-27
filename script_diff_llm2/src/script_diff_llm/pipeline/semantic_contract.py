@@ -254,6 +254,143 @@ def _reshape_missing_count_rows(query: str, data: list[dict[str, Any]]) -> list[
     return reshaped
 
 
+def _set_if_missing(row: dict[str, Any], key: str, value: Any) -> None:
+    if key and key not in row:
+        row[key] = value
+
+
+def _measure_alias_candidates(measure: dict[str, Any]) -> list[tuple[str, bool]]:
+    if not isinstance(measure, dict):
+        return []
+    output_name = str(measure.get("output_name", "")).strip()
+    source_class = str(measure.get("source_class", "")).lower()
+    field_name = str(measure.get("field", "")).lower()
+    formula = str(measure.get("formula", "")).lower()
+    final_operation = str(measure.get("final_operation", "")).upper()
+    aliases: list[tuple[str, bool]] = []
+
+    def add(name: str, *, absolute: bool = False) -> None:
+        if name and (name, absolute) not in aliases:
+            aliases.append((name, absolute))
+
+    if "withdraw" in output_name or "withdrawal" in formula:
+        add("withdrawal_amount", absolute=True)
+        add("total_withdrawal", absolute=True)
+        add("total_withdrawal_amount", absolute=True)
+    if "deposit" in output_name or "deposit" in formula:
+        add("deposit_amount")
+        add("total_deposit")
+        add("total_deposit_amount")
+    if field_name == "progress_pct":
+        add("avg_progress_pct")
+        add("avg_goal_progress_pct")
+        add("avg_goal_progress")
+    if field_name == "risk_score":
+        add("avg_risk_score")
+        add("risk_score")
+        add("avg_health_risk")
+    if field_name == "liquidity_score":
+        add("avg_liquidity_score")
+        add("avg_liquidity")
+    if field_name == "diversification_score":
+        add("avg_diversification_score")
+        add("diversification_score")
+        add("avg_diversification")
+    if field_name == "goal_match_pct":
+        add("avg_goal_match_pct")
+    if field_name == "shortfall":
+        add("avg_shortfall")
+        add("avg_goal_shortfall")
+        add("total_shortfall")
+    if field_name == "returns_pct":
+        add("avg_returns_pct")
+        add("avg_holding_return_pct")
+    if field_name == "amount" and "cash" in output_name.lower():
+        add("avg_net_cash_flow")
+        add("avg_cash_flow")
+        add("avg_cash_flow_amount")
+        add("net_cash_flow")
+        add("total_cash")
+    if field_name == "current_value":
+        add("holding_value")
+        add("total_holding_value")
+        add("avg_holding_value")
+    if "rebalanc" in output_name.lower() and "amount" in output_name.lower():
+        add("avg_rebalance_amount")
+        add("avg_rebalancing_amount")
+        add("total_rebalancing_amount")
+        add("rebalancing_amount")
+    if "gap" in output_name.lower():
+        add("avg_rebalance_gap")
+        add("avg_rebalancing_gap")
+    if "scenario" in output_name.lower() and "change" in output_name.lower():
+        add("avg_scenario_change")
+        add("avg_scenario_change_pct")
+    if "scenario" in output_name.lower() and "count" in output_name.lower():
+        add("avg_scenario_count")
+        add("scenario_count")
+    if "transaction" in output_name.lower() and "count" in output_name.lower():
+        add("avg_transaction_count")
+        add("transaction_count")
+    if "goal" in output_name.lower() and "count" in output_name.lower():
+        add("avg_goal_count")
+        add("goal_count")
+    if "investor" in output_name.lower() and "count" in output_name.lower():
+        add("n_investors")
+        add("total_investors")
+        add("investor_count")
+    if "holding_gain" in output_name.lower() or ("current_value - cost" in formula and "portfolio_holding" in source_class):
+        add("avg_holding_gain")
+        add("holding_gain")
+    if final_operation == "COUNT":
+        add("count")
+    if output_name:
+        add(output_name)
+    return aliases
+
+
+def _augment_query_spec_aliases(query_spec: dict[str, Any], data: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    if not data or not isinstance(query_spec, dict):
+        return data
+    measures = query_spec.get("measures")
+    measures = measures if isinstance(measures, list) else []
+    group_by = query_spec.get("group_by")
+    group_by = group_by if isinstance(group_by, list) else []
+    first_group_name = ""
+    if group_by and isinstance(group_by[0], dict):
+        first_group_name = str(group_by[0].get("output_name", "")).strip()
+
+    normalized: list[dict[str, Any]] = []
+    for row in data:
+        if not isinstance(row, dict):
+            normalized.append(row)
+            continue
+        updated = dict(row)
+        if first_group_name and first_group_name in updated:
+            _set_if_missing(updated, "group_value", updated.get(first_group_name))
+        measure_columns: list[str] = []
+        for measure in measures:
+            if not isinstance(measure, dict):
+                continue
+            output_name = str(measure.get("output_name", "")).strip()
+            if output_name and output_name in updated:
+                measure_columns.append(output_name)
+                value = updated.get(output_name)
+                for alias, absolute in _measure_alias_candidates(measure):
+                    alias_value = abs(value) if absolute and _numeric_decimal(value) is not None else value
+                    _set_if_missing(updated, alias, alias_value)
+        if len(measure_columns) >= 1:
+            _set_if_missing(updated, "metric", updated.get(measure_columns[0]))
+            _set_if_missing(updated, "group_avg", updated.get(measure_columns[0]))
+        if len(measure_columns) >= 2:
+            _set_if_missing(updated, "metric_a", updated.get(measure_columns[0]))
+            _set_if_missing(updated, "metric_b", updated.get(measure_columns[1]))
+        if len(measure_columns) >= 3:
+            _set_if_missing(updated, "metric_c", updated.get(measure_columns[2]))
+        normalized.append(updated)
+    return normalized
+
+
 def normalize_semantic_result(query: str, query_spec: dict[str, Any], data: Any) -> Any:
     if not isinstance(data, list):
         return data
@@ -263,6 +400,7 @@ def normalize_semantic_result(query: str, query_spec: dict[str, Any], data: Any)
     normalized = _normalize_bucket_rows(query_spec, normalized)
     normalized = _drop_null_month_rows(query_spec, normalized)
     normalized = _reshape_missing_count_rows(query, normalized)
+    normalized = _augment_query_spec_aliases(query_spec, normalized)
     return normalized
 
 
@@ -558,5 +696,47 @@ def validate_aggregation_shape(query_spec: dict[str, Any], generated_query: str)
             f"Aggregate each measure to {keys} grain inside its own CTE or derived table using the "
             "measure's per_entity_operation, join those pre-aggregated results to the base entity table "
             f"on {keys}, and only then apply the final_operation grouped by {group_text}."
+        ),
+    }
+
+
+def validate_join_population_shape(query_spec: dict[str, Any], generated_query: str) -> dict[str, Any]:
+    """Detect grouped comparative SQL that collapses measure populations by inner-joining CTEs.
+
+    For grouped multi-measure comparisons we often want each metric averaged over
+    the entities that have that metric, not the strict intersection of every
+    source table. An outer GROUP BY over INNER JOINed measure CTEs silently
+    changes the denominator for every metric.
+    """
+    if not isinstance(query_spec, dict):
+        return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}
+    if not query_spec.get("independent_measure_population"):
+        return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}
+    group_by = query_spec.get("group_by")
+    group_by = group_by if isinstance(group_by, list) else []
+    if not group_by:
+        return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}
+    lowered = re.sub(r"\s+", " ", str(generated_query or "").lower())
+    if not lowered:
+        return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}
+    if " inner join " not in lowered:
+        return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}
+    if " left join " in lowered:
+        # Mixed joins are acceptable here; the contract is specifically about
+        # avoiding an all-intersection outer query.
+        return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}
+    group_names = [str(group.get("output_name") or group.get("field") or "").strip() for group in group_by if isinstance(group, dict)]
+    group_text = ", ".join(name for name in group_names if name) or "the requested group"
+    return {
+        "is_valid": False,
+        "severity": "repairable_warning",
+        "reason": (
+            "Grouped comparative query uses only INNER JOINs across pre-aggregated measure sources, "
+            "so every metric is being averaged over the intersection of source populations instead of "
+            "its own entities within the group."
+        ),
+        "rewrite_hint": (
+            f"Drive the outer query from the base grouping table and LEFT JOIN each measure CTE on the entity key, "
+            f"then GROUP BY {group_text} so AVG/SUM for each metric uses the correct per-measure population."
         ),
     }

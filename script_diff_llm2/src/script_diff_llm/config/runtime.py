@@ -77,6 +77,14 @@ def _normalize_legacy_repo_path(root_dir: Path, value: str) -> str:
         candidate = normalized.replace(old_prefix, replacement, 1)
         if os.path.exists(candidate):
             return candidate
+    old_repo_prefix = os.path.abspath(
+        str(root_dir.parent.parent / "script_diff_llm" / "openai.gpt-oss-120b-aman")
+    )
+    if normalized.startswith(old_repo_prefix):
+        replacement = os.path.abspath(str(root_dir / "historical_models" / "openai.gpt-oss-120b-aman"))
+        candidate = normalized.replace(old_repo_prefix, replacement, 1)
+        if os.path.exists(candidate):
+            return candidate
     return normalized
 
 
@@ -138,6 +146,8 @@ class RuntimeConfig:
     test_query_limit: int
     test_query_offset: int
     test_max_workers: int
+    benchmark_start_delay_seconds: float
+    report_save_every: int
     sparql_scan_timeout_seconds: float
     fuseki_endpoint: str
     fuseki_scan_timeout_seconds: float
@@ -262,6 +272,8 @@ def load_runtime_config(experiment_config_path: str | None = None) -> RuntimeCon
         test_query_limit=int(os.getenv("TEST_QUERY_LIMIT", str(experiment_data.get("test_query_limit") or 300))),
         test_query_offset=int(os.getenv("TEST_QUERY_OFFSET", str(experiment_data.get("test_query_offset") or 0))),
         test_max_workers=int(os.getenv("TEST_MAX_WORKERS", str(experiment_data.get("test_max_workers") or 1))),
+        benchmark_start_delay_seconds=max(0.0, float(os.getenv("BENCHMARK_START_DELAY_SECONDS", str(experiment_data.get("benchmark_start_delay_seconds") or 0)))),
+        report_save_every=max(1, int(os.getenv("REPORT_SAVE_EVERY", str(experiment_data.get("report_save_every") or 1)))),
         sparql_scan_timeout_seconds=max(0.0, float(os.getenv("SPARQL_SCAN_TIMEOUT_SECONDS", str(experiment_data.get("sparql_scan_timeout_seconds") or 60)))),
         fuseki_endpoint=os.getenv("FUSEKI_ENDPOINT", str(experiment_data.get("fuseki_endpoint") or "http://127.0.0.1:3030/wealth/query")),
         fuseki_scan_timeout_seconds=max(0.0, float(os.getenv("FUSEKI_SCAN_TIMEOUT_SECONDS", str(experiment_data.get("fuseki_scan_timeout_seconds") or 60)))),

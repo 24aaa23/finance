@@ -447,14 +447,55 @@ def extract_json_candidate(raw_text: str):
     return json.loads(text[start:end + 1])
 
 
-def parse_benchmark_json_rows(raw_text: str) -> tuple[bool, list]:
+def unwrap_benchmark_payload(parsed: Any) -> tuple[list, dict]:
+    metadata = {
+        "wrapped_rows": False,
+        "truncated": False,
+        "included_rows": None,
+        "total_rows": None,
+        "wrapper_keys": [],
+    }
+    if isinstance(parsed, list):
+        return parsed, metadata
+    if isinstance(parsed, dict):
+        if isinstance(parsed.get("rows"), list):
+            metadata["wrapped_rows"] = True
+            metadata["wrapper_keys"] = sorted(parsed.keys())
+            metadata["included_rows"] = parsed.get("_included_rows")
+            metadata["total_rows"] = parsed.get("_total_rows")
+            try:
+                included = int(parsed.get("_included_rows"))
+                total = int(parsed.get("_total_rows"))
+                metadata["truncated"] = included < total
+            except Exception:
+                metadata["truncated"] = False
+            return parsed["rows"], metadata
+        if isinstance(parsed.get("data"), list):
+            metadata["wrapped_rows"] = True
+            metadata["wrapper_keys"] = sorted(parsed.keys())
+            return parsed["data"], metadata
+        return [parsed], metadata
+    return [parsed], metadata
+
+
+def parse_benchmark_json_payload(raw_text: str) -> tuple[bool, list, dict]:
     try:
         parsed = extract_json_candidate(raw_text)
     except Exception:
-        return False, []
-    if isinstance(parsed, list):
-        return True, parsed
-    return True, [parsed]
+        return False, [], {
+            "wrapped_rows": False,
+            "truncated": False,
+            "included_rows": None,
+            "total_rows": None,
+            "wrapper_keys": [],
+        }
+    rows, metadata = unwrap_benchmark_payload(parsed)
+    return True, rows, metadata
+
+
+def parse_benchmark_json_rows(raw_text: str) -> tuple[bool, list]:
+    ok, rows, _ = parse_benchmark_json_payload(raw_text)
+    return ok, rows
 
 
 def local_identifier(value: str) -> str:
@@ -465,6 +506,16 @@ def local_identifier(value: str) -> str:
 
 
 def normalize_benchmark_value(value: Any) -> Any:
+    if isinstance(value, list):
+        return tuple(normalize_benchmark_value(item) for item in value)
+    if isinstance(value, dict):
+        return tuple(
+            (
+                canonical_benchmark_key(key),
+                normalize_benchmark_value(nested_value),
+            )
+            for key, nested_value in sorted(value.items(), key=lambda item: str(item[0]))
+        )
     if isinstance(value, str):
         text = local_identifier(value).strip()
         if text.upper() in {"NULL", "NONE", "NAN"}:
@@ -487,7 +538,7 @@ def normalize_benchmark_row(row: Any) -> Any:
 
 
 def benchmark_rows_from_text(raw_text: str, limit: int | None = None) -> list:
-    ok, rows = parse_benchmark_json_rows(raw_text)
+    ok, rows, _ = parse_benchmark_json_payload(raw_text)
     if not ok:
         return []
     return rows[:limit] if limit is not None else rows
@@ -602,7 +653,7 @@ def verify_grading_contract_columns(question: str, expected_rows: list, contract
 
 
 def infer_grading_contract(question: str, ground_truth: str, client, model: str) -> dict:
-    ok, expected_rows = parse_benchmark_json_rows(ground_truth)
+    ok, expected_rows, _ = parse_benchmark_json_payload(ground_truth)
     if not ok:
         return {"required_columns": [], "identity_columns": [], "comparison_mode": "row_set", "order_matters": False, "multiplicity_matters": False}
     normalized_rows = [normalize_benchmark_row(row) for row in expected_rows]
@@ -1027,13 +1078,21 @@ def compare_scalar_rows(expected_rows: list, actual_rows: list, required_columns
 
 def deterministic_benchmark_status(ground_truth: str, scan_raw_rows: str, grading_contract: dict, column_mapping: dict | None = None) -> dict:
     evidence = {"status": "MISMATCH", "expected_json_valid": False, "actual_json_valid": False, "expected_row_count": 0, "actual_row_count": 0, "required_columns": [], "identity_columns": [], "comparison_mode": "", "order_matters": False, "multiplicity_matters": False, "missing_identity_columns": [], "matched_identity_keys": [], "missing_identity_keys": [], "extra_identity_keys": [], "missing_rows": [], "extra_rows": [], "wrong_required_values": [], "quality_flags": [], "column_mapping_used": column_mapping or {}, "reason": ""}
-    expected_ok, expected_raw = parse_benchmark_json_rows(ground_truth)
-    actual_ok, actual_raw = parse_benchmark_json_rows(scan_raw_rows)
+    expected_ok, expected_raw, expected_meta = parse_benchmark_json_payload(ground_truth)
+    actual_ok, actual_raw, _ = parse_benchmark_json_payload(scan_raw_rows)
     evidence["expected_json_valid"] = expected_ok
     evidence["actual_json_valid"] = actual_ok
     if not expected_ok:
         evidence["status"] = "OTHER"
         evidence["reason"] = "Ground truth JSON is invalid."
+        return evidence
+    if expected_meta.get("truncated"):
+        evidence["status"] = "OTHER"
+        evidence["reason"] = (
+            "Ground truth JSON is a truncated wrapper payload; deterministic grading is not reliable."
+        )
+        evidence["quality_flags"].append("TRUNCATED_GROUND_TRUTH")
+        evidence["expected_row_count"] = len(expected_raw)
         return evidence
     if not actual_ok:
         evidence["status"] = "MISMATCH"
@@ -1184,8 +1243,26 @@ def deterministic_benchmark_status(ground_truth: str, scan_raw_rows: str, gradin
 
 
 def grade_json_result_deterministically(question: str, ground_truth: str, scan_raw_rows: str, client, model: str, schema_context: dict | None = None) -> dict:
-    expected_ok, expected_rows = parse_benchmark_json_rows(ground_truth)
-    actual_ok, actual_rows = parse_benchmark_json_rows(scan_raw_rows)
+    expected_ok, expected_rows, expected_meta = parse_benchmark_json_payload(ground_truth)
+    actual_ok, actual_rows, _ = parse_benchmark_json_payload(scan_raw_rows)
+    if expected_ok and expected_meta.get("truncated"):
+        return {
+            "status": "OTHER",
+            "reason": "Ground truth is a truncated wrapper payload; deterministic grading is not reliable.",
+            "grading_path": "truncated_ground_truth_wrapper",
+            "grading_contract": {},
+            "column_mapping": {},
+            "column_mapping_status": "not_applicable",
+            "deterministic_status": "NOT_APPLICABLE",
+            "deterministic_evidence": {
+                "expected_json_valid": True,
+                "actual_json_valid": actual_ok,
+                "truncated_ground_truth": True,
+                "expected_row_count": len(expected_rows),
+                "included_rows": expected_meta.get("included_rows"),
+                "total_rows": expected_meta.get("total_rows"),
+            },
+        }
     contract = infer_grading_contract(question, ground_truth, client, model)
     mapping_result = {"column_mapping": {}, "is_valid": True, "reason": "All required and identity columns aligned by Python normalization."}
     validated_mapping = {}
@@ -1225,7 +1302,25 @@ def grade_json_result_deterministically(question: str, ground_truth: str, scan_r
 
 def grade_pipeline_result(question: str, ground_truth: str, scan_raw_rows: str, final_output: str, client, model: str, schema_context: dict | None = None) -> dict:
     ground_truth_format = detect_ground_truth_format(ground_truth)
-    scan_json_valid, _ = parse_benchmark_json_rows(scan_raw_rows)
+    scan_json_valid, _, _ = parse_benchmark_json_payload(scan_raw_rows)
+    ground_truth_ok, _, ground_truth_meta = parse_benchmark_json_payload(ground_truth)
+    if ground_truth_ok and ground_truth_meta.get("truncated"):
+        return {
+            "status": "OTHER",
+            "reason": "Ground truth is a truncated wrapper payload; deterministic grading is not reliable.",
+            "grading_path": "truncated_ground_truth_wrapper",
+            "grading_contract": {},
+            "column_mapping": {},
+            "column_mapping_status": "not_applicable",
+            "deterministic_status": "NOT_APPLICABLE",
+            "deterministic_evidence": {
+                "expected_json_valid": True,
+                "actual_json_valid": scan_json_valid,
+                "truncated_ground_truth": True,
+                "included_rows": ground_truth_meta.get("included_rows"),
+                "total_rows": ground_truth_meta.get("total_rows"),
+            },
+        }
     if ground_truth_format == "json" and scan_json_valid:
         return grade_json_result_deterministically(question, ground_truth, scan_raw_rows, client, model, schema_context)
     if ground_truth_format == "json":
@@ -1261,6 +1356,8 @@ def regrade_existing_report(input_csv: str, output_csv: str, client, model: str 
             existing_row = existing_rows[idx]
             existing_graded_status = str(existing_row.get("New Status", "") or "").strip().upper()
             existing_path = str(existing_row.get("Final Grading Path", "") or "").strip()
+            if existing_path == "grader_exception":
+                existing_graded_status = ""
             if existing_graded_status in completed_statuses and (existing_path or existing_graded_status in preserve_statuses):
                 rows.append(existing_row)
                 print(f"[GRADE] {row_number}/{total_rows}: resumed {existing_graded_status}", flush=True)

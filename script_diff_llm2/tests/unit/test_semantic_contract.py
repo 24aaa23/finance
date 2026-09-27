@@ -1,3 +1,5 @@
+import sqlite3
+import tempfile
 import unittest
 
 from script_diff_llm.pipeline.dag.planner import build_subquery_dag, fallback_backend_for_query
@@ -7,6 +9,7 @@ from script_diff_llm.pipeline.semantic_contract import (
     normalize_result_iris,
     set_operation_key,
     validate_aggregation_shape,
+    validate_join_population_shape,
     validate_semantic_result,
 )
 from script_diff_llm.pipeline.specification import (
@@ -14,6 +17,7 @@ from script_diff_llm.pipeline.specification import (
     semantic_build_query_spec,
     spec_is_analytic_without_measures,
 )
+from script_diff_llm.backends.sql import enrich_sql_result_rows
 
 
 def _normalize(value):
@@ -119,6 +123,29 @@ class QuerySpecCleanupTest(unittest.TestCase):
         )
         self.assertEqual(cleaned["output_schema"][:3], ["investor_id", "investor_name", "risk_pressure_score"])
 
+    def test_ranking_query_adds_filter_context_fields(self):
+        spec = {
+            "query_type": "ranking",
+            "base_entity": "investor",
+            "entity_key": "investor_id",
+            "grain": {"pre_aggregate_by": ["investor_id"], "final_group_by": []},
+            "group_by": [],
+            "filters": [{"source_class": "ATOM_ENTITY_PORTFOLIO_HEALTH_001", "field": "risk_score", "operator": ">", "value": 60}],
+            "measures": [{"output_name": "total_shortfall"}],
+            "output_schema": ["total_shortfall"],
+            "required_classes": ["ATOM_ENTITY_PORTFOLIO_HEALTH_001", "ATOM_ENTITY_INVESTMENT_GOAL_001"],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Which five investors with risk scores above 60 have the greatest total goal shortfall?",
+            ["ATOM_ENTITY_PORTFOLIO_HEALTH_001", "ATOM_ENTITY_INVESTMENT_GOAL_001"],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertIn("investor_name", cleaned["output_schema"])
+        self.assertIn("risk_score", cleaned["output_schema"])
+
     def test_month_and_profile_group_are_inferred(self):
         spec = {
             "query_type": "aggregation",
@@ -213,6 +240,249 @@ class QuerySpecCleanupTest(unittest.TestCase):
         measure = cleaned["measures"][0]
         self.assertIsNone(measure["formula"])
         self.assertEqual(measure["formula_fields"], [])
+
+    def test_grouped_count_metric_is_normalized_to_average(self):
+        spec = {
+            "query_type": "comparative",
+            "base_entity": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "entity_key": "investor_id",
+            "grain": {"pre_aggregate_by": ["investor_id"], "final_group_by": ["risk_tolerance"]},
+            "group_by": [{"output_name": "risk_tolerance", "field": "risk_tolerance"}],
+            "measures": [
+                {
+                    "output_name": "transaction_count",
+                    "field": "rebalance_id",
+                    "per_entity_operation": "COUNT",
+                    "final_operation": "SUM",
+                }
+            ],
+            "output_schema": ["risk_tolerance", "transaction_count"],
+            "required_classes": [],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Across risk_tolerance, how do rebalancing amount and transaction count compare?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        measure = cleaned["measures"][0]
+        self.assertEqual(measure["final_operation"], "AVG")
+        self.assertEqual(measure["output_name"], "avg_transaction_count")
+
+    def test_grouped_compare_defaults_to_inner_join_for_related_table_comparisons(self):
+        spec = {
+            "query_type": "comparative",
+            "base_entity": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "entity_key": "investor_id",
+            "grain": {"pre_aggregate_by": ["investor_id"], "final_group_by": ["risk_tolerance"]},
+            "group_by": [{"output_name": "risk_tolerance", "field": "risk_tolerance"}],
+            "measures": [
+                {
+                    "output_name": "avg_cash_flow_amount",
+                    "source_class": "ATOM_EVENT_CASH_FLOW_001",
+                    "field": "amount",
+                    "per_entity_operation": "SUM",
+                    "final_operation": "AVG",
+                },
+                {
+                    "output_name": "avg_rebalancing_amount",
+                    "source_class": "ATOM_EVENT_REBALANCING_ACTION_001",
+                    "field": "amount",
+                    "per_entity_operation": "SUM",
+                    "final_operation": "AVG",
+                },
+            ],
+            "output_schema": ["risk_tolerance", "avg_cash_flow_amount", "avg_rebalancing_amount"],
+            "required_classes": [],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Across risk_tolerance, how do cash flow and rebalancing amount compare using three related tables?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertEqual(cleaned["join_policy"], "inner_join")
+        self.assertNotIn("independent_measure_population", cleaned)
+
+    def test_explicit_inclusive_grouped_compare_uses_left_join(self):
+        spec = {
+            "query_type": "comparative",
+            "base_entity": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "entity_key": "investor_id",
+            "grain": {"pre_aggregate_by": ["investor_id"], "final_group_by": ["risk_tolerance"]},
+            "group_by": [{"output_name": "risk_tolerance", "field": "risk_tolerance"}],
+            "measures": [
+                {
+                    "output_name": "avg_cash_flow_amount",
+                    "source_class": "ATOM_EVENT_CASH_FLOW_001",
+                    "field": "amount",
+                    "per_entity_operation": "SUM",
+                    "final_operation": "AVG",
+                },
+                {
+                    "output_name": "avg_rebalancing_amount",
+                    "source_class": "ATOM_EVENT_REBALANCING_ACTION_001",
+                    "field": "amount",
+                    "per_entity_operation": "SUM",
+                    "final_operation": "AVG",
+                },
+            ],
+            "output_schema": ["risk_tolerance", "avg_cash_flow_amount", "avg_rebalancing_amount"],
+            "required_classes": [],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Across risk_tolerance, include all investors even if related records are missing; how do cash flow and rebalancing amount compare?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertEqual(cleaned["join_policy"], "left_join")
+        self.assertTrue(cleaned["independent_measure_population"])
+
+    def test_cash_flow_transaction_count_is_bound_to_cash_flow_rows(self):
+        spec = {
+            "query_type": "comparative",
+            "base_entity": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "entity_key": "investor_id",
+            "grain": {"pre_aggregate_by": ["investor_id"], "final_group_by": ["risk_tolerance"]},
+            "group_by": [{"output_name": "risk_tolerance", "field": "risk_tolerance"}],
+            "measures": [
+                {
+                    "output_name": "avg_cash_flow_amount",
+                    "source_class": "ATOM_EVENT_CASH_FLOW_001",
+                    "field": "amount",
+                    "per_entity_operation": "SUM",
+                    "final_operation": "AVG",
+                },
+                {
+                    "output_name": "avg_transaction_count",
+                    "source_class": "ATOM_EVENT_REBALANCING_ACTION_001",
+                    "field": "rebalance_id",
+                    "per_entity_operation": "COUNT",
+                    "final_operation": "AVG",
+                },
+            ],
+            "output_schema": ["risk_tolerance", "avg_cash_flow_amount", "avg_transaction_count"],
+            "required_classes": [],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Across risk_tolerance, how do net cash flow and transaction count compare using three related tables?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        count_measure = cleaned["measures"][1]
+        self.assertEqual(count_measure["source_class"], "ATOM_EVENT_CASH_FLOW_001")
+        self.assertEqual(count_measure["field"], "cash_flow_id")
+        self.assertEqual(count_measure["per_entity_operation"], "COUNT")
+        self.assertEqual(count_measure["final_operation"], "AVG")
+        self.assertEqual(count_measure["output_name"], "avg_transaction_count")
+
+    def test_entity_key_removed_from_grouped_comparative_output_grain(self):
+        spec = {
+            "query_type": "aggregation",
+            "base_entity": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "entity_key": "investor_id",
+            "grain": {"pre_aggregate_by": ["investor_id"], "final_group_by": ["investor_id", "time_horizon"]},
+            "group_by": [
+                {"output_name": "investor_id", "field": "investor_id"},
+                {"output_name": "time_horizon", "field": "time_horizon"},
+            ],
+            "measures": [
+                {
+                    "output_name": "avg_holding_value",
+                    "source_class": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+                    "field": "current_value",
+                    "per_entity_operation": "SUM",
+                    "final_operation": "AVG",
+                }
+            ],
+            "output_schema": ["investor_id", "time_horizon", "avg_holding_value"],
+            "required_classes": [],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Across time_horizon, how do allocation concentration and holding value compare using three related tables?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertEqual([group["output_name"] for group in cleaned["group_by"]], ["time_horizon"])
+        self.assertEqual(cleaned["grain"]["final_group_by"], ["time_horizon"])
+        self.assertNotIn("investor_id", cleaned["output_schema"])
+
+    def test_holding_gain_rewrites_returns_pct_to_gain_formula(self):
+        spec = {
+            "query_type": "comparative",
+            "base_entity": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "entity_key": "investor_id",
+            "grain": {"pre_aggregate_by": ["investor_id"], "final_group_by": ["risk_tolerance"]},
+            "group_by": [{"output_name": "risk_tolerance", "field": "risk_tolerance"}],
+            "measures": [
+                {
+                    "output_name": "avg_holding_gain",
+                    "source_class": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+                    "field": "returns_pct",
+                    "formula": None,
+                    "formula_fields": [],
+                    "per_entity_operation": "AVG",
+                    "final_operation": "AVG",
+                }
+            ],
+            "output_schema": ["risk_tolerance", "avg_holding_gain"],
+            "required_classes": [],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Across risk_tolerance, how do holding gain and health risk compare?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        measure = cleaned["measures"][0]
+        self.assertEqual(measure["formula"], "current_value - cost")
+        self.assertEqual(measure["formula_fields"], ["current_value", "cost"])
+        self.assertEqual(measure["per_entity_operation"], "SUM")
+
+    def test_withdrawal_formula_is_normalized_to_positive_magnitude(self):
+        spec = {
+            "query_type": "comparative",
+            "measures": [
+                {
+                    "output_name": "total_withdrawal_amount",
+                    "source_class": "ATOM_EVENT_CASH_FLOW_001",
+                    "field": "amount",
+                    "formula": "CASE WHEN type = 'Withdrawal' THEN amount ELSE 0 END",
+                    "formula_fields": ["type"],
+                    "per_entity_operation": "SUM",
+                    "final_operation": "SUM",
+                }
+            ],
+            "output_schema": ["total_withdrawal_amount"],
+            "required_classes": [],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "How do total Deposit and Withdrawal amounts compare for each risk-tolerance group?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertEqual(
+            cleaned["measures"][0]["formula"],
+            "CASE WHEN type = 'Withdrawal' THEN ABS(amount) ELSE 0 END",
+        )
 
     def test_bucket_queries_do_not_preserve_null_group(self):
         spec = {
@@ -724,10 +994,10 @@ class TwoLevelAggregationGrainTest(unittest.TestCase):
     def test_concentration_measure_takes_entity_maximum(self):
         """Concentration is an entity's largest share, not the mean of its shares."""
         spec = self._spec(measures=[{
-            "output_name": "allocation_concentration",
+            "output_name": "avg_allocation_pct",
             "source_class": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
             "field": "allocation_pct",
-            "per_entity_operation": None,
+            "per_entity_operation": "AVG",
             "final_operation": "AVG",
         }])
         cleaned = cleanup_query_spec(
@@ -739,6 +1009,8 @@ class TwoLevelAggregationGrainTest(unittest.TestCase):
         measure = cleaned["measures"][0]
         self.assertEqual(measure["per_entity_operation"], "MAX")
         self.assertEqual(measure["final_operation"], "AVG")
+        self.assertEqual(measure["output_name"], "avg_max_allocation_pct")
+        self.assertIn("avg_max_allocation_pct", cleaned["output_schema"])
 
     def test_rate_measure_still_averages_within_entity(self):
         spec = self._spec(measures=[{
@@ -818,8 +1090,58 @@ class AggregationShapeValidationTest(unittest.TestCase):
     def test_empty_query_is_not_flagged(self):
         self.assertTrue(validate_aggregation_shape(self.FANOUT_SPEC, "")["is_valid"])
 
+    def test_inner_join_population_collapse_is_rejected(self):
+        spec = {
+            "independent_measure_population": True,
+            "group_by": [{"output_name": "risk_tolerance", "field": "risk_tolerance"}],
+        }
+        sql = (
+            "WITH a AS (SELECT investor_id, SUM(amount) x FROM cash GROUP BY investor_id), "
+            "b AS (SELECT investor_id, SUM(amount) y FROM reb GROUP BY investor_id) "
+            "SELECT p.risk_tolerance, AVG(a.x), AVG(b.y) "
+            "FROM profile p INNER JOIN a ON p.investor_id = a.investor_id "
+            "INNER JOIN b ON p.investor_id = b.investor_id GROUP BY p.risk_tolerance"
+        )
+        check = validate_join_population_shape(spec, sql)
+        self.assertFalse(check["is_valid"])
+        self.assertIn("intersection", check["reason"])
+
+    def test_left_join_population_shape_is_accepted(self):
+        spec = {
+            "independent_measure_population": True,
+            "group_by": [{"output_name": "risk_tolerance", "field": "risk_tolerance"}],
+        }
+        sql = (
+            "WITH a AS (SELECT investor_id, SUM(amount) x FROM cash GROUP BY investor_id), "
+            "b AS (SELECT investor_id, SUM(amount) y FROM reb GROUP BY investor_id) "
+            "SELECT p.risk_tolerance, AVG(a.x), AVG(b.y) "
+            "FROM profile p LEFT JOIN a ON p.investor_id = a.investor_id "
+            "LEFT JOIN b ON p.investor_id = b.investor_id GROUP BY p.risk_tolerance"
+        )
+        self.assertTrue(validate_join_population_shape(spec, sql)["is_valid"])
+
 
 class ResultNormalizationTest(unittest.TestCase):
+    def test_normalize_semantic_result_adds_group_and_measure_aliases(self):
+        query_spec = {
+            "group_by": [{"output_name": "risk_tolerance", "field": "risk_tolerance"}],
+            "measures": [
+                {"output_name": "avg_goal_progress", "field": "progress_pct", "source_class": "ATOM_ENTITY_INVESTMENT_GOAL_001"},
+                {"output_name": "avg_health_risk", "field": "risk_score", "source_class": "ATOM_ENTITY_PORTFOLIO_HEALTH_001"},
+            ],
+        }
+        rows = [{"risk_tolerance": "Aggressive", "avg_goal_progress": 39.76, "avg_health_risk": 49.12}]
+        normalized = normalize_semantic_result(
+            "Across risk_tolerance, how do goal progress and risk compare?",
+            query_spec,
+            rows,
+        )
+        self.assertEqual(normalized[0]["group_value"], "Aggressive")
+        self.assertEqual(normalized[0]["avg_progress_pct"], 39.76)
+        self.assertEqual(normalized[0]["avg_risk_score"], 49.12)
+        self.assertEqual(normalized[0]["metric_a"], 39.76)
+        self.assertEqual(normalized[0]["metric_b"], 49.12)
+
     def test_iri_reduces_to_local_name(self):
         self.assertEqual(iri_local_name("https://wealth.example.org/kg/investor/INV-003"), "INV-003")
         self.assertEqual(iri_local_name("http://example.org/ns#Aggressive"), "Aggressive")
@@ -842,6 +1164,27 @@ class ResultNormalizationTest(unittest.TestCase):
             set_operation_key("inv 003"),
         }
         self.assertEqual(len(keys), 1)
+
+    def test_enrich_sql_result_rows_backfills_investor_context(self):
+        with tempfile.NamedTemporaryFile(suffix=".db") as tmp:
+            conn = sqlite3.connect(tmp.name)
+            cur = conn.cursor()
+            cur.execute("CREATE TABLE ATOM_ENTITY_INVESTOR_PROFILE_001 (investor_id TEXT, investor_name TEXT, risk_tolerance TEXT, time_horizon TEXT, segment TEXT, category TEXT)")
+            cur.execute("CREATE TABLE ATOM_ENTITY_PORTFOLIO_HEALTH_001 (investor_id TEXT, risk_score REAL, liquidity_score REAL, diversification_score REAL, goal_match_pct REAL)")
+            cur.execute("INSERT INTO ATOM_ENTITY_INVESTOR_PROFILE_001 VALUES ('INV-001','Arjun Iyer','Moderate','Long-term','Retail','Equity')")
+            cur.execute("INSERT INTO ATOM_ENTITY_PORTFOLIO_HEALTH_001 VALUES ('INV-001',71.5,40.0,12.3,55.0)")
+            conn.commit()
+            conn.close()
+
+            query_spec = {
+                "output_schema": ["investor_id", "investor_name", "risk_score", "diversification_score"],
+                "filters": [{"field": "risk_score", "operator": ">", "value": 60}],
+            }
+            rows = [{"investor_id": "INV-001", "total_shortfall": 123.0}]
+            enriched = enrich_sql_result_rows(query_spec, rows, tmp.name)
+            self.assertEqual(enriched[0]["investor_name"], "Arjun Iyer")
+            self.assertEqual(enriched[0]["risk_score"], 71.5)
+            self.assertEqual(enriched[0]["diversification_score"], 12.3)
 
 
 class MeasureRecoveryTest(unittest.TestCase):

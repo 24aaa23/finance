@@ -16,6 +16,7 @@ from script_diff_llm.pipeline.semantic_contract import (
     set_operation_key,
     should_validate_semantics,
     validate_aggregation_shape,
+    validate_join_population_shape,
     validate_semantic_result,
 )
 
@@ -481,8 +482,19 @@ class AOPExecutor:
                     "reason": shape_check.get("reason", ""),
                 })
             else:
-                psv_result = sql_pipeline.semantic_pre_scan_validate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
-                check = psv_result.get("pre_scan_validation", {})
+                join_check = validate_join_population_shape(inputs.get("query_spec", {}), inputs.get("sql", ""))
+                if not join_check.get("is_valid", True):
+                    check = join_check
+                    node_trace["attempts"].append({
+                        "stage": "Join_Population_Check_SQL",
+                        "attempt": attempt,
+                        "is_valid": False,
+                        "severity": join_check.get("severity", ""),
+                        "reason": join_check.get("reason", ""),
+                    })
+                else:
+                    psv_result = sql_pipeline.semantic_pre_scan_validate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
+                    check = psv_result.get("pre_scan_validation", {})
             is_valid = bool(check.get("is_valid", False))
             severity = str(check.get("severity", "repairable_warning")).lower()
             node_trace["pre_scan_validation_is_valid"] = is_valid
@@ -544,6 +556,11 @@ class AOPExecutor:
             if original_successful_scan is None:
                 original_successful_scan = scan_result
             if isinstance(scan_result, dict) and isinstance(scan_result.get("data"), list):
+                scan_result["data"] = sql_pipeline.enrich_sql_result_rows(
+                    inputs.get("query_spec", {}),
+                    scan_result.get("data", []),
+                    self.db_path,
+                )
                 scan_result["data"] = normalize_semantic_result(
                     root_query,
                     inputs.get("query_spec", {}),
@@ -593,8 +610,19 @@ class AOPExecutor:
             node_trace["generate_sql_raw_response_preview"] = gen_result.get("raw_response_preview", "")
             node_trace["attempts"].append({"stage": "Generate_SQL", "attempt": self.pre_scan_validate_max_retries + attempt, "output_present": bool(inputs["sql"]), "parse_error": gen_result.get("parse_error", "")})
 
-            psv_result = sql_pipeline.semantic_pre_scan_validate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
-            check = psv_result.get("pre_scan_validation", {})
+            join_check = validate_join_population_shape(inputs.get("query_spec", {}), inputs.get("sql", ""))
+            if not join_check.get("is_valid", True):
+                check = join_check
+                node_trace["attempts"].append({
+                    "stage": "Join_Population_Check_SQL",
+                    "attempt": self.pre_scan_validate_max_retries + attempt,
+                    "is_valid": False,
+                    "severity": str(join_check.get("severity", "repairable_warning")).lower(),
+                    "reason": join_check.get("reason", ""),
+                })
+            else:
+                psv_result = sql_pipeline.semantic_pre_scan_validate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
+                check = psv_result.get("pre_scan_validation", {})
             node_trace["pre_scan_validation_is_valid"] = bool(check.get("is_valid", False))
             node_trace["pre_scan_validation_reason"] = check.get("reason", "")
             node_trace["attempts"].append({

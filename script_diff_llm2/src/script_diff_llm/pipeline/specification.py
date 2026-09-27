@@ -155,6 +155,89 @@ def _explicit_grouping_requested(query_text: str) -> bool:
     )
 
 
+def _query_explicitly_requests_per_entity_breakdown(query_text: str, entity_key: str) -> bool:
+    q = f" {query_text} "
+    entity_key = str(entity_key or "").lower()
+    entity_markers = []
+    if "investor" in entity_key:
+        entity_markers = [" for each investor ", " each investor ", " by investor ", " per investor "]
+    elif "goal" in entity_key:
+        entity_markers = [" for each goal ", " each goal ", " by goal ", " per goal "]
+    elif "holding" in entity_key:
+        entity_markers = [" for each holding ", " each holding ", " by holding ", " per holding "]
+    return any(marker in q for marker in entity_markers)
+
+
+def _query_requires_intersection_population(query_text: str) -> bool:
+    q = f" {query_text} "
+    if re.search(r"\busing\s+(?:two|three|four|five|\d+)\s+related\s+tables\b", q):
+        return True
+    return any(
+        marker in q
+        for marker in [
+            " among those with ",
+            " among investors with ",
+            " who have both ",
+            " that have both ",
+            " with both ",
+            " also have ",
+            " and also ",
+            " together with ",
+        ]
+    )
+
+
+def _query_requests_independent_measure_population(query_text: str) -> bool:
+    q = f" {query_text} "
+    return any(
+        marker in q
+        for marker in [
+            " include all ",
+            " including all ",
+            " even if ",
+            " regardless of whether ",
+            " with or without ",
+            " missing related ",
+            " no related ",
+            " without related ",
+        ]
+    )
+
+
+def _schema_class(schema_kind: str, semantic_name: str) -> str:
+    if schema_kind == "sql":
+        mapping = {
+            "cash_flow": "ATOM_EVENT_CASH_FLOW_001",
+            "rebalancing": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "sector_allocation": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+            "portfolio_holding": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+        }
+    else:
+        mapping = {
+            "cash_flow": "CashFlow",
+            "rebalancing": "RebalancingAction",
+            "sector_allocation": "SectorAllocation",
+            "portfolio_holding": "PortfolioHolding",
+        }
+    return mapping[semantic_name]
+
+
+def _schema_field(schema_kind: str, semantic_name: str) -> str:
+    if schema_kind == "sql":
+        mapping = {
+            "cash_flow_id": "cash_flow_id",
+            "allocation_pct": "allocation_pct",
+            "returns_pct": "returns_pct",
+        }
+    else:
+        mapping = {
+            "cash_flow_id": "cashFlowId",
+            "allocation_pct": "allocationPct",
+            "returns_pct": "returnsPct",
+        }
+    return mapping[semantic_name]
+
+
 def _measure_prefix(base_name: str) -> str:
     lowered = str(base_name or "").lower()
     for prefix in ["avg_", "average_", "total_", "sum_", "count_", "max_", "min_"]:
@@ -199,6 +282,7 @@ def _field_prefers_average(measure: dict[str, Any]) -> bool:
     average_markers = [
         "pct", "percent", "percentage", "score", "progress", "shortfall",
         "volatility", "liquidity", "diversification", "goal_match",
+        "change", "gap",
         "return",
     ]
     return any(marker in field_text for marker in average_markers)
@@ -528,6 +612,33 @@ def _requires_two_level_aggregation(
     return False
 
 
+def _measure_requests_holding_gain(query_text: str, measure: dict[str, Any]) -> bool:
+    if not isinstance(measure, dict):
+        return False
+    source_class = str(measure.get("source_class") or "").lower()
+    field_name = str(measure.get("field") or "").lower()
+    output_name = str(measure.get("output_name") or "").lower()
+    query_text = str(query_text or "").lower()
+    if "portfolio_holding" not in source_class:
+        return False
+    if "holding_gain" in output_name:
+        return True
+    if "gain" not in output_name and "holding gain" not in query_text:
+        return False
+    return field_name in {"returns_pct", "return_pct", "returns"}
+
+
+def _measure_requests_positive_withdrawal(measure: dict[str, Any]) -> bool:
+    if not isinstance(measure, dict):
+        return False
+    field_name = str(measure.get("field") or "").lower()
+    if field_name != "amount":
+        return False
+    output_name = str(measure.get("output_name") or "").lower()
+    formula = str(measure.get("formula") or "").lower()
+    return "withdraw" in output_name or "withdrawal" in formula
+
+
 ANALYTIC_QUERY_TYPES = {"aggregation", "comparative", "ranking", "multi_step"}
 
 ANALYTIC_QUESTION_MARKERS = [
@@ -619,6 +730,37 @@ def cleanup_query_spec(
             grain["final_group_by"] = inferred_final_group_by
             cleaned["grain"] = grain
             cleanup_notes.append("grain.final_group_by filled from group_by fields")
+
+    entity_key = str(cleaned.get("entity_key") or "").strip()
+    if (
+        grouped_compare := bool(group_by) and (
+            query_type in {"comparative", "multi_step", "ranking", "aggregation"}
+            or _has_any_phrase(q, [" compare ", " comparison ", " how do ", " how does ", " average ", " avg "])
+        )
+    ) and entity_key and len(group_by) > 1 and not _query_explicitly_requests_per_entity_breakdown(f" {q} ", entity_key):
+        filtered_group_by = []
+        removed_entity_group = False
+        for group in group_by:
+            if not isinstance(group, dict):
+                continue
+            output_name = str(group.get("output_name") or "").strip()
+            field_name = str(group.get("field") or "").strip()
+            if output_name == entity_key or field_name == entity_key:
+                removed_entity_group = True
+                continue
+            filtered_group_by.append(group)
+        if removed_entity_group and filtered_group_by:
+            cleaned["group_by"] = filtered_group_by
+            group_by = filtered_group_by
+            final_group_by = [field for field in final_group_by if str(field).strip() != entity_key]
+            grain["final_group_by"] = final_group_by
+            cleaned["grain"] = grain
+            output_schema = cleaned.get("output_schema", [])
+            output_schema = output_schema if isinstance(output_schema, list) else []
+            cleaned["output_schema"] = [name for name in output_schema if str(name).strip() != entity_key]
+            cleanup_notes.append(
+                f"entity_key {entity_key} removed from group_by/final output so aggregation stays at the comparative group grain"
+            )
 
     grouped_compare = bool(group_by) and (
         query_type in {"comparative", "multi_step", "ranking"}
@@ -782,19 +924,138 @@ def cleanup_query_spec(
             "reason": "Aggregate each measure to entity grain in its own table before joining and grouping.",
         }
 
+    measure_sources = _measure_source_classes(measures)
+    if (
+        grouped_compare
+        and entity_key
+        and group_by
+        and len(measure_sources) >= 1
+        and _query_requests_independent_measure_population(f" {q} ")
+        and not _query_requires_intersection_population(f" {q} ")
+    ):
+        driver_group_fields = {
+            str(group.get("field") or "").strip()
+            for group in group_by
+            if isinstance(group, dict)
+        }
+        if entity_key not in driver_group_fields:
+            cleaned["join_policy"] = "left_join"
+            cleaned["independent_measure_population"] = True
+            cleanup_notes.append(
+                "grouped comparative query set to left_join so each pre-aggregated measure keeps its own entity population within the group"
+            )
+    elif grouped_compare and entity_key and group_by and len(measure_sources) >= 1:
+        cleaned["join_policy"] = "inner_join"
+        if cleaned.pop("independent_measure_population", None):
+            cleanup_notes.append("independent measure population disabled because the query requires an intersection population")
+
     if grouped_compare:
         for measure in measures:
             if not isinstance(measure, dict):
                 continue
+            source_class = str(measure.get("source_class") or "").lower()
+            field_name = str(measure.get("field") or "").lower()
+            output_name_lower = str(measure.get("output_name") or "").lower()
+
+            if (
+                "transaction count" in q
+                and ("count" in output_name_lower or str(measure.get("per_entity_operation") or "").upper() == "COUNT")
+                and _has_any_phrase(q, [" cash flow", " cash-flow", " cashflow", " transaction count"])
+            ):
+                cash_flow_class = _schema_class(schema_kind, "cash_flow")
+                cash_flow_id = _schema_field(schema_kind, "cash_flow_id")
+                if (
+                    measure.get("source_class") != cash_flow_class
+                    or measure.get("field") != cash_flow_id
+                    or measure.get("output_name") != "avg_transaction_count"
+                ):
+                    measure["source_class"] = cash_flow_class
+                    measure["field"] = cash_flow_id
+                    measure["output_name"] = "avg_transaction_count"
+                    _append_unique(cleaned.setdefault("required_classes", []), cash_flow_class)
+                    cleanup_notes.append("transaction count measure bound to cash-flow rows at entity grain")
+                measure["per_entity_operation"] = "COUNT"
+                measure["final_operation"] = "AVG"
+                source_class = str(measure.get("source_class") or "").lower()
+                field_name = str(measure.get("field") or "").lower()
+                output_name_lower = str(measure.get("output_name") or "").lower()
+
+            if (
+                grouped_compare
+                and _has_any_phrase(q, [" cash flow", " cash-flow", " cashflow"])
+                and ("cash_flow" in source_class or "cashflow" in source_class or "cash flow" in output_name_lower)
+                and field_name == "amount"
+            ):
+                if measure.get("output_name") != "avg_net_cash_flow":
+                    measure["output_name"] = "avg_net_cash_flow"
+                    cleanup_notes.append("cash-flow amount measure output normalized to avg_net_cash_flow")
+                measure["per_entity_operation"] = "SUM"
+                measure["final_operation"] = "AVG"
+
+            if (
+                grouped_compare
+                and _has_any_phrase(q, [" rebalance", " rebalancing"])
+                and ("rebalanc" in source_class or "rebalanc" in output_name_lower)
+                and field_name == "amount"
+            ):
+                if measure.get("output_name") != "avg_rebalance_amount":
+                    measure["output_name"] = "avg_rebalance_amount"
+                    cleanup_notes.append("rebalancing amount measure output normalized to avg_rebalance_amount")
+                measure["per_entity_operation"] = "SUM"
+                measure["final_operation"] = "AVG"
+
+            if (
+                grouped_compare
+                and "allocation concentration" in q
+                and ("sector_allocation" in source_class or "sectorallocation" in source_class or field_name == _schema_field(schema_kind, "allocation_pct").lower())
+                and _normalize_name_for_contract(field_name) == "allocationpct"
+            ):
+                if measure.get("output_name") != "avg_max_allocation_pct":
+                    measure["output_name"] = "avg_max_allocation_pct"
+                    cleanup_notes.append("allocation concentration measure output normalized to avg_max_allocation_pct")
+                measure["per_entity_operation"] = "MAX"
+                measure["final_operation"] = "AVG"
+
+            if (
+                grouped_compare
+                and "holding return" in q
+                and ("portfolio_holding" in source_class or "portfolioholding" in source_class)
+                and _normalize_name_for_contract(field_name) == "returnspct"
+            ):
+                if measure.get("output_name") != "avg_returns_pct":
+                    measure["output_name"] = "avg_returns_pct"
+                    cleanup_notes.append("holding return measure output normalized to avg_returns_pct")
+                measure["per_entity_operation"] = "AVG"
+                measure["final_operation"] = "AVG"
+
             per_entity_operation = str(measure.get("per_entity_operation") or "").upper()
             final_operation = str(measure.get("final_operation") or "").upper()
+            output_name_text = str(measure.get("output_name") or "")
+            formula_text = str(measure.get("formula") or "")
             if per_entity_operation == "COUNT":
+                if not explicit_total_query and final_operation in {"", "SUM", "COUNT"}:
+                    measure["final_operation"] = "AVG"
+                    if _measure_prefix(output_name_text) in {"", "count_", "total_", "sum_"}:
+                        measure["output_name"] = _average_style_name(output_name_text)
+                    cleanup_notes.append(
+                        f"measure {measure.get('output_name', '')} normalized to AVG count per entity for grouped comparison"
+                    )
                 continue
             if explicit_total_query:
                 if not final_operation:
                     measure["final_operation"] = per_entity_operation or "SUM"
                     cleanup_notes.append(f"measure {measure.get('output_name', '')} final_operation preserved for explicit-total query")
                 continue
+            if (
+                formula_text
+                and any(marker in f"{output_name_text} {formula_text}".lower() for marker in ["change", "gap"])
+                and per_entity_operation in {"", "SUM"}
+            ):
+                measure["per_entity_operation"] = "AVG"
+                per_entity_operation = "AVG"
+                cleanup_notes.append(
+                    f"measure {measure.get('output_name', '')} per_entity_operation normalized to AVG for comparative change/gap metric"
+                )
             if pre_aggregate_by and per_entity_operation in {"SUM", "AVG", "MIN", "MAX"}:
                 if _field_prefers_average(measure) and per_entity_operation == "SUM":
                     measure["per_entity_operation"] = "AVG"
@@ -815,6 +1076,34 @@ def cleanup_query_spec(
                 measure["final_operation"] = per_entity_operation
                 cleanup_notes.append(f"measure {measure.get('output_name', '')} inherited final_operation from per_entity_operation")
         cleaned["measures"] = measures
+
+    for measure in measures:
+        if not isinstance(measure, dict):
+            continue
+        if _measure_requests_holding_gain(q, measure):
+            measure["field"] = None
+            measure["formula"] = "current_value - cost"
+            measure["formula_fields"] = ["current_value", "cost"]
+            measure["per_entity_operation"] = "SUM"
+            final_operation = str(measure.get("final_operation") or "").upper()
+            if grouped_compare and not explicit_total_query:
+                measure["final_operation"] = "AVG"
+            elif final_operation not in {"SUM", "AVG", "MIN", "MAX", "COUNT"}:
+                measure["final_operation"] = "SUM"
+            cleanup_notes.append(
+                f"measure {measure.get('output_name', '')} rewritten as holding gain = current_value - cost"
+            )
+
+        if _measure_requests_positive_withdrawal(measure):
+            measure["formula"] = "CASE WHEN type = 'Withdrawal' THEN ABS(amount) ELSE 0 END"
+            measure["formula_fields"] = ["type", "amount"]
+            if not str(measure.get("per_entity_operation") or "").strip():
+                measure["per_entity_operation"] = "SUM"
+            if not str(measure.get("final_operation") or "").strip():
+                measure["final_operation"] = measure.get("per_entity_operation") or "SUM"
+            cleanup_notes.append(
+                f"measure {measure.get('output_name', '')} normalized to positive withdrawal magnitude with ABS(amount)"
+            )
 
     for measure in measures:
         if not isinstance(measure, dict):
@@ -927,6 +1216,21 @@ def cleanup_query_spec(
             insert_at = 1 if output_schema and output_schema[0] == entity_key else 0
             output_schema.insert(insert_at, label_output)
             cleanup_notes.append(f"label field {label_output} added to output_schema for named entity query")
+        if query_type == "ranking":
+            filters = cleaned.get("filters", [])
+            filters = filters if isinstance(filters, list) else []
+            for filter_item in filters:
+                if not isinstance(filter_item, dict):
+                    continue
+                field_name = str(filter_item.get("field") or "").strip()
+                if not field_name or field_name == entity_key:
+                    continue
+                operator = str(filter_item.get("operator") or "").strip().lower()
+                if operator == "between" or field_name == "date":
+                    continue
+                if not _has_output_name(output_schema, field_name):
+                    output_schema.append(field_name)
+                    cleanup_notes.append(f"filter field {field_name} added to output_schema for ranking query context")
         cleaned["output_schema"] = output_schema
 
     if any(isinstance(group, dict) and group.get("bucket_strategy") for group in group_by):

@@ -59,10 +59,12 @@ def run_single_benchmark_record(
     executor: Any,
     pipeline_version: str,
     is_quota_exhaustion_error: Callable[[Any], bool],
+    start_delay_seconds: float = 0.0,
 ) -> dict[str, Any]:
     query_start_time = time.perf_counter()
     started_at = datetime.datetime.now().isoformat(timespec="seconds")
-    time.sleep(2)
+    if start_delay_seconds > 0:
+        time.sleep(start_delay_seconds)
     query = record.get("Question", "")
     ground_truth = str(record.get("Ground Truth", ""))
     old_status = record.get("Status", "")
