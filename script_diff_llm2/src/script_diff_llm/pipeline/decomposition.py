@@ -1,4 +1,86 @@
+import re
 from typing import Any, Callable
+
+
+DOMAIN_MARKERS = {
+    "profile": ("investor", "risk tolerance", "risk_tolerance", "time horizon", "segment", "category"),
+    "holding": ("holding", "investment type", "purchase", "returns_pct", "dividend", "taxes paid"),
+    "goal": ("goal", "shortfall", "progress_pct", "volatility", "sharpe"),
+    "health": ("portfolio health", "risk score", "risk_score", "liquidity", "diversification", "goal match"),
+    "cash_flow": ("cash flow", "cash-flow", "cashflow", "deposit", "withdrawal", "transaction"),
+    "allocation": ("sector allocation", "allocation_pct", "allocation concentration", "sector investment"),
+    "rebalancing": ("rebalanc", "manual override", "de-risking", "tactical", "action"),
+    "scenario": ("scenario", "bear market", "bull market", "allocation change"),
+}
+
+
+def _mentioned_domains(text: str) -> set[str]:
+    lowered = str(text or "").lower()
+    return {
+        domain
+        for domain, markers in DOMAIN_MARKERS.items()
+        if any(marker in lowered for marker in markers)
+    }
+
+
+def _fallback_single_sql(query: str, reason: str) -> dict[str, Any]:
+    print(f"[WARN] {reason} Falling back to one complete SQL subquery.")
+    return {
+        "nodes": [{
+            "id": "Q1",
+            "description": query,
+            "operator": "Subquery",
+            "backend": "SQL",
+            "inputs": [],
+            "outputs": [],
+        }]
+    }
+
+
+def _ensure_domain_coverage(query: str, parsed: Any) -> dict[str, Any]:
+    if isinstance(parsed, list):
+        parsed = {"nodes": parsed}
+    if not isinstance(parsed, dict):
+        return _fallback_single_sql(query, "Decomposition was not a JSON object.")
+    nodes = parsed.get("nodes")
+    if not isinstance(nodes, list) or not nodes:
+        return parsed
+    query_domains = _mentioned_domains(query)
+    conjunctive = any(marker in f" {query.lower()} " for marker in [
+        " and ", " both ", " also ", " as well as ", " using two ",
+        " using three ", " using four ", " using five ",
+    ])
+    if len(query_domains) < 2 or not conjunctive:
+        return parsed
+
+    years = sorted(set(re.findall(r"\b(?:19|20)\d{2}\b", query)))
+    if years and len(nodes) > 1:
+        temporal_domains = {"holding", "goal", "cash_flow", "rebalancing", "scenario"}
+        for node in nodes:
+            if not isinstance(node, dict) or str(node.get("operator") or "Subquery") != "Subquery":
+                continue
+            description = str(node.get("description") or "")
+            if not (_mentioned_domains(description) & temporal_domains):
+                continue
+            missing_years = [year for year in years if year not in description]
+            if missing_years:
+                node["description"] = (
+                    description.rstrip(". ")
+                    + f" during {', '.join(missing_years)}."
+                )
+    plan_text = " ".join(
+        str(node.get("description") or "")
+        for node in nodes
+        if isinstance(node, dict) and str(node.get("operator") or "Subquery") == "Subquery"
+    )
+    covered = _mentioned_domains(plan_text)
+    missing = sorted(query_domains - covered)
+    if missing:
+        return _fallback_single_sql(
+            query,
+            f"Decomposition omitted required domain(s): {', '.join(missing)}.",
+        )
+    return parsed
 
 
 def semantic_decompose(
@@ -60,9 +142,7 @@ Ensure the DAG is acyclic and all input sources match an upstream node's output.
         response = client.chat.completions.create(**request)
         raw_text = response.choices[0].message.content
         parsed = parse_json_fn(raw_text, {"nodes": []}, "Decompose")
-        if isinstance(parsed, list):
-            return {"nodes": parsed}
-        return parsed
+        return _ensure_domain_coverage(query, parsed)
     except Exception as error:
         print(f"   [!] Decompose API error: {error}")
         return {"nodes": []}

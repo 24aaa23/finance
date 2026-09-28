@@ -70,7 +70,220 @@ class QuerySpecCleanupTest(unittest.TestCase):
             [],
             _normalize,
         )
-        self.assertEqual(cleaned["group_by"][0]["bucket_strategy"], "three_band_33_66")
+        group = cleaned["group_by"][0]
+        self.assertEqual(group["bucket_strategy"], "semantic_thresholds")
+        self.assertEqual(group["bucket_boundaries"], [60, 80])
+
+    def test_explicit_month_bucket_boundaries_are_preserved(self):
+        spec = {
+            "query_type": "aggregation",
+            "base_entity": "ATOM_EVENT_CASH_FLOW_001",
+            "entity_key": "investor_id",
+            "group_by": [{
+                "output_name": "goal_time_bucket",
+                "source_class": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+                "field": "time_to_goal_months",
+            }],
+            "measures": [{"output_name": "net_cash_flow", "field": "amount"}],
+            "output_schema": ["goal_time_bucket", "net_cash_flow"],
+            "required_classes": [],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "For each goal time bucket, what is the net cash flow, using Short = <=12 months, Medium = 13-60 months, and Long = >60 months?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        group = cleaned["group_by"][0]
+        self.assertEqual(group["bucket_boundaries"], [12, 60])
+        self.assertEqual(group["bucket_labels"], [
+            "Short <=12 months", "Medium 13-60 months", "Long >60 months",
+        ])
+
+    def test_explicit_generic_bucket_name_is_not_renamed_or_duplicated(self):
+        spec = {
+            "query_type": "aggregation",
+            "group_by": [{
+                "output_name": "bucket",
+                "source_class": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+                "field": "time_to_goal_months",
+            }],
+            "measures": [{
+                "output_name": "net_cash_flow",
+                "source_class": "ATOM_EVENT_CASH_FLOW_001",
+                "field": "amount",
+            }],
+            "output_schema": ["bucket", "net_cash_flow", "bucket_band"],
+            "required_classes": [],
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "For each goal time bucket, what is the net cash flow, using Short = <=12 months, Medium = 13-60 months, and Long = >60 months?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertEqual(cleaned["group_by"][0]["output_name"], "bucket")
+        self.assertEqual(cleaned["output_schema"], ["bucket", "net_cash_flow"])
+
+    def test_unfiltered_grouping_preserves_null_category(self):
+        spec = {
+            "query_type": "aggregation",
+            "entity_key": "investor_id",
+            "group_by": [{
+                "output_name": "risk_tolerance",
+                "source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+                "field": "risk_tolerance",
+            }],
+            "filters": [],
+            "measures": [{
+                "output_name": "investor_count",
+                "source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+                "field": "investor_id",
+                "per_entity_operation": "COUNT",
+            }],
+            "required_classes": ["ATOM_ENTITY_INVESTOR_PROFILE_001"],
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "How many investors are in each risk-tolerance category?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertTrue(cleaned["preserve_null_groups"])
+
+    def test_goal_progress_is_grounded_to_investment_goal(self):
+        spec = {
+            "query_type": "comparative",
+            "entity_key": "investor_id",
+            "group_by": [{
+                "output_name": "time_horizon",
+                "source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+                "field": "time_horizon",
+            }],
+            "measures": [{
+                "output_name": "avg_goal_progress",
+                "source_class": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+                "field": "goal_match_pct",
+                "per_entity_operation": "AVG",
+                "final_operation": "AVG",
+            }],
+            "required_classes": [],
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Across time_horizon, how does goal progress compare?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        measure = cleaned["measures"][0]
+        self.assertEqual(measure["source_class"], "ATOM_ENTITY_INVESTMENT_GOAL_001")
+        self.assertEqual(measure["field"], "progress_pct")
+
+    def test_total_cash_flow_keeps_group_sum(self):
+        spec = {
+            "query_type": "comparative",
+            "entity_key": "investor_id",
+            "grain": {"pre_aggregate_by": ["investor_id"], "final_group_by": ["category"]},
+            "group_by": [{
+                "output_name": "category",
+                "source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+                "field": "category",
+            }],
+            "measures": [{
+                "output_name": "total_cash_flow",
+                "source_class": "ATOM_EVENT_CASH_FLOW_001",
+                "field": "amount",
+                "per_entity_operation": "SUM",
+                "final_operation": "AVG",
+            }],
+            "required_classes": [],
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "For each investor category, what is the total cash-flow amount?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertEqual(cleaned["measures"][0]["final_operation"], "SUM")
+
+    def test_investor_list_keeps_entity_identity_grain(self):
+        spec = {
+            "query_type": "aggregation",
+            "entity_key": "investor_id",
+            "grain": {"pre_aggregate_by": ["investor_id"], "final_group_by": ["investor_id", "investor_name"]},
+            "group_by": [
+                {"output_name": "investor_id", "field": "investor_id"},
+                {"output_name": "investor_name", "field": "investor_name"},
+            ],
+            "filters": [],
+            "measures": [{"output_name": "avg_progress", "field": "progress_pct"}],
+            "output_schema": ["investor_id", "investor_name", "avg_progress"],
+            "required_classes": [],
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Which investors have average goal progress below 20%?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertIn("investor_id", [group["output_name"] for group in cleaned["group_by"]])
+
+    def test_filtered_vary_across_query_excludes_null_group_and_requests_count(self):
+        spec = {
+            "query_type": "comparative",
+            "base_entity": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "entity_key": "investor_id",
+            "group_by": [{"output_name": "category", "field": "category"}],
+            "filters": [{"field": "risk_tolerance", "operator": "=", "value": "Moderate"}],
+            "measures": [{"output_name": "avg_net_cash_flow", "field": "amount"}],
+            "output_schema": ["category", "avg_net_cash_flow"],
+            "required_classes": [],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "Among Moderate investors, how does average net cash flow per investor vary across profile category?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertFalse(cleaned["preserve_null_groups"])
+        self.assertTrue(cleaned["include_entity_count"])
+        self.assertIn("n_investors", cleaned["output_schema"])
+
+    def test_group_gap_contract_keeps_all_groups_and_uses_signed_difference(self):
+        spec = {
+            "query_type": "ranking",
+            "entity_key": "investor_id",
+            "group_by": [{"output_name": "segment", "field": "segment"}],
+            "measures": [
+                {"output_name": "avg_liquidity_score", "source_class": "health", "field": "liquidity_score"},
+                {"output_name": "avg_diversification_score", "source_class": "health", "field": "diversification_score"},
+                {"output_name": "avg_gap", "source_class": "derived", "formula": "ABS(x-y)"},
+            ],
+            "ranking": {"required": True, "metric": "gap", "direction": "desc", "limit": 1},
+            "output_schema": ["segment", "avg_liquidity_score", "avg_diversification_score", "avg_gap"],
+            "required_classes": [],
+            "execution_strategy": "preaggregate_sparql",
+        }
+        cleaned = cleanup_query_spec(
+            spec,
+            "For each segment, compare average liquidity score and average diversification score per investor; which group has the largest gap between them?",
+            [],
+            _normalize,
+            schema_kind="sql",
+        )
+        self.assertEqual(cleaned["ranking"]["limit"], None)
+        self.assertEqual(cleaned["measures"][-1]["output_name"], "gap")
+        self.assertEqual(cleaned["measures"][-1]["formula"], "avg_liquidity_score - avg_diversification_score")
+        self.assertIn("gap", cleaned["output_schema"])
 
     def test_shortfall_measure_prefers_average_not_sum(self):
         spec = {
@@ -271,7 +484,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(measure["final_operation"], "AVG")
         self.assertEqual(measure["output_name"], "avg_transaction_count")
 
-    def test_grouped_compare_defaults_to_inner_join_for_related_table_comparisons(self):
+    def test_grouped_compare_keeps_independent_population_for_source_table_wording(self):
         spec = {
             "query_type": "comparative",
             "base_entity": "ATOM_ENTITY_INVESTOR_PROFILE_001",
@@ -305,8 +518,8 @@ class QuerySpecCleanupTest(unittest.TestCase):
             _normalize,
             schema_kind="sql",
         )
-        self.assertEqual(cleaned["join_policy"], "inner_join")
-        self.assertNotIn("independent_measure_population", cleaned)
+        self.assertEqual(cleaned["join_policy"], "left_join")
+        self.assertTrue(cleaned["independent_measure_population"])
 
     def test_explicit_inclusive_grouped_compare_uses_left_join(self):
         spec = {
@@ -484,7 +697,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
             "CASE WHEN type = 'Withdrawal' THEN ABS(amount) ELSE 0 END",
         )
 
-    def test_bucket_queries_do_not_preserve_null_group(self):
+    def test_bucket_queries_preserve_source_nulls_for_else_bucket(self):
         spec = {
             "query_type": "comparative",
             "grain": {"pre_aggregate_by": [], "final_group_by": []},
@@ -499,7 +712,8 @@ class QuerySpecCleanupTest(unittest.TestCase):
             [],
             _normalize,
         )
-        self.assertFalse(cleaned.get("preserve_null_groups", False))
+        self.assertTrue(cleaned.get("preserve_null_groups", False))
+        self.assertNotIn("drop_null_bucket_groups", cleaned)
 
     def test_filter_mention_does_not_infer_group_by(self):
         spec = {
@@ -712,6 +926,23 @@ class SemanticContractValidationTest(unittest.TestCase):
             [row["goal_match_pct_band"] for row in normalized],
             ["goal match < 33", "goal match 33-66", "goal match >= 67"],
         )
+
+    def test_rounds_analytic_measure_outputs_to_two_decimals(self):
+        query_spec = {
+            "group_by": [{"output_name": "risk_tolerance"}],
+            "measures": [{
+                "output_name": "avg_risk_score",
+                "field": "risk_score",
+                "per_entity_operation": "AVG",
+                "final_operation": "AVG",
+            }],
+        }
+        normalized = normalize_semantic_result(
+            "For each risk tolerance, what is the average risk score?",
+            query_spec,
+            [{"risk_tolerance": "Moderate", "avg_risk_score": 50.3349}],
+        )
+        self.assertEqual(normalized[0]["avg_risk_score"], 50.33)
 
     def test_reshapes_missing_count_rows(self):
         data = [{
@@ -976,15 +1207,15 @@ class TwoLevelAggregationGrainTest(unittest.TestCase):
 
     def test_single_table_grouping_is_left_alone(self):
         spec = self._spec(measures=[{
-            "output_name": "avg_risk_score",
+            "output_name": "avg_profile_metric",
             "source_class": "ATOM_ENTITY_INVESTOR_PROFILE_001",
-            "field": "risk_score",
+            "field": "profile_metric",
             "per_entity_operation": None,
             "final_operation": "AVG",
         }])
         cleaned = cleanup_query_spec(
             spec,
-            "Across time_horizon, what is the average risk score?",
+            "Across time_horizon, what is the average profile metric?",
             ["ATOM_ENTITY_INVESTOR_PROFILE_001"],
             _normalize,
         )

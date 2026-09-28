@@ -75,7 +75,11 @@ class AggregationGateTest(unittest.TestCase):
         """A fan-out warning is a quality signal, not a reason to lose the answer."""
         result, calls = self._run([FLAT_SQL])
         self.assertEqual(result["status"], "success")
-        self.assertEqual(result["data"], ROWS)
+        self.assertEqual(
+            [{"time_horizon": row["time_horizon"], "avg_progress_pct": row["avg_progress_pct"]}
+             for row in result["data"]],
+            ROWS,
+        )
         self.assertIn("two-level aggregation", result["trace"]["aggregation_shape_warning"])
 
     def test_compliant_sql_is_not_regenerated(self):

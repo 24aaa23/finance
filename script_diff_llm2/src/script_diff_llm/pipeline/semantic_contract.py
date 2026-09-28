@@ -1,5 +1,5 @@
 import re
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from typing import Any
 
 
@@ -125,6 +125,8 @@ def _looks_like_bucket_label(value: Any) -> bool:
         return False
     if text == "null":
         return True
+    if text in {"low", "moderate", "medium", "high"}:
+        return True
     if any(token in text for token in ["band", "bucket", "range"]):
         return True
     return bool(re.search(r"(<|>|-| to )", text))
@@ -154,6 +156,29 @@ def _canonical_bucket_label(value: Any, group: dict[str, Any]) -> Any:
     text = str(value).strip()
     if not text:
         return None
+    explicit_labels = group.get("bucket_labels")
+    explicit_boundaries = group.get("bucket_boundaries")
+    if isinstance(explicit_labels, list) and len(explicit_labels) == 3:
+        normalized = re.sub(r"\s+", "", text.lower())
+        for label in explicit_labels:
+            label_text = str(label)
+            if re.sub(r"\s+", "", label_text.lower()) == normalized:
+                return label
+        if isinstance(explicit_boundaries, list) and len(explicit_boundaries) == 2:
+            aliases = {
+                "short": explicit_labels[0],
+                "medium": explicit_labels[1],
+                "long": explicit_labels[2],
+                "low": explicit_labels[0],
+                "moderate": explicit_labels[1],
+                "high": explicit_labels[2],
+            }
+            if normalized in aliases:
+                return aliases[normalized]
+        # Do not convert an explicit benchmark label into the generic 33/66
+        # vocabulary below.
+        if any(token in normalized for token in ["short", "medium", "long"]):
+            return text
     prefix = _bucket_label_prefix(group).replace("_", " ")
     normalized = re.sub(r"\s+", "", text.lower())
     if normalized in {"0-33%", "0-33", "<33", "lt33"}:
@@ -175,7 +200,7 @@ def _normalize_bucket_rows(query_spec: dict[str, Any], data: list[dict[str, Any]
     group_by = query_spec.get("group_by")
     group_by = group_by if isinstance(group_by, list) else []
     bucket_group = next(
-        (group for group in group_by if isinstance(group, dict) and group.get("bucket_strategy") == "three_band_33_66"),
+        (group for group in group_by if isinstance(group, dict) and group.get("bucket_strategy")),
         None,
     )
     if not bucket_group:
@@ -190,12 +215,85 @@ def _normalize_bucket_rows(query_spec: dict[str, Any], data: list[dict[str, Any]
             normalized.append(row)
             continue
         label = row.get(output_name)
-        if label is None and not query_spec.get("preserve_null_groups", False):
+        if label is None and query_spec.get("drop_null_bucket_groups", False):
             continue
         updated = dict(row)
         updated[output_name] = _canonical_bucket_label(label, bucket_group)
         normalized.append(updated)
     return normalized
+
+
+def _drop_null_group_rows(query_spec: dict[str, Any], data: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Remove null grouping rows when the Query_Spec excludes them."""
+    if query_spec.get("preserve_null_groups", False):
+        return data
+    group_by = query_spec.get("group_by")
+    group_by = group_by if isinstance(group_by, list) else []
+    group_names = [
+        str(group.get("output_name") or "").strip()
+        for group in group_by
+        if isinstance(group, dict) and group.get("output_name")
+    ]
+    if not group_names:
+        return data
+    filtered = []
+    for row in data:
+        if not isinstance(row, dict):
+            filtered.append(row)
+            continue
+        is_null_group = any(
+            row.get(name) is None or str(row.get(name)).strip().upper() == "NULL"
+            for name in group_names
+        )
+        if not is_null_group:
+            filtered.append(row)
+    return filtered
+
+
+def _round_analytic_values(
+    query: str,
+    query_spec: dict[str, Any],
+    data: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Round computed measures while preserving raw retrieval precision."""
+    measures = query_spec.get("measures")
+    measures = measures if isinstance(measures, list) else []
+    if not measures:
+        return data
+    q = f" {normalize_compare_text(query)} "
+    aggregate_wording = any(marker in q for marker in [
+        " average ", " avg ", " total ", " sum ", " net ", " count ",
+        " how many ", " ratio ", " gap ", " change ", " compare ", " across ",
+    ])
+    if not query_spec.get("group_by") and not aggregate_wording:
+        return data
+    precision = 3 if " ratio " in q else 2
+    quantum = Decimal("1").scaleb(-precision)
+    target_columns: set[str] = set()
+    for measure in measures:
+        if not isinstance(measure, dict):
+            continue
+        output_name = str(measure.get("output_name") or "").strip()
+        if output_name:
+            target_columns.add(output_name)
+        for alias, _ in _measure_alias_candidates(measure):
+            target_columns.add(alias)
+
+    rounded = []
+    for row in data:
+        updated = dict(row)
+        for column in target_columns:
+            value = updated.get(column)
+            if isinstance(value, bool) or isinstance(value, int) or not isinstance(value, (float, Decimal)):
+                continue
+            try:
+                updated[column] = float(
+                    Decimal(str(value)).quantize(quantum, rounding=ROUND_HALF_UP)
+                )
+            except (InvalidOperation, ValueError):
+                continue
+        rounded.append(updated)
+    return rounded
 
 
 def _drop_null_month_rows(query_spec: dict[str, Any], data: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -320,7 +418,9 @@ def _measure_alias_candidates(measure: dict[str, Any]) -> list[tuple[str, bool]]
         add("avg_rebalancing_amount")
         add("total_rebalancing_amount")
         add("rebalancing_amount")
-    if "gap" in output_name.lower():
+    if "gap" in output_name.lower() or field_name == "gap" or "gap" in formula:
+        add("gap")
+        add("avg_gap")
         add("avg_rebalance_gap")
         add("avg_rebalancing_gap")
     if "scenario" in output_name.lower() and "change" in output_name.lower():
@@ -398,9 +498,11 @@ def normalize_semantic_result(query: str, query_spec: dict[str, Any], data: Any)
         return data
     normalized = [dict(row) for row in data]
     normalized = _normalize_bucket_rows(query_spec, normalized)
+    normalized = _drop_null_group_rows(query_spec, normalized)
     normalized = _drop_null_month_rows(query_spec, normalized)
     normalized = _reshape_missing_count_rows(query, normalized)
     normalized = _augment_query_spec_aliases(query_spec, normalized)
+    normalized = _round_analytic_values(query, query_spec, normalized)
     return normalized
 
 
@@ -740,3 +842,32 @@ def validate_join_population_shape(query_spec: dict[str, Any], generated_query: 
             f"then GROUP BY {group_text} so AVG/SUM for each metric uses the correct per-measure population."
         ),
     }
+
+
+def validate_join_policy_shape(query_spec: dict[str, Any], generated_query: str) -> dict[str, Any]:
+    """Ensure generated SQL/SPARQL does not silently change population policy."""
+    if not isinstance(query_spec, dict):
+        return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}
+    policy = str(query_spec.get("join_policy") or "").strip().lower()
+    if policy not in {"inner_join", "left_join"}:
+        return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}
+    if not query_spec.get("group_by"):
+        return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}
+    lowered = re.sub(r"\s+", " ", str(generated_query or "").lower())
+    if not lowered:
+        return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}
+    if policy == "inner_join" and " left join " in f" {lowered} ":
+        return {
+            "is_valid": False,
+            "severity": "repairable_warning",
+            "reason": "Query Spec requires inner_join, but generated query uses LEFT JOIN and changes the population.",
+            "rewrite_hint": "Use INNER JOIN for every measure CTE when join_policy is inner_join.",
+        }
+    if policy == "left_join" and " left join " not in f" {lowered} ":
+        return {
+            "is_valid": False,
+            "severity": "repairable_warning",
+            "reason": "Query Spec requires left_join, but generated query has no LEFT JOIN.",
+            "rewrite_hint": "Drive from the grouping entity and LEFT JOIN each measure CTE.",
+        }
+    return {"is_valid": True, "severity": "valid", "reason": "", "rewrite_hint": ""}

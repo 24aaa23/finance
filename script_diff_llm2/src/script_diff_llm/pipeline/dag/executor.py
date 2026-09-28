@@ -17,6 +17,7 @@ from script_diff_llm.pipeline.semantic_contract import (
     should_validate_semantics,
     validate_aggregation_shape,
     validate_join_population_shape,
+    validate_join_policy_shape,
     validate_semantic_result,
 )
 
@@ -299,7 +300,7 @@ class AOPExecutor:
                 "rewrite_hint": check.get("rewrite_hint", ""),
                 "query_spec": inputs.get("query_spec", {}),
                 "failed_sparql": inputs.get("sparql", ""),
-            }, indent=2)
+            }, indent=2, default=str)
             node_trace["self_heal_attempts"] += 1
             gen_result = self.registry["Generate"](inputs)
             inputs["sparql"] = gen_result.get("sparql", "")
@@ -418,7 +419,7 @@ class AOPExecutor:
         node_trace["scan_row_count"] = scan_result.get("row_count", "")
         node_trace["scan_error"] = scan_result.get("error_message", "")
         node_trace["scan_error_type"] = scan_result.get("error_type", "")
-        node_trace["scan_raw_rows"] = json.dumps(scan_result.get("data", []), ensure_ascii=False)
+        node_trace["scan_raw_rows"] = json.dumps(scan_result.get("data", []), ensure_ascii=False, default=str)
         node_trace["output_row_count"] = len(scan_result.get("data", []) or [])
         node_trace["output_columns"] = list(scan_result.get("data", [{}])[0].keys()) if scan_result.get("data") else []
         return {"status": "success", "data": scan_result.get("data", []), "trace": node_trace}
@@ -493,8 +494,19 @@ class AOPExecutor:
                         "reason": join_check.get("reason", ""),
                     })
                 else:
-                    psv_result = sql_pipeline.semantic_pre_scan_validate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
-                    check = psv_result.get("pre_scan_validation", {})
+                    policy_check = validate_join_policy_shape(inputs.get("query_spec", {}), inputs.get("sql", ""))
+                    if not policy_check.get("is_valid", True):
+                        check = policy_check
+                        node_trace["attempts"].append({
+                            "stage": "Join_Policy_Check_SQL",
+                            "attempt": attempt,
+                            "is_valid": False,
+                            "severity": policy_check.get("severity", ""),
+                            "reason": policy_check.get("reason", ""),
+                        })
+                    else:
+                        psv_result = sql_pipeline.semantic_pre_scan_validate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
+                        check = psv_result.get("pre_scan_validation", {})
             is_valid = bool(check.get("is_valid", False))
             severity = str(check.get("severity", "repairable_warning")).lower()
             node_trace["pre_scan_validation_is_valid"] = is_valid
@@ -524,7 +536,7 @@ class AOPExecutor:
                 "reason": check.get("reason"),
                 "rewrite_hint": check.get("rewrite_hint", ""),
                 "failed_sql": inputs.get("sql", ""),
-            }, indent=2)
+            }, indent=2, default=str)
             node_trace["self_heal_attempts"] += 1
             gen_result = sql_pipeline.semantic_generate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
             inputs["sql"] = gen_result.get("sql", "")
@@ -556,11 +568,16 @@ class AOPExecutor:
             if original_successful_scan is None:
                 original_successful_scan = scan_result
             if isinstance(scan_result, dict) and isinstance(scan_result.get("data"), list):
-                scan_result["data"] = sql_pipeline.enrich_sql_result_rows(
+                enriched_rows = sql_pipeline.enrich_sql_result_rows(
                     inputs.get("query_spec", {}),
                     scan_result.get("data", []),
                     self.db_path,
                 )
+                # Keep the executed rows if an optional enrichment adapter
+                # returns an invalid value. This also keeps the executor
+                # contract robust for lightweight test/dry-run adapters.
+                if isinstance(enriched_rows, list):
+                    scan_result["data"] = enriched_rows
                 scan_result["data"] = normalize_semantic_result(
                     root_query,
                     inputs.get("query_spec", {}),
@@ -598,7 +615,7 @@ class AOPExecutor:
                 "query_spec": inputs.get("query_spec", {}),
                 "failed_sql": inputs.get("sql", ""),
                 "result_sample": (scan_result.get("data", []) or [])[:10],
-            }, indent=2)
+            }, indent=2, default=str)
             node_trace["self_heal_attempts"] += 1
             gen_result = sql_pipeline.semantic_generate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
             inputs["sql"] = gen_result.get("sql", "")
@@ -642,7 +659,7 @@ class AOPExecutor:
         node_trace["scan_row_count"] = scan_result.get("row_count", "")
         node_trace["scan_error"] = scan_result.get("error_message", "")
         node_trace["scan_error_type"] = scan_result.get("error_type", "")
-        node_trace["scan_raw_rows"] = json.dumps(scan_result.get("data", []), ensure_ascii=False)
+        node_trace["scan_raw_rows"] = json.dumps(scan_result.get("data", []), ensure_ascii=False, default=str)
 
         node_trace["output_row_count"] = len(scan_result.get("data", []) or [])
         node_trace["output_columns"] = list(scan_result.get("data", [{}])[0].keys()) if scan_result.get("data") else []
@@ -951,7 +968,7 @@ class AOPExecutor:
             "scan_status": "",
             "scan_row_count": "",
             "scan_error": "",
-            "scan_raw_rows": json.dumps(final_data, ensure_ascii=False),
+            "scan_raw_rows": json.dumps(final_data, ensure_ascii=False, default=str),
             "unknown_terms": [],
             "term_suggestions": {},
             "refine_reason": "",

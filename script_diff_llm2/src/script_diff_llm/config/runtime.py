@@ -67,6 +67,19 @@ def _resolve_repo_path(root_dir: Path, value: str | None) -> str:
     return str(candidate.resolve())
 
 
+def _clean_env_path(value: str | None) -> str:
+    """Strip shell-style quotes/comments from path environment variables."""
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    if text[0] in {'"', "'"}:
+        quote = text[0]
+        end_quote = text.find(quote, 1)
+        if end_quote > 0:
+            return text[1:end_quote].strip()
+    return text.split("#", 1)[0].strip().strip('"\'')
+
+
 def _normalize_legacy_repo_path(root_dir: Path, value: str) -> str:
     if not value:
         return value
@@ -220,10 +233,10 @@ def load_runtime_config(experiment_config_path: str | None = None) -> RuntimeCon
     )
     output_dir = os.getenv("PIPELINE_OUTPUT_DIR", _resolve_repo_path(root_dir, str(default_output_dir_value)))
     default_db_path = _resolve_repo_path(root_dir, str(sql_asset_data.get("database_path") or default_sqlite_db_path()))
-    sqlite_db_path = os.getenv(
+    sqlite_db_path = _clean_env_path(os.getenv(
         "SQLITE_DB_PATH",
         _resolve_repo_path(root_dir, str(experiment_data.get("sqlite_db_path") or default_db_path)),
-    )
+    ))
     if sqlite_db_path == "/path/to/your/actual/wealth_management.db" and os.path.exists(default_db_path):
         sqlite_db_path = default_db_path
     if not os.path.isabs(sqlite_db_path):
