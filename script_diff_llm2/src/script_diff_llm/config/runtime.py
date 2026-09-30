@@ -176,6 +176,7 @@ class RuntimeConfig:
     instance_file: str
     input_sample_file: str
     input_sample_sheet: str
+    ground_truth_override_file: str
     sql_asset_file: str
     sql_asset_name: str
     sql_asset_description: str
@@ -302,6 +303,7 @@ def load_runtime_config(experiment_config_path: str | None = None) -> RuntimeCon
         instance_file=os.getenv("INSTANCE_FILE", _resolve_repo_path(root_dir, str(experiment_data.get("kg_instance_file") or root_dir / "data" / "kg" / "wealth_management_diverse_kg.ttl"))),
         input_sample_file=os.getenv("INPUT_SAMPLE_FILE", _resolve_repo_path(root_dir, str(experiment_data.get("input_sample_file") or root_dir / "data" / "benchmarks" / "verification_results_v2_sql_correct_train_300.xlsx"))),
         input_sample_sheet=os.getenv("INPUT_SAMPLE_SHEET", str(experiment_data.get("input_sample_sheet") or "")).strip(),
+        ground_truth_override_file=os.getenv("GROUND_TRUTH_OVERRIDE_FILE", _resolve_repo_path(root_dir, str(experiment_data.get("ground_truth_override_file") or ""))),
         sql_asset_file=str(sql_asset_path),
         sql_asset_name=str(sql_asset_data.get("name") or sql_asset_path.parent.name),
         sql_asset_description=str(sql_asset_data.get("description") or ""),

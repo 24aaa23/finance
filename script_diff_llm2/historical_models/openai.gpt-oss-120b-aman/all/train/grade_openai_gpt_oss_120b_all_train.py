@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 import re
+import signal
 import threading
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from typing import Any, Dict
@@ -42,11 +43,40 @@ DEFAULT_GPT_OSS_MODEL = "openai.gpt-oss-120b-1:0"
 GPT_OSS_MODEL = os.getenv("BEDROCK_GPT_OSS_MODEL", DEFAULT_GPT_OSS_MODEL)
 DEFAULT_LLM_GRADER_MODEL = "gpt-5.6-sol"
 LLM_GRADER_MODEL = os.getenv("LLM_GRADER_MODEL", DEFAULT_LLM_GRADER_MODEL)
+GRADER_LABEL = "grader_1"
 DETERMINISTIC_EXPLAIN = os.getenv("DETERMINISTIC_EXPLAIN", "1").strip().lower() not in {"0", "false", "no"}
 REPORT_FILE = os.getenv("GRADED_REPORT_FILE", os.path.join(OUTPUT_DIR, "graded_openai_gpt_oss_120b_all_train.csv"))
 RAW_REPORT_FILE = os.getenv("RAW_REPORT_FILE", os.path.join(OUTPUT_DIR, "raw_pipeline_openai_gpt_oss_120b_all_train.csv"))
 GRADER_API_TIMEOUT_SECONDS = max(5.0, float(os.getenv("GRADER_API_TIMEOUT_SECONDS", "45")))
-GRADER_OPENAI_MAX_RETRIES = max(0, int(os.getenv("GRADER_OPENAI_MAX_RETRIES", "1")))
+GRADER_OPENAI_MAX_RETRIES = max(0, int(os.getenv("GRADER_OPENAI_MAX_RETRIES", "0")))
+GRADER_ROW_TIMEOUT_SECONDS = max(
+    GRADER_API_TIMEOUT_SECONDS,
+    float(os.getenv("GRADER_ROW_TIMEOUT_SECONDS", "120")),
+)
+
+
+class GraderRowTimeout(RuntimeError):
+    pass
+
+
+def call_with_row_timeout(fn, timeout_seconds: float, *args, **kwargs):
+    if timeout_seconds <= 0 or not hasattr(signal, "SIGALRM"):
+        return fn(*args, **kwargs)
+
+    def _handle_timeout(signum, frame):
+        raise GraderRowTimeout(f"Grader row timed out after {timeout_seconds:g} seconds.")
+
+    previous_handler = signal.getsignal(signal.SIGALRM)
+    previous_timer = signal.getitimer(signal.ITIMER_REAL)
+    signal.signal(signal.SIGALRM, _handle_timeout)
+    signal.setitimer(signal.ITIMER_REAL, timeout_seconds)
+    try:
+        return fn(*args, **kwargs)
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous_handler)
+        if previous_timer != (0.0, 0.0):
+            signal.setitimer(signal.ITIMER_REAL, *previous_timer)
 
 
 class APILogger:
@@ -1371,6 +1401,7 @@ def regrade_existing_report(input_csv: str, output_csv: str, client, model: str 
                 continue
 
         updated = row.to_dict()
+        updated["Grader Label"] = GRADER_LABEL
         existing_status = str(row.get("New Status", "") or "").strip().upper()
         if existing_status in preserve_statuses:
             updated["Final Grading Path"] = "preserved_execution_status"
@@ -1381,7 +1412,16 @@ def regrade_existing_report(input_csv: str, output_csv: str, client, model: str 
 
         try:
             print(f"[GRADE] {row_number}/{total_rows}: grading...", flush=True)
-            result = grade_pipeline_result(str(row.get("Question", "") or ""), str(row.get("Ground Truth", "") or ""), str(row.get("Scan Raw Rows", "") or ""), str(row.get("New Pipeline Result", "") or ""), client, model)
+            result = call_with_row_timeout(
+                grade_pipeline_result,
+                GRADER_ROW_TIMEOUT_SECONDS,
+                str(row.get("Question", "") or ""),
+                str(row.get("Ground Truth", "") or ""),
+                str(row.get("Scan Raw Rows", "") or ""),
+                str(row.get("New Pipeline Result", "") or ""),
+                client,
+                model,
+            )
             updated.update({"New Status": result.get("status", "OTHER"), "Comparison / Comments": result.get("reason", ""), "Grading Contract": json.dumps(result.get("grading_contract", {}), ensure_ascii=False, default=str), "Column Mapping": json.dumps(result.get("column_mapping", {}), ensure_ascii=False, default=str), "Column Mapping Status": result.get("column_mapping_status", "not_applicable"), "Deterministic Preliminary Status": result.get("deterministic_status", "NOT_APPLICABLE"), "Deterministic Evidence": json.dumps(result.get("deterministic_evidence", {}), ensure_ascii=False, default=str), "Final Grading Path": result.get("grading_path", "")})
         except Exception as exc:
             updated.update({"New Status": "OTHER", "Comparison / Comments": f"Grader exception: {exc}", "Grading Contract": "{}", "Column Mapping": "{}", "Column Mapping Status": "grader_exception", "Deterministic Preliminary Status": "NOT_APPLICABLE", "Deterministic Evidence": "{}", "Final Grading Path": "grader_exception"})
@@ -1404,8 +1444,10 @@ def main():
     grader_client = build_openai_grader_client()
     print(f"[SYSTEM] Raw report: {RAW_REPORT_FILE}")
     print(f"[SYSTEM] Graded report: {REPORT_FILE}")
+    print(f"[SYSTEM] Grader label: {GRADER_LABEL}")
     print(f"[SYSTEM] Grader model: {LLM_GRADER_MODEL}")
     print(f"[SYSTEM] Grader API timeout: {GRADER_API_TIMEOUT_SECONDS:g}s; max retries: {GRADER_OPENAI_MAX_RETRIES}")
+    print(f"[SYSTEM] Per-row grading timeout: {GRADER_ROW_TIMEOUT_SECONDS:g}s")
     regrade_existing_report(RAW_REPORT_FILE, REPORT_FILE, grader_client, LLM_GRADER_MODEL)
     api_logger.save()
     print(f"[SUCCESS] Graded report saved to {REPORT_FILE}")

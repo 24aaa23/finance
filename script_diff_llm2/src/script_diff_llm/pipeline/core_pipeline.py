@@ -30,6 +30,7 @@ from script_diff_llm.backends import sql as sql_pipeline
 from script_diff_llm.config.runtime import load_local_env_file, load_runtime_config
 from script_diff_llm.evaluation.benchmark_io import (
     load_input_samples,
+    load_ground_truth_overrides,
     normalize_benchmark_records,
     run_single_benchmark_record,
 )
@@ -104,6 +105,7 @@ SCHEMA_FILE = CONFIG.schema_file
 INSTANCE_FILE = CONFIG.instance_file
 INPUT_SAMPLE_FILE = CONFIG.input_sample_file
 INPUT_SAMPLE_SHEET = CONFIG.input_sample_sheet
+GROUND_TRUTH_OVERRIDE_FILE = CONFIG.ground_truth_override_file
 DEFAULT_SQLITE_DB_PATH = CONFIG.default_sqlite_db_path
 SQLITE_DB_PATH = CONFIG.sqlite_db_path
 
@@ -664,10 +666,16 @@ def main():
         print(f"\n[SYSTEM] Loading {sample_file}...")
 
         df_all = load_input_samples(sample_file, INPUT_SAMPLE_SHEET)
+        ground_truth_overrides = {}
+        if GROUND_TRUTH_OVERRIDE_FILE:
+            print(f"[SYSTEM] Loading ground-truth overrides from {GROUND_TRUTH_OVERRIDE_FILE}...")
+            ground_truth_overrides = load_ground_truth_overrides(GROUND_TRUTH_OVERRIDE_FILE)
+            print(f"[SYSTEM] Loaded {len(ground_truth_overrides)} ground-truth override entries.")
         test_records, benchmark_mode = normalize_benchmark_records(
             df_all,
             offset=TEST_QUERY_OFFSET,
             limit=TEST_QUERY_LIMIT,
+            ground_truth_overrides=ground_truth_overrides,
         )
         print(f"[SYSTEM] Query window offset={TEST_QUERY_OFFSET}, limit={TEST_QUERY_LIMIT}.")
         if benchmark_mode == "new_benchmark":
