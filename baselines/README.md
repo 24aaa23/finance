@@ -14,6 +14,10 @@ final GPT-5.6 TERA graded CSV reports.
 `results/query_type_grading_results.md` contains the independent MATCH,
 MISMATCH, and PARTIAL counts for every query type in each pipeline.
 
+`results/category_grading_results_125_each.md` contains the independent MATCH,
+MISMATCH, and PARTIAL counts for each of the eight 125-question source
+categories in every pipeline.
+
 Only the local-retrieval GraphRAG baseline is included. The alternative
 GraphRAG implementation and its reports are intentionally absent.
 
