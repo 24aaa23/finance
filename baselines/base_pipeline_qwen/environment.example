@@ -1,0 +1,26 @@
+# Copy this file to .env and fill in your real credentials.
+# Do NOT commit .env to version control.
+
+# AWS Bedrock API key (used for both GPT-OSS grading and Qwen via Mantle)
+AWS_BEDROCK_API_KEY=your_bedrock_api_key_here
+BEDROCK_REGION=us-east-1
+
+# Optional: override the Bedrock Mantle base URL for the target model
+# BEDROCK_MANTLE_BASE_URL=https://bedrock-mantle.us-east-1.api.aws/v1
+
+# Optional: override the Bedrock base URL for GPT-OSS 120B
+# BEDROCK_BASE_URL=https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1
+
+# Fuseki endpoint (must be running before starting the pipeline)
+FUSEKI_ENDPOINT=http://127.0.0.1:3030/wealth/query
+
+# Optional: override the target model for SPARQL generation
+# TARGET_MODEL=qwen.qwen3-235b-a22b-2507
+
+# Optional: override the grader model
+# GRADER_MODEL=openai.gpt-oss-120b-1:0
+
+# Optional: control retry and query window
+# MAX_RETRIES=3
+# TEST_QUERY_LIMIT=442
+# TEST_QUERY_OFFSET=0
