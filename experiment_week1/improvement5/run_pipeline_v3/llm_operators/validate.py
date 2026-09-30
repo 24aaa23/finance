@@ -1,0 +1,172 @@
+"""Check result structure; optionally review answer meaning without gating execution."""
+
+import os
+
+from ..common import (
+    Any,
+    DETERMINISTIC_EXPLAIN,
+    Dict,
+    LOCAL_MODEL,
+    api_logger,
+    json,
+    re,
+)
+from ..clients import build_llm_messages, supports_temperature
+from ..business_context import business_context_prompt
+from ..utils import parse_llm_json
+
+
+def empty_answer_can_be_valid(query: str, query_spec: Dict[str, Any]) -> bool:
+    """Compatibility hint only; emptiness still requires successful execution evidence."""
+    return isinstance(query_spec, dict) and query_spec.get("allow_empty_result") is True
+
+
+def _norm_group_token(value: Any) -> str:
+    return re.sub(r"[^a-z0-9_]+", "", str(value or "").replace("-", "_").lower())
+
+
+def query_spec_requires_null_group_guard(query_spec: Dict[str, Any]) -> bool:
+    return isinstance(query_spec, dict) and query_spec.get("preserve_null_groups") is True and bool(query_spec.get("group_by"))
+
+
+def sparql_has_null_group_guard(sparql: str) -> bool:
+    text = str(sparql or "").lower()
+    return "optional" in text
+
+
+def normalize_value_for_final_answer(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {key: normalize_value_for_final_answer(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [normalize_value_for_final_answer(item) for item in value]
+    # Actual nulls stay null. A literal category named "NONE" or "NULL" must not
+    # be reinterpreted without an explicit source conversion policy.
+    return value
+
+
+def is_list_query(query: str) -> bool:
+    q = str(query or "").lower()
+    return any(marker in q for marker in ["which", "show", "list", "identify", "find"])
+
+
+def is_count_query(query: str) -> bool:
+    q = str(query or "").lower()
+    return any(marker in q for marker in [
+        "count",
+        "how many",
+        "number of",
+        "total number",
+        "frequency",
+    ])
+
+
+def clean_rows_for_final_answer(raw_data: list, query: str) -> list:
+    cleaned = []
+    for row in raw_data:
+        cleaned.append(normalize_value_for_final_answer(row))
+    return cleaned
+
+
+def should_return_structured_json(query: str, raw_data: Any) -> bool:
+    if not DETERMINISTIC_EXPLAIN or not isinstance(raw_data, list):
+        return False
+    if len(raw_data) == 0:
+        return False
+
+    if all(isinstance(row, dict) for row in raw_data):
+        return True
+
+    row_count = len(raw_data)
+    list_output = is_list_query(query)
+    table_output = row_count > 1
+    return list_output or table_output
+
+
+def _execution_errors(inputs: Dict[str, Any]) -> list[str]:
+    """Read execution metadata, never mistake a data column named 'error' for failure."""
+    errors = []
+    for key in ("error", "error_message", "execution_errors"):
+        value = inputs.get(key)
+        if value:
+            errors.extend(str(item) for item in value) if isinstance(value, list) else errors.append(str(value))
+    for key in ("final_execution", "processing_execution", "operator_execution"):
+        for entry in inputs.get(key, []) if isinstance(inputs.get(key, []), list) else []:
+            if not isinstance(entry, dict):
+                continue
+            reason = entry.get("error") or entry.get("error_message")
+            if reason or entry.get("status") in {"error", "failed"}:
+                errors.append(f"{entry.get('operator', key)}: {reason or 'execution failed'}")
+    return list(dict.fromkeys(errors))
+
+
+def _validation_failure(data: Any, reason: str, repair_stage: str = "Final_Spec") -> Dict[str, Any]:
+    return {"validation": {"is_valid": False, "reason": reason, "repair_stage": repair_stage}, "data": data}
+
+
+def semantic_validate(inputs: Dict[str, Any], client: Any, model: str = LOCAL_MODEL) -> Dict[str, Any]:
+    data = inputs.get("data", [])
+    errors = _execution_errors(inputs)
+    final_spec = inputs.get("final_spec") or {}
+    errors.extend(str(error) for error in final_spec.get("contract_errors", []))
+    if not isinstance(data, list) or any(not isinstance(row, dict) for row in data):
+        errors.append("Final data must be a list of structured rows.")
+    if not errors:
+        projection = final_spec.get("projection", [])
+        projection = [projection] if isinstance(projection, str) else projection
+        missing = sorted({field for field in projection for row in data if field not in row})
+        if missing:
+            errors.append("Final data lacks declared projection fields: " + ", ".join(missing))
+    if errors:
+        return {"validation": {"is_valid": False, "status": "execution_error",
+                "reason": "; ".join(errors), "repair_stage": "Execution"}, "data": data}
+
+    enabled = inputs.get("semantic_review", os.getenv("FINAL_SEMANTIC_REVIEW", "1"))
+    enabled = enabled is True or str(enabled).strip().lower() in {"1", "true", "yes"}
+    if not enabled:
+        return {"validation": {"is_valid": None, "status": "not_requested",
+                "reason": "Execution checks passed. Answer correctness has not been reviewed; use the separate grader."}, "data": data}
+
+    query = inputs.get("original_query") or inputs.get("query", "")
+    indices = sorted({round(i * (len(data) - 1) / 14) for i in range(15)}) if len(data) > 15 else range(len(data))
+    sample = [data[index] for index in indices]
+    plan = {key: value for key, value in final_spec.items()
+            if key in {"final_steps", "merge_steps", "pre_steps", "final_measures", "projection", "distinct_on"}}
+    business_context = business_context_prompt()
+    prompt = f"""Review whether the executed calculation answers the original question.
+Question: {query}
+Business rule pack that should govern metric definitions and rule clashes: {business_context}
+Metric/grain/population/NULL contracts: {json.dumps(inputs.get('answer_requirements', {}), default=str)}
+Retrieved branches: {json.dumps(inputs.get('branch_evidence', []), default=str)}
+Executed plan: {json.dumps(plan, default=str)}
+Execution steps and row counts: {json.dumps(inputs.get('final_execution', []), default=str)}
+Result row count: {len(data)}
+Result sample (complete only when row count <= 15): {json.dumps(sample, default=str)}
+Check predicates, source population, join keys, aggregation, distinctness, sorting,
+and output fields against each branch's executed_sparql as well as its intended retrieval.
+An IRI is a full resource identifier. Join keys must
+identify the same kind of entity and use the same representation, not a display label.
+Equivalent aliases are acceptable. Intermediate grouping and filtering-only measures
+need not appear in final output. Explicit filters may remove nulls from optional fields.
+Empty output is possible; judge its supporting plan, not emptiness alone. Samples do
+not establish complete answer correctness. This is a review, not execution status.
+Check R5 per-investor inner aggregates, exact metric sources, group-owner joins,
+ratio-of-averages versus average-of-ratios, and named-label exclusions before ranking.
+Do not reject merely because of a valid NULL group or a different display alias.
+Set repair_stage Final_Spec only for a concrete calculation error repairable from
+the available branches. Missing source data or wrong branch predicates need Decompose.
+Return only JSON: {{"is_valid": true|false, "reason": "specific evidence",
+ "repair_stage":"Final_Spec|Decompose|none", "repair_hint":"specific correction"}}
+"""
+    api_logger.log_call(query, "Validate")
+    request = {"model": model, "messages": build_llm_messages("validate", prompt)}
+    if supports_temperature(model):
+        request["temperature"] = 0.0
+    try:
+        response = client.chat.completions.create(**request)
+        parsed = parse_llm_json(response.choices[0].message.content, None, "Validate")
+        if not isinstance(parsed, dict) or not isinstance(parsed.get("is_valid"), bool):
+            raise ValueError("Review did not return a JSON boolean verdict.")
+        parsed["status"] = "accepted" if parsed["is_valid"] else "rejected"
+    except Exception as exc:
+        parsed = {"is_valid": None, "status": "unconfirmed", "reason": "Answer review unavailable: " + str(exc)[:500]}
+    return {"validation": parsed, "data": data}
