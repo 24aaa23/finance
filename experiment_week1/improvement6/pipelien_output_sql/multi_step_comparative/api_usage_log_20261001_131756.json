@@ -1,0 +1,262 @@
+{
+    "List the top 10 investors ranked by a composite score (0-100 index) combining net cash flow, total holding gain (counting only holdings with a recorded cost and current value) and total scenario allocation shift (sum of new minus current allocation %). Over investors that have all 3 components, min-max normalise each component to 0-1, and take 100 times their equal-weighted mean; break ties by investor_id.": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow records for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio holdings that have both cost and current value": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve scenario\u2011rebalancing events with allocation percentages": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "List the top 10 investors ranked by a composite score (0-100 index) combining net cash flow, total holding gain (counting only holdings with a recorded cost and current value) and risk score. Over investors that have all 3 components, min-max normalise each component to 0-1, and take 100 times their equal-weighted mean; break ties by investor_id.": {
+        "total_calls": 5,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 3
+        }
+    },
+    "Retrieve cash\u2011flow events for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records containing risk score": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total holding gain (counting only holdings with a recorded cost and current value) minus average goal shortfall (all components in INR); break ties by investor_id.": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "retrieve investor identifiers": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve cash\u2011flow amounts per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve holdings with recorded cost and current value per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve investment\u2011goal shortfalls per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total rebalance amount plus total sector investment (all components in INR); break ties by investor_id.": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow event with its signed amount": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each rebalancing action with its amount": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each sector\u2011allocation record with its total investment": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "List the top 10 investors ranked by the transaction_rebalance_index (a 0-100 composite index) combining net cash flow, total rebalance amount and total scenario allocation shift (sum of new minus current allocation %). Over investors that have all 3 components, min-max normalise each component to 0-1, and take 100 times their equal-weighted mean; break ties by investor_id.": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve every cash\u2011flow event with its signed amount for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every portfolio\u2011rebalancing action with its amount for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every scenario\u2011driven rebalancing event with its before\u2011and\u2011after allocation percentages for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "List the top 10 investors ranked by a composite score (0-100 index) combining net cash flow, total rebalance amount and risk score. Over investors that have all 3 components, min-max normalise each component to 0-1, and take 100 times their equal-weighted mean; break ties by investor_id.": {
+        "total_calls": 5,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 3
+        }
+    },
+    "Retrieve all cash\u2011flow events with their signed amount": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve all rebalancing\u2011action events with their amount": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio\u2011health records containing risk_score": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total rebalance amount minus average goal shortfall (all components in INR); break ties by investor_id.": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow events with a signed amount": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing\u2011action events with an amount": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal records with a shortfall": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "List the top 10 investors ranked by a composite score (0-100 index) combining net cash flow, total sector investment and total scenario allocation shift (sum of new minus current allocation %). Over investors that have all 3 components, min-max normalise each component to 0-1, and take 100 times their equal-weighted mean; break ties by investor_id.": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve every cash\u2011flow event for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every sector\u2011allocation record for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every scenario\u2011rebalancing event for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "List the top 10 investors ranked by a composite score (0-100 index) combining net cash flow, total sector investment and risk score. Over investors that have all 3 components, min-max normalise each component to 0-1, and take 100 times their equal-weighted mean; break ties by investor_id.": {
+        "total_calls": 6,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 4
+        }
+    },
+    "Retrieve every cash\u2011flow event for each investor (raw signed amounts).": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every sector\u2011allocation record for each investor (total investment per sector).": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the portfolio\u2011health record that contains the risk score for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total sector investment minus average goal shortfall (all components in INR); break ties by investor_id.": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve every cash\u2011flow event with a signed amount for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each sector\u2011allocation record with its total investment for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every investment\u2011goal record with its shortfall for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    }
+}

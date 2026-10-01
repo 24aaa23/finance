@@ -1,0 +1,103 @@
+{
+  "version": "improvement5_business_rules_plan_c_v1",
+  "source_documents": {
+    "domain_intro": "../domain_intro_latest.prompt",
+    "business_rules_addendum": "../business_rules_addendum.md"
+  },
+  "precedence": [
+    "business_rules_addendum overrides older phase0/domain rules when there is a clash",
+    "domain_intro_latest is the corrected domain background",
+    "the database is authoritative for actual enum values"
+  ],
+  "rules": {
+    "cash_flow_signs": {
+      "id": "R1",
+      "storage": "cash_flow.amount is already signed in the DB",
+      "inflows": ["Deposit", "SIP", "Interest Credit", "Tax Refund", "Dividend Reinvestment", "Lump Sum", "blank", "None"],
+      "inflow_sign": "positive",
+      "outflows": ["Withdrawal", "Redemption"],
+      "outflow_sign": "negative",
+      "net_cash_flow_formula": "SUM(amount)",
+      "outflow_magnitude_formula": "-SUM(amount) or SUM(ABS(amount)) over outflow rows",
+      "do_not": "do not re-sign stored amounts with CASE inflow THEN amount ELSE -amount"
+    },
+    "withdrawal_presentation": {
+      "id": "R2",
+      "rule": "when the question asks for total withdrawal or amount withdrawn, present a positive magnitude",
+      "net_flow_exception": "net cash flow keeps the stored sign convention"
+    },
+    "ranking_tie_break": {
+      "id": "R3",
+      "rule": "top-k/bottom-k rankings must add a deterministic secondary id key",
+      "pattern": "ORDER BY score direction, entity_id ASC",
+      "entity_ids": ["investor_id", "holding_id"]
+    },
+    "missing_scores_in_rankings": {
+      "id": "R4",
+      "rule": "exclude NULL scores from highest/lowest rankings",
+      "pattern": "WHERE score IS NOT NULL before ranking"
+    },
+    "uniform_averaging_grain": {
+      "id": "R5",
+      "rule": "when grouping by investor attributes, compute every averaged metric per investor first, then AVG across investors",
+      "avoid": "do not mix per-investor-first averages with row-pooled averages in the same grouped result"
+    },
+    "join_population": {
+      "id": "R6",
+      "rules": [
+        "do not join tables the question does not ask for",
+        "use LEFT JOIN from investor profile for optional child metrics",
+        "express every condition the question states"
+      ]
+    },
+    "allocation_concentration": {
+      "id": "R7",
+      "definition": "allocation concentration for an investor is MAX(allocation_pct), the largest single-sector share",
+      "cohort_formula": "per-investor MAX(allocation_pct), then AVG across investors",
+      "wording": "state as average of each investor's largest single-sector allocation percent"
+    },
+    "composite_scores": {
+      "id": "R8",
+      "risk_pressure_score": "risk_score + (100 - liquidity_score) + (100 - diversification_score)",
+      "dropped_metrics": ["old five-term risk_pressure_score", "MC-104 composite C2"],
+      "combined_gain_and_ncf": "GAIN + NCF",
+      "combined_ncf_and_reb": "NCF + REB",
+      "combined_holding_value_and_shortfall": "HVAL + SHORT",
+      "normalized_indexes": {
+        "quantitative_burden_index": "0-100 equal-weight min-max index of SHORT, inverse GAIN, inverse NCF, risk_pressure_score",
+        "transaction_rebalance_index": "0-100 equal-weight min-max index of NCF, REB, SCEN_delta_sum",
+        "temporal_pressure_index": "0-100 equal-weight min-max index of NCF(period), REB, inverse AVGSHORT, SCEN_delta_sum"
+      },
+      "scenario_change_aggregation": "SCEN_delta_sum = SUM(new_allocation_pct - current_allocation_pct)",
+      "temporal_ncf_period": "use the period stated in the question; if no period is stated, mark the question incomplete"
+    },
+    "returns_pct_weighting": {
+      "id": "R9",
+      "average_return": "equal-weighted AVG(returns_pct), normally per investor first when grouped by investor attributes",
+      "portfolio_or_value_weighted_return": "weight by current_value or cost only when explicitly requested",
+      "do_not": "do not SUM returns_pct"
+    },
+    "aggregation_guardrails": {
+      "id": "R10",
+      "rules": [
+        "never aggregate ids, dates, or enum labels as numeric measures",
+        "count investors with COUNT(DISTINCT investor_id)",
+        "0-100 scores such as goal_match_pct are averaged, not summed"
+      ]
+    },
+    "proportion_denominators": {
+      "id": "R11",
+      "rule": "share/proportion of investors uses the full cohort denominator",
+      "missing_metric_policy": "NULL metric counts as not meeting the threshold, not as removed from denominator"
+    },
+    "xirr": {
+      "storage_transform": "for XIRR only, negate stored cash_flow.amount to investor-pocket convention",
+      "plausibility_warning": "XIRR > 25% must be flagged for data quality review",
+      "cohort_rule": "compute XIRR per investor; do not pool cash flows across investors"
+    },
+    "lock_in": {
+      "elss_years": 3,
+      "ppf_years": 15
+    }
+  }
+}

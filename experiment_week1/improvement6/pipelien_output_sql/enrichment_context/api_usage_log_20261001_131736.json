@@ -1,0 +1,472 @@
+{
+    "For each time horizon, how many distinct investors with a risk score above 25 both hold a Mutual Fund position and have a Bull Market scenario record?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's identifier and their time horizon": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor's portfolio risk score": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve investors that hold a Mutual Fund position": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investors with a Bull Market scenario record": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each segment, what is the average net cash-flow amount per investor (sum of signed cash-flow amounts), the average goal progress per investor, and the average risk score?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "retrieve each investor's segment": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "retrieve cash\u2011flow amounts per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve goal progress percentages per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve risk scores per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each time horizon, how many distinct investors with a risk score above 25 both hold a Real Estate position and have a Growth goal?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor profile records needed for the analysis": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records needed for the analysis": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio holding records that indicate a Real Estate position": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each segment, what is the average total sector-allocation investment amount per investor, the average holding return per investor (counting only holdings with a recorded cost and current value), and the average risk score?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's segment classification": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "retrieve each investor's segment classification": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve sector\u2011allocation records for each investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve holdings that have both cost and current value recorded": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve each investor's portfolio risk score": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each time horizon, how many distinct investors with a risk score above 25 both hold a Corporate Bond position and have a Withdrawal transaction?": {
+        "total_calls": 5,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 3
+        }
+    },
+    "retrieve investor_id and time_horizon": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve investor_id with risk_score > 25": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve investor_id holding a Corporate Bond position": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "retrieve investor_id with a Withdrawal transaction": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each category, what is the average number of holdings per investor, the average net cash-flow amount per investor (sum of signed cash-flow amounts), and the average risk score?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's identifier and preferred asset category": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each holding record to count holdings per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each cash\u2011flow transaction amount per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor's risk score": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each segment, how many distinct investors with a risk score above 25 both hold a position with investment type 'Equity' and have a SIP transaction?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's segment": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Spec": 5
+        }
+    },
+    "Retrieve investors' risk scores": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Identify investors with at least one Equity holding": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Identify investors with at least one SIP transaction": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each category, what is the average number of holdings per investor, the average number of rebalancing actions per investor (investors with none count as 0), and the average risk score?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investor's identifier and their preferred asset category.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every portfolio holding record to enable counting holdings per investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every rebalancing\u2011action event to enable counting actions per investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor's portfolio risk score.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each segment, how many distinct investors with a risk score above 25 both hold a Gold position and have a Deposit transaction?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investors' Gold holdings": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investors' Deposit cash\u2011flow events": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each category, what is the average net cash-flow amount per investor (sum of signed cash-flow amounts), the average goal progress per investor, and the average risk score?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each investor's identifier and preferred asset category.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every cash\u2011flow transaction amount for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the goal\u2011progress percentage for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the portfolio risk score for each investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each segment, how many distinct investors with a risk score above 25 both hold a position with investment type 'ETF' and have a Buy rebalancing action?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investors' portfolio risk scores": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investors' holdings with investment type": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investors' rebalancing actions": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each category, what is the average total sector-allocation investment amount per investor, the average holding return per investor (counting only holdings with a recorded cost and current value), and the average risk score?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve each sector\u2011allocation record with its investor identifier and the amount invested in that sector.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor\u2019s preferred asset category.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each holding that has both a recorded cost and a recorded current value, together with its investor identifier and the holding\u2019s returns percentage.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each portfolio\u2011health record with its investor identifier and risk score.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each segment, how many distinct investors with a risk score above 25 both hold a Mutual Fund position and have a Bull Market scenario record?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve portfolio risk scores": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve Mutual Fund holdings": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve Bull Market scenario records": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each segment, how many distinct investors with a risk score above 25 both hold a Real Estate position and have a Growth goal?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve investors whose portfolio risk_score is greater than 25": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve Real Estate holdings and their market\u2011cap segment": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investors whose investment_goal is Growth": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each segment, how many distinct investors with a risk score above 25 both hold a Corporate Bond position and have a Withdrawal transaction?": {
+        "total_calls": 3,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Identify investors that hold a Corporate Bond position": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Identify investors that have a Withdrawal transaction": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "For each category, how many distinct investors with a risk score above 25 both hold a position with investment type 'Equity' and have a SIP transaction?": {
+        "total_calls": 4,
+        "functions": {
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve investor profile records with category": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records for risk score filtering": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio holding records for equity positions": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve cash\u2011flow records for SIP transactions": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    }
+}
