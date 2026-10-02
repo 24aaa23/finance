@@ -179,56 +179,35 @@ def supports_temperature(model: str) -> bool:
 # 5. SQLITE SCHEMA LOADING
 # ---------------------------------------------------------------------------
 
-def load_sqlite_schema(db_path: str) -> Dict[str, Any]:
-    print(f"[SYSTEM] Loading SQLite schema from {db_path}...")
+def load_sqlite_schema(db_path: str) -> Dict[str, str]:
+    print(f"[SYSTEM] Loading SQLite DDL from {db_path}...")
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
-    tables = [row[0] for row in cursor.fetchall()]
+    cursor.execute(
+        "SELECT name, sql FROM sqlite_master "
+        "WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
+    )
 
-    schema: Dict[str, Any] = {}
-    for table_name in tables:
-        cursor.execute(f'PRAGMA table_info("{table_name}")')
-        columns = cursor.fetchall()
-        cursor.execute(f'SELECT COUNT(*) FROM "{table_name}"')
-        row_count = cursor.fetchone()[0]
-
-        column_info = []
-        for col in columns:
-            col_name = col[1]
-            col_type = col[2]
-            is_pk = col[5] > 0
-            try:
-                cursor.execute(
-                    f'SELECT DISTINCT "{col_name}" FROM "{table_name}" '
-                    f'WHERE "{col_name}" IS NOT NULL LIMIT 3'
-                )
-                samples = [str(r[0]) for r in cursor.fetchall()]
-            except Exception:
-                samples = []
-            column_info.append({"name": col_name, "type": col_type, "is_primary_key": is_pk, "sample_values": samples})
-
-        schema[table_name] = {"row_count": row_count, "columns": column_info}
+    schema: Dict[str, str] = {}
+    for table_name, ddl in cursor.fetchall():
+        if not ddl:
+            quoted_table = '"' + str(table_name).replace('"', '""') + '"'
+            cursor.execute(f"PRAGMA table_info({quoted_table})")
+            columns = ", ".join(
+                f'{chr(34)}{str(col[1]).replace(chr(34), chr(34) * 2)}{chr(34)} '
+                f'{col[2]}{" PRIMARY KEY" if col[5] else ""}'
+                for col in cursor.fetchall()
+            )
+            ddl = f"CREATE TABLE {quoted_table} ({columns})"
+        schema[str(table_name)] = str(ddl).strip().rstrip(";") + ";"
 
     conn.close()
-    print(f"[SYSTEM] Successfully loaded schema for {len(schema)} tables.")
+    print(f"[SYSTEM] Successfully loaded DDL for {len(schema)} tables.")
     return schema
 
 
-def build_schema_text(schema: Dict[str, Any]) -> str:
-    lines = []
-    for table_name, details in schema.items():
-        row_count = details.get("row_count", 0)
-        lines.append(f"Table: {table_name}  ({row_count} rows)")
-        for col in details.get("columns", []):
-            name = col["name"]
-            dtype = col["type"]
-            pk = " [PRIMARY KEY]" if col.get("is_primary_key") else ""
-            samples = col.get("sample_values", [])
-            sample_str = f"  -- e.g. {', '.join(repr(s) for s in samples[:3])}" if samples else ""
-            lines.append(f"  - {name} ({dtype}){pk}{sample_str}")
-        lines.append("")
-    return "\n".join(lines)
+def build_schema_text(schema: Dict[str, str]) -> str:
+    return "\n\n".join(schema.values())
 
 
 # ---------------------------------------------------------------------------
@@ -275,51 +254,14 @@ def execute_sql_on_sqlite(
 # ---------------------------------------------------------------------------
 
 def generate_sql(query: str, schema_text: str, client: LLMClient, model: str) -> Dict[str, Any]:
-    prompt = f"""You are a SQL query generator for a SQLite database about wealth management.
-
-User Query: "{query}"
-
-SQLite Database Schema:
+    prompt = f"""Database schema (DDL):
 {schema_text}
 
-Return ONLY raw SQL text. Do not explain. Do not include <reasoning>, <think>, markdown, comments, or prose.
-The first non-whitespace characters in your response must be SELECT, WITH, or another SQL keyword.
+Question:
+{query}
 
-CRITICAL SQL RULES:
-
-RULE 1 (TABLE NAMES): Use the exact table names from the schema above. All table names start with ATOM_.
-Always quote table names with double quotes since they contain special characters.
-
-RULE 2 (JOINS): All tables share the `investor_id` column. Use JOINs via investor_id to combine data from multiple tables.
-Use LEFT JOIN when you need to preserve all rows from the primary table even if secondary table has no match.
-
-RULE 3 (AGGREGATIONS): Use standard SQL aggregation functions: SUM(), AVG(), COUNT(), MIN(), MAX().
-When using aggregations, ensure all non-aggregated SELECT columns are in the GROUP BY clause.
-Cast text to REAL when doing math: CAST(column AS REAL).
-
-RULE 4 (CASE-INSENSITIVE FILTERS): When filtering by text values, use LOWER() for case-insensitive matching.
-Example: WHERE LOWER(risk_tolerance) = 'conservative'
-
-RULE 5 (NEGATION): If the user query contains "never", "not", "excluding", "without", or "no X", use NOT IN, NOT EXISTS, or WHERE NOT.
-
-RULE 6 (RANKING): For top/bottom/highest/lowest questions, use ORDER BY with LIMIT.
-For "top N", use ORDER BY DESC LIMIT N. For "bottom N", use ORDER BY ASC LIMIT N.
-
-RULE 7 (COUNT): Use COUNT(*) or COUNT(column) as appropriate. Use COUNT(DISTINCT column) only when the user asks for distinct/unique values.
-
-RULE 8 (DATE HANDLING): Dates are stored as TEXT in YYYY-MM-DD format.
-For month grouping, use SUBSTR(date_column, 1, 7) to get YYYY-MM.
-For year grouping, use SUBSTR(date_column, 1, 4) to get YYYY.
-
-RULE 9 (NULL HANDLING): Use COALESCE(column, default_value) to handle NULLs when needed.
-For "for each" or "by" grouping queries, include rows where the group column might be NULL.
-
-RULE 10 (ARITHMETIC): Be careful with division — use NULLIF(denominator, 0) to avoid division by zero.
-Example: SUM(a) / NULLIF(COUNT(*), 0)
-
-RULE 11 (SUBQUERIES): For complex multi-step queries, use CTEs (WITH clauses) or subqueries to break down the logic.
-
-RULE 12 (ROUNDING): When the question asks for percentages or financial metrics, round to 2 decimal places: ROUND(value, 2).
+Return only the SQL query. Do not include reasoning, explanations, markdown,
+comments, or prose.
 """
 
     api_logger.log_call(query, "Generate_SQL")

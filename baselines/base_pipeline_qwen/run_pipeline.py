@@ -199,27 +199,25 @@ def strip_llm_reasoning_blocks(text: str) -> str:
     return cleaned.strip()
 
 
-def repair_sparql_query(sparql: str) -> str:
+def repair_sparql_query(sparql: str, schema_namespaces: Dict[str, str]) -> str:
+    """Normalize only namespace bindings supplied by the active RDF schema."""
     normalized = (sparql or "").strip()
     if not normalized:
         return ""
     normalized = strip_llm_reasoning_blocks(normalized)
     normalized = re.sub(r"^\s*```(?:sparql)?\s*|\s*```\s*$", "", normalized, flags=re.IGNORECASE | re.MULTILINE).strip()
-    standard_prefixes = {
-        "wm:": 'PREFIX wm: <https://wealth.example.org/ontology/>',
-        "kg:": 'PREFIX kg: <https://wealth.example.org/kg/>',
-        "rdf:": 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>',
-        "rdfs:": 'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>',
-        "xsd:": 'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>',
-        "schema1:": 'PREFIX schema1: <http://schema.org/>',
-        "wmmeta:": 'PREFIX wmmeta: <https://wealth.example.org/metadata/>',
-    }
-    upper_query = normalized.upper()
-    for prefix_alias, prefix_line in standard_prefixes.items():
-        if prefix_alias in normalized and prefix_alias.upper().replace(":", ":") not in re.findall(
-            r"PREFIX\s+(\S+:)", upper_query
-        ):
-            normalized = prefix_line + "\n" + normalized
+    declarations = []
+    for alias, iri in sorted(schema_namespaces.items()):
+        prefix_token = f"{alias}:" if alias else ":"
+        declaration = f"PREFIX {prefix_token} <{iri}>"
+        declaration_pattern = rf"(?im)^\s*PREFIX\s+{re.escape(alias)}\s*:\s*<[^>]*>\s*$"
+        usage_pattern = rf"(?<![A-Za-z0-9_-]){re.escape(prefix_token)}[A-Za-z_]"
+        if re.search(declaration_pattern, normalized):
+            normalized = re.sub(declaration_pattern, declaration, normalized)
+        elif re.search(usage_pattern, normalized):
+            declarations.append(declaration)
+    if declarations:
+        normalized = "\n".join(declarations + [normalized])
     return normalized
 
 
@@ -246,24 +244,29 @@ def schema_datatype_key(value: Any) -> str:
 
 
 def extract_schema_datatypes_by_property(g: rdflib.Graph) -> Dict[str, str]:
-    attribute_name_predicates = {
-        rdflib.URIRef("https://wealth.example.org/ontology/attributeName"),
-        rdflib.URIRef("https://wealth.example.org/ontology/derivedName"),
-    }
-    attribute_type_predicate = rdflib.URIRef("https://wealth.example.org/ontology/attributeType")
+    """Read generic RDF/OWL range declarations when the TTL provides them."""
     datatypes: Dict[str, str] = {}
-    for attr_uri, _, attr_type in g.triples((None, attribute_type_predicate, None)):
-        datatype = normalize_schema_attribute_type(attr_type)
+    for property_uri, _, range_uri in g.triples((None, rdflib.RDFS.range, None)):
+        datatype = normalize_schema_attribute_type(range_uri)
         if datatype == "unknown":
             continue
-        for name_predicate in attribute_name_predicates:
-            attr_name = g.value(attr_uri, name_predicate)
-            if attr_name is not None:
-                datatypes[schema_datatype_key(attr_name)] = datatype
+        datatypes[schema_datatype_key(local_name(property_uri))] = datatype
     return datatypes
 
 
-def load_rdf_knowledge_graph(schema_file: str) -> Dict[str, Any]:
+def schema_qname(graph: rdflib.Graph, uri: Any) -> str:
+    """Return a schema-qualified RDF term, preserving the TTL namespace map."""
+    text = str(uri or "")
+    if not text:
+        return ""
+    try:
+        prefix, _, local = graph.namespace_manager.compute_qname(text, generate=True)
+        return f"{prefix}:{local}" if prefix else f":{local}"
+    except Exception:
+        return f"<{text}>"
+
+
+def load_rdf_knowledge_graph(schema_file: str) -> tuple[Dict[str, Any], Dict[str, str]]:
     print("[SYSTEM] Loading RDF Knowledge Graph metadata from schema + Fuseki...")
     g = rdflib.Graph()
     g.parse(schema_file, format="turtle")
@@ -271,29 +274,31 @@ def load_rdf_knowledge_graph(schema_file: str) -> Dict[str, Any]:
 
     kg_metadata: Dict[str, Any] = {}
     for s, p, o in g.triples((None, rdflib.RDF.type, rdflib.OWL.Class)):
+        class_uri = str(s)
         class_name = local_name(s)
         if "__" not in class_name:
             label = str(g.value(s, rdflib.RDFS.label)) if g.value(s, rdflib.RDFS.label) else class_name
-            kg_metadata[class_name] = {
+            kg_metadata[class_uri] = {
                 "name": label,
+                "term": schema_qname(g, s),
                 "columns": set(),
                 "property_datatypes": {},
             }
 
-    metadata_query = """
+    class_values = " ".join(f"<{uri}>" for uri in sorted(kg_metadata))
+    metadata_query = f"""
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 SELECT DISTINCT ?class ?p ?datatype ?targetClass
-WHERE {
+WHERE {{
+  VALUES ?class {{ {class_values} }}
   ?s rdf:type ?class .
   ?s ?p ?o .
-  FILTER(STRSTARTS(STR(?class), "https://wealth.example.org/ontology/"))
-  FILTER(!STRSTARTS(STR(?p), "http://www.w3.org/"))
-  OPTIONAL { FILTER(isLiteral(?o)) BIND(DATATYPE(?o) AS ?datatype) }
-  OPTIONAL {
+  FILTER(?p != rdf:type)
+  OPTIONAL {{ FILTER(isLiteral(?o)) BIND(DATATYPE(?o) AS ?datatype) }}
+  OPTIONAL {{
     FILTER(isIRI(?o)) ?o rdf:type ?targetClass .
-    FILTER(STRSTARTS(STR(?targetClass), "https://wealth.example.org/ontology/"))
-  }
-}
+  }}
+}}
 """
     metadata_result = execute_sparql_on_fuseki(metadata_query, FUSEKI_ENDPOINT, FUSEKI_METADATA_TIMEOUT_SECONDS)
     if metadata_result.get("status") != "success":
@@ -301,36 +306,52 @@ WHERE {
         print("[WARN] Continuing with schema classes only.")
     else:
         for row in metadata_result.get("data", []):
-            class_name = local_name(row.get("class", ""))
-            if class_name not in kg_metadata:
-                kg_metadata[class_name] = {"name": class_name, "columns": set(), "property_datatypes": {}}
-            prop_name = local_name(row.get("p", ""))
-            if not prop_name:
+            class_uri = str(row.get("class", ""))
+            class_name = local_name(class_uri)
+            if class_uri not in kg_metadata:
+                kg_metadata[class_uri] = {
+                    "name": class_name,
+                    "term": schema_qname(g, class_uri),
+                    "columns": set(),
+                    "property_datatypes": {},
+                }
+            prop_uri = str(row.get("p", ""))
+            prop_name = local_name(prop_uri)
+            if not prop_uri or not prop_name:
                 continue
-            kg_metadata[class_name]["columns"].add(prop_name)
+            kg_metadata[class_uri]["columns"].add(prop_uri)
             schema_datatype = schema_datatypes_by_property.get(schema_datatype_key(prop_name))
             datatype = str(row.get("datatype", "") or "").lower()
             target_class = row.get("targetClass", "")
             if target_class:
-                kg_metadata[class_name]["property_datatypes"][prop_name] = (
-                    f"object_reference (points to: {local_name(target_class)})"
+                kg_metadata[class_uri]["property_datatypes"][prop_uri] = (
+                    f"object_reference (points to: {schema_qname(g, target_class)})"
                 )
             elif schema_datatype:
-                kg_metadata[class_name]["property_datatypes"][prop_name] = schema_datatype
+                kg_metadata[class_uri]["property_datatypes"][prop_uri] = schema_datatype
             elif any(m in datatype for m in ("decimal", "integer", "float", "double")):
-                kg_metadata[class_name]["property_datatypes"][prop_name] = "numeric"
+                kg_metadata[class_uri]["property_datatypes"][prop_uri] = "numeric"
             else:
-                kg_metadata[class_name]["property_datatypes"][prop_name] = "categorical_string"
+                kg_metadata[class_uri]["property_datatypes"][prop_uri] = "categorical_string"
 
-    for class_name in kg_metadata:
+    for class_uri in kg_metadata:
         formatted_columns = []
-        for prop in kg_metadata[class_name]["columns"]:
-            dtype = kg_metadata[class_name]["property_datatypes"].get(prop, "unknown")
-            formatted_columns.append({"name": prop, "type": "Property", "datatype": dtype})
-        kg_metadata[class_name]["columns"] = formatted_columns
+        for prop_uri in kg_metadata[class_uri]["columns"]:
+            dtype = kg_metadata[class_uri]["property_datatypes"].get(prop_uri, "unknown")
+            formatted_columns.append({
+                "name": schema_qname(g, prop_uri),
+                "uri": prop_uri,
+                "type": "Property",
+                "datatype": dtype,
+            })
+        kg_metadata[class_uri]["columns"] = formatted_columns
 
     print(f"[SYSTEM] Successfully loaded {len(kg_metadata)} classes with Fuseki dynamic properties.")
-    return kg_metadata
+    schema_namespaces = {
+        str(prefix or ""): str(namespace)
+        for prefix, namespace in g.namespaces()
+    }
+    return kg_metadata, schema_namespaces
 
 
 # ---------------------------------------------------------------------------
@@ -398,16 +419,34 @@ def check_fuseki_health(endpoint: str = FUSEKI_ENDPOINT) -> None:
 # 7. BUILD SCHEMA TEXT FOR LLM PROMPT
 # ---------------------------------------------------------------------------
 
-def build_schema_text(kg_metadata: Dict[str, Any]) -> str:
-    lines = []
-    for class_name, details in kg_metadata.items():
+def build_schema_text(kg_metadata: Dict[str, Any], schema_namespaces: Dict[str, str]) -> str:
+    used_prefixes = set()
+    for details in kg_metadata.values():
+        terms = [str(details.get("term", ""))]
+        for col in details.get("columns", []):
+            if isinstance(col, dict):
+                terms.extend((str(col.get("name", "")), str(col.get("datatype", ""))))
+        for term in terms:
+            used_prefixes.update(re.findall(r"(?<![A-Za-z0-9_-])([A-Za-z][\w-]*):[A-Za-z_]", term))
+
+    lines = ["Namespace bindings:"]
+    for prefix in sorted(used_prefixes):
+        iri = schema_namespaces.get(prefix)
+        if iri:
+            lines.append(f"PREFIX {prefix}: <{iri}>")
+    lines.append("")
+
+    sorted_classes = sorted(
+        kg_metadata.values(), key=lambda details: str(details.get("term", details.get("name", "")))
+    )
+    for details in sorted_classes:
         if not isinstance(details, dict):
             continue
         columns = details.get("columns", [])
         if not columns:
             continue
-        lines.append(f"Class: {class_name}")
-        for col in columns:
+        lines.append(f"Class: {details.get('term', details.get('name', '?'))}")
+        for col in sorted(columns, key=lambda value: str(value.get("name", "")) if isinstance(value, dict) else str(value)):
             if isinstance(col, dict):
                 lines.append(f"  - {col.get('name', '?')} ({col.get('datatype', 'unknown')})")
             else:
@@ -423,52 +462,18 @@ def build_schema_text(kg_metadata: Dict[str, Any]) -> str:
 def generate_sparql(
     query: str,
     schema_text: str,
+    schema_namespaces: Dict[str, str],
     client: LLMClient,
     model: str,
 ) -> Dict[str, Any]:
-    prompt = f"""You are a SPARQL query generator for an RDF Knowledge Graph about wealth management.
-
-User Query: "{query}"
-
-RDF Knowledge Graph Schema:
+    prompt = f"""RDF schema:
 {schema_text}
 
-Return ONLY raw SPARQL text. Do not explain. Do not include <reasoning>, <think>, markdown, comments, or prose.
-The first non-whitespace characters in your response must be PREFIX or SELECT.
+Question:
+{query}
 
-CRITICAL SPARQL RULES:
-
-RULE 1 (PREFIXES): You MUST include these exact prefixes:
-    PREFIX wm: <https://wealth.example.org/ontology/>
-    PREFIX kg: <https://wealth.example.org/kg/>
-    PREFIX wmmeta: <https://wealth.example.org/metadata/>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX schema1: <http://schema.org/>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-
-RULE 2 (RDF TYPES): Always anchor entities with rdf:type. Example: ?investor rdf:type wm:InvestorProfile .
-
-RULE 3 (MATH & AGGREGATION): RDF stores values as strings. For aggregations (SUM, AVG) or math, MUST cast variables to decimal: e.g., SUM(xsd:decimal(?value)).
-Never put aggregate functions like SUM, AVG, COUNT, MIN, or MAX inside BIND or OPTIONAL blocks.
-Put aggregate expressions in SELECT, for example `(SUM(xsd:decimal(?amount)) AS ?totalAmount)`, and use GROUP BY for non-aggregated selected variables.
-
-RULE 4 (CASE-INSENSITIVE FILTERS): When filtering by text or IDs, use lowercase comparison.
-Example: FILTER(CONTAINS(LCASE(STR(?id)), "inv-001")).
-
-RULE 5 (NEGATION): If the user query contains "never", "not", "excluding", "without", or "no X", use FILTER NOT EXISTS or MINUS.
-
-RULE 6 (LABELS OVER IRIs): For controlled-vocabulary classes (InvestmentType, Sector, Segment, RiskCategory), always follow the label property to get the human-readable string.
-
-RULE 7 (COUNT): Use COUNT(?id) by default. Use COUNT(DISTINCT ?id) only when the user asks for distinct/unique values.
-
-RULE 8 (MONTH GROUPING): If the query asks "per month", "for each month", or "monthly", extract YYYY-MM from date strings. Use BIND(SUBSTR(STR(?date), 1, 7) AS ?month) and GROUP BY ?month.
-
-RULE 9 (NULL GROUPS): For "for each", "by", "per" group-by questions, do not drop rows because the group field is missing. Use OPTIONAL for the group field and COALESCE to "NULL".
-
-RULE 10 (JOIN SAFETY): Do not create flat joins between two classes through literal properties when both sides have many values. Aggregate each class separately in subqueries first, then join.
-
-RULE 11 (VOCABULARY): Use only classes and predicates from the Schema above. Do NOT invent properties. Use wm: namespace properties, not schema1: properties, in graph patterns.
+Return only the SPARQL query. Do not include reasoning, explanations, markdown,
+comments, or prose.
 """
 
     api_logger.log_call(query, "Generate")
@@ -498,7 +503,7 @@ RULE 11 (VOCABULARY): Use only classes and predicates from the Schema above. Do 
         sparql_query = result.strip()
 
     return {
-        "sparql": repair_sparql_query(sparql_query),
+        "sparql": repair_sparql_query(sparql_query, schema_namespaces),
         "latency": latency,
         "input_tokens": int(getattr(usage, "prompt_tokens", 0) or 0),
         "output_tokens": int(getattr(usage, "completion_tokens", 0) or 0),
@@ -549,7 +554,12 @@ REPORT_COLUMNS = [
 ]
 
 
-def process_question(record: Dict[str, Any], client: LLMClient, schema_text: str) -> Dict[str, Any]:
+def process_question(
+    record: Dict[str, Any],
+    client: LLMClient,
+    schema_text: str,
+    schema_namespaces: Dict[str, str],
+) -> Dict[str, Any]:
     query_start = time.perf_counter()
     started_at = datetime.datetime.now().isoformat(timespec="seconds")
     query = sanitize_user_query(str(record.get("Question", "")))
@@ -573,7 +583,13 @@ def process_question(record: Dict[str, Any], client: LLMClient, schema_text: str
     }
 
     try:
-        gen = generate_sparql(query=query, schema_text=schema_text, client=client, model=TARGET_MODEL)
+        gen = generate_sparql(
+            query=query,
+            schema_text=schema_text,
+            schema_namespaces=schema_namespaces,
+            client=client,
+            model=TARGET_MODEL,
+        )
     except Exception as gen_err:
         if is_quota_exhaustion_error(gen_err):
             return {**base_row, "New Status": "QUOTA_EXHAUSTED", "Scan Error": str(gen_err),
@@ -645,8 +661,8 @@ def main():
     target_client = build_target_client(TARGET_MODEL)
 
     print(f"\n[STEP 1] Loading schema from {SCHEMA_FILE}...")
-    kg_metadata = load_rdf_knowledge_graph(SCHEMA_FILE)
-    schema_text = build_schema_text(kg_metadata)
+    kg_metadata, schema_namespaces = load_rdf_knowledge_graph(SCHEMA_FILE)
+    schema_text = build_schema_text(kg_metadata, schema_namespaces)
 
     print(f"\n[STEP 1] Loading dataset from {INPUT_SAMPLE_FILE}...")
     df_all = load_input_samples(INPUT_SAMPLE_FILE)
@@ -708,7 +724,7 @@ def main():
     def worker(record):
         if quota_exhausted.is_set():
             return None
-        return process_question(record, target_client, schema_text)
+        return process_question(record, target_client, schema_text, schema_namespaces)
 
     with ThreadPoolExecutor(max_workers=PIPELINE_WORKERS) as pool:
         futures = {pool.submit(worker, r): r for r in pending_records}

@@ -108,20 +108,10 @@ def parse_answer(raw: str, retrieved_uris: set[str]) -> dict:
 
 def _answer_prompt(question: str, retrieval: dict) -> str:
     return (
-        "Answer the wealth-management question using ONLY the RDF entity facts below. "
-        "The facts are a retrieved subgraph, not necessarily the complete graph. "
-        "For counts, sums, averages, rankings, lists, absence, or comparisons across a population, "
-        "do not claim a complete answer unless the evidence itself establishes completeness. "
-        "If relevant facts are missing, or truncation could change a requested complete "
-        "list or calculation, return insufficient_evidence. A direct property of an exact "
-        "named entity may still be answered when unrelated neighbors were truncated. "
-        "Preserve numeric precision and requested grouping. Do not invent IDs, values, or citations. "
-        "Return exactly one JSON object with keys status (answered or insufficient_evidence), "
-        "answer (JSON value or null), and evidence_uris (array of URIs present below).\n\n"
-        f"Question: {question}\n"
-        f"Retrieval truncated: {str(retrieval['truncated']).lower()}\n"
-        f"Retrieved entities: {len(retrieval['entities'])}\n\n"
-        f"RDF facts:\n{retrieval['context']}"
+        f"RDF facts:\n{retrieval['context']}\n\n"
+        f"Question:\n{question}\n\n"
+        "Return exactly one JSON object with keys status, answer, and evidence_uris. "
+        "Set status to answered or insufficient_evidence."
     )
 
 
@@ -169,11 +159,9 @@ def answer_question_single_shot(
         retrieval["estimated_input_tokens"] = 0
         return {"status": "insufficient_evidence", "answer": None, "evidence_uris": []}, 0, 0, 0.0
 
-    system_message = "You answer questions from retrieved graph evidence and return valid JSON only."
     # Pre-flight (non-API) trimming to fit the context budget before the single call.
     while True:
         messages = [
-            {"role": "system", "content": system_message},
             {"role": "user", "content": _answer_prompt(question, retrieval)},
         ]
         estimate = estimate_input_tokens(messages)

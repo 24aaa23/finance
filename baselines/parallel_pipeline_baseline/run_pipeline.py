@@ -49,6 +49,11 @@ DEFAULT_REPORT = HERE / "output" / "parallel_pipeline_single_shot_ungraded.csv"
 DEFAULT_FUSEKI_ENDPOINT = os.getenv("FUSEKI_ENDPOINT", "http://127.0.0.1:3030/wealth/query")
 DEFAULT_QUESTION_WORKERS = int(os.getenv("PIPELINE_WORKERS", "3"))
 
+# RDFLib's shared SPARQL parser grammar is not safe under concurrent parseQuery
+# calls. Serialize only local validation; generation and Fuseki execution remain
+# parallel.
+SPARQL_VALIDATION_LOCK = threading.Lock()
+
 _csv_limit = sys.maxsize
 while True:
     try:
@@ -111,7 +116,8 @@ def run_branch_single_shot(
         branch.generation_output_tokens = output_tokens
 
         try:
-            base.validate_generated_sparql(sparql, schema_text)
+            with SPARQL_VALIDATION_LOCK:
+                base.validate_generated_sparql(sparql, schema_text)
         except Exception as exc:
             scan = {"status": "error", "error_message": f"Pre-execution validation: {exc}"}
         else:

@@ -491,108 +491,18 @@ def generate_sparql(
     temperature: float,
     api_logger: APILogger,
 ) -> tuple[str, int, int]:
-    feedback = ""
-    if retry_feedback:
-        feedback = f"""
-Previous execution or consensus check needs correction. Use the diagnostic feedback
-to fix the specific error. Preserve valid logic; do not change the requested meaning.
-Execution-only feedback (contains no reference answers or evaluation grades):
-{retry_feedback}
-"""
-    prompt = f"""
-You are independent SPARQL generator copy {copy_id} in parallel ensemble round {round_number}.
-Write one executable SPARQL query that directly answers the wealth-management question.
-There is no post-processing stage: all requested filtering, grouping, aggregation,
-ranking, and limiting must be implemented correctly in SPARQL.
-
-User Question: "{question}"
-
-RDF Knowledge Graph Schema:
+    prompt = f"""RDF schema:
 {schema_text}
-{feedback}
 
-Return ONLY raw SPARQL text. Do not explain. Do not include <reasoning>, <think>,
-markdown, comments, or prose. The first non-whitespace characters must be PREFIX or SELECT.
+Question:
+{question}
 
-CRITICAL SPARQL RULES:
-
-RULE 1 (SCHEMA GROUNDING):
-- Use only classes and predicates present in the schema. Never invent a class, predicate,
-  relationship, or repeated property name.
-- Type every answer entity and every joined entity with rdf:type for its actual class.
-- A shared ID/name literal is not a valid join. Join classes only with schema-listed object
-  properties, in the direction shown by the schema.
-- If no relationship is listed between two classes, do not fabricate one.
-- Properties belong to the class under which they are listed. Do not move a literal
-  property from an investor or transaction onto its linked vocabulary node.
-- Use rdfs:label on vocabulary nodes when listed. For example, an investor's
-  wm:riskTolerance literal is different from its linked risk node's rdfs:label.
-
-RULE 2 (PREFIXES): Include these exact canonical prefixes:
-  PREFIX wm: <https://wealth.example.org/ontology/>
-  PREFIX kg: <https://wealth.example.org/kg/>
-  PREFIX wmmeta: <https://wealth.example.org/metadata/>
-  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-  PREFIX schema1: <http://schema.org/>
-  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-
-RULE 3 (VALID SPARQL, NOT SQL):
-- Every SELECT alias must be parenthesized: `(expression AS ?alias)`. Never write
-  `expression AS ?alias` without the surrounding parentheses.
-- SPARQL has no SQL CASE expression. Use `IF(condition, trueValue, falseValue)`.
-- Never BIND a value to a variable that is already in scope. Use a new variable name.
-- A property path belongs in a graph pattern, not inside SELECT, BIND, or an aggregate.
-- Use SPARQL expression syntax, not SQL assignment or CASE syntax.
-
-RULE 4 (MATH AND GROUPING):
-- RDF numeric values may be strings. Cast with xsd:decimal for SUM, AVG, comparisons,
-  and arithmetic.
-- In aggregate queries, put aggregates in SELECT and group the non-aggregate projections.
-  Ordinary non-aggregate queries do not need GROUP BY.
-- Do not select a pre-COALESCE variable when GROUP BY uses its COALESCE alias.
-- Never use an aggregate directly in BIND. Aggregates belong in a SELECT, including
-  SELECT subqueries that may be nested inside OPTIONAL.
-- Preserve the requested output grain. For multi-class measures, aggregate each one-to-many
-  class at its own grain in a subquery before joining, so Cartesian multiplication cannot
-  inflate counts, sums, or averages.
-- Preserve weighting: an average of per-investor averages is not a row-level average.
-  Carry sums and counts through subqueries when a weighted average is required.
-
-RULE 5 (COUNTING):
-- Count the entity named by the question, not an arbitrary joined row.
-- When joins can repeat that entity, use COUNT(DISTINCT ?entity).
-- Use a non-distinct count only when each counted RDF subject is itself one requested record
-  and the graph pattern cannot duplicate it.
-
-RULE 6 (FILTERS AND NEGATION):
-- Apply every condition in the question. Compare text and IDs case-insensitively with
-  LCASE(STR(...)) when appropriate.
-- For "never", "not", "excluding", "without", or "no related record", use a correlated
-  FILTER NOT EXISTS or MINUS pattern.
-
-RULE 7 (NULL GROUPS):
-- For "for each", "by", "per", or "across" grouping questions, preserve entities whose
-  group value is missing: retrieve the group with OPTIONAL, then BIND COALESCE to a NEW
-  variable such as `BIND(COALESCE(?rawGroup, "NULL") AS ?group)` and group by ?group.
-
-RULE 8 (RANKING AND OUTPUT SHAPE):
-- For top/bottom/highest/lowest questions, compute the requested metric first, then ORDER BY
-  that metric and apply the exact requested LIMIT.
-- Do not add an arbitrary LIMIT to non-ranking questions.
-- Return all and only the entities, group labels, and metrics required to answer the question.
-- Return human-readable label/literal values instead of raw vocabulary IRIs when possible.
-
-Before returning, silently verify that every class and predicate exists in the supplied
-schema, all SELECT aliases are parenthesized, aggregate-query projections are valid,
-and the query's output grain matches the question. Output only the final SPARQL.
+Return only the SPARQL query. Do not include reasoning, explanations, markdown,
+comments, or prose.
 """.strip()
     request: dict[str, Any] = {
         "model": model,
-        "messages": [
-            {"role": "system", "content": "Return only a correct executable SPARQL query."},
-            {"role": "user", "content": prompt},
-        ],
+        "messages": [{"role": "user", "content": prompt}],
     }
     if not model.lower().startswith("gpt-5"):
         request["temperature"] = temperature

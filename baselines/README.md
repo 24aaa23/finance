@@ -1,22 +1,26 @@
 # Finance baselines
 
 This directory contains the five 1,000-question baseline pipelines and their
-final GPT-5.6 TERA graded CSV reports.
+current GPT-5 Mini graded CSV reports. The earlier GPT-5.6 TERA reports remain
+under `results/` as a historical snapshot.
 
 | Baseline | Code | Final graded result |
 |---|---|---|
-| Base SPARQL | `base_pipeline_qwen/` | `results/base_pipeline_qwen_dir_gpt_oss_120b_1000q_graded_gpt_5_6_terra.csv` |
-| Base SQL | `base_pipeline_sql/` | `results/base_pipeline_sql_gpt_oss_120b_1000q_graded_gpt_5_6_terra.csv` |
-| GraphRAG local retrieval | `graph_rag_local/` | `results/graph_rag_local_only_gpt_oss_120b_1000q_graded_gpt_5_6_terra.csv` |
-| Parallel SPARQL ensemble | `parallel_pipeline_baseline/` | `results/parallel_gpt_oss_120b_1000q_graded_gpt_5_6_terra.csv` |
-| Parallel SQL ensemble | `parallel_pipeline_sql_baseline/` | `results/parallel_sql_gpt_oss_120b_1000q_graded_gpt_5_6_terra.csv` |
+| Base SPARQL | `base_pipeline_qwen/` | `results/base_sparql_dynamic_namespace_1000q_20261002_graded_gpt_5_mini.csv` |
+| Base SQL | `base_pipeline_sql/` | `results/base_pipeline_sql_schema_only_prompt_1000q_20261001_graded_gpt_5_mini.csv` |
+| GraphRAG local retrieval | `graph_rag_local/` | `results/graph_rag_local_domain_neutral_prompt_1000q_20261001_graded_gpt_5_mini.csv` |
+| Parallel SPARQL ensemble | `parallel_pipeline_baseline/` | `results/parallel_sparql_schema_only_prompt_parser_lock_1000q_20261002_graded_gpt_5_mini.csv` |
+| Parallel SQL ensemble | `parallel_pipeline_sql_baseline/` | `results/parallel_sql_schema_only_prompt_1000q_20261001_graded_gpt_5_mini.csv` |
 
-`results/query_type_grading_results.md` contains the independent MATCH,
+`results/query_type_grading_results_gpt_5_mini.md` contains the independent MATCH,
 MISMATCH, and PARTIAL counts for every query type in each pipeline.
 
-`results/category_grading_results_125_each.md` contains the independent MATCH,
+`results/category_grading_results_125_each_gpt_5_mini.md` contains the independent MATCH,
 MISMATCH, and PARTIAL counts for each of the eight 125-question source
 categories in every pipeline.
+
+`results/baseline_changes_20261002.md` records the prompt, namespace,
+concurrency, grading, and result changes from the previous snapshot.
 
 Only the local-retrieval GraphRAG baseline is included. The alternative
 GraphRAG implementation and its reports are intentionally absent.
@@ -67,11 +71,18 @@ reports, not resumable working outputs.
 
 ## Grading
 
-The unchanged grader used for these reports is stored in `grading/`. Configure
-`OPENAI_API_KEY`, `RAW_REPORT_FILE`, and `GRADED_REPORT_FILE`, then run:
+The unchanged grader prompt used for these reports is stored in `grading/`.
+Configure `OPENAI_API_KEY`, `RAW_REPORT_FILE`, `GRADED_REPORT_FILE`, and set
+`LLM_GRADER_MODEL=gpt-5-mini`, then run:
 
 ```bash
 python baselines/grading/grade_openai_gpt_oss_120b_all_train_direct_llm_gpt_5_6_TERA.py
 ```
 
 No API keys or local `.env` files are included.
+
+To rebuild the two Markdown summaries from the current graded CSVs:
+
+```bash
+python baselines/scripts/generate_grading_markdown.py
+```

@@ -173,39 +173,28 @@ def classify_api_exception(exc: Exception) -> str:
     return "GENERATION_ERROR"
 
 
-def load_sqlite_schema(database: Path) -> dict[str, Any]:
-    """Read table/column metadata and a few values for schema grounding."""
+def load_sqlite_schema(database: Path) -> dict[str, str]:
+    """Read only table DDL. Do not read row counts or sample values."""
     if not database.is_file():
         raise FileNotFoundError(database)
     connection = sqlite3.connect(f"file:{database.resolve()}?mode=ro", uri=True)
     try:
-        tables = [
-            row[0] for row in connection.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
-            )
-        ]
-        schema: dict[str, Any] = {}
-        for table in tables:
+        tables = list(connection.execute(
+            "SELECT name, sql FROM sqlite_master "
+            "WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
+        ))
+        schema: dict[str, str] = {}
+        for table, ddl in tables:
             quoted_table = quote_identifier(table)
-            columns = list(connection.execute(f"PRAGMA table_info({quoted_table})"))
-            row_count = connection.execute(f"SELECT COUNT(*) FROM {quoted_table}").fetchone()[0]
-            column_info = []
-            for column in columns:
-                name = str(column[1])
-                quoted_column = quote_identifier(name)
-                samples = [
-                    str(row[0]) for row in connection.execute(
-                        f"SELECT DISTINCT {quoted_column} FROM {quoted_table} "
-                        f"WHERE {quoted_column} IS NOT NULL LIMIT 3"
-                    )
-                ]
-                column_info.append({
-                    "name": name,
-                    "type": str(column[2]),
-                    "is_primary_key": bool(column[5]),
-                    "sample_values": samples,
-                })
-            schema[table] = {"row_count": row_count, "columns": column_info}
+            if not ddl:
+                columns = list(connection.execute(f"PRAGMA table_info({quoted_table})"))
+                definitions = ", ".join(
+                    f"{quote_identifier(column[1])} {column[2]}"
+                    f"{' PRIMARY KEY' if column[5] else ''}"
+                    for column in columns
+                )
+                ddl = f"CREATE TABLE {quoted_table} ({definitions})"
+            schema[str(table)] = str(ddl).strip().rstrip(";") + ";"
         return schema
     finally:
         connection.close()
@@ -215,17 +204,8 @@ def quote_identifier(value: str) -> str:
     return '"' + str(value).replace('"', '""') + '"'
 
 
-def build_schema_text(schema: dict[str, Any]) -> str:
-    lines: list[str] = []
-    for table, details in schema.items():
-        lines.append(f"Table: {table}  ({details['row_count']} rows)")
-        for column in details["columns"]:
-            primary_key = " [PRIMARY KEY]" if column["is_primary_key"] else ""
-            samples = column["sample_values"]
-            example = f"  -- e.g. {', '.join(repr(item) for item in samples)}" if samples else ""
-            lines.append(f"  - {column['name']} ({column['type']}){primary_key}{example}")
-        lines.append("")
-    return "\n".join(lines)
+def build_schema_text(schema: dict[str, str]) -> str:
+    return "\n\n".join(schema.values())
 
 
 def strip_reasoning_and_extract_sql(raw: str) -> str:
@@ -245,50 +225,18 @@ def generate_sql(
     temperature: float,
     api_logger: APILogger,
 ) -> tuple[str, int, int]:
-    prompt = f"""You are independent SQL generator copy {copy_id} in a parallel ensemble.
-Write one read-only SQLite query that directly answers the wealth-management question.
-There is no post-processing stage: all filtering, grouping, aggregation, ranking, and
-limiting requested by the question must be implemented correctly in SQL.
-
-User Question: "{question}"
-
-SQLite Database Schema:
+    prompt = f"""Database schema (DDL):
 {schema_text}
 
-Return ONLY raw SQL. The first non-whitespace word must be SELECT or WITH. Never return
-markdown, comments, reasoning, PRAGMA, ATTACH, DDL, DML, or more than one statement.
+Question:
+{question}
 
-Rules:
-- Use only exact table and column names from the schema. Quote table names with double quotes.
-- Join tables only through schema-listed keys. In this database, related ATOM tables commonly
-  join through investor_id; never infer a join from unrelated display values.
-- Use LEFT JOIN when the question requires preserving entities with missing related records.
-- Prevent one-to-many join multiplication. Aggregate each child table at the requested grain
-  in a CTE before joining multiple child tables.
-- Cast text numeric fields AS REAL before arithmetic, numeric comparison, SUM, or AVG.
-- Put every non-aggregated selected column in GROUP BY.
-- Use COUNT(DISTINCT entity_key) when joins can repeat the entity being counted. Otherwise
-  count the record type actually requested by the question.
-- Use LOWER(CAST(value AS TEXT)) for case-insensitive text or ID matching.
-- Implement never/not/excluding/without/no-related-record conditions with NOT EXISTS or an
-  equivalent correctly correlated anti-join.
-- Dates are text in YYYY-MM-DD form. Use SUBSTR(date,1,7) for month and SUBSTR(date,1,4)
-  for year grouping.
-- Preserve missing groups with LEFT JOIN and COALESCE when the question asks for each/by/per.
-- For top/bottom/highest/lowest questions, calculate the requested metric, order it correctly,
-  and apply exactly the requested LIMIT. Do not add LIMIT to non-ranking questions.
-- Return all and only the identifiers, labels, and metrics required to answer the question.
-- Use NULLIF for division denominators. Round only when the question requires it.
-
-Silently verify table names, joins, filters, output grain, aggregation, and ranking before
-returning the query. Output only the final SQL statement.
+Return only the SQL query. Do not include reasoning, explanations, markdown,
+comments, or prose.
 """.strip()
     request: dict[str, Any] = {
         "model": model,
-        "messages": [
-            {"role": "system", "content": "Return only one correct read-only SQLite query."},
-            {"role": "user", "content": prompt},
-        ],
+        "messages": [{"role": "user", "content": prompt}],
     }
     if not model.lower().startswith("gpt-5"):
         request["temperature"] = temperature
