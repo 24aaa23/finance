@@ -1,0 +1,577 @@
+{
+  "method": "Local comparison of manually reviewed semantic column aliases. Absolute tolerance 0.00500001 for references rounded to two decimals. Not an external grader result. Mapping is diagnostic only, never used by inference.",
+  "report_sha256": "e2b668c0c0e35416a5de1590590cf8e03058ab2afc7c578fbe5c09f6fd673a92",
+  "results": [
+    {
+      "id": "MC-024",
+      "execution": "PIPELINE_SUCCESS",
+      "groups_match": true,
+      "numeric_checks_pass": 4,
+      "numeric_checks_total": 12,
+      "all_requested_values_match": false,
+      "extra_output_columns": [],
+      "checks": [
+        {
+          "group": null,
+          "reference_column": "avg_scenario_change",
+          "actual_column": "avg_allocation_change",
+          "expected": -0.71,
+          "actual": -0.7109999999999995,
+          "absolute_error": 0.0009999999999995568,
+          "passes": true
+        },
+        {
+          "group": null,
+          "reference_column": "avg_progress_pct",
+          "actual_column": "avg_goal_progress",
+          "expected": 49.93,
+          "actual": 46.446172255146124,
+          "absolute_error": 3.483827744853876,
+          "passes": false
+        },
+        {
+          "group": null,
+          "reference_column": "avg_volatility_pct",
+          "actual_column": "avg_volatility",
+          "expected": 13.53,
+          "actual": 13.937717770041756,
+          "absolute_error": 0.40771777004175647,
+          "passes": false
+        },
+        {
+          "group": "Aggressive",
+          "reference_column": "avg_scenario_change",
+          "actual_column": "avg_allocation_change",
+          "expected": -1.85,
+          "actual": -1.8488054607508535,
+          "absolute_error": 0.0011945392491465867,
+          "passes": true
+        },
+        {
+          "group": "Aggressive",
+          "reference_column": "avg_progress_pct",
+          "actual_column": "avg_goal_progress",
+          "expected": 39.69,
+          "actual": 39.758705006693184,
+          "absolute_error": 0.06870500669318602,
+          "passes": false
+        },
+        {
+          "group": "Aggressive",
+          "reference_column": "avg_volatility_pct",
+          "actual_column": "avg_volatility",
+          "expected": 14.72,
+          "actual": 14.380517686499163,
+          "absolute_error": 0.339482313500838,
+          "passes": false
+        },
+        {
+          "group": "Conservative",
+          "reference_column": "avg_scenario_change",
+          "actual_column": "avg_allocation_change",
+          "expected": -2.22,
+          "actual": -2.223434004474273,
+          "absolute_error": 0.0034340044742728892,
+          "passes": true
+        },
+        {
+          "group": "Conservative",
+          "reference_column": "avg_progress_pct",
+          "actual_column": "avg_goal_progress",
+          "expected": 37.99,
+          "actual": 38.25466267969879,
+          "absolute_error": 0.26466267969878743,
+          "passes": false
+        },
+        {
+          "group": "Conservative",
+          "reference_column": "avg_volatility_pct",
+          "actual_column": "avg_volatility",
+          "expected": 14.33,
+          "actual": 14.186114201863862,
+          "absolute_error": 0.14388579813613767,
+          "passes": false
+        },
+        {
+          "group": "Moderate",
+          "reference_column": "avg_scenario_change",
+          "actual_column": "avg_allocation_change",
+          "expected": 0.07,
+          "actual": 0.06820877817319085,
+          "absolute_error": 0.0017912218268091584,
+          "passes": true
+        },
+        {
+          "group": "Moderate",
+          "reference_column": "avg_progress_pct",
+          "actual_column": "avg_goal_progress",
+          "expected": 40.13,
+          "actual": 41.208436917228674,
+          "absolute_error": 1.0784369172286716,
+          "passes": false
+        },
+        {
+          "group": "Moderate",
+          "reference_column": "avg_volatility_pct",
+          "actual_column": "avg_volatility",
+          "expected": 14.09,
+          "actual": 14.457783280083117,
+          "absolute_error": 0.3677832800831169,
+          "passes": false
+        }
+      ]
+    },
+    {
+      "id": "MC-025",
+      "execution": "PIPELINE_SUCCESS",
+      "groups_match": true,
+      "numeric_checks_pass": 8,
+      "numeric_checks_total": 12,
+      "all_requested_values_match": false,
+      "extra_output_columns": [
+        "investor_count"
+      ],
+      "checks": [
+        {
+          "group": null,
+          "reference_column": "avg_scenario_change",
+          "actual_column": "mean_scenario_change",
+          "expected": -1.66,
+          "actual": -1.6639534883720932,
+          "absolute_error": 0.003953488372093306,
+          "passes": true
+        },
+        {
+          "group": null,
+          "reference_column": "avg_rebalance_gap",
+          "actual_column": "mean_rebalancing_gap",
+          "expected": 3.53,
+          "actual": 3.527851605758583,
+          "absolute_error": 0.0021483942414168844,
+          "passes": true
+        },
+        {
+          "group": null,
+          "reference_column": "avg_rebalance_amount",
+          "actual_column": "mean_rebalancing_amount",
+          "expected": 399232.81,
+          "actual": 111396.7935090703,
+          "absolute_error": 287836.0164909297,
+          "passes": false
+        },
+        {
+          "group": "Aggressive",
+          "reference_column": "avg_scenario_change",
+          "actual_column": "mean_scenario_change",
+          "expected": -1.91,
+          "actual": -1.9135658914728684,
+          "absolute_error": 0.0035658914728684543,
+          "passes": true
+        },
+        {
+          "group": "Aggressive",
+          "reference_column": "avg_rebalance_gap",
+          "actual_column": "mean_rebalancing_gap",
+          "expected": -0.47,
+          "actual": -0.46964506992388044,
+          "absolute_error": 0.00035493007611953065,
+          "passes": true
+        },
+        {
+          "group": "Aggressive",
+          "reference_column": "avg_rebalance_amount",
+          "actual_column": "mean_rebalancing_amount",
+          "expected": 406728.34,
+          "actual": 89500.03250575323,
+          "absolute_error": 317228.3074942468,
+          "passes": false
+        },
+        {
+          "group": "Conservative",
+          "reference_column": "avg_scenario_change",
+          "actual_column": "mean_scenario_change",
+          "expected": -2.49,
+          "actual": -2.493564993564993,
+          "absolute_error": 0.0035649935649928466,
+          "passes": true
+        },
+        {
+          "group": "Conservative",
+          "reference_column": "avg_rebalance_gap",
+          "actual_column": "mean_rebalancing_gap",
+          "expected": 1.26,
+          "actual": 1.2615458683473386,
+          "absolute_error": 0.0015458683473386081,
+          "passes": true
+        },
+        {
+          "group": "Conservative",
+          "reference_column": "avg_rebalance_amount",
+          "actual_column": "mean_rebalancing_amount",
+          "expected": 406759.18,
+          "actual": 97411.18016313933,
+          "absolute_error": 309347.9998368607,
+          "passes": false
+        },
+        {
+          "group": "Moderate",
+          "reference_column": "avg_scenario_change",
+          "actual_column": "mean_scenario_change",
+          "expected": -0.47,
+          "actual": -0.46963562753036436,
+          "absolute_error": 0.0003643724696356099,
+          "passes": true
+        },
+        {
+          "group": "Moderate",
+          "reference_column": "avg_rebalance_gap",
+          "actual_column": "mean_rebalancing_gap",
+          "expected": -3.01,
+          "actual": -3.0086183121897405,
+          "absolute_error": 0.001381687810259269,
+          "passes": true
+        },
+        {
+          "group": "Moderate",
+          "reference_column": "avg_rebalance_amount",
+          "actual_column": "mean_rebalancing_amount",
+          "expected": 406075.91,
+          "actual": 93878.38435309974,
+          "absolute_error": 312197.52564690023,
+          "passes": false
+        }
+      ]
+    },
+    {
+      "id": "MC-038",
+      "execution": "PIPELINE_SUCCESS",
+      "groups_match": true,
+      "numeric_checks_pass": 18,
+      "numeric_checks_total": 18,
+      "all_requested_values_match": true,
+      "extra_output_columns": [
+        "mean_alloc_pct",
+        "total_holding_value"
+      ],
+      "checks": [
+        {
+          "group": null,
+          "reference_column": "avg_max_allocation_pct",
+          "actual_column": "mean_max_alloc_pct",
+          "expected": 13.71,
+          "actual": 13.713171194903747,
+          "absolute_error": 0.0031711949037465104,
+          "passes": true
+        },
+        {
+          "group": null,
+          "reference_column": "avg_returns_pct",
+          "actual_column": "mean_holding_return_pct",
+          "expected": 40.39,
+          "actual": 40.39165380074471,
+          "absolute_error": 0.0016538007447124414,
+          "passes": true
+        },
+        {
+          "group": null,
+          "reference_column": "avg_holding_value",
+          "actual_column": "mean_holding_value",
+          "expected": 6738916.76,
+          "actual": 6738916.7597402595,
+          "absolute_error": 0.00025974027812480927,
+          "passes": true
+        },
+        {
+          "group": "Debt",
+          "reference_column": "avg_max_allocation_pct",
+          "actual_column": "mean_max_alloc_pct",
+          "expected": 16.28,
+          "actual": 16.278244812097864,
+          "absolute_error": 0.0017551879021375782,
+          "passes": true
+        },
+        {
+          "group": "Debt",
+          "reference_column": "avg_returns_pct",
+          "actual_column": "mean_holding_return_pct",
+          "expected": 81.91,
+          "actual": 81.91180461784857,
+          "absolute_error": 0.00180461784857755,
+          "passes": true
+        },
+        {
+          "group": "Debt",
+          "reference_column": "avg_holding_value",
+          "actual_column": "mean_holding_value",
+          "expected": 8445123.62,
+          "actual": 8445123.620879121,
+          "absolute_error": 0.0008791219443082809,
+          "passes": true
+        },
+        {
+          "group": "Equity",
+          "reference_column": "avg_max_allocation_pct",
+          "actual_column": "mean_max_alloc_pct",
+          "expected": 17.14,
+          "actual": 17.14296585629844,
+          "absolute_error": 0.002965856298438041,
+          "passes": true
+        },
+        {
+          "group": "Equity",
+          "reference_column": "avg_returns_pct",
+          "actual_column": "mean_holding_return_pct",
+          "expected": 64.98,
+          "actual": 64.97802760057662,
+          "absolute_error": 0.0019723994233800113,
+          "passes": true
+        },
+        {
+          "group": "Equity",
+          "reference_column": "avg_holding_value",
+          "actual_column": "mean_holding_value",
+          "expected": 7489841.63,
+          "actual": 7489841.627868853,
+          "absolute_error": 0.0021311473101377487,
+          "passes": true
+        },
+        {
+          "group": "Gold",
+          "reference_column": "avg_max_allocation_pct",
+          "actual_column": "mean_max_alloc_pct",
+          "expected": 17.81,
+          "actual": 17.81319718297846,
+          "absolute_error": 0.003197182978460944,
+          "passes": true
+        },
+        {
+          "group": "Gold",
+          "reference_column": "avg_returns_pct",
+          "actual_column": "mean_holding_return_pct",
+          "expected": 81.56,
+          "actual": 81.56359566359568,
+          "absolute_error": 0.0035956635956750915,
+          "passes": true
+        },
+        {
+          "group": "Gold",
+          "reference_column": "avg_holding_value",
+          "actual_column": "mean_holding_value",
+          "expected": 8173942.74,
+          "actual": 8173942.736666666,
+          "absolute_error": 0.0033333338797092438,
+          "passes": true
+        },
+        {
+          "group": "Hybrid",
+          "reference_column": "avg_max_allocation_pct",
+          "actual_column": "mean_max_alloc_pct",
+          "expected": 17.45,
+          "actual": 17.450748104424832,
+          "absolute_error": 0.0007481044248329738,
+          "passes": true
+        },
+        {
+          "group": "Hybrid",
+          "reference_column": "avg_returns_pct",
+          "actual_column": "mean_holding_return_pct",
+          "expected": 106.59,
+          "actual": 106.59458551317103,
+          "absolute_error": 0.004585513171022626,
+          "passes": true
+        },
+        {
+          "group": "Hybrid",
+          "reference_column": "avg_holding_value",
+          "actual_column": "mean_holding_value",
+          "expected": 9897724.92,
+          "actual": 9897724.919141915,
+          "absolute_error": 0.0008580852299928665,
+          "passes": true
+        },
+        {
+          "group": "Real Estate",
+          "reference_column": "avg_max_allocation_pct",
+          "actual_column": "mean_max_alloc_pct",
+          "expected": 17.83,
+          "actual": 17.831408947107807,
+          "absolute_error": 0.0014089471078087001,
+          "passes": true
+        },
+        {
+          "group": "Real Estate",
+          "reference_column": "avg_returns_pct",
+          "actual_column": "mean_holding_return_pct",
+          "expected": 53.77,
+          "actual": 53.77195228838828,
+          "absolute_error": 0.0019522883882743258,
+          "passes": true
+        },
+        {
+          "group": "Real Estate",
+          "reference_column": "avg_holding_value",
+          "actual_column": "mean_holding_value",
+          "expected": 7437500.82,
+          "actual": 7437500.817708333,
+          "absolute_error": 0.0022916672751307487,
+          "passes": true
+        }
+      ]
+    },
+    {
+      "id": "MC-068",
+      "execution": "PIPELINE_SUCCESS",
+      "groups_match": true,
+      "numeric_checks_pass": 16,
+      "numeric_checks_total": 16,
+      "all_requested_values_match": true,
+      "extra_output_columns": [],
+      "checks": [
+        {
+          "group": null,
+          "reference_column": "avg_shortfall",
+          "actual_column": "mean_shortfall",
+          "expected": 26236751.87,
+          "actual": 26236751.866675317,
+          "absolute_error": 0.003324683755636215,
+          "passes": true
+        },
+        {
+          "group": null,
+          "reference_column": "avg_max_allocation_pct",
+          "actual_column": "mean_max_allocation_pct",
+          "expected": 16.18,
+          "actual": 16.17720883669284,
+          "absolute_error": 0.0027911633071582287,
+          "passes": true
+        },
+        {
+          "group": null,
+          "reference_column": "avg_liquidity_score",
+          "actual_column": "mean_liquidity_score",
+          "expected": 44.52,
+          "actual": 44.522514676303466,
+          "absolute_error": 0.002514676303462693,
+          "passes": true
+        },
+        {
+          "group": null,
+          "reference_column": "avg_diversification_score",
+          "actual_column": "mean_diversification_score",
+          "expected": 49.15,
+          "actual": 49.15178779478362,
+          "absolute_error": 0.0017877947836240082,
+          "passes": true
+        },
+        {
+          "group": "Long-term",
+          "reference_column": "avg_shortfall",
+          "actual_column": "mean_shortfall",
+          "expected": 22738558.95,
+          "actual": 22738558.947970282,
+          "absolute_error": 0.002029716968536377,
+          "passes": true
+        },
+        {
+          "group": "Long-term",
+          "reference_column": "avg_max_allocation_pct",
+          "actual_column": "mean_max_allocation_pct",
+          "expected": 17.59,
+          "actual": 17.585603022036338,
+          "absolute_error": 0.004396977963661897,
+          "passes": true
+        },
+        {
+          "group": "Long-term",
+          "reference_column": "avg_liquidity_score",
+          "actual_column": "mean_liquidity_score",
+          "expected": 50.39,
+          "actual": 50.39252533731994,
+          "absolute_error": 0.0025253373199376483,
+          "passes": true
+        },
+        {
+          "group": "Long-term",
+          "reference_column": "avg_diversification_score",
+          "actual_column": "mean_diversification_score",
+          "expected": 49.47,
+          "actual": 49.471562624176904,
+          "absolute_error": 0.0015626241769055582,
+          "passes": true
+        },
+        {
+          "group": "Medium-term",
+          "reference_column": "avg_shortfall",
+          "actual_column": "mean_shortfall",
+          "expected": 22984243.38,
+          "actual": 22984243.37768323,
+          "absolute_error": 0.0023167692124843597,
+          "passes": true
+        },
+        {
+          "group": "Medium-term",
+          "reference_column": "avg_max_allocation_pct",
+          "actual_column": "mean_max_allocation_pct",
+          "expected": 17.64,
+          "actual": 17.641122947944734,
+          "absolute_error": 0.0011229479447329993,
+          "passes": true
+        },
+        {
+          "group": "Medium-term",
+          "reference_column": "avg_liquidity_score",
+          "actual_column": "mean_liquidity_score",
+          "expected": 47.8,
+          "actual": 47.80492871035413,
+          "absolute_error": 0.004928710354136001,
+          "passes": true
+        },
+        {
+          "group": "Medium-term",
+          "reference_column": "avg_diversification_score",
+          "actual_column": "mean_diversification_score",
+          "expected": 47.54,
+          "actual": 47.53861714539371,
+          "absolute_error": 0.0013828546062910618,
+          "passes": true
+        },
+        {
+          "group": "Short-term",
+          "reference_column": "avg_shortfall",
+          "actual_column": "mean_shortfall",
+          "expected": 22761746.7,
+          "actual": 22761746.70374078,
+          "absolute_error": 0.0037407800555229187,
+          "passes": true
+        },
+        {
+          "group": "Short-term",
+          "reference_column": "avg_max_allocation_pct",
+          "actual_column": "mean_max_allocation_pct",
+          "expected": 16.27,
+          "actual": 16.271473019074,
+          "absolute_error": 0.001473019074001769,
+          "passes": true
+        },
+        {
+          "group": "Short-term",
+          "reference_column": "avg_liquidity_score",
+          "actual_column": "mean_liquidity_score",
+          "expected": 51.32,
+          "actual": 51.31837638800651,
+          "absolute_error": 0.0016236119934873727,
+          "passes": true
+        },
+        {
+          "group": "Short-term",
+          "reference_column": "avg_diversification_score",
+          "actual_column": "mean_diversification_score",
+          "expected": 53.09,
+          "actual": 53.09149635771754,
+          "absolute_error": 0.0014963577175350906,
+          "passes": true
+        }
+      ]
+    }
+  ]
+}
