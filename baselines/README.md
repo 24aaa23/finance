@@ -22,6 +22,10 @@ categories in every pipeline.
 `results/baseline_changes_20261002.md` records the prompt, namespace,
 concurrency, grading, and result changes from the previous snapshot.
 
+`results/baseline_metrics_gpt_5_mini.md` reports accuracy, token latency,
+inference cost, average inference cost per question, and execution efficiency
+for every current baseline.
+
 Only the local-retrieval GraphRAG baseline is included. The alternative
 GraphRAG implementation and its reports are intentionally absent.
 
@@ -85,4 +89,5 @@ To rebuild the two Markdown summaries from the current graded CSVs:
 
 ```bash
 python baselines/scripts/generate_grading_markdown.py
+python baselines/scripts/generate_baseline_metrics.py
 ```

@@ -84,3 +84,7 @@ The previous reports used the older pipeline prompts and GPT-5.6 TERA.
 - `generate_grading_markdown.py`: reproducibly rebuilds both reports and checks
   row counts, unique sample IDs, grader model, source categories, and category
   size.
+- `baseline_metrics_gpt_5_mini.md`: accuracy, token latency, inference cost,
+  average cost per question, and execution efficiency for every baseline.
+- `generate_baseline_metrics.py`: reproducibly rebuilds the aggregate metrics
+  report from the five graded CSVs.
