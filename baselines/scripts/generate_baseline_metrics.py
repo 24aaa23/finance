@@ -13,18 +13,18 @@ csv.field_size_limit(sys.maxsize)
 
 BASELINES_ROOT = Path(__file__).resolve().parents[1]
 RESULTS_DIR = BASELINES_ROOT / "results"
-OUTPUT_PATH = RESULTS_DIR / "baseline_metrics_gpt_5_mini.md"
+OUTPUT_PATH = RESULTS_DIR / "baseline_metrics_domain_context_gpt_5_mini.md"
 
 # Amazon Bedrock Standard on-demand pricing for gpt-oss-120b in us-east-1.
 INPUT_PRICE_PER_MILLION = 0.15
 OUTPUT_PRICE_PER_MILLION = 0.60
 
 PIPELINES = [
-    ("Base SPARQL", "base_sparql_dynamic_namespace_1000q_20261002_graded_gpt_5_mini.csv"),
-    ("Base SQL", "base_pipeline_sql_schema_only_prompt_1000q_20261001_graded_gpt_5_mini.csv"),
-    ("GraphRAG Local", "graph_rag_local_domain_neutral_prompt_1000q_20261001_graded_gpt_5_mini.csv"),
-    ("Parallel SPARQL", "parallel_sparql_schema_only_prompt_parser_lock_1000q_20261002_graded_gpt_5_mini.csv"),
-    ("Parallel SQL", "parallel_sql_schema_only_prompt_1000q_20261001_graded_gpt_5_mini.csv"),
+    ("Base SPARQL", "base_sparql_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv"),
+    ("Base SQL", "base_sql_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv"),
+    ("GraphRAG Local", "graph_rag_local_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv"),
+    ("Parallel SPARQL", "parallel_sparql_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv"),
+    ("Parallel SQL", "parallel_sql_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv"),
 ]
 
 
@@ -102,7 +102,7 @@ def calculate(label: str, filename: str) -> dict[str, object]:
 
 def build_report(metrics: list[dict[str, object]]) -> str:
     lines = [
-        "# GPT-5 Mini graded baseline metrics",
+        "# Domain-context baseline metrics (GPT-5 Mini grader)",
         "",
         "All five reports contain 1,000 questions graded by `gpt-5-mini`. A correct answer is a row whose `New Status` is `MATCH`; `PARTIAL`, `MISMATCH`, and error statuses are not counted as correct.",
         "",

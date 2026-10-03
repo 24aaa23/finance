@@ -41,7 +41,7 @@ BASELINES = HERE.parent
 FINANCE = BASELINES.parent
 SCRIPT_DIFF_ROOT = FINANCE / "script_diff_llm"
 
-VERSION = "parallel-text-to-sparql-ensemble-single-shot-ungraded-v1"
+VERSION = "parallel-sparql-domain-intro-phase0-rules-v1"
 DEFAULT_TARGET_MODEL = os.getenv("TARGET_MODEL", "openai.gpt-oss-120b-1:0")
 DEFAULT_SCHEMA = SCRIPT_DIFF_ROOT / "kg" / "wealth_management_diverse_schema.ttl"
 DEFAULT_BENCHMARK = BASELINES / "dataset" / "wealth_management_1000_questions.csv"

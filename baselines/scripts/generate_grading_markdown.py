@@ -17,23 +17,23 @@ RESULTS_DIR = BASELINES_ROOT / "results"
 PIPELINES = [
     (
         "Base SPARQL",
-        "base_sparql_dynamic_namespace_1000q_20261002_graded_gpt_5_mini.csv",
+        "base_sparql_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv",
     ),
     (
         "Base SQL",
-        "base_pipeline_sql_schema_only_prompt_1000q_20261001_graded_gpt_5_mini.csv",
+        "base_sql_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv",
     ),
     (
         "GraphRAG Local",
-        "graph_rag_local_domain_neutral_prompt_1000q_20261001_graded_gpt_5_mini.csv",
+        "graph_rag_local_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv",
     ),
     (
         "Parallel SPARQL",
-        "parallel_sparql_schema_only_prompt_parser_lock_1000q_20261002_graded_gpt_5_mini.csv",
+        "parallel_sparql_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv",
     ),
     (
         "Parallel SQL",
-        "parallel_sql_schema_only_prompt_1000q_20261001_graded_gpt_5_mini.csv",
+        "parallel_sql_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv",
     ),
 ]
 
@@ -96,7 +96,7 @@ def load_all() -> dict[str, tuple[str, list[dict[str, str]]]]:
 
 def build_query_type_report(loaded: dict[str, tuple[str, list[dict[str, str]]]]) -> str:
     lines = [
-        "# GPT-5 Mini grading results by query type",
+        "# Domain-context baseline grading by query type",
         "",
         "Counts are grouped by the CSV `Query Type` field. Each pipeline is reported independently.",
         "The requested semantic grades are shown explicitly; `OTHER / ERROR` contains all remaining statuses so every table reconciles to 1,000 questions.",
@@ -132,7 +132,7 @@ def build_query_type_report(loaded: dict[str, tuple[str, list[dict[str, str]]]])
 
 def build_category_report(loaded: dict[str, tuple[str, list[dict[str, str]]]]) -> str:
     lines = [
-        "# GPT-5 Mini grading results by 125-question category",
+        "# Domain-context baseline grading by 125-question category",
         "",
         "Counts are grouped by the eight source datasets in the 1,000-question benchmark.",
         "Every pipeline contains exactly 125 questions from each category.",
@@ -187,8 +187,8 @@ def build_category_report(loaded: dict[str, tuple[str, list[dict[str, str]]]]) -
 
 def main() -> None:
     loaded = load_all()
-    query_path = RESULTS_DIR / "query_type_grading_results_gpt_5_mini.md"
-    category_path = RESULTS_DIR / "category_grading_results_125_each_gpt_5_mini.md"
+    query_path = RESULTS_DIR / "query_type_grading_results_domain_context_gpt_5_mini.md"
+    category_path = RESULTS_DIR / "category_grading_results_125_each_domain_context_gpt_5_mini.md"
     query_path.write_text(build_query_type_report(loaded), encoding="utf-8")
     category_path.write_text(build_category_report(loaded), encoding="utf-8")
     print(query_path)

@@ -43,7 +43,23 @@ HERE = Path(__file__).resolve().parent
 BASELINES = HERE.parent
 FINANCE = BASELINES.parent
 
-VERSION = "parallel-text-to-sql-ensemble-single-shot-ungraded-v1"
+DOMAIN_INTRO_FILE = Path(os.getenv("DOMAIN_INTRO_FILE", BASELINES / "domain_intro.prompt"))
+BUSINESS_RULES_FILE = Path(os.getenv("BUSINESS_RULES_FILE", BASELINES / "phase0_business_rules.md"))
+
+
+def load_prompt_reference_context() -> str:
+    sections = []
+    for title, path in (
+        ("Domain introduction", DOMAIN_INTRO_FILE),
+        ("Phase 0 business rules", BUSINESS_RULES_FILE),
+    ):
+        sections.append(f"{title}:\n{path.read_text(encoding='utf-8').strip()}")
+    return "\n\n".join(sections)
+
+
+PROMPT_REFERENCE_CONTEXT = load_prompt_reference_context()
+
+VERSION = "parallel-sql-domain-intro-phase0-rules-v1"
 DEFAULT_TARGET_MODEL = os.getenv("TARGET_MODEL", "openai.gpt-oss-120b-1:0")
 DEFAULT_DATABASE = FINANCE / "wealth_management_diverse.db"
 DEFAULT_BENCHMARK = BASELINES / "dataset" / "wealth_management_1000_questions.csv"
@@ -225,7 +241,10 @@ def generate_sql(
     temperature: float,
     api_logger: APILogger,
 ) -> tuple[str, int, int]:
-    prompt = f"""Database schema (DDL):
+    prompt = f"""Reference context:
+{PROMPT_REFERENCE_CONTEXT}
+
+Database schema (DDL):
 {schema_text}
 
 Question:

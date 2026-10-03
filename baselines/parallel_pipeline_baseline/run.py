@@ -45,6 +45,22 @@ BASELINES = HERE.parent
 FINANCE = BASELINES.parent
 SCRIPT_DIFF_ROOT = FINANCE / "script_diff_llm"
 
+DOMAIN_INTRO_FILE = Path(os.getenv("DOMAIN_INTRO_FILE", BASELINES / "domain_intro.prompt"))
+BUSINESS_RULES_FILE = Path(os.getenv("BUSINESS_RULES_FILE", BASELINES / "phase0_business_rules.md"))
+
+
+def load_prompt_reference_context() -> str:
+    sections = []
+    for title, path in (
+        ("Domain introduction", DOMAIN_INTRO_FILE),
+        ("Phase 0 business rules", BUSINESS_RULES_FILE),
+    ):
+        sections.append(f"{title}:\n{path.read_text(encoding='utf-8').strip()}")
+    return "\n\n".join(sections)
+
+
+PROMPT_REFERENCE_CONTEXT = load_prompt_reference_context()
+
 VERSION = "parallel-text-to-sparql-ensemble-v3.1"
 DEFAULT_TARGET_MODEL = os.getenv("TARGET_MODEL", "qwen.qwen3-235b-a22b-2507")
 DEFAULT_GRADER_MODEL = (
@@ -491,7 +507,10 @@ def generate_sparql(
     temperature: float,
     api_logger: APILogger,
 ) -> tuple[str, int, int]:
-    prompt = f"""RDF schema:
+    prompt = f"""Reference context:
+{PROMPT_REFERENCE_CONTEXT}
+
+RDF schema:
 {schema_text}
 
 Question:

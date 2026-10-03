@@ -28,13 +28,28 @@ from graph_index import build_index, connect, retrieve, verify_index
 HERE = Path(__file__).resolve().parent
 BASELINES = HERE.parent
 FINANCE = BASELINES.parent
+DOMAIN_INTRO_FILE = Path(os.getenv("DOMAIN_INTRO_FILE", BASELINES / "domain_intro.prompt"))
+BUSINESS_RULES_FILE = Path(os.getenv("BUSINESS_RULES_FILE", BASELINES / "phase0_business_rules.md"))
+
+
+def load_prompt_reference_context() -> str:
+    sections = []
+    for title, path in (
+        ("Domain introduction", DOMAIN_INTRO_FILE),
+        ("Phase 0 business rules", BUSINESS_RULES_FILE),
+    ):
+        sections.append(f"{title}:\n{path.read_text(encoding='utf-8').strip()}")
+    return "\n\n".join(sections)
+
+
+PROMPT_REFERENCE_CONTEXT = load_prompt_reference_context()
 DEFAULT_GRAPH = FINANCE / "script_diff_llm" / "kg" / "wealth_management_diverse_kg.ttl"
 DEFAULT_BENCHMARK = BASELINES / "dataset" / "wealth_management_1000_questions.csv"
 DEFAULT_INDEX = HERE / "output" / "graph_index.sqlite"
 DEFAULT_REPORT = HERE / "output" / "graph_rag_local_only_gpt_oss_120b_1000q.csv"
 DEFAULT_MODEL = os.getenv("BEDROCK_GPT_OSS_MODEL", "openai.gpt-oss-120b-1:0")
 DEFAULT_WORKERS = int(os.getenv("PIPELINE_WORKERS", "8"))
-VERSION = "graph-rag-local-retrieval-single-shot-ungraded-v1"
+VERSION = "graph-rag-local-domain-intro-phase0-rules-v1"
 
 _csv_limit = sys.maxsize
 while True:
@@ -108,6 +123,7 @@ def parse_answer(raw: str, retrieved_uris: set[str]) -> dict:
 
 def _answer_prompt(question: str, retrieval: dict) -> str:
     return (
+        f"Reference context:\n{PROMPT_REFERENCE_CONTEXT}\n\n"
         f"RDF facts:\n{retrieval['context']}\n\n"
         f"Question:\n{question}\n\n"
         "Return exactly one JSON object with keys status, answer, and evidence_uris. "

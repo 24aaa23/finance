@@ -74,8 +74,25 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASELINES_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 FINANCE_ROOT = os.path.abspath(os.path.join(BASELINES_ROOT, ".."))
 
+DOMAIN_INTRO_FILE = os.getenv("DOMAIN_INTRO_FILE", os.path.join(BASELINES_ROOT, "domain_intro.prompt"))
+BUSINESS_RULES_FILE = os.getenv("BUSINESS_RULES_FILE", os.path.join(BASELINES_ROOT, "phase0_business_rules.md"))
+
+
+def load_prompt_reference_context() -> str:
+    sections = []
+    for title, path in (
+        ("Domain introduction", DOMAIN_INTRO_FILE),
+        ("Phase 0 business rules", BUSINESS_RULES_FILE),
+    ):
+        with open(path, encoding="utf-8") as handle:
+            sections.append(f"{title}:\n{handle.read().strip()}")
+    return "\n\n".join(sections)
+
+
+PROMPT_REFERENCE_CONTEXT = load_prompt_reference_context()
+
 TARGET_MODEL = os.getenv("TARGET_MODEL", "openai.gpt-oss-120b-1:0")
-PIPELINE_VERSION = os.getenv("PIPELINE_VERSION", "base-pipeline-sql-gpt-oss-120b-single-shot-ungraded-v1")
+PIPELINE_VERSION = os.getenv("PIPELINE_VERSION", "base-sql-domain-intro-phase0-rules-v1")
 TEST_QUERY_LIMIT = int(os.getenv("TEST_QUERY_LIMIT", "0"))  # 0 = all
 TEST_QUERY_OFFSET = int(os.getenv("TEST_QUERY_OFFSET", "0"))
 PIPELINE_WORKERS = int(os.getenv("PIPELINE_WORKERS", "8"))
@@ -254,7 +271,10 @@ def execute_sql_on_sqlite(
 # ---------------------------------------------------------------------------
 
 def generate_sql(query: str, schema_text: str, client: LLMClient, model: str) -> Dict[str, Any]:
-    prompt = f"""Database schema (DDL):
+    prompt = f"""Reference context:
+{PROMPT_REFERENCE_CONTEXT}
+
+Database schema (DDL):
 {schema_text}
 
 Question:
