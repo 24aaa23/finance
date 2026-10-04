@@ -28,6 +28,20 @@ grading, operational, and result changes from the previous snapshot.
 inference cost, average inference cost per question, and execution efficiency
 for every current baseline.
 
+## Multi-model reports
+
+The combined comparison covers GPT-OSS 120B, Kimi K2 Thinking 1T, Gemma 3
+27B IT, and DeepSeek V3.2 685B across the same five domain-context baselines.
+Each of the 20 outputs contains 1,000 questions graded by GPT-5 Mini.
+
+- `results/query_type_grading_results_multimodel_gpt_5_mini.md`: query-type
+  MATCH, MISMATCH, PARTIAL, and error counts.
+- `results/category_grading_results_125_each_multimodel_gpt_5_mini.md`: the
+  same counts for each of the eight 125-question source categories.
+- `results/multimodel_baseline_metrics_gpt_5_mini.md`: model-level aggregates
+  and pipeline-level accuracy, token latency, inference cost, average cost per
+  question, and execution efficiency.
+
 Only the local-retrieval GraphRAG baseline is included. The alternative
 GraphRAG implementation and its reports are intentionally absent.
 
