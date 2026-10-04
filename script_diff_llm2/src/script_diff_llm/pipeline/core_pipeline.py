@@ -25,6 +25,7 @@ from script_diff_llm.backends.kg import (
     check_fuseki_health,
     get_lightweight_table_index,
     load_rdf_knowledge_graph,
+    load_rdf_prefix_map,
 )
 from script_diff_llm.backends import sql as sql_pipeline
 from script_diff_llm.config.runtime import load_local_env_file, load_runtime_config
@@ -66,6 +67,8 @@ from script_diff_llm.pipeline.operators import (
 )
 from script_diff_llm.pipeline.registry import build_operator_registry
 from script_diff_llm.pipeline.specification import semantic_build_query_spec as semantic_build_query_spec_operator
+from script_diff_llm.pipeline.semantic_catalog import load_semantic_catalog
+from script_diff_llm.pipeline.domain_context import prepare_domain_context
 
 load_local_env_file()
 CONFIG = load_runtime_config()
@@ -121,44 +124,14 @@ def load_sqlite_schema(db_path: str) -> Dict[str, Any]:
     if not db_path:
         raise ValueError("SQLITE_DB_PATH is empty; SQL nodes require a real SQLite database path.")
     if db_path == ":memory:":
-        raise ValueError("SQLITE_DB_PATH resolved to :memory:; SQL nodes require the physical wealth database.")
+        raise ValueError("SQLITE_DB_PATH resolved to :memory:; SQL nodes require a configured database file.")
     if not os.path.exists(db_path):
         raise FileNotFoundError(f"SQLite database not found at {db_path}")
 
-    conn = sqlite3.connect(db_path)
-    try:
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            SELECT name
-            FROM sqlite_master
-            WHERE type = 'table' AND name NOT LIKE 'sqlite_%'
-            ORDER BY name
-            """
-        )
-        table_names = [row[0] for row in cursor.fetchall()]
-        schema: Dict[str, Any] = {}
-        for table_name in table_names:
-            cursor.execute(f'PRAGMA table_info("{table_name}")')
-            columns = []
-            for cid, name, col_type, notnull, default_value, pk in cursor.fetchall():
-                columns.append({
-                    "name": name,
-                    "type": col_type or "",
-                    "notnull": bool(notnull),
-                    "default": default_value,
-                    "pk": bool(pk),
-                    "ordinal": cid,
-                })
-            schema[table_name] = {
-                "table_name": table_name,
-                "columns": columns,
-                "column_names": [column["name"] for column in columns],
-            }
-        print(f"[SQL SCHEMA] Loaded {len(schema)} tables from {db_path}")
-        return schema
-    finally:
-        conn.close()
+    from script_diff_llm.backends.sql_schema import load_source_schema
+    schema = load_source_schema(db_path)
+    print(f"[SQL SCHEMA] Loaded {len(schema)} tables from {db_path}")
+    return schema
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(REPORT_FILE), exist_ok=True)
@@ -283,8 +256,7 @@ def empty_answer_can_be_valid(query: str, query_spec: Dict[str, Any]) -> bool:
     qtype = str(query_spec.get("query_type", "")).lower()
 
     list_like = any(phrase in q for phrase in [
-        "which", "show", "list", "identify", "find", "investors who",
-        "holdings that", "records where"
+        "which", "show", "list", "identify", "find", "records where"
     ])
     numeric_required = any(phrase in q for phrase in [
         "count", "how many", "average", "avg", "sum", "total",
@@ -348,7 +320,7 @@ def semantic_validate(inputs: Dict[str, Any], client: Any, model: str = LOCAL_MO
 
     CRITICAL RULE 2 (SCHEMA & FIELD MATCH - FIX E-02): Beyond checking if data is non-empty, you MUST verify:
     1. Do the returned column names logically match what the query asked for? (e.g., if asking for "sector and allocation", both fields MUST be present).
-    2. If the query asked for a specific investor/entity filter, does the data reflect only that entity? Or did it return data for everyone?
+    2. If the query asked for a specific entity filter, does the data reflect only that entity?
     3. If the query asked for an aggregation (MAX/MIN/SUM/AVG/COUNT), did the SPARQL and returned fields reflect the requested aggregate, or did it return raw unaggregated rows?
     4. If the query asks for a top/bottom, highest/lowest, maximum/minimum, largest/smallest, best/worst, or ranking-style result, inspect the SPARQL ranking logic.
     5. If Query Spec has output_schema, do the returned column names satisfy that expected answer shape?
@@ -444,7 +416,12 @@ def semantic_classify_query(inputs: Dict[str, Any], client: Any, model: str = LO
     print(f"[DEBUG] Output Classification: {final_result}")
     return final_result
 
-def _run_kg_scan(inputs: Dict[str, Any], rdf_graph: rdflib.Graph, known_terms_cache: Dict[str, Any]) -> Dict[str, Any]:
+def _run_kg_scan(
+    inputs: Dict[str, Any],
+    rdf_graph: rdflib.Graph,
+    known_terms_cache: Dict[str, Any],
+    rdf_prefix_map: Dict[str, str],
+) -> Dict[str, Any]:
     cache_lock = known_terms_cache.setdefault("_lock", threading.Lock())
     with cache_lock:
         cached_terms = known_terms_cache.get("value")
@@ -452,6 +429,7 @@ def _run_kg_scan(inputs: Dict[str, Any], rdf_graph: rdflib.Graph, known_terms_ca
         inputs,
         rdf_graph,
         rdf_id_alias_map=RDF_ID_ALIAS_MAP,
+        rdf_prefix_map=rdf_prefix_map,
         known_terms_cache=cached_terms,
         fuseki_endpoint=FUSEKI_ENDPOINT,
         fuseki_scan_timeout_seconds=FUSEKI_SCAN_TIMEOUT_SECONDS,
@@ -473,8 +451,10 @@ def pre_programmed_check_schema(inputs: Dict[str, Any], rdf_graph: rdflib.Graph)
     sparql = inputs.get("sparql", "")
     issues = []
 
-    if "PREFIX wm: <https://wealth.example.org/ontology/>" not in sparql:
-         issues.append("Missing the required 'wm:' prefix.")
+    uses_prefixed_terms = bool(re.search(r"(?im)(?<!PREFIX\s)\b([A-Za-z][A-Za-z0-9_-]*):[A-Za-z_][A-Za-z0-9_-]*\b", sparql))
+    has_any_prefix_declaration = bool(re.search(r"(?im)^\s*PREFIX\s+[A-Za-z][A-Za-z0-9_-]*\s*:", sparql))
+    if uses_prefixed_terms and not has_any_prefix_declaration:
+         issues.append("Query uses prefixed RDF terms but declares no PREFIX mappings.")
 
     #Check for basic SPARQL keywords
     if "SELECT" not in sparql.upper() and "ASK" not in sparql.upper():
@@ -545,6 +525,7 @@ def main():
         FUSEKI_ENDPOINT,
         FUSEKI_METADATA_TIMEOUT_SECONDS,
     )
+    rdf_prefix_map = load_rdf_prefix_map(schema_file)
     rdf_graph = setup_rdf_graph(instance_file)
 
     if not kg_metadata:
@@ -552,6 +533,21 @@ def main():
         return
 
     sql_schema = load_sqlite_schema(SQLITE_DB_PATH)
+    catalog_file = os.getenv("SEMANTIC_CATALOG_FILE", "").strip()
+    if catalog_file and not os.path.isabs(catalog_file):
+        catalog_file = os.path.join(SCRIPT_DIR, catalog_file)
+    semantic_catalog = load_semantic_catalog(catalog_file, sql_schema, kg_metadata)
+    if catalog_file:
+        print(f"[SYSTEM] Loaded {len(semantic_catalog['metrics'])} source metric definitions from {catalog_file}")
+
+    domain_context = prepare_domain_context(
+        SCRIPT_DIR, sql_schema, kg_metadata, query_spec_client, QUERY_SPEC_MODEL,
+        log_call_fn=api_logger.log_call,
+    )
+
+    if os.getenv("DOMAIN_CONTEXT_PREPARE_ONLY", "").strip() == "1":
+        print("[DOMAIN CONTEXT] Preparation-only run complete; benchmark not started")
+        return
 
     # Create the token-saving index
     lightweight_index = get_lightweight_table_index(kg_metadata)
@@ -581,7 +577,7 @@ def main():
             log_call_fn=api_logger.log_call,
         ),
         semantic_build_query_spec=lambda inputs, client, model: semantic_build_query_spec_operator(
-            inputs,
+            {**inputs, "semantic_catalog": semantic_catalog, **({"domain_context": domain_context} if domain_context else {})},
             client,
             model,
             parse_json_fn=parse_llm_json,
@@ -593,6 +589,7 @@ def main():
             client,
             model,
             rdf_id_alias_map=RDF_ID_ALIAS_MAP,
+            rdf_prefix_map=rdf_prefix_map,
             log_call_fn=api_logger.log_call,
         ),
         semantic_pre_scan_validate=lambda inputs, client, model: semantic_pre_scan_validate_operator(
@@ -607,6 +604,7 @@ def main():
             client,
             model,
             rdf_id_alias_map=RDF_ID_ALIAS_MAP,
+            rdf_prefix_map=rdf_prefix_map,
             log_call_fn=api_logger.log_call,
             supports_temperature_fn=supports_temperature,
         ),
@@ -614,6 +612,7 @@ def main():
             inputs,
             rdf_graph,
             known_terms_cache,
+            rdf_prefix_map,
         ),
         semantic_explain_results=lambda inputs, client, model: semantic_explain_results_operator(
             inputs,
@@ -633,7 +632,10 @@ def main():
         planner_client,
         operator_registry,
         decompose_fn=lambda inputs, client, model: semantic_decompose_operator(
-            inputs,
+            {**inputs, **({"domain_context": domain_context} if domain_context else {}), "schema_context": {
+                "SQL": {table: details.get("column_names", []) for table, details in sql_schema.items()},
+                "KG": lightweight_index,
+            }},
             client,
             model,
             parse_json_fn=parse_llm_json,
@@ -650,6 +652,7 @@ def main():
         kg_metadata=kg_metadata,
         db_path=SQLITE_DB_PATH,
         sql_schema=sql_schema,
+        identity_bindings=semantic_catalog.get("identity_bindings", []),
         pre_scan_validate_max_retries=PRE_SCAN_VALIDATE_MAX_RETRIES,
         post_scan_validate_max_retries=POST_SCAN_VALIDATE_MAX_RETRIES,
         scan_refine_max_retries=SCAN_REFINE_MAX_RETRIES,

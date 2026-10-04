@@ -3,6 +3,7 @@ import sqlite3
 from typing import Dict, Any, Tuple
 import os
 import re
+from pathlib import Path
 
 def parse_llm_json_with_error(raw_text: str, default: Any, context: str) -> Tuple[Any, str]:
     text = (raw_text or "").strip()
@@ -45,45 +46,62 @@ def parse_llm_json(raw_text: str, default: Any, context: str) -> Any:
     return parsed
 
 
-SQL_TABLE_KEYWORDS = {
-    "ATOM_ENTITY_INVESTOR_PROFILE_001": [
-        "investor", "profile", "risk tolerance", "time horizon", "sector focus",
-        "segment", "category", "investment goal", "investor name"
-    ],
-    "ATOM_ENTITY_PORTFOLIO_HEALTH_001": [
-        "portfolio health", "goal match", "risk score", "liquidity",
-        "diversification", "risk-pressure", "risk pressure"
-    ],
-    "ATOM_EVENT_REBALANCING_ACTION_001": [
-        "rebalancing action", "rebalance", "allocation", "target allocation",
-        "current allocation", "action", "amount"
-    ],
-    "ATOM_EVENT_SCENARIO_REBALANCING_001": [
-        "scenario", "scenario rebalancing", "triggered action", "affected assets",
-        "new allocation", "rationale"
-    ],
-    "ATOM_ENTITY_PORTFOLIO_HOLDING_001": [
-        "holding", "portfolio holding", "investment type", "investment name",
-        "sector", "purchase date", "cost", "current value", "returns",
-        "dividends", "taxes"
-    ],
-    "ATOM_ENTITY_SECTOR_ALLOCATION_001": [
-        "sector allocation", "allocation pct", "total investment", "sector"
-    ],
-    "ATOM_ENTITY_INVESTMENT_GOAL_001": [
-        "goal", "investment goal", "target amount", "current value", "progress",
-        "shortfall", "time to goal", "annual return", "post tax", "sharpe",
-        "volatility", "standard deviation"
-    ],
-    "ATOM_EVENT_CASH_FLOW_001": [
-        "cash flow", "cash-flow", "cashflow", "date", "source", "wallet",
-        "transaction", "amount"
-    ],
-}
-
-
 def _schema_table_names(sql_schema: Dict[str, Any]) -> list[str]:
     return sorted(sql_schema.keys()) if isinstance(sql_schema, dict) else []
+
+
+def _table_columns(table_schema: Dict[str, Any]) -> set[str]:
+    columns = table_schema.get("column_names", [])
+    return {str(column) for column in columns} if isinstance(columns, list) else set()
+
+
+def _collect_query_spec_table_hints(query_spec: Dict[str, Any]) -> set[str]:
+    hints: set[str] = set()
+    if not isinstance(query_spec, dict):
+        return hints
+    for key in ("group_by", "measures", "filters"):
+        items = query_spec.get(key)
+        if not isinstance(items, list):
+            continue
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            source = str(item.get("source_class") or "").strip()
+            if source:
+                hints.add(source)
+    base_table = str(query_spec.get("base_table") or "").strip()
+    if base_table:
+        hints.add(base_table)
+    return hints
+
+
+def _collect_query_spec_column_hints(query_spec: Dict[str, Any]) -> set[str]:
+    hints: set[str] = set()
+    if not isinstance(query_spec, dict):
+        return hints
+    for key in ("group_by", "measures", "filters"):
+        items = query_spec.get(key)
+        if not isinstance(items, list):
+            continue
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            field = str(item.get("field") or "").strip()
+            if field:
+                hints.add(field.lower())
+            output_name = str(item.get("output_name") or "").strip()
+            if output_name:
+                hints.add(output_name.lower())
+    entity_key = str(query_spec.get("entity_key") or "").strip()
+    if entity_key:
+        hints.add(entity_key.lower())
+    output_schema = query_spec.get("output_schema")
+    if isinstance(output_schema, list):
+        for field in output_schema:
+            value = str(field or "").strip()
+            if value:
+                hints.add(value.lower())
+    return hints
 
 
 def _select_relevant_sql_schema(inputs: Dict[str, Any]) -> Tuple[Dict[str, Any], list[str]]:
@@ -98,119 +116,27 @@ def _select_relevant_sql_schema(inputs: Dict[str, Any]) -> Tuple[Dict[str, Any],
     combined = f"{query} {spec_text} {bound_text}"
 
     relevant = []
-    for table_name, keywords in SQL_TABLE_KEYWORDS.items():
-        if table_name in sql_schema and any(keyword in combined for keyword in keywords):
+    hinted_tables = _collect_query_spec_table_hints(query_spec)
+    hinted_columns = _collect_query_spec_column_hints(query_spec)
+    for table_name in hinted_tables:
+        if table_name in sql_schema:
             relevant.append(table_name)
 
     for table_name, table_schema in sql_schema.items():
         if table_name.lower() in combined:
             relevant.append(table_name)
             continue
-        for column_name in table_schema.get("column_names", []):
-            if str(column_name).lower() in combined:
+        for column_name in _table_columns(table_schema):
+            column_lower = str(column_name).lower()
+            if column_lower in combined or column_lower in hinted_columns:
                 relevant.append(table_name)
                 break
-
-    if "investor" in combined and "ATOM_ENTITY_INVESTOR_PROFILE_001" in sql_schema:
-        relevant.append("ATOM_ENTITY_INVESTOR_PROFILE_001")
 
     relevant = sorted(dict.fromkeys(relevant))
     if not relevant:
         relevant = _schema_table_names(sql_schema)
 
     return {table_name: sql_schema[table_name] for table_name in relevant}, relevant
-
-
-def _deterministic_bucket_sql(inputs: Dict[str, Any]) -> str | None:
-    """Compile explicit entity buckets without introducing join fan-out.
-
-    Bucket questions are a high-confidence relational pattern: first reduce
-    the grouping table to one bucket per entity, then join entity-level
-    measures. Letting a language model join the raw one-to-many table directly
-    produces plausible but inflated totals.
-    """
-    spec = inputs.get("query_spec")
-    schema = inputs.get("sql_schema") or inputs.get("global_schema") or {}
-    if not isinstance(spec, dict) or not isinstance(schema, dict):
-        return None
-    groups = spec.get("group_by")
-    measures = spec.get("measures")
-    if not isinstance(groups, list) or len(groups) != 1 or not isinstance(measures, list) or not measures:
-        return None
-    group = groups[0]
-    if not isinstance(group, dict) or group.get("bucket_strategy") != "three_band_33_66":
-        return None
-    group_table = str(group.get("source_class") or "").strip()
-    group_field = str(group.get("field") or "").strip()
-    output_group = str(group.get("output_name") or "").strip()
-    boundaries = group.get("bucket_boundaries")
-    labels = group.get("bucket_labels")
-    if (
-        group_table not in schema
-        or not group_field
-        or not output_group
-        or not isinstance(boundaries, list)
-        or len(boundaries) != 2
-        or not isinstance(labels, list)
-        or len(labels) != 3
-    ):
-        return None
-    group_columns = set(schema[group_table].get("column_names", []))
-    if group_field not in group_columns or "investor_id" not in group_columns:
-        return None
-    if any(not isinstance(item, dict) for item in measures):
-        return None
-
-    entity_measure_specs = []
-    for index, measure in enumerate(measures):
-        source_table = str(measure.get("source_class") or "").strip()
-        field = str(measure.get("field") or "").strip()
-        if source_table not in schema or not field or field not in set(schema[source_table].get("column_names", [])):
-            return None
-        if "investor_id" not in set(schema[source_table].get("column_names", [])):
-            return None
-        if measure.get("formula"):
-            return None
-        operation = str(measure.get("per_entity_operation") or "SUM").upper()
-        final_operation = str(measure.get("final_operation") or operation).upper()
-        if operation not in {"SUM", "AVG", "MIN", "MAX", "COUNT"} or final_operation not in {"SUM", "AVG", "MIN", "MAX", "COUNT"}:
-            return None
-        alias = str(measure.get("output_name") or f"measure_{index}").strip()
-        aggregate_field = f'DISTINCT "{field}"' if operation == "COUNT" and measure.get("requires_distinct") else f'"{field}"'
-        entity_measure_specs.append((index, source_table, operation, final_operation, alias, aggregate_field))
-
-    measure_ctes = []
-    joins = []
-    select_measures = []
-    for index, source_table, operation, final_operation, alias, aggregate_field in entity_measure_specs:
-        cte_name = f"measure_{index}"
-        measure_ctes.append(
-            f'{cte_name} AS (SELECT "investor_id", {operation}({aggregate_field}) AS "{alias}" '
-            f'FROM "{source_table}" GROUP BY "investor_id")'
-        )
-        joins.append(f'INNER JOIN {cte_name} ON groups_per_entity.investor_id = {cte_name}.investor_id')
-        select_measures.append(f'{final_operation}(measure_{index}."{alias}") AS "{alias}"')
-
-    lower_label = str(labels[0]).replace("'", "''")
-    middle_label = str(labels[1]).replace("'", "''")
-    upper_label = str(labels[2]).replace("'", "''")
-    first_boundary, second_boundary = boundaries
-    group_cte = (
-        'groups_per_entity AS (SELECT DISTINCT "investor_id", '
-        f'CASE WHEN "{group_field}" <= {int(first_boundary)} THEN \'{lower_label}\' '
-        f'WHEN "{group_field}" <= {int(second_boundary)} THEN \'{middle_label}\' '
-        f"ELSE '{upper_label}' END AS \"{output_group}\" "
-        f'FROM "{group_table}" WHERE "{group_field}" IS NOT NULL)'
-    )
-    ctes = [*measure_ctes, group_cte]
-    return (
-        "WITH " + ",\n".join(ctes) + "\n"
-        f'SELECT groups_per_entity."{output_group}" AS "{output_group}", '
-        + ", ".join(select_measures) + "\n"
-        "FROM groups_per_entity\n"
-        + "\n".join(joins) + "\n"
-        f'GROUP BY groups_per_entity."{output_group}";'
-    )
 
 
 def _group_expression(group: dict[str, Any], table_alias: str) -> str | None:
@@ -236,10 +162,10 @@ def _group_expression(group: dict[str, Any], table_alias: str) -> str | None:
 
 
 def _deterministic_group_count_sql(inputs: Dict[str, Any]) -> str | None:
-    """Compile unfiltered entity counts across one or more dimensions."""
+    """Compile only explicitly requested distinct entity counts."""
     spec = inputs.get("query_spec")
     schema = inputs.get("sql_schema") or inputs.get("global_schema") or {}
-    if not isinstance(spec, dict) or not isinstance(schema, dict) or spec.get("filters"):
+    if not isinstance(spec, dict) or not isinstance(schema, dict) or spec.get("filters") or inputs.get("bound_inputs") or spec.get("predicate_tree"):
         return None
     groups = spec.get("group_by")
     measures = spec.get("measures")
@@ -248,15 +174,28 @@ def _deterministic_group_count_sql(inputs: Dict[str, Any]) -> str | None:
     if not groups or len(measures) != 1:
         return None
     measure = measures[0]
+    if measure.get("population_filters") or measure.get("aggregate_filters") or spec.get("ranking", {}).get("required"):
+        return None
+    expected_output = [g.get("output_name") for g in groups if isinstance(g, dict)] + [measure.get("output_name")]
+    if spec.get("output_schema") and spec["output_schema"] != expected_output:
+        return None
     operation = str(
         measure.get("per_entity_operation") or measure.get("final_operation") or ""
     ).upper()
     if operation != "COUNT":
         return None
-    entity_key = str(spec.get("entity_key") or "investor_id")
+    entity_key = str(spec.get("entity_key") or "").strip()
     output_measure = str(measure.get("output_name") or "entity_count")
-    profile_table = "ATOM_ENTITY_INVESTOR_PROFILE_001"
-    driver_table = profile_table if profile_table in schema else str(groups[0].get("source_class") or "")
+    driver_table = str(groups[0].get("source_class") or "")
+    if (
+        measure.get("field") not in {entity_key, "*"}
+        or measure.get("source_class") != driver_table
+        or measure.get("requires_distinct") is not True
+        or str(measure.get("final_operation") or "COUNT").upper() != "COUNT"
+    ):
+        return None
+    if not entity_key or not driver_table:
+        return None
     if driver_table not in schema or entity_key not in set(schema[driver_table].get("column_names", [])):
         return None
 
@@ -288,10 +227,9 @@ def _deterministic_group_count_sql(inputs: Dict[str, Any]) -> str | None:
             return None
         select_groups.append(f'{expression} AS "{output_name}"')
         group_expressions.append(expression)
-    distinct = "DISTINCT " if measure.get("requires_distinct", True) else ""
     return (
         "SELECT " + ", ".join(select_groups)
-        + f', COUNT({distinct}g0."{entity_key}") AS "{output_measure}" '
+        + f', COUNT(DISTINCT g0."{entity_key}") AS "{output_measure}" '
         + f'FROM "{driver_table}" AS g0 '
         + " ".join(joins)
         + " GROUP BY " + ", ".join(group_expressions)
@@ -309,19 +247,24 @@ def _sql_literal(value: Any) -> str:
     return "'" + str(value).replace("'", "''") + "'"
 
 
-def _profile_filter_sql(filters: list[dict[str, Any]], profile_columns: set[str]) -> str | None:
+def _profile_filter_sql(filters: list[dict[str, Any]], profile_columns: set[str], base_table: str) -> str | None:
     clauses = []
     for item in filters:
         if not isinstance(item, dict):
             return None
         source = str(item.get("source_class") or "")
-        if source and source != "ATOM_ENTITY_INVESTOR_PROFILE_001":
+        if source and source != base_table:
             return None
         field = str(item.get("field") or "")
         if field not in profile_columns:
             return None
         operator = str(item.get("operator") or "=").strip().lower()
         value = item.get("value")
+        if item.get("value_type") == "field":
+            if not isinstance(value, str) or value not in profile_columns or operator not in {"=", "!=", "<>", ">", ">=", "<", "<="}:
+                return None
+            clauses.append(f'"{field}" {operator.upper()} "{value}"')
+            continue
         if operator in {"=", "!=", "<>", ">", ">=", "<", "<="} and not isinstance(value, list):
             clauses.append(f'"{field}" {operator.upper()} {_sql_literal(value)}')
         elif operator in {"in", "not_in"} and isinstance(value, list) and value:
@@ -338,82 +281,80 @@ def _profile_filter_sql(filters: list[dict[str, Any]], profile_columns: set[str]
 
 
 def _entity_measure_expression(measure: dict[str, Any], columns: set[str]) -> str | None:
-    field = str(measure.get("field") or "").strip()
-    output_name = str(measure.get("output_name") or "").lower()
-    formula = str(measure.get("formula") or "").lower()
-    if "holding_gain" in output_name or "holding gain" in formula:
-        return '"current_value" - "cost"' if {"current_value", "cost"} <= columns else None
-    if ("rebalanc" in output_name and "gap" in output_name) or (
-        "target_allocation_pct" in formula and "current_allocation_pct" in formula
-    ):
-        return '"target_allocation_pct" - "current_allocation_pct"' if {
-            "target_allocation_pct", "current_allocation_pct"
-        } <= columns else None
-    if ("scenario" in output_name and "change" in output_name) or (
-        "new_allocation_pct" in formula and "current_allocation_pct" in formula
-    ):
-        return '"new_allocation_pct" - "current_allocation_pct"' if {
-            "new_allocation_pct", "current_allocation_pct"
-        } <= columns else None
-    if "inflow" in output_name:
-        return 'CASE WHEN "amount" > 0 THEN "amount" ELSE 0 END' if "amount" in columns else None
-    if "outflow" in output_name or "withdrawal" in output_name:
-        return 'CASE WHEN "amount" < 0 THEN ABS("amount") ELSE 0 END' if "amount" in columns else None
-    if field and field in columns:
-        return f'"{field}"'
-    return None
+    """Compile only an explicit field or safe arithmetic expression."""
+    import ast
+    formula = str(measure.get("formula") or "").strip()
+    if not formula:
+        field = str(measure.get("field") or "").strip()
+        return f'"{field}"' if field in columns else None
+    try:
+        node = ast.parse(formula, mode="eval").body
+    except SyntaxError:
+        return None
+    operations = {ast.Add: "+", ast.Sub: "-", ast.Mult: "*", ast.Div: "/"}
+
+    def render(value):
+        if isinstance(value, ast.Name) and value.id in columns:
+            return f'"{value.id}"'
+        if isinstance(value, ast.Constant) and type(value.value) in {int, float}:
+            return str(value.value)
+        if isinstance(value, ast.BinOp) and type(value.op) in operations:
+            left, right = render(value.left), render(value.right)
+            if isinstance(value.op, ast.Div) and left and right:
+                return f"(1.0 * {left} / NULLIF({right}, 0))"
+            return f"({left} {operations[type(value.op)]} {right})" if left and right else None
+        if isinstance(value, ast.UnaryOp) and isinstance(value.op, ast.USub):
+            operand = render(value.operand)
+            return f"(-{operand})" if operand else None
+        if isinstance(value, ast.Call) and isinstance(value.func, ast.Name) and value.func.id.upper() == "ABS" and len(value.args) == 1:
+            operand = render(value.args[0])
+            return f"ABS({operand})" if operand else None
+        return None
+
+    return render(node)
 
 
 def _derived_formula_sql(formula: str, aliases: list[str]) -> str | None:
-    expression = str(formula or "").strip()
-    if not expression:
-        return None
-    for alias in sorted(aliases, key=len, reverse=True):
-        expression = re.sub(rf"\b{re.escape(alias)}\b", f'"{alias}"', expression)
-    residue = expression
-    for alias in aliases:
-        residue = residue.replace(f'"{alias}"', "")
-    if re.sub(r"[\s0-9.+\-*/(),]", "", residue.upper().replace("ABS", "")):
-        return None
-    return expression
+    return _entity_measure_expression({"formula": formula}, set(aliases))
 
 
-def _deterministic_profile_group_sql(inputs: Dict[str, Any]) -> str | None:
-    """Compile the dominant analytical pattern without LLM reinterpretation.
-
-    The supported contract is deliberately narrow: one profile grouping
-    dimension, entity-level measures from physical ATOM tables, optional
-    profile filters, and a final cohort aggregation. This covers the large
-    comparative benchmark family while falling back for genuinely complex
-    SQL shapes.
-    """
+def _deterministic_entity_group_sql(inputs: Dict[str, Any]) -> str | None:
+    """Compile explicit entity-first aggregation over any matching SQL schema."""
     spec = inputs.get("query_spec")
     schema = inputs.get("sql_schema") or inputs.get("global_schema") or {}
-    if not isinstance(spec, dict) or not isinstance(schema, dict):
+    if not isinstance(spec, dict) or not isinstance(schema, dict) or inputs.get("bound_inputs") or spec.get("predicate_tree"):
+        return None
+    if spec.get("join_policy") not in {"left_join", "inner_join"}:
         return None
     groups = spec.get("group_by")
     measures = spec.get("measures")
     groups = groups if isinstance(groups, list) else []
     measures = measures if isinstance(measures, list) else []
-    if len(groups) != 1 or not measures or not spec.get("fanout_control", {}).get("required"):
+    grain = spec.get("grain") if isinstance(spec.get("grain"), dict) else {}
+    if len(groups) != 1 or not measures or not (spec.get("fanout_control", {}).get("required") or grain.get("pre_aggregate_by")):
+        return None
+    entity_key = str(spec.get("entity_key") or "").strip()
+    if not entity_key or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", entity_key):
         return None
     group = groups[0]
     if not isinstance(group, dict) or group.get("bucket_strategy"):
         return None
-    profile_table = "ATOM_ENTITY_INVESTOR_PROFILE_001"
+    profile_table = str(group.get("source_class") or "")
     if str(group.get("source_class") or "") != profile_table or profile_table not in schema:
         return None
     group_field = str(group.get("field") or "").strip()
     group_alias = str(group.get("output_name") or group_field).strip()
     profile_columns = set(schema[profile_table].get("column_names", []))
-    if group_field not in profile_columns or "investor_id" not in profile_columns:
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", group_alias):
+        return None
+    if group_field not in profile_columns or entity_key not in profile_columns:
         return None
     filters = spec.get("filters")
     filters = filters if isinstance(filters, list) else []
-    where = _profile_filter_sql(filters, profile_columns)
+    where = _profile_filter_sql(filters, profile_columns, profile_table)
     if where is None:
         return None
-    if not spec.get("preserve_null_groups", False):
+    if spec.get("preserve_null_groups") is False:
         where = " AND ".join(filter(None, [where, f'"{group_field}" IS NOT NULL']))
 
     physical_measures = []
@@ -421,33 +362,45 @@ def _deterministic_profile_group_sql(inputs: Dict[str, Any]) -> str | None:
     for measure in measures:
         if not isinstance(measure, dict):
             return None
-        if str(measure.get("source_class") or "").lower() == "derived" or measure.get("formula_stage") == "final_group":
+        if str(measure.get("source_class") or "").lower() == "derived" or measure.get("operand_kind") == "aliases":
             derived_measures.append(measure)
         else:
             physical_measures.append(measure)
     if not physical_measures:
         return None
 
-    by_source: dict[str, list[dict[str, Any]]] = {}
+    by_source = {}
     for measure in physical_measures:
         source = str(measure.get("source_class") or "")
-        if source not in schema or "investor_id" not in set(schema[source].get("column_names", [])):
+        if source not in schema or entity_key not in set(schema[source].get("column_names", [])):
             return None
-        by_source.setdefault(source, []).append(measure)
+        # Independent metrics can use different eligible rows in one table.
+        population = measure.get("population_filters") or []
+        if not isinstance(population, list):
+            return None
+        eligibility = _profile_filter_sql(population, set(schema[source].get("column_names", [])), source)
+        if eligibility is None:
+            return None
+        aggregate = measure.get("aggregate_filters") or []
+        if not isinstance(aggregate, list):
+            return None
+        by_source.setdefault((source, eligibility, json.dumps(aggregate, sort_keys=True)), []).append(measure)
 
     ctes = []
     joins = []
     grouped_selects = []
     aliases = []
-    for source_index, (source, source_measures) in enumerate(by_source.items()):
+    final_predicates = []
+    for source_index, ((source, eligibility, _), source_measures) in enumerate(by_source.items()):
         cte_name = f"metric_source_{source_index}"
         columns = set(schema[source].get("column_names", []))
         entity_selects = []
+        entity_predicates = []
         for measure in source_measures:
             alias = str(measure.get("output_name") or "").strip()
-            operation = str(measure.get("per_entity_operation") or "AVG").upper()
-            final_operation = str(measure.get("final_operation") or operation).upper()
-            if not alias or operation not in {"SUM", "AVG", "COUNT", "MIN", "MAX"}:
+            operation = str(measure.get("per_entity_operation") or "").upper()
+            final_operation = str(measure.get("final_operation") or "").upper()
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", alias) or operation not in {"SUM", "AVG", "COUNT", "MIN", "MAX"}:
                 return None
             if final_operation not in {"SUM", "AVG", "COUNT", "MIN", "MAX"}:
                 return None
@@ -456,21 +409,38 @@ def _deterministic_profile_group_sql(inputs: Dict[str, Any]) -> str | None:
                 return None
             distinct = "DISTINCT " if operation == "COUNT" and measure.get("requires_distinct") else ""
             entity_selects.append(f'{operation}({distinct}{expression}) AS "{alias}"')
-            grouped_selects.append(f'{final_operation}({cte_name}."{alias}") AS "{alias}"')
+            outer_value = f'{cte_name}."{alias}"'
+            if operation == "COUNT" and measure.get("missing_entity_value") == 0 and spec.get("join_policy") == "left_join":
+                outer_value = f"COALESCE({outer_value}, 0)"
+            grouped_selects.append(f'{final_operation}({outer_value}) AS "{alias}"')
             aliases.append(alias)
+            for predicate in measure.get("aggregate_filters") or []:
+                if predicate.get("field") != alias or predicate.get("stage") not in {"entity", "final_group"}:
+                    return None
+                if predicate["stage"] == "final_group" and predicate.get("scope", "population") != "population":
+                    return None
+                normalized = {**predicate, "source_class": ""}
+                (entity_predicates if predicate["stage"] == "entity" else final_predicates).append(normalized)
+        having = _profile_filter_sql(entity_predicates, set(aliases), "")
+        if having is None:
+            return None
         ctes.append(
-            f'{cte_name} AS (SELECT "investor_id", ' + ", ".join(entity_selects)
-            + f' FROM "{source}" GROUP BY "investor_id")'
+            f'{cte_name} AS (SELECT "{entity_key}", ' + ", ".join(entity_selects)
+            + f' FROM "{source}"' + (f' WHERE {eligibility}' if eligibility else '')
+            + f' GROUP BY "{entity_key}"' + (f' HAVING {having}' if having else '') + ')'
         )
         join_keyword = "INNER JOIN" if spec.get("join_policy") == "inner_join" else "LEFT JOIN"
+        if any(p.get("stage") == "entity" and p.get("scope", "population") == "population"
+               for m in source_measures for p in m.get("aggregate_filters", [])):
+            join_keyword = "INNER JOIN"
         joins.append(
-            f'{join_keyword} {cte_name} ON profile_groups."investor_id" = {cte_name}."investor_id"'
+            f'{join_keyword} {cte_name} ON profile_groups."{entity_key}" = {cte_name}."{entity_key}"'
         )
 
     profile_where = f" WHERE {where}" if where else ""
     ctes.insert(
         0,
-        f'profile_groups AS (SELECT "investor_id", "{group_field}" AS "{group_alias}" '
+        f'profile_groups AS (SELECT DISTINCT "{entity_key}", "{group_field}" AS "{group_alias}" '
         f'FROM "{profile_table}"{profile_where})',
     )
     grouped_cte = (
@@ -481,25 +451,53 @@ def _deterministic_profile_group_sql(inputs: Dict[str, Any]) -> str | None:
     )
     ctes.append(grouped_cte)
 
-    final_columns = [f'"{group_alias}"', *[f'"{alias}"' for alias in aliases]]
-    for measure in derived_measures:
-        alias = str(measure.get("output_name") or "").strip()
-        expression = _derived_formula_sql(str(measure.get("formula") or ""), aliases)
-        if not alias or not expression:
+    result_cte = "grouped_result"
+    pending = list(derived_measures)
+    while pending:
+        progress = False
+        for measure in list(pending):
+            if measure.get("formula_stage") not in {None, "final_group"}:
+                return None
+            for predicate in measure.get("aggregate_filters") or []:
+                if predicate.get("stage") != "final_group" or predicate.get("field") != measure.get("output_name") or predicate.get("scope", "population") != "population":
+                    return None
+            alias = str(measure.get("output_name") or "").strip()
+            expression = _derived_formula_sql(str(measure.get("formula") or ""), aliases)
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", alias):
+                return None
+            if not expression:
+                continue
+            next_cte = f"derived_result_{len(aliases)}"
+            ctes.append(f'{next_cte} AS (SELECT *, {expression} AS "{alias}" FROM {result_cte})')
+            result_cte = next_cte
+            aliases.append(alias)
+            pending.remove(measure)
+            final_predicates.extend({**p, "source_class": ""} for p in measure.get("aggregate_filters") or [])
+            progress = True
+        if not progress:
             return None
-        final_columns.append(f'{expression} AS "{alias}"')
-        aliases.append(alias)
-    sql = "WITH " + ",\n".join(ctes) + "\nSELECT " + ", ".join(final_columns) + " FROM grouped_result"
+    output = spec.get("output_schema") or [group_alias, *aliases]
+    if not isinstance(output, list) or any(name not in [group_alias, *aliases] for name in output):
+        return None
+    final_columns = [f'"{name}"' for name in output]
+    sql = "WITH " + ",\n".join(ctes) + "\nSELECT " + ", ".join(final_columns) + f" FROM {result_cte}"
+    final_where = _profile_filter_sql(final_predicates, set(aliases), "")
+    if final_where is None:
+        return None
+    if final_where:
+        sql += f" WHERE {final_where}"
     ranking = spec.get("ranking")
     ranking = ranking if isinstance(ranking, dict) else {}
     if ranking.get("required"):
         metric = str(ranking.get("metric") or "").strip()
         direction = str(ranking.get("direction") or "desc").upper()
-        if metric in aliases and direction in {"ASC", "DESC"}:
+        if metric in [group_alias, *aliases] and direction in {"ASC", "DESC"}:
             sql += f' ORDER BY "{metric}" {direction}, "{group_alias}" ASC'
             limit = ranking.get("limit")
             if isinstance(limit, int) and limit > 0:
                 sql += f" LIMIT {limit}"
+        else:
+            return None
     return sql + ";"
 
 def semantic_generate_sql(inputs: Dict[str, Any], client: Any, model: str) -> Dict[str, Any]:
@@ -516,7 +514,19 @@ def semantic_generate_sql(inputs: Dict[str, Any], client: Any, model: str) -> Di
     bound_inputs = inputs.get("bound_inputs", {})
     print(f"[SQL SCHEMA] Relevant tables: {relevant_tables}")
 
-    deterministic_group_count = _deterministic_group_count_sql(inputs)
+    # A failed compiled query must reach the repair model instead of being
+    # reproduced unchanged by the deterministic fast path.
+    deterministic_entity_group = _deterministic_entity_group_sql(inputs) if not logic_feedback else None
+    if deterministic_entity_group:
+        return {
+            "sql": deterministic_entity_group,
+            "reasoning": "Compiled explicit entity and final-group operations from Query_Spec.",
+            "sql_schema_tables": _schema_table_names(sql_schema),
+            "relevant_tables": relevant_tables,
+            "raw_response_preview": "",
+        }
+
+    deterministic_group_count = _deterministic_group_count_sql(inputs) if not logic_feedback else None
     if deterministic_group_count:
         print("[SQL GENERATE] Deterministic grouped-count compiler selected.")
         return {
@@ -527,28 +537,7 @@ def semantic_generate_sql(inputs: Dict[str, Any], client: Any, model: str) -> Di
             "raw_response_preview": "",
         }
 
-    deterministic_bucket = _deterministic_bucket_sql(inputs)
-    if deterministic_bucket:
-        print("[SQL GENERATE] Deterministic bucket compiler selected to prevent entity fan-out.")
-        return {
-            "sql": deterministic_bucket,
-            "reasoning": "Compiled explicit bucket labels at one row per investor before joining measures.",
-            "sql_schema_tables": _schema_table_names(sql_schema),
-            "relevant_tables": relevant_tables,
-            "raw_response_preview": "",
-        }
 
-    deterministic_profile_group = _deterministic_profile_group_sql(inputs)
-    if deterministic_profile_group:
-        print("[SQL GENERATE] Deterministic profile-group compiler selected.")
-        return {
-            "sql": deterministic_profile_group,
-            "reasoning": "Compiled Query_Spec at entity grain, then aggregated once at profile-group grain.",
-            "sql_schema_tables": _schema_table_names(sql_schema),
-            "relevant_tables": relevant_tables,
-            "raw_response_preview": "",
-        }
-    
     prompt = f"""
 You are the SQL Generate operator. Your task is to generate a valid SQLite SQL query to answer the user's question.
 
@@ -562,12 +551,12 @@ SQLite Physical Schema:
 CRITICAL SQL SCHEMA RULES:
 - Use ONLY tables present in the provided SQLite Physical Schema.
 - Use ONLY columns present in those tables.
-- Use exact physical table names such as ATOM_ENTITY_INVESTOR_PROFILE_001.
-- Use exact snake_case physical column names such as investor_id, investor_name, risk_tolerance.
-- Never invent semantic table names such as Investor, PortfolioHealth, CashFlow, PortfolioHolding, InvestmentGoal, RiskTolerance, or TimeHorizon.
-- Never use KG-style field names such as investorId, investorName, riskTolerance, timeHorizon, progressPct, or currentValue.
+- Use exact physical table names exactly as they appear in the schema.
+- Use exact physical column names exactly as they appear in the schema.
+- Never invent semantic table names, convenience aliases, or abstract entity names that do not physically exist.
+- Never replace physical SQL names with KG-style or camelCase field names unless those exact names are present in the SQL schema.
 - Generate SQLite-compatible SQL.
-- Use investor_id as the common join key when joining investor-related tables.
+- Use the entity key or join keys that are actually present in the schema and required by Query Spec.
 - Do not confuse KG class/property names with SQLite table/column names.
 - Treat User Query and Query Spec as the local subquery scope.
 - Use Original User Query Context only for shared context such as the year or the outer question wording.
@@ -575,10 +564,10 @@ CRITICAL SQL SCHEMA RULES:
 
 Bound Upstream Inputs (Values from previous nodes):
 {json.dumps(bound_inputs, indent=2)}
-Use these bound inputs in WHERE clauses if provided, matching values to real physical columns such as investor_id.
+Use these bound inputs in WHERE clauses if provided, matching values to real physical key or dimension columns from the schema.
 If Bound Upstream Inputs are non-empty, they are hard constraints from upstream nodes.
 Do not recompute a broader universe when the subquery is clearly meant to refine, subtract from, or select within those upstream values.
-If an upstream input is a list of category-like or investor-like values, constrain the SQL to those values with IN/NOT IN logic where appropriate.
+If an upstream input is a list of entity IDs, labels, categories, or other dimension values, constrain the SQL to those values with IN/NOT IN logic where appropriate.
 
 QUERY SPEC CONTRACT RULES:
 - Treat Query Spec as the semantic contract for the SQL query, not as optional guidance.
@@ -587,9 +576,14 @@ QUERY SPEC CONTRACT RULES:
 - Respect per_entity_operation and final_operation exactly.
 - If a group_by item uses bucket_strategy, build explicit CASE-based bucket labels and group by those labels rather than the raw numeric field.
 - For ranking queries, order by the ranking metric in the specified direction and apply the ranking limit after aggregation.
-- For ranking queries, add a deterministic secondary ORDER BY on the entity identity column (for example investor_id ASC) after the primary metric sort unless the Query Spec already requires a different stable tie-break.
-- If a group_by item contains bucket_labels and bucket_boundaries, use those exact labels and thresholds from the Query Spec. Never substitute generic 33/66 thresholds for an explicitly stated definition such as <=12, 13-60, >60.
+- For ranking queries, add a deterministic secondary ORDER BY on a stable entity identity column (for example an entity key column) after the primary metric sort unless the Query Spec already requires a different stable tie-break.
+- If a group_by item contains bucket_labels and bucket_boundaries, use those exact labels and thresholds. Never invent missing boundaries.
 - For a derived measure with formula_stage="final_group", compute the formula from the already aggregated final-group measure aliases in an outer SELECT. Do not average the formula at raw-row or entity grain.
+- Apply population_filters only inside that measure's source aggregation. Metrics from the same table with different filters need separate CTEs. Top-level filters constrain the shared population. Do not apply a numerator-only restriction to the denominator.
+- aggregate_filters apply AFTER the declared entity or final-group aggregation. An average-above threshold uses HAVING/an outer predicate on the computed average, never WHERE on each input value. With scope="population", constrain the shared eligible entity universe before computing other metrics; with scope="metric", restrict only that metric. Use operand_kind to distinguish physical columns from derived aliases; formula_stage alone never makes a physical aggregate a derived expression.
+- When joining separately grouped aggregates on nullable dimensions, use SQLite null-safe IS (or an equivalent explicit null-safe condition), so a null group retains its metrics. Preserve NOT IN null semantics; add IS NULL only when the question explicitly includes missing values.
+- Preserve exact source ownership and stored allowed_values. Do not replace a stored measure with a formula, add category values, or reverse signs without an explicit definition in the question or source metadata.
+- Compute internal measure aliases even if they are absent from output_schema, then project only output_schema in its declared order. Apply filters on derived aliases after those aliases have been computed.
 - For a grouped gap comparison whose ranking.limit is null, return every group, compute the requested gap column, and ORDER BY that gap; do not add LIMIT 1.
 - If query_spec["join_policy"] is "inner_join" for a grouped comparative/aggregation query, join the base grouping table to every pre-aggregated measure CTE with JOIN/INNER JOIN on the entity key. Use this only when the Query Spec explicitly requires an intersection population (for example, "who have both" or "among those with").
 - If query_spec["join_policy"] is "left_join" for a grouped comparative/aggregation query, drive the outer query from the base grouping table and LEFT JOIN each pre-aggregated measure CTE on the entity key.
@@ -606,7 +600,7 @@ AGGREGATION GRAIN RULES (these decide whether the numbers are right):
       FROM <that measure's own source table>
       GROUP BY <entity_key>
     ),
-    m2 AS ( ... one CTE per source table, each grouped by <entity_key> ... )
+    m2 AS ( ... one CTE per source and eligible population, grouped by <entity_key> ... )
     SELECT b.<group_field> AS <group_alias>,
            <final_operation>(m1.<measure_alias>) AS <output_alias>,
            <final_operation>(m2.<measure_alias>) AS <output_alias>
@@ -678,6 +672,21 @@ def semantic_pre_scan_validate_sql(inputs: Dict[str, Any], client: Any, model: s
     
     if not sql:
         return {"pre_scan_validation": {"is_valid": False, "reason": "No SQL provided.", "severity": "hard_error"}}
+    # Prepare against the real schema without executing the query. This catches
+    # syntax, unknown aliases and illegal HAVING that a model may approve.
+    db_path = inputs.get("db_path")
+    if db_path and Path(db_path).is_file():
+        connection = None
+        try:
+            connection = sqlite3.connect(Path(db_path).resolve().as_uri() + "?mode=ro", uri=True)
+            connection.execute("EXPLAIN " + sql).fetchall()
+        except sqlite3.Error as error:
+            reason = f"SQLite query preparation failed: {error}"
+            return {"pre_scan_validation": {"is_valid": False, "severity": "hard_error", "reason": reason,
+                    "rewrite_hint": reason + ". Regenerate valid SQL against the supplied physical schema."}}
+        finally:
+            if connection is not None:
+                connection.close()
         
     prompt = f"""
 You are the SQL Pre_Scan_Validate operator. Verify if the following SQL query is valid, safe, and logically aligns with the query.
@@ -699,6 +708,10 @@ Check for:
    - grouped comparative queries that skip the requested final grouping
    - ranking queries missing ORDER BY/LIMIT for the requested metric
    - pre_aggregate_by queries that appear to use one flat multi-table aggregation instead of staged aggregation
+   - aggregate_filters incorrectly implemented on input rows rather than on computed entity/final-group aliases
+   - population-scope aggregate predicates that fail to constrain other requested metrics to the same eligible entities
+   - grouped aggregate joins using ordinary equality on nullable dimension keys and losing null-group metrics
+   - NOT IN predicates broadened to include NULL without an explicit missing-value condition in the question
 
 Reject any SQL that uses tables outside this exact list:
 {schema_tables}
@@ -754,7 +767,8 @@ def pre_programmed_scan_sql(inputs: Dict[str, Any], db_path: str) -> Dict[str, A
     conn = None
 
     try:
-        conn = sqlite3.connect(db_path)
+        conn = sqlite3.connect(Path(db_path).resolve().as_uri() + "?mode=ro", uri=True)
+        conn.execute("PRAGMA query_only=ON")
     except sqlite3.Error as e:
         return {
             "status": "error",
@@ -810,151 +824,6 @@ def pre_programmed_scan_sql(inputs: Dict[str, Any], db_path: str) -> Dict[str, A
             "data": []
         }
 
-    finally:
-        if conn is not None:
-            conn.close()
-
-
-def enrich_sql_result_rows(query_spec: Dict[str, Any], data: Any, db_path: str) -> Any:
-    """Deterministically back-fill lightweight investor context columns.
-
-    This keeps the pipeline architecture unchanged: SQL still answers the query,
-    but rows can carry stable identity/context columns (investor_name,
-    risk_score, diversification_score, etc.) that the benchmark expects for
-    ranking/comparative outputs.
-    """
-    if not isinstance(data, list) or not data or not all(isinstance(row, dict) for row in data):
-        return data
-    if not db_path or not os.path.exists(db_path):
-        return data
-    if not any("investor_id" in row for row in data) and not query_spec.get("include_entity_count"):
-        return data
-
-    output_schema = query_spec.get("output_schema")
-    output_schema = output_schema if isinstance(output_schema, list) else []
-    filters = query_spec.get("filters")
-    filters = filters if isinstance(filters, list) else []
-    needed = set()
-    for name in output_schema:
-        column = str(name or "").strip()
-        if column:
-            needed.add(column)
-    for filter_item in filters:
-        if not isinstance(filter_item, dict):
-            continue
-        field_name = str(filter_item.get("field") or "").strip()
-        if field_name and field_name not in {"investor_id", "date"}:
-            needed.add(field_name)
-    if any("investor_id" in row for row in data):
-        needed.add("investor_name")
-
-    supported_profile = {"investor_name", "risk_tolerance", "time_horizon", "segment", "category"}
-    supported_health = {"risk_score", "liquidity_score", "diversification_score", "goal_match_pct"}
-    requested_profile = sorted(needed & supported_profile)
-    requested_health = sorted(needed & supported_health)
-    if not requested_profile and not requested_health and not query_spec.get("include_entity_count"):
-        return data
-
-    investor_ids = sorted({str(row.get("investor_id")) for row in data if row.get("investor_id") is not None})
-    if not investor_ids and not query_spec.get("include_entity_count"):
-        return data
-
-    conn = None
-    try:
-        conn = sqlite3.connect(db_path)
-        conn.row_factory = sqlite3.Row
-        cur = conn.cursor()
-        placeholders = ",".join("?" for _ in investor_ids)
-        profile_rows = {}
-        health_rows = {}
-        if requested_profile and investor_ids:
-            columns = ", ".join(["investor_id", *requested_profile])
-            cur.execute(
-                f"SELECT {columns} FROM ATOM_ENTITY_INVESTOR_PROFILE_001 WHERE investor_id IN ({placeholders})",
-                investor_ids,
-            )
-            profile_rows = {str(row["investor_id"]): dict(row) for row in cur.fetchall()}
-        if requested_health and investor_ids:
-            columns = ", ".join(["investor_id", *requested_health])
-            cur.execute(
-                f"SELECT {columns} FROM ATOM_ENTITY_PORTFOLIO_HEALTH_001 WHERE investor_id IN ({placeholders})",
-                investor_ids,
-            )
-            health_rows = {str(row["investor_id"]): dict(row) for row in cur.fetchall()}
-
-        enriched = []
-        for row in data:
-            investor_id = row.get("investor_id")
-            if investor_id is None:
-                enriched.append(row)
-                continue
-            key = str(investor_id)
-            updated = dict(row)
-            for column in requested_profile:
-                if updated.get(column) is None and key in profile_rows:
-                    updated[column] = profile_rows[key].get(column)
-            for column in requested_health:
-                if updated.get(column) is None and key in health_rows:
-                    updated[column] = health_rows[key].get(column)
-            enriched.append(updated)
-
-        # Some comparative benchmark contracts explicitly ask for the number
-        # of entities behind each group (``... per investor vary across ...``).
-        # This is a deterministic property of the physical profile table and
-        # should not be left to an LLM-generated aggregate alias.  Calculate it
-        # from the same profile filters used by the Query_Spec and attach it to
-        # the already-generated result rows.
-        if query_spec.get("include_entity_count"):
-            group_by = query_spec.get("group_by")
-            group_by = group_by if isinstance(group_by, list) else []
-            group = group_by[0] if group_by and isinstance(group_by[0], dict) else {}
-            group_name = str(group.get("output_name") or "").strip()
-            group_field = str(group.get("field") or "").strip()
-            allowed_profile_fields = {
-                "risk_tolerance", "time_horizon", "segment", "category",
-            }
-            if group_name and group_field in allowed_profile_fields:
-                filters = query_spec.get("filters")
-                filters = filters if isinstance(filters, list) else []
-                clauses = []
-                params = []
-                for item in filters:
-                    if not isinstance(item, dict):
-                        continue
-                    field = str(item.get("field") or "").strip()
-                    if field not in allowed_profile_fields:
-                        continue
-                    operator = str(item.get("operator") or "=").strip().lower()
-                    value = item.get("value")
-                    if operator == "=" and not isinstance(value, list):
-                        clauses.append(f'"{field}" = ?')
-                        params.append(value)
-                    elif operator in {"!=", "<>", "not_in"}:
-                        values = value if isinstance(value, list) else [value]
-                        values = [item for item in values if item is not None]
-                        if values:
-                            marks = ",".join("?" for _ in values)
-                            clauses.append(f'"{field}" NOT IN ({marks})')
-                            params.extend(values)
-                    elif operator == "in" and isinstance(value, list) and value:
-                        marks = ",".join("?" for _ in value)
-                        clauses.append(f'"{field}" IN ({marks})')
-                        params.extend(value)
-                where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
-                count_rows = cur.execute(
-                    f'SELECT "{group_field}" AS group_value, '
-                    f'COUNT(DISTINCT "investor_id") AS n_investors '
-                    f'FROM ATOM_ENTITY_INVESTOR_PROFILE_001{where} '
-                    f'GROUP BY "{group_field}"',
-                    params,
-                ).fetchall()
-                counts = {str(item["group_value"]): item["n_investors"] for item in count_rows}
-                for row in enriched:
-                    group_value = row.get(group_name)
-                    row["n_investors"] = counts.get(str(group_value), 0)
-        return enriched
-    except Exception:
-        return data
     finally:
         if conn is not None:
             conn.close()

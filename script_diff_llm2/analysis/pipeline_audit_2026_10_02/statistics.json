@@ -1,0 +1,260 @@
+{
+  "Source CSV": {
+    "wealth_management_125_question_benchmark.csv": {
+      "MATCH": 69,
+      "MISMATCH": 49,
+      "PARTIAL": 7
+    },
+    "wealth_management_at_risk_critical_125_questions.csv": {
+      "MATCH": 75,
+      "MISMATCH": 37,
+      "PARTIAL": 13
+    },
+    "wealth_management_batch_status_125_questions.csv": {
+      "MATCH": 97,
+      "MISMATCH": 26,
+      "PARTIAL": 1,
+      "PRE_SCAN_ERROR": 1
+    },
+    "wealth_management_enrichment_context_125_questions.csv": {
+      "MATCH": 50,
+      "PARTIAL": 51,
+      "MISMATCH": 20,
+      "SCAN_ERROR": 1,
+      "PRE_SCAN_ERROR": 2,
+      "GRADER_API_ERROR": 1
+    },
+    "wealth_management_multi_step_comparative_125_questions.csv": {
+      "MATCH": 68,
+      "PARTIAL": 38,
+      "PRE_SCAN_ERROR": 7,
+      "MISMATCH": 9,
+      "SCAN_ERROR": 2,
+      "GRADER_API_ERROR": 1
+    },
+    "wealth_management_reference_compliance_125_questions.csv": {
+      "MATCH": 94,
+      "MISMATCH": 18,
+      "PARTIAL": 7,
+      "PRE_SCAN_ERROR": 6
+    },
+    "wealth_management_scoring_quantitative_125_questions.csv": {
+      "MATCH": 94,
+      "OTHER": 1,
+      "MISMATCH": 9,
+      "PARTIAL": 20,
+      "PRE_SCAN_ERROR": 1
+    },
+    "wealth_management_temporal_transaction_125_questions.csv": {
+      "MATCH": 90,
+      "MISMATCH": 34,
+      "PRE_SCAN_ERROR": 1
+    }
+  },
+  "Difficulty": {
+    "Easy": {
+      "MATCH": 60,
+      "MISMATCH": 22
+    },
+    "Medium": {
+      "MATCH": 293,
+      "MISMATCH": 47,
+      "PARTIAL": 14,
+      "PRE_SCAN_ERROR": 6,
+      "OTHER": 1
+    },
+    "Hard": {
+      "MATCH": 163,
+      "MISMATCH": 79,
+      "PARTIAL": 55,
+      "PRE_SCAN_ERROR": 9
+    },
+    "Advanced": {
+      "MATCH": 54,
+      "PARTIAL": 34,
+      "MISMATCH": 31,
+      "PRE_SCAN_ERROR": 3,
+      "SCAN_ERROR": 1,
+      "GRADER_API_ERROR": 1
+    },
+    "Expert": {
+      "MISMATCH": 23,
+      "MATCH": 67,
+      "PARTIAL": 34,
+      "SCAN_ERROR": 2,
+      "GRADER_API_ERROR": 1
+    }
+  },
+  "Query Type": {
+    "Direct Retrieval": {
+      "MATCH": 22,
+      "MISMATCH": 12
+    },
+    "Multi-Relational": {
+      "MATCH": 116,
+      "MISMATCH": 59,
+      "PARTIAL": 34,
+      "PRE_SCAN_ERROR": 1,
+      "SCAN_ERROR": 1,
+      "GRADER_API_ERROR": 1
+    },
+    "Categorical Aggregation": {
+      "MATCH": 151,
+      "PARTIAL": 41,
+      "MISMATCH": 18,
+      "PRE_SCAN_ERROR": 2
+    },
+    "Composite Reasoning": {
+      "MATCH": 66,
+      "PARTIAL": 35,
+      "MISMATCH": 39,
+      "SCAN_ERROR": 2,
+      "GRADER_API_ERROR": 1
+    },
+    "Rule-Based Detection": {
+      "MATCH": 22,
+      "MISMATCH": 7
+    },
+    "Filtered List": {
+      "MATCH": 64,
+      "MISMATCH": 38,
+      "OTHER": 1
+    },
+    "Exception Detection": {
+      "MATCH": 49,
+      "MISMATCH": 3,
+      "PARTIAL": 1
+    },
+    "Comparative": {
+      "MATCH": 7,
+      "PARTIAL": 2,
+      "PRE_SCAN_ERROR": 3,
+      "MISMATCH": 3
+    },
+    "Ranking": {
+      "MATCH": 53,
+      "MISMATCH": 9,
+      "PRE_SCAN_ERROR": 3
+    },
+    "Multi-step Comparative": {
+      "MATCH": 35,
+      "PARTIAL": 17,
+      "PRE_SCAN_ERROR": 3
+    },
+    "Reference Compliance": {
+      "MATCH": 17,
+      "MISMATCH": 9,
+      "PARTIAL": 7,
+      "PRE_SCAN_ERROR": 6
+    },
+    "Temporal": {
+      "MISMATCH": 5,
+      "MATCH": 35
+    }
+  },
+  "DAG Sequence": {
+    "Q1:Subquery(SQL)": {
+      "MATCH": 624,
+      "MISMATCH": 76,
+      "PARTIAL": 132,
+      "SCAN_ERROR": 3,
+      "PRE_SCAN_ERROR": 16,
+      "GRADER_API_ERROR": 2,
+      "OTHER": 1
+    },
+    "Q1:Subquery(KG)": {
+      "MISMATCH": 102,
+      "MATCH": 6
+    },
+    "Q1:Subquery(KG) -> Q2:Subquery(SQL)": {
+      "MATCH": 6,
+      "PARTIAL": 5,
+      "MISMATCH": 5,
+      "PRE_SCAN_ERROR": 1
+    },
+    "Q1:Subquery(SQL) -> Q2:Subquery(KG) -> Q3:Set_Intersect(set)": {
+      "MISMATCH": 10
+    },
+    "Q1:Subquery(SQL) -> Q2:Subquery(KG)": {
+      "MISMATCH": 3
+    },
+    "Q1:Subquery(KG) -> Q2:Subquery(SQL) -> Q3:Set_Intersect(set)": {
+      "MISMATCH": 4
+    },
+    "Q1:Subquery(SQL) -> Q2:Subquery(KG) -> Q3:Subquery(KG) -> Q4:Set_Intersect(set)": {
+      "MISMATCH": 1
+    },
+    "Q1:Subquery(SQL) -> Q2:Subquery(KG) -> Q3:Subquery(SQL)": {
+      "MATCH": 1
+    },
+    "Q1:Subquery(SQL) -> Q2:Subquery(SQL)": {
+      "PRE_SCAN_ERROR": 1,
+      "MISMATCH": 1
+    }
+  },
+  "Validation Is Valid": {
+    "True": {
+      "MATCH": 619,
+      "MISMATCH": 80,
+      "PARTIAL": 134,
+      "GRADER_API_ERROR": 2,
+      "PRE_SCAN_ERROR": 1,
+      "OTHER": 1
+    },
+    "False": {
+      "MISMATCH": 120,
+      "PARTIAL": 1,
+      "MATCH": 14,
+      "PRE_SCAN_ERROR": 1,
+      "SCAN_ERROR": 1
+    },
+    "": {
+      "PARTIAL": 2,
+      "MISMATCH": 2,
+      "MATCH": 4,
+      "PRE_SCAN_ERROR": 16,
+      "SCAN_ERROR": 2
+    }
+  },
+  "triage_tags_overlapping_not_causal": {
+    "uses_KG": 131,
+    "grader_mentions_empty_result": 128,
+    "grader_mentions_numeric_measure": 162,
+    "grader_mentions_null_or_missing_group": 97,
+    "political_reinterpretation": 18,
+    "grader_mentions_extra_results": 31
+  },
+  "paired_payload_differences": {
+    "Question": 0,
+    "Ground Truth": 0,
+    "New Pipeline Result": 0,
+    "Generated SPARQL": 0
+  },
+  "transitions": {
+    "MATCH -> MATCH": 541,
+    "MATCH -> MISMATCH": 126,
+    "PRE_SCAN_ERROR -> MATCH": 10,
+    "MISMATCH -> MATCH": 39,
+    "MISMATCH -> MISMATCH": 51,
+    "PARTIAL -> MISMATCH": 20,
+    "MISMATCH -> PARTIAL": 12,
+    "PARTIAL -> PARTIAL": 95,
+    "MATCH -> PARTIAL": 24,
+    "GRADER_API_ERROR -> MATCH": 1,
+    "PARTIAL -> MATCH": 41,
+    "GRADER_API_ERROR -> MISMATCH": 2,
+    "SCAN_ERROR -> MATCH": 4,
+    "MATCH -> PRE_SCAN_ERROR": 4,
+    "PRE_SCAN_ERROR -> MISMATCH": 3,
+    "PRE_SCAN_ERROR -> PARTIAL": 4,
+    "MISMATCH -> SCAN_ERROR": 1,
+    "PRE_SCAN_ERROR -> PRE_SCAN_ERROR": 6,
+    "PARTIAL -> GRADER_API_ERROR": 2,
+    "PARTIAL -> PRE_SCAN_ERROR": 7,
+    "MATCH -> SCAN_ERROR": 2,
+    "SCAN_ERROR -> PARTIAL": 2,
+    "MISMATCH -> PRE_SCAN_ERROR": 1,
+    "OTHER -> MATCH": 1,
+    "MATCH -> OTHER": 1
+  }
+}

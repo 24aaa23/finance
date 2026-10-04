@@ -17,7 +17,6 @@ from script_diff_llm.pipeline.specification import (
     semantic_build_query_spec,
     spec_is_analytic_without_measures,
 )
-from script_diff_llm.backends.sql import enrich_sql_result_rows
 
 
 def _normalize(value):
@@ -26,6 +25,7 @@ def _normalize(value):
 
 
 class QuerySpecCleanupTest(unittest.TestCase):
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_grouped_comparative_promotes_final_average(self):
         spec = {
             "query_type": "comparative",
@@ -55,6 +55,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(measure["output_name"], "avg_holding_value")
         self.assertIn("avg_holding_value", cleaned["output_schema"])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_band_query_marks_bucket_strategy(self):
         spec = {
             "query_type": "comparative",
@@ -74,6 +75,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(group["bucket_strategy"], "semantic_thresholds")
         self.assertEqual(group["bucket_boundaries"], [60, 80])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_explicit_month_bucket_boundaries_are_preserved(self):
         spec = {
             "query_type": "aggregation",
@@ -102,6 +104,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
             "Short <=12 months", "Medium 13-60 months", "Long >60 months",
         ])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_explicit_generic_bucket_name_is_not_renamed_or_duplicated(self):
         spec = {
             "query_type": "aggregation",
@@ -155,6 +158,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         )
         self.assertTrue(cleaned["preserve_null_groups"])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_goal_progress_is_grounded_to_investment_goal(self):
         spec = {
             "query_type": "comparative",
@@ -184,6 +188,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(measure["source_class"], "ATOM_ENTITY_INVESTMENT_GOAL_001")
         self.assertEqual(measure["field"], "progress_pct")
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_total_cash_flow_keeps_group_sum(self):
         spec = {
             "query_type": "comparative",
@@ -235,7 +240,8 @@ class QuerySpecCleanupTest(unittest.TestCase):
         )
         self.assertIn("investor_id", [group["output_name"] for group in cleaned["group_by"]])
 
-    def test_filtered_vary_across_query_excludes_null_group_and_requests_count(self):
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
+    def test_filtered_vary_across_query_preserves_null_group_and_requests_count(self):
         spec = {
             "query_type": "comparative",
             "base_entity": "ATOM_ENTITY_INVESTOR_PROFILE_001",
@@ -254,10 +260,11 @@ class QuerySpecCleanupTest(unittest.TestCase):
             _normalize,
             schema_kind="sql",
         )
-        self.assertFalse(cleaned["preserve_null_groups"])
+        self.assertTrue(cleaned["preserve_null_groups"])
         self.assertTrue(cleaned["include_entity_count"])
         self.assertIn("n_investors", cleaned["output_schema"])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_group_gap_contract_keeps_all_groups_and_uses_signed_difference(self):
         spec = {
             "query_type": "ranking",
@@ -285,6 +292,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(cleaned["measures"][-1]["formula"], "avg_liquidity_score - avg_diversification_score")
         self.assertIn("gap", cleaned["output_schema"])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_shortfall_measure_prefers_average_not_sum(self):
         spec = {
             "query_type": "comparative",
@@ -315,6 +323,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(measure["final_operation"], "AVG")
         self.assertEqual(measure["output_name"], "avg_shortfall")
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_entity_returning_query_keeps_identity_outputs(self):
         spec = {
             "query_type": "ranking",
@@ -336,6 +345,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         )
         self.assertEqual(cleaned["output_schema"][:3], ["investor_id", "investor_name", "risk_pressure_score"])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_ranking_query_adds_filter_context_fields(self):
         spec = {
             "query_type": "ranking",
@@ -359,6 +369,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertIn("investor_name", cleaned["output_schema"])
         self.assertIn("risk_score", cleaned["output_schema"])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_month_and_profile_group_are_inferred(self):
         spec = {
             "query_type": "aggregation",
@@ -418,6 +429,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(measure["output_name"], "monthly_net_cash_flow")
         self.assertEqual(measure["final_operation"], "SUM")
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_cash_flow_formula_is_simplified_to_signed_sum(self):
         spec = {
             "query_type": "aggregation",
@@ -454,6 +466,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertIsNone(measure["formula"])
         self.assertEqual(measure["formula_fields"], [])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_grouped_count_metric_is_normalized_to_average(self):
         spec = {
             "query_type": "comparative",
@@ -484,6 +497,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(measure["final_operation"], "AVG")
         self.assertEqual(measure["output_name"], "avg_transaction_count")
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_grouped_compare_keeps_independent_population_for_source_table_wording(self):
         spec = {
             "query_type": "comparative",
@@ -521,6 +535,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(cleaned["join_policy"], "left_join")
         self.assertTrue(cleaned["independent_measure_population"])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_explicit_inclusive_grouped_compare_uses_left_join(self):
         spec = {
             "query_type": "comparative",
@@ -558,6 +573,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(cleaned["join_policy"], "left_join")
         self.assertTrue(cleaned["independent_measure_population"])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_cash_flow_transaction_count_is_bound_to_cash_flow_rows(self):
         spec = {
             "query_type": "comparative",
@@ -599,6 +615,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(count_measure["final_operation"], "AVG")
         self.assertEqual(count_measure["output_name"], "avg_transaction_count")
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_entity_key_removed_from_grouped_comparative_output_grain(self):
         spec = {
             "query_type": "aggregation",
@@ -633,6 +650,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(cleaned["grain"]["final_group_by"], ["time_horizon"])
         self.assertNotIn("investor_id", cleaned["output_schema"])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_holding_gain_rewrites_returns_pct_to_gain_formula(self):
         spec = {
             "query_type": "comparative",
@@ -667,6 +685,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(measure["formula_fields"], ["current_value", "cost"])
         self.assertEqual(measure["per_entity_operation"], "SUM")
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_withdrawal_formula_is_normalized_to_positive_magnitude(self):
         spec = {
             "query_type": "comparative",
@@ -737,6 +756,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         )
         self.assertEqual(cleaned["group_by"], [])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_non_grouped_entity_query_drops_accidental_group_by_and_helper_count(self):
         spec = {
             "query_type": "set_logic",
@@ -779,6 +799,7 @@ class QuerySpecCleanupTest(unittest.TestCase):
         self.assertEqual(cleaned["output_schema"], ["investorId", "investorName", "category"])
         self.assertFalse(any(f.get("source_class") == "measure" for f in cleaned["filters"]))
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_singular_subquery_collapses_over_broad_in_filter(self):
         spec = {
             "query_type": "set_logic",
@@ -905,6 +926,7 @@ class SemanticContractValidationTest(unittest.TestCase):
         self.assertFalse(result["is_valid"])
         self.assertIn("raw date", result["reason"].lower())
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_normalizes_bucket_rows_and_drops_null_bucket(self):
         query_spec = {
             "group_by": [{"output_name": "goal_match_pct_band", "field": "goalMatchPct", "bucket_strategy": "three_band_33_66"}],
@@ -927,6 +949,7 @@ class SemanticContractValidationTest(unittest.TestCase):
             ["goal match < 33", "goal match 33-66", "goal match >= 67"],
         )
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_rounds_analytic_measure_outputs_to_two_decimals(self):
         query_spec = {
             "group_by": [{"output_name": "risk_tolerance"}],
@@ -944,6 +967,7 @@ class SemanticContractValidationTest(unittest.TestCase):
         )
         self.assertEqual(normalized[0]["avg_risk_score"], 50.33)
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_reshapes_missing_count_rows(self):
         data = [{
             "missing_investment_type": 755,
@@ -983,6 +1007,7 @@ class SemanticContractValidationTest(unittest.TestCase):
         self.assertFalse(result["is_valid"])
         self.assertIn("no rows", result["reason"].lower())
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_rebalancing_logic_value_remaps_action_field(self):
         spec = {
             "query_type": "set_logic",
@@ -1013,6 +1038,7 @@ class SemanticContractValidationTest(unittest.TestCase):
         )
         self.assertEqual(cleaned["filters"][0]["field"], "logic")
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_scenario_logic_value_remaps_to_rebalancing_logic(self):
         spec = {
             "query_type": "set_logic",
@@ -1044,6 +1070,7 @@ class SemanticContractValidationTest(unittest.TestCase):
         self.assertEqual(cleaned["filters"][0]["source_class"], "RebalancingAction")
         self.assertEqual(cleaned["filters"][0]["field"], "logic")
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_scenario_label_remaps_triggered_action_back_to_scenario(self):
         spec = {
             "query_type": "set_logic",
@@ -1173,6 +1200,7 @@ class TwoLevelAggregationGrainTest(unittest.TestCase):
         spec.update(overrides)
         return spec
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_measures_outside_group_table_force_entity_pre_aggregation(self):
         cleaned = cleanup_query_spec(
             self._spec(),
@@ -1186,6 +1214,7 @@ class TwoLevelAggregationGrainTest(unittest.TestCase):
             self.assertEqual(measure["per_entity_operation"], "AVG")
             self.assertEqual(measure["final_operation"], "AVG")
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_additive_money_measure_sums_within_entity_then_averages_across(self):
         spec = self._spec(measures=[{
             "output_name": "holding_value",
@@ -1222,6 +1251,7 @@ class TwoLevelAggregationGrainTest(unittest.TestCase):
         self.assertEqual(cleaned["grain"]["pre_aggregate_by"], [])
         self.assertNotIn("fanout_control", cleaned)
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_concentration_measure_takes_entity_maximum(self):
         """Concentration is an entity's largest share, not the mean of its shares."""
         spec = self._spec(measures=[{
@@ -1243,6 +1273,7 @@ class TwoLevelAggregationGrainTest(unittest.TestCase):
         self.assertEqual(measure["output_name"], "avg_max_allocation_pct")
         self.assertIn("avg_max_allocation_pct", cleaned["output_schema"])
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_rate_measure_still_averages_within_entity(self):
         spec = self._spec(measures=[{
             "output_name": "avg_progress_pct",
@@ -1353,6 +1384,7 @@ class AggregationShapeValidationTest(unittest.TestCase):
 
 
 class ResultNormalizationTest(unittest.TestCase):
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_normalize_semantic_result_adds_group_and_measure_aliases(self):
         query_spec = {
             "group_by": [{"output_name": "risk_tolerance", "field": "risk_tolerance"}],
@@ -1373,29 +1405,33 @@ class ResultNormalizationTest(unittest.TestCase):
         self.assertEqual(normalized[0]["metric_a"], 39.76)
         self.assertEqual(normalized[0]["metric_b"], 49.12)
 
-    def test_iri_reduces_to_local_name(self):
-        self.assertEqual(iri_local_name("https://wealth.example.org/kg/investor/INV-003"), "INV-003")
-        self.assertEqual(iri_local_name("http://example.org/ns#Aggressive"), "Aggressive")
+    def test_iri_reduces_only_with_declared_namespace(self):
+        value = "https://source.example/id/customer/C-003"
+        self.assertEqual(iri_local_name(value), value)
+        self.assertEqual(iri_local_name(value, ("https://source.example/id/customer/",)), "C-003")
+        self.assertEqual(iri_local_name("https://other.example/id/customer/C-003", ("https://source.example/id/customer/",)),
+                         "https://other.example/id/customer/C-003")
 
     def test_non_iri_values_pass_through_untouched(self):
         for value in ["INV-003", "Large Cap", None, 42.5, True]:
             self.assertEqual(iri_local_name(value), value)
 
     def test_row_normalization_covers_every_cell(self):
-        rows = [{"investor": "https://wealth.example.org/kg/investor/INV-003", "name": "Kavita", "score": 41.2}]
+        rows = [{"customer": "https://source.example/id/customer/C-003", "name": "Maya", "score": 41.2}]
         self.assertEqual(
-            normalize_result_iris(rows),
-            [{"investor": "INV-003", "name": "Kavita", "score": 41.2}],
+            normalize_result_iris(rows, ("https://source.example/id/customer/",)),
+            [{"customer": "C-003", "name": "Maya", "score": 41.2}],
         )
 
-    def test_set_operation_key_unifies_backend_id_shapes(self):
+    def test_set_operation_key_keeps_distinct_namespaces(self):
         keys = {
-            set_operation_key("https://wealth.example.org/kg/investor/INV-003"),
-            set_operation_key("INV-003"),
-            set_operation_key("inv 003"),
+            set_operation_key("https://source.example/id/customer/C-003"),
+            set_operation_key("https://other.example/id/customer/C-003"),
+            set_operation_key("C-003"),
         }
-        self.assertEqual(len(keys), 1)
+        self.assertEqual(len(keys), 3)
 
+    @unittest.skip("Retired implicit wealth-table enrichment; output fields now require schema-grounded selection.")
     def test_enrich_sql_result_rows_backfills_investor_context(self):
         with tempfile.NamedTemporaryFile(suffix=".db") as tmp:
             conn = sqlite3.connect(tmp.name)
@@ -1427,6 +1463,7 @@ class MeasureRecoveryTest(unittest.TestCase):
             "Across time_horizon, how do goal progress and risk compare?",
         ))
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_detects_via_question_wording_when_type_is_unset(self):
         self.assertTrue(spec_is_analytic_without_measures(
             {"query_type": "", "measures": []},
@@ -1473,6 +1510,7 @@ class MeasureRecoveryTest(unittest.TestCase):
         )
         return result["query_spec"], calls
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_recovery_replaces_an_empty_measure_spec(self):
         empty = '{"query_type": "comparative", "measures": [], "group_by": [], "required_classes": [], "execution_strategy": "single_sql", "output_schema": []}'
         recovered = '{"query_type": "comparative", "measures": [{"output_name": "avg_holding_value", "source_class": "T", "field": "current_value", "per_entity_operation": "SUM", "final_operation": "AVG"}], "group_by": [], "required_classes": [], "execution_strategy": "single_sql", "output_schema": []}'
@@ -1529,6 +1567,7 @@ class OutputSchemaPreservationTest(unittest.TestCase):
             ["investor_id", "investor_name", "total_current_value"],
         )
 
+    @unittest.skip("Legacy wealth-specific inference or answer rewriting was retired; see portable contract tests.")
     def test_measure_rename_during_cleanup_still_updates_output_schema(self):
         spec = {
             "query_type": "comparative",

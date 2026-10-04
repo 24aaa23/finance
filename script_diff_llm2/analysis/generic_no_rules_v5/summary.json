@@ -1,0 +1,112 @@
+{
+  "v2": {
+    "rows": 1000,
+    "grades": {
+      "MATCH": 721,
+      "MISMATCH": 215,
+      "PARTIAL": 57,
+      "SCAN_ERROR": 2,
+      "PRE_SCAN_ERROR": 2,
+      "OTHER": 1,
+      "GRADER_API_ERROR": 2
+    },
+    "raw_status": {
+      "PIPELINE_SUCCESS": 825,
+      "DAG_NODE_ERROR": 171,
+      "SCAN_ERROR": 2,
+      "PRE_SCAN_ERROR": 2
+    },
+    "saved_plan_revalidation": {
+      "clear -> clear": 833,
+      "blocked -> blocked": 91,
+      "blocked -> clear": 76,
+      "recovered_saved_contracts": 76
+    },
+    "repair_evidence": {
+      "operand names resolve against the declared source or planned aliases": 1548,
+      "unique explicit owner of projected or distinctly counted entity key": 26,
+      "logical base bound by explicit entity-key ownership": 26,
+      "identical physical projection already declared as a grouping key": 1,
+      "distinct count of explicitly declared base entity identity": 15,
+      "declared entity key supplies distinct-count operand": 4,
+      "every reference to logical source resolves to one physical owner": 26,
+      "all references to logical source resolved": 13,
+      "operands have a unique physical owner and do not reference planned aliases": 10,
+      "expression operands are physical columns, not aggregate aliases": 8,
+      "final-group expression references only independently planned aliases": 1
+    }
+  },
+  "v4": {
+    "rows": 1000,
+    "grades": {
+      "MATCH": 646,
+      "MISMATCH": 303,
+      "PARTIAL": 44,
+      "OTHER": 2,
+      "PRE_SCAN_ERROR": 5
+    },
+    "raw_status": {
+      "PIPELINE_SUCCESS": 717,
+      "DAG_NODE_ERROR": 278,
+      "PRE_SCAN_ERROR": 5
+    },
+    "saved_plan_revalidation": {
+      "clear -> clear": 731,
+      "blocked -> clear": 155,
+      "recovered_saved_contracts": 155,
+      "blocked -> blocked": 114
+    },
+    "repair_evidence": {
+      "unique explicit owner of projected or distinctly counted entity key": 18,
+      "logical base bound by explicit entity-key ownership": 18,
+      "unique declared source containing every physical operand": 171,
+      "all physical operand placeholders resolved to runtime sources": 64,
+      "predicate nested under its owning measure": 65,
+      "exactly one declared aggregation stage": 33,
+      "identical physical projection already declared as a grouping key": 7,
+      "every reference to logical source resolves to one physical owner": 19,
+      "all references to logical source resolved": 10,
+      "operands have a unique physical owner and do not reference planned aliases": 17,
+      "operand names resolve against the declared source or planned aliases": 25,
+      "distinct count of explicitly declared base entity identity": 17,
+      "declared entity key supplies distinct-count operand": 2,
+      "expression operands are physical columns, not aggregate aliases": 1,
+      "final-group expression references only independently planned aliases": 3
+    }
+  },
+  "paired_grade_transitions": {
+    "MATCH -> MATCH": 545,
+    "MISMATCH -> MATCH": 88,
+    "MATCH -> MISMATCH": 162,
+    "MISMATCH -> MISMATCH": 113,
+    "MATCH -> PARTIAL": 8,
+    "PARTIAL -> MATCH": 8,
+    "PARTIAL -> PARTIAL": 22,
+    "PARTIAL -> MISMATCH": 27,
+    "MISMATCH -> PARTIAL": 13,
+    "SCAN_ERROR -> MATCH": 1,
+    "PRE_SCAN_ERROR -> PARTIAL": 1,
+    "MATCH -> OTHER": 2,
+    "OTHER -> MATCH": 1,
+    "MATCH -> PRE_SCAN_ERROR": 4,
+    "PRE_SCAN_ERROR -> MATCH": 1,
+    "MISMATCH -> PRE_SCAN_ERROR": 1,
+    "GRADER_API_ERROR -> MATCH": 2,
+    "SCAN_ERROR -> MISMATCH": 1
+  },
+  "lost_matches_by_failure_stage": {
+    "Q1:Query_Spec_Contract": 151,
+    "Q2:Binding": 1,
+    "executed": 18,
+    "Q3:Binding": 2,
+    "Q1:Pre_Scan_Validate": 3,
+    "Q1:Pre_Scan_Validate_SQL": 1
+  },
+  "output_sha256": {
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v2_20261003/raw_pipeline.csv": "3b652e9ddfcc88b9aed9949b3316fe476db41796ec79601b62d6bd8ea0543087",
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v2_20261003/graded_pipeline_tera.csv": "77c971b637d666746bd3bc4d024e1ab0856a8c934f16918e1c8c0d45e47028c9",
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v4/raw_pipeline.csv": "9b368d26c2d60c68ee279e3b40dfaee2a26b0291c21a22660a251610ae73be13",
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v4/graded_pipeline_tera.csv": "aeec27dc57d1682d056c697d2827ebd01827554f118ee6a35699e98e20137d0f"
+  },
+  "limitation": "Saved-spec acceptance is not execution or accuracy. No fresh model generation or grading was performed."
+}

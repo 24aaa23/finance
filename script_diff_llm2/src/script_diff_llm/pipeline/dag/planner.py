@@ -47,6 +47,14 @@ def canonicalize_set_operator(operator_name: str) -> str:
 
 
 def build_subquery_dag(query: str, nodes: list[dict[str, Any]]) -> nx.DiGraph:
+    if not isinstance(nodes, list) or any(
+        not isinstance(node, dict) or not isinstance(node.get("id"), str)
+        or not isinstance(node.get("inputs", []), list)
+        or not isinstance(node.get("outputs", []), list)
+        or any(not isinstance(item, dict) for item in node.get("inputs", []) + node.get("outputs", []))
+        for node in nodes
+    ):
+        nodes = []
     if not nodes:
         fallback_backend = fallback_backend_for_query(query)
         print(f"[WARN] Decomposition returned empty. Falling back to single {fallback_backend} node.")
@@ -58,6 +66,11 @@ def build_subquery_dag(query: str, nodes: list[dict[str, Any]]) -> nx.DiGraph:
             "inputs": [],
             "outputs": [],
         }]
+
+    # A single backend node is the entire question, so a model paraphrase
+    # must not replace the user's predicates or invent a metric definition.
+    if len(nodes) == 1 and nodes[0].get("operator", "Subquery") == "Subquery":
+        nodes = [{**nodes[0], "description": query}]
 
     dag = nx.DiGraph()
     for node in nodes:
@@ -113,4 +126,5 @@ class AdvancedAOPPlanner:
         del num_candidates, planning_round
         print("--- Planning DAG using semantic_decompose ---")
         decompose_result = self.decompose_fn({"query": query}, self.client, self.model)
-        return build_subquery_dag(query, decompose_result.get("nodes", []))
+        nodes = decompose_result.get("nodes", []) if isinstance(decompose_result, dict) else []
+        return build_subquery_dag(query, nodes)

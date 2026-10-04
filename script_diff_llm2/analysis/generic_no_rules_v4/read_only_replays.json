@@ -1,0 +1,30 @@
+{
+  "RC125-089": {
+    "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\nSELECT DISTINCT ?investorId\nWHERE {\n  ?ph a wm:PortfolioHolding ;\n      wm:investorId ?investorId .\n  FILTER NOT EXISTS {\n    ?ra a wm:RebalancingAction ;\n        wm:investorId ?investorId .\n  }\n}",
+    "reference_row_count": 180,
+    "row_count": 180,
+    "expected_ids_count": 180,
+    "exact_id_set_match": true
+  },
+  "RC125-092": {
+    "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\nSELECT DISTINCT ?investorId\nWHERE {\n  ?ph a wm:PortfolioHolding ;\n      wm:investorId ?investorId .\n  FILTER NOT EXISTS {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:investorId ?investorId .\n  }\n}",
+    "reference_row_count": 573,
+    "row_count": 573,
+    "expected_ids_count": 573,
+    "exact_id_set_match": true
+  },
+  "RC125-103": {
+    "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\nSELECT ?investorId (SAMPLE(?cf) AS ?cashFlowSample)\nWHERE {\n  ?cf a wm:CashFlow ;\n      wm:investorId ?investorId .\n  FILTER NOT EXISTS {\n    ?sr a wm:ScenarioRebalancing ;\n        wm:investorId ?investorId .\n  }\n}\nGROUP BY ?investorId",
+    "reference_row_count": 573,
+    "row_count": 573,
+    "expected_ids_count": 573,
+    "exact_id_set_match": true
+  },
+  "RC125-107": {
+    "sparql": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX wm: <https://wealth.example.org/ontology/>\n\nSELECT DISTINCT ?investorId\nWHERE {\n  ?sa rdf:type wm:SectorAllocation ;\n      wm:investorId ?investorId .\n  FILTER NOT EXISTS {\n    ?sr rdf:type wm:ScenarioRebalancing ;\n        wm:investorId ?investorId .\n  }\n}",
+    "reference_row_count": 573,
+    "row_count": 573,
+    "expected_ids_count": 573,
+    "exact_id_set_match": true
+  }
+}

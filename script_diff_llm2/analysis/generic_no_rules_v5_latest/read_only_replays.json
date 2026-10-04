@@ -1,0 +1,274 @@
+{
+  "WM125-2T-027": {
+    "diagnostic_sql": "SELECT AVG(entity_progress) AS avg_progress FROM (\n SELECT g.investor_id, AVG(g.progress_pct) entity_progress\n FROM ATOM_ENTITY_INVESTMENT_GOAL_001 g\n JOIN ATOM_ENTITY_INVESTOR_PROFILE_001 p ON p.investor_id=g.investor_id\n WHERE p.investment_goal='Wealth Preservation' GROUP BY g.investor_id)",
+    "rows": 1,
+    "reference_rows": 1,
+    "common_columns": [
+      "avg_progress"
+    ],
+    "exact_common_column_multiset_match": false,
+    "preview": [
+      {
+        "avg_progress": 38.78597932381176
+      }
+    ],
+    "reference_preview": [
+      {
+        "avg_progress": 38.79
+      }
+    ],
+    "absolute_difference": 0.004020676188240202
+  },
+  "EC125-2T-029": {
+    "diagnostic_sql": "SELECT p.segment,h.sector,COUNT(DISTINCT p.investor_id) investor_count\n FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 h ON h.investor_id=p.investor_id\n GROUP BY p.segment,h.sector",
+    "rows": 65,
+    "reference_rows": 65,
+    "common_columns": [
+      "investor_count",
+      "sector",
+      "segment"
+    ],
+    "exact_common_column_multiset_match": true,
+    "preview": [
+      {
+        "segment": null,
+        "sector": null,
+        "investor_count": 29
+      },
+      {
+        "segment": null,
+        "sector": "Automobile",
+        "investor_count": 38
+      },
+      {
+        "segment": null,
+        "sector": "Banking",
+        "investor_count": 39
+      },
+      {
+        "segment": null,
+        "sector": "Consumer Goods",
+        "investor_count": 42
+      }
+    ],
+    "reference_preview": [
+      {
+        "segment": null,
+        "sector": null,
+        "investor_count": 29
+      },
+      {
+        "segment": null,
+        "sector": "Automobile",
+        "investor_count": 38
+      },
+      {
+        "segment": null,
+        "sector": "Banking",
+        "investor_count": 39
+      },
+      {
+        "segment": null,
+        "sector": "Consumer Goods",
+        "investor_count": 42
+      }
+    ]
+  },
+  "EC125-3T-010": {
+    "diagnostic_sql": "SELECT p.risk_tolerance,COUNT(DISTINCT p.investor_id) investor_count\n FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p\n WHERE EXISTS(SELECT 1 FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 h WHERE h.investor_id=p.investor_id AND h.investment_type='Mutual Fund')\n AND EXISTS(SELECT 1 FROM ATOM_ENTITY_INVESTMENT_GOAL_001 g WHERE g.investor_id=p.investor_id AND g.investment_goal='Growth')\n GROUP BY p.risk_tolerance",
+    "rows": 4,
+    "reference_rows": 4,
+    "common_columns": [
+      "investor_count",
+      "risk_tolerance"
+    ],
+    "exact_common_column_multiset_match": true,
+    "preview": [
+      {
+        "risk_tolerance": null,
+        "investor_count": 18
+      },
+      {
+        "risk_tolerance": "Aggressive",
+        "investor_count": 107
+      },
+      {
+        "risk_tolerance": "Conservative",
+        "investor_count": 90
+      },
+      {
+        "risk_tolerance": "Moderate",
+        "investor_count": 113
+      }
+    ],
+    "reference_preview": [
+      {
+        "risk_tolerance": null,
+        "investor_count": 18
+      },
+      {
+        "risk_tolerance": "Aggressive",
+        "investor_count": 107
+      },
+      {
+        "risk_tolerance": "Conservative",
+        "investor_count": 90
+      },
+      {
+        "risk_tolerance": "Moderate",
+        "investor_count": 113
+      }
+    ]
+  },
+  "EC125-2T-018": {
+    "diagnostic_sql": "SELECT p.category,AVG(100.0*(h.current_value-h.cost)/NULLIF(h.cost,0)) avg_return_pct\n FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 h ON h.investor_id=p.investor_id\n WHERE p.investor_id='INV-009' AND h.cost IS NOT NULL AND h.current_value IS NOT NULL GROUP BY p.category",
+    "rows": 1,
+    "reference_rows": 1,
+    "common_columns": [
+      "avg_return_pct",
+      "category"
+    ],
+    "exact_common_column_multiset_match": true,
+    "preview": [
+      {
+        "category": "Gold",
+        "avg_return_pct": 50.0
+      }
+    ],
+    "reference_preview": [
+      {
+        "category": "Gold",
+        "avg_return_pct": 50.0
+      }
+    ]
+  },
+  "TT125-053": {
+    "diagnostic_sql": "SELECT SUM(amount) total_amount FROM ATOM_EVENT_CASH_FLOW_001 WHERE source='Auto-debit' ",
+    "rows": 1,
+    "reference_rows": 1,
+    "common_columns": [
+      "total_amount"
+    ],
+    "exact_common_column_multiset_match": true,
+    "preview": [
+      {
+        "total_amount": 914448.0
+      }
+    ],
+    "reference_preview": [
+      {
+        "total_amount": 914448.0
+      }
+    ]
+  },
+  "BSQ125-1T-011": {
+    "diagnostic_sql": "SELECT goal_id,shortfall FROM ATOM_ENTITY_INVESTMENT_GOAL_001 WHERE progress_pct<30 AND shortfall>0",
+    "rows": 2251,
+    "reference_rows": 2251,
+    "common_columns": [
+      "goal_id",
+      "shortfall"
+    ],
+    "exact_common_column_multiset_match": true,
+    "preview": [
+      {
+        "goal_id": "54b81f84-14f9-4a19-b73d-e08826bdfc84",
+        "shortfall": 234098472.0
+      },
+      {
+        "goal_id": "56727024-35b0-48c3-94b8-f2c686eff251",
+        "shortfall": 1597791.7513786494
+      },
+      {
+        "goal_id": "6bdec5d4-44f3-491d-bc72-f27f46732b73",
+        "shortfall": 138093214.5
+      },
+      {
+        "goal_id": "96bd5e08-db7d-4edb-afdd-103b42fb6583",
+        "shortfall": 14132677.0
+      }
+    ],
+    "reference_preview": [
+      {
+        "goal_id": "0006aef2-ab21-43d6-8885-4730e21c870b",
+        "shortfall": 221658.5176605276
+      },
+      {
+        "goal_id": "00a2226e-9f0f-4747-a4cc-d80b9f33f4df",
+        "shortfall": 4217833.689659902
+      },
+      {
+        "goal_id": "00ab462f-e832-4424-bbf7-04e7f9b4ef0e",
+        "shortfall": 17190097.216175612
+      },
+      {
+        "goal_id": "00ca72fc-b530-4621-9035-7a41500d16dc",
+        "shortfall": 4160493.0897713546
+      }
+    ]
+  },
+  "SQA125-1T-015": {
+    "diagnostic_sql": "SELECT goal_id,investor_id,avg_volatility_pct FROM ATOM_ENTITY_INVESTMENT_GOAL_001\n ORDER BY avg_volatility_pct DESC,goal_id ASC LIMIT 10",
+    "rows": 10,
+    "reference_rows": 10,
+    "common_columns": [
+      "avg_volatility_pct",
+      "goal_id",
+      "investor_id"
+    ],
+    "exact_common_column_multiset_match": false,
+    "preview": [
+      {
+        "goal_id": "fa2e5024-c3bf-4436-8d77-e4d53b5042f6",
+        "investor_id": "INV-181",
+        "avg_volatility_pct": 79.66452927621782
+      },
+      {
+        "goal_id": "d7561bce-335a-40dc-b8fc-ead4109596c2",
+        "investor_id": "INV-1205",
+        "avg_volatility_pct": 79.63464334478623
+      },
+      {
+        "goal_id": "d84d033c-931e-437c-854e-3f85948da3a9",
+        "investor_id": "INV-1093",
+        "avg_volatility_pct": 79.59714882768944
+      },
+      {
+        "goal_id": "1f15838b-aeba-4373-a967-1315fe19d05d",
+        "investor_id": "INV-1087",
+        "avg_volatility_pct": 79.31887528723023
+      }
+    ],
+    "reference_preview": [
+      {
+        "goal_id": "fa2e5024-c3bf-4436-8d77-e4d53b5042f6",
+        "investor_id": "INV-181",
+        "avg_volatility_pct": 79.664529
+      },
+      {
+        "goal_id": "d7561bce-335a-40dc-b8fc-ead4109596c2",
+        "investor_id": "INV-1205",
+        "avg_volatility_pct": 79.634643
+      },
+      {
+        "goal_id": "d84d033c-931e-437c-854e-3f85948da3a9",
+        "investor_id": "INV-1093",
+        "avg_volatility_pct": 79.597149
+      },
+      {
+        "goal_id": "1f15838b-aeba-4373-a967-1315fe19d05d",
+        "investor_id": "INV-1087",
+        "avg_volatility_pct": 79.318875
+      }
+    ]
+  },
+  "RC125-002": {
+    "diagnostic_sql": "SELECT investor_id,time_horizon FROM ATOM_ENTITY_INVESTOR_PROFILE_001\n WHERE time_horizon NOT IN ('Long-term','Medium-term','Short-term')",
+    "rows": 0,
+    "reference_rows": 0,
+    "common_columns": [],
+    "exact_common_column_multiset_match": true,
+    "preview": [],
+    "reference_preview": []
+  }
+}

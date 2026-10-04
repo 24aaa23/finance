@@ -1,0 +1,17 @@
+name: openai_gpt_oss_120b_neowealth_test
+slug: openai_gpt_oss_120b_neowealth_test
+model_config: configs/models/openai_gpt_oss_120b.yaml
+mode: all
+split: test
+input_sample_file: data/benchmarks/neowealth_test.csv
+ground_truth_override_file: ""
+sql_asset_file: data/sql/neowealth/asset.yaml
+kg_schema_file: data/kg/neowealth_schema.ttl
+kg_instance_file: data/kg/neowealth_kg.ttl
+fuseki_endpoint: http://127.0.0.1:3031/neowealth/query
+report_basename: neowealth_test_raw_pipeline.csv
+test_query_limit: 768
+test_query_offset: 0
+test_max_workers: 4
+benchmark_start_delay_seconds: 0
+report_save_every: 1

@@ -1,0 +1,131 @@
+{
+  "date_string_comparison": {
+    "query": "PREFIX wm: <https://wealth.example.org/ontology/> PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> SELECT (SUM(xsd:decimal(?a)) AS ?total) WHERE {?s a wm:CashFlow;wm:amount ?a;wm:date ?d. FILTER(?d >= \"2022-01-01\" && ?d <= \"2022-12-31\")}",
+    "bindings": [
+      {
+        "total": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "value": "0"
+        }
+      }
+    ]
+  },
+  "date_typed_comparison": {
+    "query": "PREFIX wm: <https://wealth.example.org/ontology/> PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> SELECT (SUM(xsd:decimal(?a)) AS ?total) WHERE {?s a wm:CashFlow;wm:amount ?a;wm:date ?d. FILTER(?d >= \"2022-01-01\"^^xsd:date && ?d < \"2023-01-01\"^^xsd:date)}",
+    "bindings": [
+      {
+        "total": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "value": "502078427.0"
+        }
+      }
+    ]
+  },
+  "investor_duplicate_subjects": {
+    "query": "PREFIX wm: <https://wealth.example.org/ontology/> PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> SELECT (COUNT(DISTINCT ?s) AS ?subjects) WHERE {?s wm:investorId \"INV-1010\"}",
+    "bindings": [
+      {
+        "subjects": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "value": "29"
+        }
+      }
+    ]
+  },
+  "investor_id_subject_classes": {
+    "query": "PREFIX wm: <https://wealth.example.org/ontology/> SELECT ?type (COUNT(DISTINCT ?s) AS ?subjects) WHERE {?s wm:investorId \"INV-1010\"; a ?type} GROUP BY ?type",
+    "bindings": [
+      {
+        "type": {
+          "type": "uri",
+          "value": "https://wealth.example.org/ontology/CashFlow"
+        },
+        "subjects": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "value": "5"
+        }
+      },
+      {
+        "type": {
+          "type": "uri",
+          "value": "https://wealth.example.org/ontology/Investor"
+        },
+        "subjects": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "value": "1"
+        }
+      },
+      {
+        "type": {
+          "type": "uri",
+          "value": "https://wealth.example.org/ontology/SectorAllocation"
+        },
+        "subjects": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "value": "2"
+        }
+      },
+      {
+        "type": {
+          "type": "uri",
+          "value": "https://wealth.example.org/ontology/InvestmentGoal"
+        },
+        "subjects": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "value": "3"
+        }
+      },
+      {
+        "type": {
+          "type": "uri",
+          "value": "https://wealth.example.org/ontology/RebalancingAction"
+        },
+        "subjects": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "value": "5"
+        }
+      },
+      {
+        "type": {
+          "type": "uri",
+          "value": "https://wealth.example.org/ontology/PortfolioHolding"
+        },
+        "subjects": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "value": "11"
+        }
+      },
+      {
+        "type": {
+          "type": "uri",
+          "value": "https://wealth.example.org/ontology/ScenarioRebalancing"
+        },
+        "subjects": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "value": "1"
+        }
+      },
+      {
+        "type": {
+          "type": "uri",
+          "value": "https://wealth.example.org/ontology/PortfolioHealth"
+        },
+        "subjects": {
+          "type": "literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "value": "1"
+        }
+      }
+    ]
+  }
+}

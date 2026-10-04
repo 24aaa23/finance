@@ -2,9 +2,10 @@ import unittest
 
 from script_diff_llm.backends.sql import (
     _deterministic_group_count_sql,
-    _deterministic_profile_group_sql,
+    _deterministic_entity_group_sql,
 )
 from script_diff_llm.pipeline.decomposition import _ensure_domain_coverage
+from script_diff_llm.pipeline.dag.planner import build_subquery_dag
 
 
 class DeterministicProfileCompilerTest(unittest.TestCase):
@@ -36,7 +37,7 @@ class DeterministicProfileCompilerTest(unittest.TestCase):
                 "final_operation": "AVG",
             }],
         }
-        sql = _deterministic_profile_group_sql({"query_spec": spec, "sql_schema": schema})
+        sql = _deterministic_entity_group_sql({"query_spec": spec, "sql_schema": schema})
         self.assertIn('SUM("amount") AS "avg_net_cash_flow"', sql)
         self.assertIn('AVG(metric_source_0."avg_net_cash_flow")', sql)
         self.assertIn("LEFT JOIN metric_source_0", sql)
@@ -103,22 +104,43 @@ class DecompositionCoverageTest(unittest.TestCase):
         self.assertIn("purchased a holding", result["nodes"][0]["description"])
         self.assertEqual(result["nodes"][0]["backend"], "SQL")
 
-    def test_shared_year_is_propagated_to_each_event_subquery(self):
+    def test_shared_year_is_not_added_to_unrelated_subquery(self):
         parsed = {"nodes": [
             {
                 "id": "Q1", "description": "Investors who purchased a holding",
                 "operator": "Subquery", "backend": "KG", "inputs": [], "outputs": [],
+                "scope_clauses": ["investors purchased a holding"],
             },
             {
                 "id": "Q2", "description": "Investors with a cash-flow transaction during 2025",
                 "operator": "Subquery", "backend": "SQL", "inputs": [], "outputs": [],
+                "scope_clauses": ["cash flow during 2025"],
             },
         ]}
         result = _ensure_domain_coverage(
             "Which investors purchased a holding and had cash flow during 2025?",
             parsed,
         )
-        self.assertIn("during 2025", result["nodes"][0]["description"])
+        self.assertEqual(result["nodes"][0]["description"], "Investors who purchased a holding")
+
+    def test_unquoted_multi_node_scope_falls_back(self):
+        parsed = {"nodes": [
+            {"id": "Q1", "operator": "Subquery", "backend": "SQL",
+             "scope_clauses": ["political affiliation is Conservative"]},
+            {"id": "Q2", "operator": "Subquery", "backend": "KG",
+             "scope_clauses": ["risk score above 75"]},
+        ]}
+        result = _ensure_domain_coverage(
+            "How many Conservative customers have risk score above 75?", parsed,
+        )
+        self.assertEqual(result, {"nodes": []})
+
+    def test_malformed_node_falls_back_without_crashing(self):
+        question = "How many customers have open accounts?"
+        self.assertEqual(_ensure_domain_coverage(question, {"nodes": ["bad node"]}), {"nodes": []})
+        dag = build_subquery_dag(question, ["bad node"])
+        self.assertEqual(list(dag.nodes), ["Q1"])
+        self.assertEqual(dag.nodes["Q1"]["description"], question)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,1037 @@
+{
+  "raw_rows": 1000,
+  "graded_rows": 1000,
+  "unique_ids": 1000,
+  "versions": {
+    "generic-contract-fix-v1-20261003": 1000
+  },
+  "raw_statuses": {
+    "PIPELINE_SUCCESS": 698,
+    "DAG_NODE_ERROR": 297,
+    "SCAN_ERROR": 1,
+    "PRE_SCAN_ERROR": 4
+  },
+  "grades": {
+    "MATCH": 579,
+    "MISMATCH": 365,
+    "PARTIAL": 45,
+    "SCAN_ERROR": 1,
+    "PRE_SCAN_ERROR": 4,
+    "GRADER_API_ERROR": 1,
+    "OTHER": 5
+  },
+  "raw_grade_transitions": {
+    "PIPELINE_SUCCESS -> MATCH": 579,
+    "DAG_NODE_ERROR -> MISMATCH": 296,
+    "PIPELINE_SUCCESS -> PARTIAL": 45,
+    "PIPELINE_SUCCESS -> MISMATCH": 69,
+    "SCAN_ERROR -> SCAN_ERROR": 1,
+    "PRE_SCAN_ERROR -> PRE_SCAN_ERROR": 4,
+    "PIPELINE_SUCCESS -> GRADER_API_ERROR": 1,
+    "PIPELINE_SUCCESS -> OTHER": 4,
+    "DAG_NODE_ERROR -> OTHER": 1
+  },
+  "failure_stages": {
+    "": 698,
+    "Q1:Query_Spec_Contract": 295,
+    "Q1:Scan_SQL": 1,
+    "Q2:Binding": 2,
+    "Q1:Pre_Scan_Validate_SQL": 4
+  },
+  "families": {
+    "wealth_management_125_question_benchmark.csv": {
+      "MATCH": 73,
+      "MISMATCH": 49,
+      "PARTIAL": 2,
+      "SCAN_ERROR": 1
+    },
+    "wealth_management_at_risk_critical_125_questions.csv": {
+      "MATCH": 63,
+      "MISMATCH": 59,
+      "PARTIAL": 3
+    },
+    "wealth_management_batch_status_125_questions.csv": {
+      "MATCH": 87,
+      "MISMATCH": 37,
+      "PARTIAL": 1
+    },
+    "wealth_management_enrichment_context_125_questions.csv": {
+      "MATCH": 65,
+      "MISMATCH": 55,
+      "PARTIAL": 5
+    },
+    "wealth_management_multi_step_comparative_125_questions.csv": {
+      "MATCH": 37,
+      "MISMATCH": 57,
+      "PARTIAL": 27,
+      "PRE_SCAN_ERROR": 4
+    },
+    "wealth_management_reference_compliance_125_questions.csv": {
+      "MATCH": 92,
+      "MISMATCH": 25,
+      "GRADER_API_ERROR": 1,
+      "PARTIAL": 3,
+      "OTHER": 4
+    },
+    "wealth_management_scoring_quantitative_125_questions.csv": {
+      "PARTIAL": 4,
+      "MISMATCH": 40,
+      "MATCH": 81
+    },
+    "wealth_management_temporal_transaction_125_questions.csv": {
+      "MATCH": 81,
+      "MISMATCH": 43,
+      "OTHER": 1
+    }
+  },
+  "backends": {
+    "SQL": {
+      "MATCH": 488,
+      "MISMATCH": 324,
+      "PARTIAL": 40,
+      "SCAN_ERROR": 1,
+      "PRE_SCAN_ERROR": 4,
+      "OTHER": 1
+    },
+    "KG": {
+      "MISMATCH": 38,
+      "MATCH": 90,
+      "PARTIAL": 5,
+      "GRADER_API_ERROR": 1,
+      "OTHER": 4
+    },
+    "mixed": {
+      "MATCH": 1,
+      "MISMATCH": 3
+    }
+  },
+  "previous_grades": {
+    "MATCH": 637,
+    "MISMATCH": 202,
+    "PARTIAL": 137,
+    "PRE_SCAN_ERROR": 18,
+    "SCAN_ERROR": 3,
+    "GRADER_API_ERROR": 2,
+    "OTHER": 1
+  },
+  "paired_question_text_changes": 0,
+  "paired_reference_text_changes": 0,
+  "node_count_distribution": {
+    "1": 993,
+    "2": 7
+  },
+  "paired_previous_transitions": {
+    "MATCH -> MATCH": 437,
+    "MISMATCH -> MISMATCH": 115,
+    "MISMATCH -> MATCH": 76,
+    "MATCH -> PARTIAL": 16,
+    "MATCH -> MISMATCH": 180,
+    "PARTIAL -> MATCH": 54,
+    "PARTIAL -> MISMATCH": 65,
+    "MISMATCH -> PARTIAL": 8,
+    "MISMATCH -> SCAN_ERROR": 1,
+    "PRE_SCAN_ERROR -> MATCH": 10,
+    "PARTIAL -> PARTIAL": 17,
+    "SCAN_ERROR -> MISMATCH": 3,
+    "GRADER_API_ERROR -> MATCH": 1,
+    "PRE_SCAN_ERROR -> PARTIAL": 4,
+    "PRE_SCAN_ERROR -> PRE_SCAN_ERROR": 3,
+    "PRE_SCAN_ERROR -> MISMATCH": 1,
+    "PARTIAL -> PRE_SCAN_ERROR": 1,
+    "GRADER_API_ERROR -> MISMATCH": 1,
+    "MATCH -> GRADER_API_ERROR": 1,
+    "MISMATCH -> OTHER": 2,
+    "MATCH -> OTHER": 3,
+    "OTHER -> MATCH": 1
+  },
+  "previous_failed_raw_transitions": {
+    "PIPELINE_SUCCESS -> PIPELINE_SUCCESS": 353,
+    "PIPELINE_SUCCESS -> DAG_NODE_ERROR": 57,
+    "DAG_NODE_ERROR -> PIPELINE_SUCCESS": 342,
+    "DAG_NODE_ERROR -> DAG_NODE_ERROR": 239,
+    "DAG_NODE_ERROR -> SCAN_ERROR": 1,
+    "PRE_SCAN_ERROR -> PIPELINE_SUCCESS": 2,
+    "PRE_SCAN_ERROR -> PRE_SCAN_ERROR": 2,
+    "PIPELINE_SUCCESS -> PRE_SCAN_ERROR": 1,
+    "PRE_SCAN_ERROR -> DAG_NODE_ERROR": 1,
+    "DAG_NODE_ERROR -> PRE_SCAN_ERROR": 1,
+    "SCAN_ERROR -> PIPELINE_SUCCESS": 1
+  },
+  "recovered_dag_success_grades": {
+    "MATCH": 290,
+    "MISMATCH": 38,
+    "PARTIAL": 14
+  },
+  "contract_error_incidence_overlapping": {
+    "unsupported_requirement_words": 56,
+    "missing_ledger_implementation": 5,
+    "unresolved": 25,
+    "unknown_field_operand": 35,
+    "unknown_source": 136,
+    "unsupported_operator": 19,
+    "literal_coverage": 10,
+    "planned_output_absent": 70,
+    "invalid_ledger_reference": 28,
+    "empty_output_schema": 11
+  },
+  "contract_single_tag_rows": {
+    "unsupported_requirement_words": 38,
+    "missing_ledger_implementation": 3,
+    "unresolved": 14,
+    "unknown_field_operand": 9,
+    "unknown_source": 103,
+    "unsupported_operator": 8,
+    "literal_coverage": 4,
+    "planned_output_absent": 18,
+    "empty_output_schema": 7,
+    "invalid_ledger_reference": 9
+  },
+  "successful_warning_grades": {
+    "MATCH": 224,
+    "MISMATCH": 24,
+    "PARTIAL": 9
+  },
+  "successful_empty_grades": {
+    "MISMATCH": 23,
+    "MATCH": 9
+  },
+  "latency": {
+    "mean_seconds": 36.052828,
+    "median_seconds": 22.354,
+    "p95_seconds": 54.243,
+    "p99_seconds": 631.719,
+    "sum_seconds": 36052.82799999999,
+    "over300_rows": 18,
+    "over300_sum_seconds": 11402.198000000002
+  },
+  "file_sha256": {
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v1_20261003/raw_pipeline.csv": "03f613092fa4a2f75b360597d5e779c57608a39bf4607ec0e23547bbaa83f382",
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v1_20261003/graded_pipeline_tera.csv": "d7871fa1c100baab1d36ca2099e3c68887f5e3d51ea8b5056420e8b92e4eae1a",
+    "outputs/openai_gpt_oss_120b/all/test1000/graded_pipeline_openai_gpt_oss_120b_all_test1000_rerun_grader2.csv": "161af64988bf8ac27f083531d83a7b796655cc87b7b8d879a9c2ecf0f90e6957",
+    "outputs/openai_gpt_oss_120b/all/test1000/rerun_20261003_023143/raw_pipeline.csv": "cf1b9a5ffcb0e8e8df9f5683ef204f4336bfec53a661818e644d3b47fd6cb0d0"
+  },
+  "read_only_sql_replays": {
+    "gold_fields": {
+      "query": "SELECT 'investment_type' AS field,COUNT(*) AS n FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 WHERE investment_type='Gold' UNION ALL SELECT 'investment_name',COUNT(*) FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 WHERE investment_name='Gold'",
+      "rows": [
+        {
+          "field": "investment_type",
+          "n": 1028
+        },
+        {
+          "field": "investment_name",
+          "n": 0
+        }
+      ]
+    },
+    "cash_types": {
+      "query": "SELECT type,COUNT(*) AS n FROM ATOM_EVENT_CASH_FLOW_001 GROUP BY type",
+      "rows": [
+        {
+          "type": null,
+          "n": 391
+        },
+        {
+          "type": "Deposit",
+          "n": 905
+        },
+        {
+          "type": "Dividend Reinvestment",
+          "n": 916
+        },
+        {
+          "type": "Interest Credit",
+          "n": 944
+        },
+        {
+          "type": "Lump Sum",
+          "n": 968
+        },
+        {
+          "type": "Redemption",
+          "n": 870
+        },
+        {
+          "type": "SIP",
+          "n": 997
+        },
+        {
+          "type": "Tax Refund",
+          "n": 936
+        },
+        {
+          "type": "Withdrawal",
+          "n": 901
+        }
+      ]
+    },
+    "credit_card_sign": {
+      "query": "SELECT SUM(amount) AS stored_sum,SUM(CASE WHEN type='inflow' THEN amount ELSE -amount END) AS invented_case_sum FROM ATOM_EVENT_CASH_FLOW_001 WHERE source='Credit Card'",
+      "rows": [
+        {
+          "stored_sum": 101046869.0,
+          "invented_case_sum": -101046869.0
+        }
+      ]
+    },
+    "gold_returns": {
+      "query": "SELECT AVG(returns_pct) AS stored_average,AVG(100.0*(current_value-cost)/NULLIF(cost,0)) AS computed_average,COUNT(*) AS eligible_rows FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 WHERE investment_type='Gold' AND cost IS NOT NULL AND current_value IS NOT NULL",
+      "rows": [
+        {
+          "stored_average": 103.01075268817205,
+          "computed_average": 109.1116173120729,
+          "eligible_rows": 930
+        }
+      ]
+    },
+    "EC125-2T-029": {
+      "query": "SELECT p.segment,h.sector,COUNT(DISTINCT p.investor_id) AS investor_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 h USING(investor_id) GROUP BY p.segment,h.sector",
+      "rows": [
+        {
+          "segment": null,
+          "sector": null,
+          "investor_count": 29
+        },
+        {
+          "segment": null,
+          "sector": "Automobile",
+          "investor_count": 38
+        },
+        {
+          "segment": null,
+          "sector": "Banking",
+          "investor_count": 39
+        },
+        {
+          "segment": null,
+          "sector": "Consumer Goods",
+          "investor_count": 42
+        },
+        {
+          "segment": null,
+          "sector": "Corporate",
+          "investor_count": 44
+        },
+        {
+          "segment": null,
+          "sector": "Financial Services",
+          "investor_count": 51
+        },
+        {
+          "segment": null,
+          "sector": "Government",
+          "investor_count": 37
+        },
+        {
+          "segment": null,
+          "sector": "Healthcare",
+          "investor_count": 39
+        },
+        {
+          "segment": null,
+          "sector": "Infrastructure",
+          "investor_count": 43
+        },
+        {
+          "segment": null,
+          "sector": "Pharma",
+          "investor_count": 48
+        },
+        {
+          "segment": null,
+          "sector": "Private Equity",
+          "investor_count": 42
+        },
+        {
+          "segment": null,
+          "sector": "Real Estate",
+          "investor_count": 45
+        },
+        {
+          "segment": null,
+          "sector": "Technology",
+          "investor_count": 37
+        },
+        {
+          "segment": "Diversified",
+          "sector": null,
+          "investor_count": 135
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Automobile",
+          "investor_count": 170
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Banking",
+          "investor_count": 183
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Consumer Goods",
+          "investor_count": 208
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Corporate",
+          "investor_count": 184
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Financial Services",
+          "investor_count": 183
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Government",
+          "investor_count": 202
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Healthcare",
+          "investor_count": 197
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Infrastructure",
+          "investor_count": 192
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Pharma",
+          "investor_count": 195
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Private Equity",
+          "investor_count": 184
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Real Estate",
+          "investor_count": 185
+        },
+        {
+          "segment": "Diversified",
+          "sector": "Technology",
+          "investor_count": 201
+        },
+        {
+          "segment": "Large Cap",
+          "sector": null,
+          "investor_count": 146
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Automobile",
+          "investor_count": 194
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Banking",
+          "investor_count": 212
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Consumer Goods",
+          "investor_count": 202
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Corporate",
+          "investor_count": 204
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Financial Services",
+          "investor_count": 199
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Government",
+          "investor_count": 179
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Healthcare",
+          "investor_count": 208
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Infrastructure",
+          "investor_count": 181
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Pharma",
+          "investor_count": 213
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Private Equity",
+          "investor_count": 198
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Real Estate",
+          "investor_count": 192
+        },
+        {
+          "segment": "Large Cap",
+          "sector": "Technology",
+          "investor_count": 200
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": null,
+          "investor_count": 132
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Automobile",
+          "investor_count": 188
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Banking",
+          "investor_count": 185
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Consumer Goods",
+          "investor_count": 202
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Corporate",
+          "investor_count": 214
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Financial Services",
+          "investor_count": 191
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Government",
+          "investor_count": 186
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Healthcare",
+          "investor_count": 195
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Infrastructure",
+          "investor_count": 199
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Pharma",
+          "investor_count": 204
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Private Equity",
+          "investor_count": 190
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Real Estate",
+          "investor_count": 204
+        },
+        {
+          "segment": "Mid Cap",
+          "sector": "Technology",
+          "investor_count": 198
+        },
+        {
+          "segment": "Small Cap",
+          "sector": null,
+          "investor_count": 153
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Automobile",
+          "investor_count": 198
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Banking",
+          "investor_count": 192
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Consumer Goods",
+          "investor_count": 192
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Corporate",
+          "investor_count": 207
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Financial Services",
+          "investor_count": 204
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Government",
+          "investor_count": 182
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Healthcare",
+          "investor_count": 208
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Infrastructure",
+          "investor_count": 207
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Pharma",
+          "investor_count": 207
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Private Equity",
+          "investor_count": 196
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Real Estate",
+          "investor_count": 200
+        },
+        {
+          "segment": "Small Cap",
+          "sector": "Technology",
+          "investor_count": 205
+        }
+      ],
+      "exact_reference_match": true
+    },
+    "EC125-2T-043": {
+      "query": "SELECT p.category,h.sector,COUNT(DISTINCT p.investor_id) AS investor_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 h USING(investor_id) GROUP BY p.category,h.sector",
+      "rows": [
+        {
+          "category": null,
+          "sector": null,
+          "investor_count": 34
+        },
+        {
+          "category": null,
+          "sector": "Automobile",
+          "investor_count": 33
+        },
+        {
+          "category": null,
+          "sector": "Banking",
+          "investor_count": 42
+        },
+        {
+          "category": null,
+          "sector": "Consumer Goods",
+          "investor_count": 48
+        },
+        {
+          "category": null,
+          "sector": "Corporate",
+          "investor_count": 42
+        },
+        {
+          "category": null,
+          "sector": "Financial Services",
+          "investor_count": 40
+        },
+        {
+          "category": null,
+          "sector": "Government",
+          "investor_count": 44
+        },
+        {
+          "category": null,
+          "sector": "Healthcare",
+          "investor_count": 41
+        },
+        {
+          "category": null,
+          "sector": "Infrastructure",
+          "investor_count": 39
+        },
+        {
+          "category": null,
+          "sector": "Pharma",
+          "investor_count": 47
+        },
+        {
+          "category": null,
+          "sector": "Private Equity",
+          "investor_count": 44
+        },
+        {
+          "category": null,
+          "sector": "Real Estate",
+          "investor_count": 40
+        },
+        {
+          "category": null,
+          "sector": "Technology",
+          "investor_count": 42
+        },
+        {
+          "category": "Debt",
+          "sector": null,
+          "investor_count": 100
+        },
+        {
+          "category": "Debt",
+          "sector": "Automobile",
+          "investor_count": 152
+        },
+        {
+          "category": "Debt",
+          "sector": "Banking",
+          "investor_count": 137
+        },
+        {
+          "category": "Debt",
+          "sector": "Consumer Goods",
+          "investor_count": 155
+        },
+        {
+          "category": "Debt",
+          "sector": "Corporate",
+          "investor_count": 152
+        },
+        {
+          "category": "Debt",
+          "sector": "Financial Services",
+          "investor_count": 153
+        },
+        {
+          "category": "Debt",
+          "sector": "Government",
+          "investor_count": 141
+        },
+        {
+          "category": "Debt",
+          "sector": "Healthcare",
+          "investor_count": 149
+        },
+        {
+          "category": "Debt",
+          "sector": "Infrastructure",
+          "investor_count": 147
+        },
+        {
+          "category": "Debt",
+          "sector": "Pharma",
+          "investor_count": 135
+        },
+        {
+          "category": "Debt",
+          "sector": "Private Equity",
+          "investor_count": 134
+        },
+        {
+          "category": "Debt",
+          "sector": "Real Estate",
+          "investor_count": 147
+        },
+        {
+          "category": "Debt",
+          "sector": "Technology",
+          "investor_count": 151
+        },
+        {
+          "category": "Equity",
+          "sector": null,
+          "investor_count": 118
+        },
+        {
+          "category": "Equity",
+          "sector": "Automobile",
+          "investor_count": 154
+        },
+        {
+          "category": "Equity",
+          "sector": "Banking",
+          "investor_count": 168
+        },
+        {
+          "category": "Equity",
+          "sector": "Consumer Goods",
+          "investor_count": 162
+        },
+        {
+          "category": "Equity",
+          "sector": "Corporate",
+          "investor_count": 163
+        },
+        {
+          "category": "Equity",
+          "sector": "Financial Services",
+          "investor_count": 161
+        },
+        {
+          "category": "Equity",
+          "sector": "Government",
+          "investor_count": 145
+        },
+        {
+          "category": "Equity",
+          "sector": "Healthcare",
+          "investor_count": 155
+        },
+        {
+          "category": "Equity",
+          "sector": "Infrastructure",
+          "investor_count": 162
+        },
+        {
+          "category": "Equity",
+          "sector": "Pharma",
+          "investor_count": 170
+        },
+        {
+          "category": "Equity",
+          "sector": "Private Equity",
+          "investor_count": 162
+        },
+        {
+          "category": "Equity",
+          "sector": "Real Estate",
+          "investor_count": 176
+        },
+        {
+          "category": "Equity",
+          "sector": "Technology",
+          "investor_count": 178
+        },
+        {
+          "category": "Gold",
+          "sector": null,
+          "investor_count": 97
+        },
+        {
+          "category": "Gold",
+          "sector": "Automobile",
+          "investor_count": 142
+        },
+        {
+          "category": "Gold",
+          "sector": "Banking",
+          "investor_count": 160
+        },
+        {
+          "category": "Gold",
+          "sector": "Consumer Goods",
+          "investor_count": 169
+        },
+        {
+          "category": "Gold",
+          "sector": "Corporate",
+          "investor_count": 157
+        },
+        {
+          "category": "Gold",
+          "sector": "Financial Services",
+          "investor_count": 151
+        },
+        {
+          "category": "Gold",
+          "sector": "Government",
+          "investor_count": 150
+        },
+        {
+          "category": "Gold",
+          "sector": "Healthcare",
+          "investor_count": 156
+        },
+        {
+          "category": "Gold",
+          "sector": "Infrastructure",
+          "investor_count": 158
+        },
+        {
+          "category": "Gold",
+          "sector": "Pharma",
+          "investor_count": 179
+        },
+        {
+          "category": "Gold",
+          "sector": "Private Equity",
+          "investor_count": 152
+        },
+        {
+          "category": "Gold",
+          "sector": "Real Estate",
+          "investor_count": 160
+        },
+        {
+          "category": "Gold",
+          "sector": "Technology",
+          "investor_count": 153
+        },
+        {
+          "category": "Hybrid",
+          "sector": null,
+          "investor_count": 129
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Automobile",
+          "investor_count": 160
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Banking",
+          "investor_count": 159
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Consumer Goods",
+          "investor_count": 152
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Corporate",
+          "investor_count": 185
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Financial Services",
+          "investor_count": 173
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Government",
+          "investor_count": 149
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Healthcare",
+          "investor_count": 167
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Infrastructure",
+          "investor_count": 158
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Pharma",
+          "investor_count": 174
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Private Equity",
+          "investor_count": 157
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Real Estate",
+          "investor_count": 162
+        },
+        {
+          "category": "Hybrid",
+          "sector": "Technology",
+          "investor_count": 154
+        },
+        {
+          "category": "Real Estate",
+          "sector": null,
+          "investor_count": 117
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Automobile",
+          "investor_count": 147
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Banking",
+          "investor_count": 145
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Consumer Goods",
+          "investor_count": 160
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Corporate",
+          "investor_count": 154
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Financial Services",
+          "investor_count": 150
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Government",
+          "investor_count": 157
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Healthcare",
+          "investor_count": 179
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Infrastructure",
+          "investor_count": 158
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Pharma",
+          "investor_count": 162
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Private Equity",
+          "investor_count": 161
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Real Estate",
+          "investor_count": 141
+        },
+        {
+          "category": "Real Estate",
+          "sector": "Technology",
+          "investor_count": 163
+        }
+      ],
+      "exact_reference_match": true
+    },
+    "EC125-3T-022": {
+      "query": "SELECT p.time_horizon,COUNT(DISTINCT p.investor_id) AS investor_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 h USING(investor_id) JOIN ATOM_ENTITY_INVESTMENT_GOAL_001 g USING(investor_id) WHERE h.investment_type='Mutual Fund' AND g.investment_goal='Growth' GROUP BY p.time_horizon",
+      "rows": [
+        {
+          "time_horizon": null,
+          "investor_count": 25
+        },
+        {
+          "time_horizon": "Long-term",
+          "investor_count": 99
+        },
+        {
+          "time_horizon": "Medium-term",
+          "investor_count": 108
+        },
+        {
+          "time_horizon": "Short-term",
+          "investor_count": 96
+        }
+      ],
+      "exact_reference_match": true
+    }
+  }
+}

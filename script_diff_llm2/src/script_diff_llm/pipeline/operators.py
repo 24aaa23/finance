@@ -31,7 +31,9 @@ def pre_programmed_math_compute(inputs: dict[str, Any]) -> dict[str, Any]:
 def pre_programmed_set_intersect(inputs: dict[str, Any]) -> dict[str, Any]:
     list_a = inputs.get("list_a", [])
     list_b = inputs.get("list_b", [])
-    join_key = inputs.get("join_key", "investor_id")
+    join_key = inputs.get("join_key")
+    if not join_key:
+        return {"error": "Set intersection requires an explicit join_key."}
     keys_a = {item[join_key] for item in list_a if join_key in item}
     keys_b = {item[join_key] for item in list_b if join_key in item}
     intersected_keys = keys_a.intersection(keys_b)
@@ -49,7 +51,9 @@ def pre_programmed_union(inputs: dict[str, Any]) -> dict[str, Any]:
 def pre_programmed_difference(inputs: dict[str, Any]) -> dict[str, Any]:
     list_a = inputs.get("list_a", [])
     list_b = inputs.get("list_b", [])
-    join_key = inputs.get("join_key", "investor_id")
+    join_key = inputs.get("join_key")
+    if not join_key:
+        return {"error": "Set difference requires an explicit join_key."}
     keys_b = {item[join_key] for item in list_b if join_key in item}
     result = [item for item in list_a if item.get(join_key) not in keys_b]
     return {"difference_data": result, "count": len(result)}

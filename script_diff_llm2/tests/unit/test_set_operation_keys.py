@@ -1,10 +1,4 @@
-"""Deterministic set operations must meet on a shared key space.
-
-Cross-backend DAGs routinely produce the same identifier in different shapes:
-a KG node binds `?investor` to a full IRI while a SQL node returns `investor_id`
-as a bare literal. These tests pin that the set operators stay deterministic and
-still intersect correctly across those shapes.
-"""
+"""Cross-backend set keys require exact values or declared identity mappings."""
 import unittest
 
 import networkx as nx
@@ -27,7 +21,7 @@ def _dag(edges_meta=None):
 
 
 class SetOperationKeyAlignmentTest(unittest.TestCase):
-    def test_iri_and_literal_ids_intersect(self):
+    def test_iri_and_literal_ids_need_an_explicit_mapping(self):
         dag = _dag()
         pred_results = [
             ("Q1", {"data": [{"investorId": "INV-415"}, {"investorId": "INV-238"}, {"investorId": "INV-999"}]}),
@@ -38,10 +32,15 @@ class SetOperationKeyAlignmentTest(unittest.TestCase):
         ]
         result = _executor()._run_set_operation("M1", "Set_Intersect", pred_results, dag)
         self.assertEqual(result["status"], "success")
+        self.assertEqual(result["data"], [])
+        mapped = [{"investor": value["investor"].rsplit("/", 1)[-1]}
+                  for value in pred_results[1][1]["data"]]
+        result = _executor()._run_set_operation(
+            "M1", "Set_Intersect", [pred_results[0], ("Q2", {"data": mapped})], dag,
+        )
         self.assertEqual(len(result["data"]), 2)
 
-    def test_realignment_picks_a_shared_identifier_column(self):
-        """Declared output fields can disagree; a shared id column still exists."""
+    def test_declared_wrong_field_does_not_trigger_fuzzy_realignment(self):
         dag = _dag(edges_meta={
             "Q1": {"source_field": "investorName"},
             "Q2": {"source_field": "investor"},
@@ -56,10 +55,8 @@ class SetOperationKeyAlignmentTest(unittest.TestCase):
             ]}),
         ]
         result = _executor()._run_set_operation("M1", "Set_Intersect", pred_results, dag)
-        self.assertEqual(len(result["data"]), 1)
-        self.assertEqual(result["trace"].get("key_realignment", ""), (
-            "re-keyed predecessors on a shared identifier column to avoid an empty result"
-        ))
+        self.assertEqual(result["data"], [])
+        self.assertNotIn("key_realignment", result["trace"])
 
     def test_genuinely_disjoint_sets_stay_empty(self):
         """Realignment must not manufacture overlap that is not there."""
@@ -80,15 +77,14 @@ class SetOperationKeyAlignmentTest(unittest.TestCase):
         result = _executor()._run_set_operation("M1", "Set_Union", pred_results, dag)
         self.assertEqual(len(result["data"]), 2)
 
-    def test_set_difference_removes_iri_shaped_matches(self):
+    def test_set_difference_does_not_equate_an_unmapped_iri(self):
         dag = _dag()
         pred_results = [
             ("Q1", {"data": [{"investorId": "INV-001"}, {"investorId": "INV-002"}]}),
             ("Q2", {"data": [{"investor": "https://wealth.example.org/kg/investor/INV-001"}]}),
         ]
         result = _executor()._run_set_operation("M1", "Set_Difference", pred_results, dag)
-        self.assertEqual(len(result["data"]), 1)
-        self.assertEqual(result["data"][0]["investorId"], "INV-002")
+        self.assertEqual(len(result["data"]), 2)
 
     def test_empty_predecessor_does_not_crash(self):
         dag = _dag()

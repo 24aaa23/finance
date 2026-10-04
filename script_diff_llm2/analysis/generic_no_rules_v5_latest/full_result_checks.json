@@ -1,0 +1,78 @@
+{
+  "WM125-1T-003": {
+    "recorded_grade": "MATCH",
+    "answer_rows": 1,
+    "reference_rows": 1,
+    "answer_chars": 61,
+    "reference_chars": 61,
+    "exact_answer_match": true
+  },
+  "ARC125-1T-004": {
+    "recorded_grade": "MATCH",
+    "answer_rows": 335,
+    "reference_rows": 335,
+    "answer_chars": 9503,
+    "reference_chars": 21324,
+    "extra_ids": 0,
+    "missing_ids": 0,
+    "exact_id_set_match": true
+  },
+  "ARC125-1T-013": {
+    "recorded_grade": "PARTIAL",
+    "answer_rows": 4013,
+    "reference_rows": 4013,
+    "answer_chars": 339184,
+    "reference_chars": 404547,
+    "extra_ids": 0,
+    "missing_ids": 0,
+    "exact_id_set_match": true
+  },
+  "SQA125-1T-008": {
+    "recorded_grade": "PARTIAL",
+    "answer_rows": 323,
+    "reference_rows": 336,
+    "answer_chars": 25790,
+    "reference_chars": 40447,
+    "extra_ids": 0,
+    "missing_ids": 13,
+    "exact_id_set_match": false,
+    "minimal_projection_replay": {
+      "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\n SELECT ?goalId ?vol WHERE {?g a wm:InvestmentGoal; wm:goalId ?goalId; wm:avgVolatilityPct ?vol. FILTER(?vol>15)}",
+      "rows": 336,
+      "reference_rows": 336,
+      "requested_values_match": true
+    }
+  },
+  "SQA125-3T-002": {
+    "recorded_grade": "MATCH",
+    "answer_rows": 10,
+    "reference_rows": 10,
+    "answer_chars": 627,
+    "reference_chars": 1029,
+    "extra_ids": 0,
+    "missing_ids": 0,
+    "exact_id_set_match": true
+  },
+  "SQA125-3T-004": {
+    "recorded_grade": "MATCH",
+    "answer_rows": 119,
+    "reference_rows": 119,
+    "answer_chars": 7087,
+    "reference_chars": 12428,
+    "extra_ids": 0,
+    "missing_ids": 0,
+    "exact_id_set_match": true
+  },
+  "TT125-020": {
+    "answer_rows": 105,
+    "reference_rows": 120,
+    "recorded_grade": "PARTIAL",
+    "exact_saved_transaction_multiset_match": false,
+    "minimal_projection_replay": {
+      "sparql": "PREFIX wm: <https://wealth.example.org/ontology/>\n PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n SELECT ?investorId ?date ?amount WHERE {\n ?c a wm:CashFlow; wm:investorId ?investorId; wm:date ?date; wm:amount ?amount; wm:type ?type.\n FILTER(?type=\"Deposit\" && ?amount>3500 && ?date>=\"2024-01-01\"^^xsd:date)}",
+      "rows": 120,
+      "reference_rows": 120,
+      "requested_values_match": true
+    }
+  }
+}

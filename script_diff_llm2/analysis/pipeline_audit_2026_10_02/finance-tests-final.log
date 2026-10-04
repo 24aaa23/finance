@@ -1,0 +1,113 @@
+........E..........................................F..F.......FF....F......F.F...................F...........
+======================================================================
+ERROR: test_compiles_entity_then_group_aggregation (test_deterministic_planning.DeterministicProfileCompilerTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/tests/unit/test_deterministic_planning.py", line 40, in test_compiles_entity_then_group_aggregation
+    self.assertIn('SUM("amount") AS "avg_net_cash_flow"', sql)
+  File "/usr/lib/python3.10/unittest/case.py", line 1109, in assertIn
+    if member not in container:
+TypeError: argument of type 'NoneType' is not iterable
+
+======================================================================
+FAIL: test_band_query_marks_bucket_strategy (test_semantic_contract.QuerySpecCleanupTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/tests/unit/test_semantic_contract.py", line 74, in test_band_query_marks_bucket_strategy
+    self.assertEqual(group["bucket_strategy"], "semantic_thresholds")
+AssertionError: 'three_band_33_66' != 'semantic_thresholds'
+- three_band_33_66
++ semantic_thresholds
+
+
+======================================================================
+FAIL: test_cash_flow_transaction_count_is_bound_to_cash_flow_rows (test_semantic_contract.QuerySpecCleanupTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/tests/unit/test_semantic_contract.py", line 596, in test_cash_flow_transaction_count_is_bound_to_cash_flow_rows
+    self.assertEqual(count_measure["source_class"], "ATOM_EVENT_CASH_FLOW_001")
+AssertionError: 'ATOM_EVENT_REBALANCING_ACTION_001' != 'ATOM_EVENT_CASH_FLOW_001'
+- ATOM_EVENT_REBALANCING_ACTION_001
++ ATOM_EVENT_CASH_FLOW_001
+
+
+======================================================================
+FAIL: test_goal_progress_is_grounded_to_investment_goal (test_semantic_contract.QuerySpecCleanupTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/tests/unit/test_semantic_contract.py", line 184, in test_goal_progress_is_grounded_to_investment_goal
+    self.assertEqual(measure["source_class"], "ATOM_ENTITY_INVESTMENT_GOAL_001")
+AssertionError: 'ATOM_ENTITY_PORTFOLIO_HEALTH_001' != 'ATOM_ENTITY_INVESTMENT_GOAL_001'
+- ATOM_ENTITY_PORTFOLIO_HEALTH_001
++ ATOM_ENTITY_INVESTMENT_GOAL_001
+
+
+======================================================================
+FAIL: test_group_gap_contract_keeps_all_groups_and_uses_signed_difference (test_semantic_contract.QuerySpecCleanupTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/tests/unit/test_semantic_contract.py", line 283, in test_group_gap_contract_keeps_all_groups_and_uses_signed_difference
+    self.assertEqual(cleaned["ranking"]["limit"], None)
+AssertionError: 1 != None
+
+======================================================================
+FAIL: test_holding_gain_rewrites_returns_pct_to_gain_formula (test_semantic_contract.QuerySpecCleanupTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/tests/unit/test_semantic_contract.py", line 666, in test_holding_gain_rewrites_returns_pct_to_gain_formula
+    self.assertEqual(measure["formula"], "current_value - cost")
+AssertionError: None != 'current_value - cost'
+
+======================================================================
+FAIL: test_total_cash_flow_keeps_group_sum (test_semantic_contract.QuerySpecCleanupTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/tests/unit/test_semantic_contract.py", line 213, in test_total_cash_flow_keeps_group_sum
+    self.assertEqual(cleaned["measures"][0]["final_operation"], "SUM")
+AssertionError: 'AVG' != 'SUM'
+- AVG
++ SUM
+
+
+======================================================================
+FAIL: test_withdrawal_formula_is_normalized_to_positive_magnitude (test_semantic_contract.QuerySpecCleanupTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/tests/unit/test_semantic_contract.py", line 695, in test_withdrawal_formula_is_normalized_to_positive_magnitude
+    self.assertEqual(
+AssertionError: "CASE WHEN type = 'Withdrawal' THEN amount ELSE 0 END" != "CASE WHEN type = 'Withdrawal' THEN ABS(amount) ELSE 0 END"
+- CASE WHEN type = 'Withdrawal' THEN amount ELSE 0 END
++ CASE WHEN type = 'Withdrawal' THEN ABS(amount) ELSE 0 END
+?                                    ++++      +
+
+
+======================================================================
+FAIL: test_concentration_measure_takes_entity_maximum (test_semantic_contract.TwoLevelAggregationGrainTest)
+Concentration is an entity's largest share, not the mean of its shares.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/tests/unit/test_semantic_contract.py", line 1241, in test_concentration_measure_takes_entity_maximum
+    self.assertEqual(measure["per_entity_operation"], "MAX")
+AssertionError: 'AVG' != 'MAX'
+- AVG
++ MAX
+
+
+----------------------------------------------------------------------
+Ran 109 tests in 0.105s
+
+FAILED (failures=8, errors=1)
+[SYSTEM] SQLite DB: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[SYSTEM] SQLite DB exists: True
+   [SQL] Running SQL pipeline for node 'Q1'...
+   [SQL] Running SQL pipeline for node 'Q1'...
+   [SQL] Running SQL pipeline for node 'Q1'...
+[WARN] Decomposition omitted required domain(s): holding. Falling back to one complete SQL subquery.
+[WARN] Decomposition returned empty. Falling back to single SQL node.
+   [SET] Running Set_Intersect for node 'M1'...
+   [SET] Running Set_Intersect for node 'M1'...
+   [SET] Running Set_Intersect for node 'M1'...
+   [SET] Running Set_Intersect for node 'M1'...
+   [SET] Running Set_Intersect for node 'M1'...
+   [SET] Running Set_Difference for node 'M1'...
+   [SET] Running Set_Union for node 'M1'...

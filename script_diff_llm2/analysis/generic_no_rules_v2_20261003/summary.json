@@ -1,0 +1,324 @@
+{
+  "raw_rows": 1000,
+  "graded_rows": 1000,
+  "unique_ids": 1000,
+  "versions": {
+    "generic-contract-grounding-v2-20261003": 1000
+  },
+  "raw_statuses": {
+    "PIPELINE_SUCCESS": 825,
+    "DAG_NODE_ERROR": 171,
+    "SCAN_ERROR": 2,
+    "PRE_SCAN_ERROR": 2
+  },
+  "grades": {
+    "MATCH": 721,
+    "MISMATCH": 215,
+    "PARTIAL": 57,
+    "SCAN_ERROR": 2,
+    "PRE_SCAN_ERROR": 2,
+    "OTHER": 1,
+    "GRADER_API_ERROR": 2
+  },
+  "raw_grade_transitions": {
+    "PIPELINE_SUCCESS -> MATCH": 721,
+    "DAG_NODE_ERROR -> MISMATCH": 171,
+    "PIPELINE_SUCCESS -> MISMATCH": 44,
+    "PIPELINE_SUCCESS -> PARTIAL": 57,
+    "SCAN_ERROR -> SCAN_ERROR": 2,
+    "PRE_SCAN_ERROR -> PRE_SCAN_ERROR": 2,
+    "PIPELINE_SUCCESS -> OTHER": 1,
+    "PIPELINE_SUCCESS -> GRADER_API_ERROR": 2
+  },
+  "failure_stages": {
+    "": 825,
+    "Q1:Query_Spec_Contract": 167,
+    "Q3:Binding": 2,
+    "Q1:Scan_SQL": 2,
+    "Q1:Pre_Scan_Validate_SQL": 1,
+    "Q2:Binding": 2,
+    "Q1:Pre_Scan_Validate": 1
+  },
+  "families": {
+    "wealth_management_125_question_benchmark.csv": {
+      "MATCH": 111,
+      "MISMATCH": 14
+    },
+    "wealth_management_at_risk_critical_125_questions.csv": {
+      "MATCH": 107,
+      "MISMATCH": 15,
+      "PARTIAL": 3
+    },
+    "wealth_management_batch_status_125_questions.csv": {
+      "MATCH": 108,
+      "MISMATCH": 16,
+      "PARTIAL": 1
+    },
+    "wealth_management_enrichment_context_125_questions.csv": {
+      "MATCH": 83,
+      "MISMATCH": 37,
+      "PARTIAL": 5
+    },
+    "wealth_management_multi_step_comparative_125_questions.csv": {
+      "MATCH": 39,
+      "PARTIAL": 29,
+      "MISMATCH": 55,
+      "SCAN_ERROR": 1,
+      "PRE_SCAN_ERROR": 1
+    },
+    "wealth_management_reference_compliance_125_questions.csv": {
+      "MATCH": 94,
+      "PARTIAL": 12,
+      "MISMATCH": 16,
+      "OTHER": 1,
+      "PRE_SCAN_ERROR": 1,
+      "GRADER_API_ERROR": 1
+    },
+    "wealth_management_scoring_quantitative_125_questions.csv": {
+      "MATCH": 92,
+      "MISMATCH": 25,
+      "PARTIAL": 7,
+      "GRADER_API_ERROR": 1
+    },
+    "wealth_management_temporal_transaction_125_questions.csv": {
+      "MATCH": 87,
+      "MISMATCH": 37,
+      "SCAN_ERROR": 1
+    }
+  },
+  "backends": {
+    "SQL": {
+      "MATCH": 612,
+      "MISMATCH": 186,
+      "PARTIAL": 51,
+      "SCAN_ERROR": 2,
+      "PRE_SCAN_ERROR": 1,
+      "GRADER_API_ERROR": 2
+    },
+    "KG": {
+      "MATCH": 109,
+      "MISMATCH": 21,
+      "PARTIAL": 6,
+      "OTHER": 1,
+      "PRE_SCAN_ERROR": 1
+    },
+    "mixed": {
+      "MISMATCH": 8
+    }
+  },
+  "previous_grades": {
+    "MATCH": 579,
+    "MISMATCH": 365,
+    "PARTIAL": 45,
+    "SCAN_ERROR": 1,
+    "PRE_SCAN_ERROR": 4,
+    "GRADER_API_ERROR": 1,
+    "OTHER": 5
+  },
+  "paired_question_text_changes": 0,
+  "paired_reference_text_changes": 0,
+  "node_count_distribution": {
+    "1": 991,
+    "3": 2,
+    "2": 7
+  },
+  "paired_previous_transitions": {
+    "MATCH -> MATCH": 467,
+    "MISMATCH -> MATCH": 235,
+    "MATCH -> MISMATCH": 86,
+    "MISMATCH -> MISMATCH": 113,
+    "PARTIAL -> MATCH": 11,
+    "SCAN_ERROR -> MATCH": 1,
+    "PARTIAL -> PARTIAL": 20,
+    "MATCH -> PARTIAL": 20,
+    "MISMATCH -> PARTIAL": 16,
+    "PARTIAL -> MISMATCH": 14,
+    "PRE_SCAN_ERROR -> MISMATCH": 2,
+    "PRE_SCAN_ERROR -> PARTIAL": 1,
+    "PRE_SCAN_ERROR -> MATCH": 1,
+    "MISMATCH -> SCAN_ERROR": 1,
+    "MATCH -> PRE_SCAN_ERROR": 2,
+    "GRADER_API_ERROR -> MATCH": 1,
+    "OTHER -> MATCH": 5,
+    "MATCH -> OTHER": 1,
+    "MATCH -> GRADER_API_ERROR": 2,
+    "MATCH -> SCAN_ERROR": 1
+  },
+  "previous_failed_raw_transitions": {
+    "PIPELINE_SUCCESS -> PIPELINE_SUCCESS": 345,
+    "DAG_NODE_ERROR -> PIPELINE_SUCCESS": 477,
+    "DAG_NODE_ERROR -> DAG_NODE_ERROR": 103,
+    "PIPELINE_SUCCESS -> DAG_NODE_ERROR": 65,
+    "PRE_SCAN_ERROR -> PIPELINE_SUCCESS": 2,
+    "PRE_SCAN_ERROR -> DAG_NODE_ERROR": 3,
+    "DAG_NODE_ERROR -> SCAN_ERROR": 2,
+    "PIPELINE_SUCCESS -> PRE_SCAN_ERROR": 1,
+    "DAG_NODE_ERROR -> PRE_SCAN_ERROR": 1,
+    "SCAN_ERROR -> PIPELINE_SUCCESS": 1
+  },
+  "recovered_dag_success_grades": {
+    "MATCH": 437,
+    "MISMATCH": 19,
+    "PARTIAL": 21
+  },
+  "contract_error_incidence_overlapping": {
+    "empty_output_schema": 10,
+    "unknown_field_operand": 9,
+    "unknown_source": 48,
+    "unresolved": 29,
+    "literal_coverage": 3,
+    "derived_expression_required": 48,
+    "derived_operand_misclassified": 43,
+    "population_filter_contract": 12,
+    "unknown_output_alias": 3
+  },
+  "contract_single_tag_rows": {
+    "empty_output_schema": 3,
+    "unknown_field_operand": 8,
+    "unknown_source": 32,
+    "unresolved": 25,
+    "literal_coverage": 3,
+    "derived_expression_required": 32,
+    "derived_operand_misclassified": 27,
+    "unknown_output_alias": 3,
+    "population_filter_contract": 4
+  },
+  "successful_warning_grades": {
+    "MATCH": 491,
+    "MISMATCH": 24,
+    "PARTIAL": 20,
+    "GRADER_API_ERROR": 1
+  },
+  "successful_empty_grades": {
+    "MISMATCH": 4,
+    "MATCH": 16
+  },
+  "latency": {
+    "mean_seconds": 33.151017,
+    "median_seconds": 22.698500000000003,
+    "p95_seconds": 52.634,
+    "p99_seconds": 630.888,
+    "sum_seconds": 33151.017,
+    "over300_rows": 12,
+    "over300_sum_seconds": 7710.621999999999
+  },
+  "file_sha256": {
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v2_20261003/raw_pipeline.csv": "3b652e9ddfcc88b9aed9949b3316fe476db41796ec79601b62d6bd8ea0543087",
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v2_20261003/graded_pipeline_tera.csv": "77c971b637d666746bd3bc4d024e1ab0856a8c934f16918e1c8c0d45e47028c9",
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v1_20261003/graded_pipeline_tera.csv": "d7871fa1c100baab1d36ca2099e3c68887f5e3d51ea8b5056420e8b92e4eae1a",
+    "outputs/openai_gpt_oss_120b/all/test1000/rerun_20261003_023143/raw_pipeline.csv": "cf1b9a5ffcb0e8e8df9f5683ef204f4336bfec53a661818e644d3b47fd6cb0d0"
+  },
+  "raw_v1_v2_transitions": {
+    "PIPELINE_SUCCESS -> PIPELINE_SUCCESS": 594,
+    "DAG_NODE_ERROR -> PIPELINE_SUCCESS": 228,
+    "PIPELINE_SUCCESS -> DAG_NODE_ERROR": 101,
+    "DAG_NODE_ERROR -> DAG_NODE_ERROR": 68,
+    "SCAN_ERROR -> PIPELINE_SUCCESS": 1,
+    "PRE_SCAN_ERROR -> DAG_NODE_ERROR": 2,
+    "PRE_SCAN_ERROR -> PIPELINE_SUCCESS": 2,
+    "DAG_NODE_ERROR -> SCAN_ERROR": 1,
+    "PIPELINE_SUCCESS -> PRE_SCAN_ERROR": 2,
+    "PIPELINE_SUCCESS -> SCAN_ERROR": 1
+  },
+  "v1_failure_recoveries": {
+    "MATCH": 208,
+    "MISMATCH": 8,
+    "PARTIAL": 15
+  },
+  "v1_match_losses_by_v2_stage": {
+    "Q1:Query_Spec_Contract": 70,
+    "executed": 37,
+    "Q1:Pre_Scan_Validate_SQL": 1,
+    "Q2:Binding": 2,
+    "Q1:Pre_Scan_Validate": 1,
+    "Q1:Scan_SQL": 1
+  },
+  "older637_transitions": {
+    "MATCH -> MATCH": 515,
+    "MISMATCH -> MATCH": 137,
+    "MATCH -> MISMATCH": 103,
+    "MISMATCH -> MISMATCH": 54,
+    "PARTIAL -> MATCH": 61,
+    "MISMATCH -> PARTIAL": 9,
+    "PARTIAL -> MISMATCH": 49,
+    "MATCH -> PARTIAL": 15,
+    "PRE_SCAN_ERROR -> MISMATCH": 6,
+    "PARTIAL -> PARTIAL": 27,
+    "SCAN_ERROR -> MISMATCH": 2,
+    "PRE_SCAN_ERROR -> MATCH": 7,
+    "GRADER_API_ERROR -> MATCH": 1,
+    "PRE_SCAN_ERROR -> PARTIAL": 5,
+    "SCAN_ERROR -> SCAN_ERROR": 1,
+    "GRADER_API_ERROR -> MISMATCH": 1,
+    "MATCH -> PRE_SCAN_ERROR": 2,
+    "MISMATCH -> OTHER": 1,
+    "MATCH -> GRADER_API_ERROR": 2,
+    "OTHER -> PARTIAL": 1,
+    "MISMATCH -> SCAN_ERROR": 1
+  },
+  "raw_grade_differences": {
+    "Question": 0,
+    "Ground Truth": 0,
+    "New Pipeline Result": 0,
+    "Node Traces": 0,
+    "Pipeline Version": 0
+  },
+  "grader_policy": {
+    "Grading Policy": {
+      "strict_v1": 1000
+    },
+    "Direct LLM Grader Model": {
+      "gpt-5.6-terra": 1000
+    },
+    "Grader Label": {
+      "grader_2": 1000
+    },
+    "Direct LLM Grading Path": {
+      "direct_llm_semantic_judgment": 994,
+      "preserved_execution_status": 4,
+      "direct_llm_grader_exception": 2
+    }
+  },
+  "formula_contract_rows": 83,
+  "family_stages": {
+    "wealth_management_125_question_benchmark.csv": {
+      "": 116,
+      "Q1:Query_Spec_Contract": 9
+    },
+    "wealth_management_at_risk_critical_125_questions.csv": {
+      "": 112,
+      "Q1:Query_Spec_Contract": 13
+    },
+    "wealth_management_batch_status_125_questions.csv": {
+      "": 109,
+      "Q1:Query_Spec_Contract": 16
+    },
+    "wealth_management_enrichment_context_125_questions.csv": {
+      "": 100,
+      "Q1:Query_Spec_Contract": 23,
+      "Q3:Binding": 2
+    },
+    "wealth_management_multi_step_comparative_125_questions.csv": {
+      "": 70,
+      "Q1:Query_Spec_Contract": 53,
+      "Q1:Scan_SQL": 1,
+      "Q1:Pre_Scan_Validate_SQL": 1
+    },
+    "wealth_management_reference_compliance_125_questions.csv": {
+      "": 111,
+      "Q1:Query_Spec_Contract": 12,
+      "Q2:Binding": 1,
+      "Q1:Pre_Scan_Validate": 1
+    },
+    "wealth_management_scoring_quantitative_125_questions.csv": {
+      "": 109,
+      "Q1:Query_Spec_Contract": 15,
+      "Q2:Binding": 1
+    },
+    "wealth_management_temporal_transaction_125_questions.csv": {
+      "": 98,
+      "Q1:Query_Spec_Contract": 26,
+      "Q1:Scan_SQL": 1
+    }
+  }
+}

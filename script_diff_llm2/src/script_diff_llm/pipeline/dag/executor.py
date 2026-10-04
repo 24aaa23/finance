@@ -10,6 +10,7 @@ import networkx as nx
 import rdflib
 
 from script_diff_llm.backends import sql as sql_pipeline
+from script_diff_llm.pipeline.contracts import split_contract_errors, validate_query_spec
 from script_diff_llm.pipeline.semantic_contract import (
     normalize_semantic_result,
     normalize_result_iris,
@@ -37,6 +38,7 @@ class AOPExecutor:
         kg_metadata: dict[str, Any] | None = None,
         db_path: str = ":memory:",
         sql_schema: dict[str, Any] | None = None,
+        identity_bindings: list[dict[str, Any]] | None = None,
         pre_scan_validate_max_retries: int = 3,
         post_scan_validate_max_retries: int = 3,
         scan_refine_max_retries: int = 3,
@@ -47,6 +49,9 @@ class AOPExecutor:
         self.kg_metadata = kg_metadata or {}
         self.db_path = db_path
         self.sql_schema = sql_schema or {}
+        self.identity_prefixes = tuple(
+            binding["kg_uri_prefix"] for binding in (identity_bindings or [])
+        )
         self.pre_scan_validate_max_retries = pre_scan_validate_max_retries
         self.post_scan_validate_max_retries = post_scan_validate_max_retries
         self.scan_refine_max_retries = scan_refine_max_retries
@@ -116,60 +121,6 @@ class AOPExecutor:
                     f"subquery={node_data.get('description', '')}"
                 )
 
-    @staticmethod
-    def _normalize_bound_field_name(value: Any) -> str:
-        return re.sub(r"[^a-z0-9]+", "", str(value or "").lower())
-
-    @classmethod
-    def _field_tokens(cls, value: Any) -> list[str]:
-        text = str(value or "")
-        text = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", text)
-        tokens = [token.lower() for token in re.split(r"[^a-zA-Z0-9]+", text) if token]
-        normalized = []
-        for token in tokens:
-            if token.endswith("ids"):
-                token = token[:-1]
-            normalized.append(token)
-        return normalized
-
-    @classmethod
-    def _best_matching_row_key(cls, source_field: str, rows: list[dict[str, Any]]) -> str | None:
-        if not rows or not isinstance(rows[0], dict):
-            return None
-        row_keys = [str(key) for key in rows[0].keys()]
-        if source_field in row_keys:
-            return source_field
-
-        source_norm = cls._normalize_bound_field_name(source_field)
-        source_tokens = cls._field_tokens(source_field)
-        source_token_set = set(source_tokens)
-        if not source_norm or not source_token_set:
-            return None
-
-        best_key = None
-        best_score = 0
-        for row_key in row_keys:
-            row_norm = cls._normalize_bound_field_name(row_key)
-            row_tokens = cls._field_tokens(row_key)
-            row_token_set = set(row_tokens)
-            score = 0
-            if row_norm == source_norm:
-                score = 100
-            elif row_token_set == source_token_set:
-                score = 90
-            elif row_token_set and row_token_set <= source_token_set:
-                score = 70 + len(row_token_set)
-            elif source_token_set and source_token_set <= row_token_set:
-                score = 60 + len(source_token_set)
-            elif source_tokens and row_tokens and source_tokens[-1] == row_tokens[-1]:
-                overlap = len(source_token_set & row_token_set)
-                if overlap:
-                    score = 50 + overlap
-            if score > best_score:
-                best_key = row_key
-                best_score = score
-        return best_key if best_score >= 71 else None
-
     def _resolve_bound_inputs(self, node_id: str, dag: nx.DiGraph, results_cache: dict[str, Any]) -> dict[str, Any]:
         node_data = dag.nodes[node_id]
         declared_inputs = node_data.get("inputs", [])
@@ -183,9 +134,11 @@ class AOPExecutor:
             if isinstance(upstream_result, dict):
                 value = upstream_result.get(src_field)
                 if value is None and isinstance(upstream_result.get("data"), list):
-                    resolved_field = self._best_matching_row_key(src_field, upstream_result["data"]) or src_field
-                    col_vals = [r.get(resolved_field) for r in upstream_result["data"] if resolved_field in r]
-                    value = col_vals if col_vals else None
+                    rows = upstream_result["data"]
+                    if not rows:
+                        value = []
+                    elif all(isinstance(row, dict) and src_field in row for row in rows):
+                        value = [row[src_field] for row in rows]
                 if value is not None:
                     bound[inp["name"]] = value
         return bound
@@ -199,7 +152,7 @@ class AOPExecutor:
         if outputs and isinstance(outputs[0], dict) and outputs[0].get("name") and (not row_keys or outputs[0]["name"] in row_keys):
             return outputs[0]["name"]
         if rows:
-            preferred = ["investorId", "portfolioId", "holdingId", "goalId", "entity_id", "id"]
+            preferred = ["entity_id", "id"]
             for key in preferred:
                 if key in rows[0]:
                     return key
@@ -207,20 +160,14 @@ class AOPExecutor:
         return "entity_id"
 
     def _kg_scan(self, inputs: dict[str, Any]) -> dict[str, Any]:
-        """Run the KG Scan operator and normalize resource IRIs to local names.
-
-        Fuseki binds resources as full IRIs, but the benchmark contract and the
-        SQL backend both speak local identifiers. Normalizing at the scan
-        boundary keeps KG rows shape-comparable with SQL rows and lets
-        cross-backend set operations meet on the same key space.
-        """
+        """Run KG Scan and apply only declared identity namespace mappings."""
         scan_result = self.registry["Scan"](inputs)
         if isinstance(scan_result, dict) and isinstance(scan_result.get("data"), list):
-            scan_result["data"] = normalize_result_iris(scan_result["data"])
+            scan_result["data"] = normalize_result_iris(scan_result["data"], self.identity_prefixes)
         return scan_result
 
     def _run_kg_subquery(self, node_id: str, description: str, root_query: str, bound_inputs: dict[str, Any], trace: dict) -> dict[str, Any]:
-        del trace
+        expected_outputs = trace.get('expected_outputs', [])
         print(f"   [KG] Running KG pipeline for node '{node_id}'...")
         node_trace = {
             "node_id": node_id,
@@ -243,6 +190,8 @@ class AOPExecutor:
         }
 
         inputs = {"query": description, "root_query": root_query, "bound_inputs": bound_inputs, "global_schema": self.kg_metadata}
+        inputs['expected_outputs'] = expected_outputs
+        node_trace['expected_outputs'] = expected_outputs
         retrieve_result = self.registry["Retrieve"](inputs)
         inputs.update(retrieve_result)
         node_trace["retrieved_classes"] = retrieve_result.get("retrieved_tables", [])
@@ -250,6 +199,15 @@ class AOPExecutor:
         qs_result = self.registry["Query_Spec"](inputs)
         inputs.update(qs_result)
         node_trace["query_spec"] = qs_result.get("query_spec", {})
+        spec = inputs.get("query_spec")
+        contract_errors = validate_query_spec(spec, self.kg_metadata, description) if isinstance(spec, dict) and ("contract_errors" in spec or "requirements" in spec) else []
+        contract_errors, contract_warnings = split_contract_errors(contract_errors)
+        if contract_warnings:
+            node_trace["contract_warnings"] = contract_warnings
+        if contract_errors:
+            node_trace["failure_stage"] = "Query_Spec_Contract"
+            node_trace["contract_errors"] = contract_errors
+            return {"status": "error", "error_message": "; ".join(contract_errors), "data": [], "trace": node_trace}
 
         gen_result = self.registry["Generate"](inputs)
         inputs["sparql"] = gen_result.get("sparql", "")
@@ -424,8 +382,56 @@ class AOPExecutor:
         node_trace["output_columns"] = list(scan_result.get("data", [{}])[0].keys()) if scan_result.get("data") else []
         return {"status": "success", "data": scan_result.get("data", []), "trace": node_trace}
 
+    def _scan_sql_with_repair(self, inputs: dict, node_trace: dict) -> dict:
+        """Repair query defects with a bounded budget; never reinterpret the spec."""
+        rejected = None
+        for attempt in range(1, max(1, self.scan_refine_max_retries) + 1):
+            if rejected is None:
+                result = sql_pipeline.pre_programmed_scan_sql(inputs, db_path=self.db_path)
+                node_trace["attempts"].append({"stage": "Scan_SQL", "attempt": attempt,
+                    "status": result.get("status", ""), "row_count": result.get("row_count", 0),
+                    "error": result.get("error_message", ""), "error_type": result.get("error_type", "")})
+            else:
+                result = {"status": "error", "data": [], "error_type": "sql_pre_scan_error",
+                          "error_message": rejected.get("reason", "Repaired SQL failed validation.")}
+            if result.get("status") != "error":
+                return result
+            repairable = {"empty_sql", "sql_no_such_table", "sql_no_such_column", "sql_execution_error", "sql_pre_scan_error"}
+            used_repairs = node_trace.get("sql_scan_repair_attempts", 0)
+            if attempt >= self.scan_refine_max_retries or used_repairs >= max(0, self.scan_refine_max_retries - 1) or result.get("error_type") not in repairable:
+                return result
+            inputs["logic_feedback"] = json.dumps({"error_type": result.get("error_type"),
+                "reason": result.get("error_message"), "failed_sql": inputs.get("sql", ""),
+                "rewrite_hint": "Repair the query against the supplied schema. Preserve Query_Spec, bound inputs, all predicates, metric stages and final outputs."})
+            node_trace["self_heal_attempts"] += 1
+            node_trace["sql_scan_repair_attempts"] = used_repairs + 1
+            generated = sql_pipeline.semantic_generate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
+            inputs["sql"] = generated.get("sql", "")
+            node_trace["generated_sql"] = inputs["sql"]
+            node_trace["generate_sql_reasoning"] = generated.get("reasoning", "")
+            node_trace["generate_sql_parse_error"] = generated.get("parse_error", "")
+            node_trace["sql_schema_relevant_tables"] = generated.get("relevant_tables", [])
+            node_trace["attempts"].append({"stage": "Generate_SQL_Scan_Repair", "attempt": attempt,
+                                          "output_present": bool(inputs["sql"])})
+            rejected = None
+            for validate in (validate_aggregation_shape, validate_join_population_shape, validate_join_policy_shape):
+                check = validate(inputs.get("query_spec", {}), inputs["sql"])
+                if not check.get("is_valid", True):
+                    rejected = check
+                    break
+            if rejected is None:
+                check = sql_pipeline.semantic_pre_scan_validate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
+                check = check.get("pre_scan_validation", {})
+                if not check.get("is_valid", False) and check.get("severity") not in {"valid", "acceptable_warning"}:
+                    rejected = check
+            node_trace["attempts"].append({"stage": "Pre_Scan_Validate_SQL_Repair", "attempt": attempt,
+                "is_valid": rejected is None, "reason": (rejected or {}).get("reason", "")})
+            node_trace["pre_scan_validation_is_valid"] = rejected is None
+            node_trace["pre_scan_validation_reason"] = check.get("reason", "")
+        return result
+
     def _run_sql_subquery(self, node_id: str, description: str, root_query: str, bound_inputs: dict[str, Any], trace: dict) -> dict[str, Any]:
-        del trace
+        expected_outputs = trace.get('expected_outputs', [])
         print(f"   [SQL] Running SQL pipeline for node '{node_id}'...")
         node_trace = {
             "node_id": node_id,
@@ -454,12 +460,24 @@ class AOPExecutor:
             "root_query": root_query,
             "bound_inputs": bound_inputs,
             "sql_schema": self.sql_schema,
+            "db_path": self.db_path,
             "global_schema": self.sql_schema,
             "schema_kind": "sql",
+            "expected_outputs": expected_outputs,
         }
+        node_trace['expected_outputs'] = expected_outputs
         qs_result = self.registry["Query_Spec"](inputs)
         inputs.update(qs_result)
         node_trace["query_spec"] = qs_result.get("query_spec", {})
+        spec = inputs.get("query_spec")
+        contract_errors = validate_query_spec(spec, self.sql_schema, description) if isinstance(spec, dict) and ("contract_errors" in spec or "requirements" in spec) else []
+        contract_errors, contract_warnings = split_contract_errors(contract_errors)
+        if contract_warnings:
+            node_trace["contract_warnings"] = contract_warnings
+        if contract_errors:
+            node_trace["failure_stage"] = "Query_Spec_Contract"
+            node_trace["contract_errors"] = contract_errors
+            return {"status": "error", "error_message": "; ".join(contract_errors), "data": [], "trace": node_trace}
 
         gen_result = sql_pipeline.semantic_generate_sql(inputs, self.llm_client, self.registry.get("_generate_model", ""))
         inputs["sql"] = gen_result.get("sql", "")
@@ -552,32 +570,17 @@ class AOPExecutor:
         scan_result = {}
         original_successful_scan = None
         for attempt in range(1, self.post_scan_validate_max_retries + 1):
-            scan_result = sql_pipeline.pre_programmed_scan_sql(inputs, db_path=self.db_path)
-            node_trace["attempts"].append({
-                "stage": "Scan_SQL",
-                "attempt": attempt,
-                "status": scan_result.get("status", ""),
-                "row_count": scan_result.get("row_count", 0),
-                "error": scan_result.get("error_message", ""),
-                "error_type": scan_result.get("error_type", ""),
-            })
+            scan_result = self._scan_sql_with_repair(inputs, node_trace)
             if scan_result.get("status") == "error":
                 node_trace["failure_stage"] = "Scan_SQL"
+                node_trace["scan_status"] = "error"
+                node_trace["scan_error"] = scan_result.get("error_message", "")
+                node_trace["scan_error_type"] = scan_result.get("error_type", "")
                 print(f"   [SQL] Scan_SQL failed for node '{node_id}': {scan_result.get('error_message')}")
                 return {"status": "error", "error_message": scan_result.get("error_message"), "data": [], "trace": node_trace}
             if original_successful_scan is None:
                 original_successful_scan = scan_result
             if isinstance(scan_result, dict) and isinstance(scan_result.get("data"), list):
-                enriched_rows = sql_pipeline.enrich_sql_result_rows(
-                    inputs.get("query_spec", {}),
-                    scan_result.get("data", []),
-                    self.db_path,
-                )
-                # Keep the executed rows if an optional enrichment adapter
-                # returns an invalid value. This also keeps the executor
-                # contract robust for lightweight test/dry-run adapters.
-                if isinstance(enriched_rows, list):
-                    scan_result["data"] = enriched_rows
                 scan_result["data"] = normalize_semantic_result(
                     root_query,
                     inputs.get("query_spec", {}),
@@ -677,75 +680,6 @@ class AOPExecutor:
                 keyed.setdefault(canonical, row)
         return keyed
 
-    @staticmethod
-    def _identifier_candidates(rows: list[dict]) -> list[str]:
-        """Columns that plausibly identify an entity, most identifier-like first."""
-        if not rows:
-            return []
-        candidates = []
-        for column in rows[0].keys():
-            values = [row.get(column) for row in rows[:200] if isinstance(row, dict)]
-            keys = {set_operation_key(value) for value in values if value is not None}
-            if not keys:
-                continue
-            lowered = str(column).lower()
-            score = (0 if ("id" in lowered or lowered.endswith("_key")) else 1, -len(keys))
-            candidates.append((score, str(column)))
-        return [column for _, column in sorted(candidates)]
-
-    def _realign_set_operation_keys(
-        self,
-        op_name: str,
-        pred_rows: list[tuple[str, list[dict]]],
-        keyed_inputs: list[tuple[str, str, dict[str, dict]]],
-    ) -> list[tuple[str, str, dict[str, dict]]] | None:
-        """Re-key predecessors on a shared identifier when the declared keys do not meet.
-
-        Different backends name and shape the same identifier differently — a KG
-        node may bind ``?investor`` to a full IRI while a SQL node returns
-        ``investor_id`` as a bare literal — so the planner-declared output field
-        can leave two sets with no common values at all. Rather than report an
-        empty intersection, retry over identifier-like columns and keep the
-        pairing that actually overlaps. Purely deterministic: no LLM involved.
-        """
-        if op_name not in {"Set_Intersect", "Set_Difference"} or len(keyed_inputs) < 2:
-            return None
-        if all(row_by_key for _, _, row_by_key in keyed_inputs):
-            current = [set(row_by_key.keys()) for _, _, row_by_key in keyed_inputs]
-            if current[0].intersection(*current[1:]):
-                return None
-
-        rows_by_pred = dict(pred_rows)
-        base_id = keyed_inputs[0][0]
-        best = None
-        for base_column in self._identifier_candidates(rows_by_pred.get(base_id, []))[:5]:
-            base_keyed = self._key_rows(rows_by_pred.get(base_id, []), base_column)
-            if not base_keyed:
-                continue
-            attempt = [(base_id, base_column, base_keyed)]
-            overlap = len(base_keyed)
-            for pred_id, _, _ in keyed_inputs[1:]:
-                choice = None
-                for column in self._identifier_candidates(rows_by_pred.get(pred_id, []))[:5]:
-                    keyed = self._key_rows(rows_by_pred.get(pred_id, []), column)
-                    shared = len(set(base_keyed) & set(keyed))
-                    if shared and (choice is None or shared > choice[0]):
-                        choice = (shared, column, keyed)
-                if choice is None:
-                    attempt = None
-                    break
-                attempt.append((pred_id, choice[1], choice[2]))
-                overlap = min(overlap, choice[0])
-            if attempt and overlap:
-                # Candidates are ordered identifier-first, so the first base
-                # column that overlaps every predecessor is the most trustworthy
-                # join key. Maximizing raw overlap instead would let an
-                # incidental low-cardinality column (a sector, a category) win
-                # over the real entity id.
-                best = (overlap, attempt)
-                break
-        return best[1] if best else None
-
     def _run_set_operation(self, node_id: str, op_name: str, pred_results: list, dag: nx.DiGraph) -> dict[str, Any]:
         print(f"   [SET] Running {op_name} for node '{node_id}'...")
         node_trace = {"node_id": node_id, "operator": op_name, "input_summaries": [], "binding_operation": op_name}
@@ -759,11 +693,6 @@ class AOPExecutor:
         for pred_id, rows in pred_rows:
             key = self._output_key_for_predecessor(dag, pred_id, node_id, rows)
             keyed_inputs.append((pred_id, key, self._key_rows(rows, key)))
-
-        realigned_key = self._realign_set_operation_keys(op_name, pred_rows, keyed_inputs)
-        if realigned_key:
-            keyed_inputs = realigned_key
-            node_trace["key_realignment"] = "re-keyed predecessors on a shared identifier column to avoid an empty result"
 
         for pred_id, key, row_by_key in keyed_inputs:
             source_rows = next((rows for source_id, rows in pred_rows if source_id == pred_id), [])
@@ -807,7 +736,16 @@ class AOPExecutor:
         pred_results = [(p, results_cache[p]) for p in dag.predecessors(node_id) if p in results_cache]
 
         if op_name == "Subquery":
-            result = self._run_sql_subquery(node_id, description, initial_query, bound_inputs, {}) if backend == "SQL" else self._run_kg_subquery(node_id, description, initial_query, bound_inputs, {})
+            declared = [item.get("name") for item in node_data.get("inputs", []) if isinstance(item, dict)]
+            missing = [name for name in declared if name not in bound_inputs]
+            if missing:
+                result = {"status": "error", "data": [], "error_message": f"Unresolved upstream bindings: {missing}",
+                          "trace": {"failure_stage": "Binding", "missing_inputs": missing}}
+            elif any(isinstance(bound_inputs.get(name), list) and not bound_inputs[name] for name in declared):
+                result = {"status": "success", "data": [], "trace": {"empty_upstream": True}}
+            else:
+                output_contract = {'expected_outputs': node_data.get('outputs', []) if dag.out_degree(node_id) else []}
+                result = self._run_sql_subquery(node_id, description, initial_query, bound_inputs, output_contract) if backend == "SQL" else self._run_kg_subquery(node_id, description, initial_query, bound_inputs, output_contract)
         elif op_name in {"Set_Intersect", "Set_Union", "Set_Difference"}:
             result = self._run_set_operation(node_id, op_name, pred_results, dag)
         elif op_name not in self.registry:

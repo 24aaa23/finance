@@ -10,7 +10,7 @@ class DagBoundInputResolutionTest(unittest.TestCase):
     def _executor(self):
         return AOPExecutor(operator_registry={}, rdf_graph=rdflib.Graph())
 
-    def test_resolves_semantic_alias_to_category_column(self):
+    def test_does_not_bind_a_category_to_an_identifier(self):
         executor = self._executor()
         dag = nx.DiGraph()
         dag.add_node("Q0", outputs=[{"name": "profile_category_id"}])
@@ -29,7 +29,10 @@ class DagBoundInputResolutionTest(unittest.TestCase):
             }
         }
         bound = executor._resolve_bound_inputs("Q1", dag, cache)
-        self.assertEqual(bound["all_category_id"], ["Equity", "Debt"])
+        self.assertNotIn("all_category_id", bound)
+        result = executor._execute_node("Q1", dag, "Find matching categories", cache)
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["trace"]["failure_stage"], "Binding")
 
     def test_prefers_exact_identifier_match_when_available(self):
         executor = self._executor()
@@ -44,8 +47,8 @@ class DagBoundInputResolutionTest(unittest.TestCase):
             "Q0": {
                 "status": "success",
                 "data": [
-                    {"investorId": "INV-1", "investorName": "A"},
-                    {"investorId": "INV-2", "investorName": "B"},
+                    {"investor_id": "INV-1", "investorName": "A"},
+                    {"investor_id": "INV-2", "investorName": "B"},
                 ],
             }
         }

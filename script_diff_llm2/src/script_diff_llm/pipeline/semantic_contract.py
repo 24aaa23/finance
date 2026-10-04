@@ -1,5 +1,5 @@
 import re
-from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from decimal import Decimal, InvalidOperation
 from typing import Any
 
 
@@ -38,7 +38,7 @@ def empty_answer_can_be_valid(query: str, query_spec: dict[str, Any]) -> bool:
     q = normalize_compare_text(query)
     qtype = str(query_spec.get("query_type", "")).lower()
     list_like = any(phrase in q for phrase in [
-        "which", "show", "list", "identify", "find", "investors who",
+        "which", "show", "list", "identify", "find",
         "holdings that", "records where",
     ])
     negative_existence = any(phrase in q for phrase in [
@@ -143,89 +143,9 @@ def _sorted_by_metric(data: list[dict[str, Any]], metric_column: str, direction:
     return numeric_values == ordered
 
 
-def _bucket_label_prefix(group: dict[str, Any]) -> str:
-    output_name = str(group.get("output_name", "") or group.get("field", "")).strip()
-    base = re.sub(r"(_pct)?_(band|bucket|range)$", "", output_name, flags=re.IGNORECASE)
-    base = re.sub(r"[^a-z0-9]+", "_", base.lower()).strip("_")
-    return base or "value"
-
-
-def _canonical_bucket_label(value: Any, group: dict[str, Any]) -> Any:
-    if value is None:
-        return None
-    text = str(value).strip()
-    if not text:
-        return None
-    explicit_labels = group.get("bucket_labels")
-    explicit_boundaries = group.get("bucket_boundaries")
-    if isinstance(explicit_labels, list) and len(explicit_labels) == 3:
-        normalized = re.sub(r"\s+", "", text.lower())
-        for label in explicit_labels:
-            label_text = str(label)
-            if re.sub(r"\s+", "", label_text.lower()) == normalized:
-                return label
-        if isinstance(explicit_boundaries, list) and len(explicit_boundaries) == 2:
-            aliases = {
-                "short": explicit_labels[0],
-                "medium": explicit_labels[1],
-                "long": explicit_labels[2],
-                "low": explicit_labels[0],
-                "moderate": explicit_labels[1],
-                "high": explicit_labels[2],
-            }
-            if normalized in aliases:
-                return aliases[normalized]
-        # Do not convert an explicit benchmark label into the generic 33/66
-        # vocabulary below.
-        if any(token in normalized for token in ["short", "medium", "long"]):
-            return text
-    prefix = _bucket_label_prefix(group).replace("_", " ")
-    normalized = re.sub(r"\s+", "", text.lower())
-    if normalized in {"0-33%", "0-33", "<33", "lt33"}:
-        return f"{prefix} < 33"
-    if normalized in {"33-66%", "33-66", "33to66", "34-66%", "34-66"}:
-        return f"{prefix} 33-66"
-    if normalized in {"66-100%", "66-100", "67-100%", "67-100", ">=67", "gt66", "gte67", "67+"}:
-        return f"{prefix} >= 67"
-    if normalized == "low":
-        return f"{prefix} < 33"
-    if normalized == "medium":
-        return f"{prefix} 33-66"
-    if normalized == "high":
-        return f"{prefix} >= 67"
-    return value
-
-
-def _normalize_bucket_rows(query_spec: dict[str, Any], data: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    group_by = query_spec.get("group_by")
-    group_by = group_by if isinstance(group_by, list) else []
-    bucket_group = next(
-        (group for group in group_by if isinstance(group, dict) and group.get("bucket_strategy")),
-        None,
-    )
-    if not bucket_group:
-        return data
-    output_name = str(bucket_group.get("output_name", "")).strip()
-    if not output_name:
-        return data
-
-    normalized = []
-    for row in data:
-        if not isinstance(row, dict):
-            normalized.append(row)
-            continue
-        label = row.get(output_name)
-        if label is None and query_spec.get("drop_null_bucket_groups", False):
-            continue
-        updated = dict(row)
-        updated[output_name] = _canonical_bucket_label(label, bucket_group)
-        normalized.append(updated)
-    return normalized
-
-
 def _drop_null_group_rows(query_spec: dict[str, Any], data: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Remove null grouping rows when the Query_Spec excludes them."""
-    if query_spec.get("preserve_null_groups", False):
+    if query_spec.get("preserve_null_groups", True):
         return data
     group_by = query_spec.get("group_by")
     group_by = group_by if isinstance(group_by, list) else []
@@ -250,259 +170,14 @@ def _drop_null_group_rows(query_spec: dict[str, Any], data: list[dict[str, Any]]
     return filtered
 
 
-def _round_analytic_values(
-    query: str,
-    query_spec: dict[str, Any],
-    data: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
-    """Round computed measures while preserving raw retrieval precision."""
-    measures = query_spec.get("measures")
-    measures = measures if isinstance(measures, list) else []
-    if not measures:
-        return data
-    q = f" {normalize_compare_text(query)} "
-    aggregate_wording = any(marker in q for marker in [
-        " average ", " avg ", " total ", " sum ", " net ", " count ",
-        " how many ", " ratio ", " gap ", " change ", " compare ", " across ",
-    ])
-    if not query_spec.get("group_by") and not aggregate_wording:
-        return data
-    precision = 3 if " ratio " in q else 2
-    quantum = Decimal("1").scaleb(-precision)
-    target_columns: set[str] = set()
-    for measure in measures:
-        if not isinstance(measure, dict):
-            continue
-        output_name = str(measure.get("output_name") or "").strip()
-        if output_name:
-            target_columns.add(output_name)
-        for alias, _ in _measure_alias_candidates(measure):
-            target_columns.add(alias)
-
-    rounded = []
-    for row in data:
-        updated = dict(row)
-        for column in target_columns:
-            value = updated.get(column)
-            if isinstance(value, bool) or isinstance(value, int) or not isinstance(value, (float, Decimal)):
-                continue
-            try:
-                updated[column] = float(
-                    Decimal(str(value)).quantize(quantum, rounding=ROUND_HALF_UP)
-                )
-            except (InvalidOperation, ValueError):
-                continue
-        rounded.append(updated)
-    return rounded
-
-
-def _drop_null_month_rows(query_spec: dict[str, Any], data: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    if not query_spec.get("month_grain"):
-        return data
-    month_field = None
-    group_by = query_spec.get("group_by")
-    group_by = group_by if isinstance(group_by, list) else []
-    for group in group_by:
-        if not isinstance(group, dict):
-            continue
-        if normalize_semantic_text(group.get("output_name", "")) == "month":
-            month_field = str(group.get("output_name", "")).strip() or "month"
-            break
-    month_field = month_field or "month"
-    filtered = []
-    for row in data:
-        if not isinstance(row, dict):
-            filtered.append(row)
-            continue
-        month_value = row.get(month_field)
-        if month_value is None:
-            continue
-        if str(month_value).strip().upper() == "NULL":
-            continue
-        filtered.append(row)
-    return filtered
-
-
-def _reshape_missing_count_rows(query: str, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    q = normalize_compare_text(query)
-    if "missing each required classification field" not in q:
-        return data
-    if len(data) != 1 or not isinstance(data[0], dict):
-        return data
-    row = data[0]
-    measure_columns = [
-        column for column in row.keys()
-        if str(column).startswith("count_missing_") or str(column).startswith("missing_")
-    ]
-    if len(measure_columns) < 2:
-        return data
-    reshaped = []
-    for column in measure_columns:
-        column_text = str(column)
-        if column_text.startswith("count_missing_"):
-            field_name = column_text[len("count_missing_"):]
-        else:
-            field_name = column_text[len("missing_"):]
-        if field_name.endswith("_count"):
-            field_name = field_name[:-6]
-        reshaped.append({
-            "field_name": field_name,
-            "missing_count": row.get(column),
-        })
-    return reshaped
-
-
-def _set_if_missing(row: dict[str, Any], key: str, value: Any) -> None:
-    if key and key not in row:
-        row[key] = value
-
-
-def _measure_alias_candidates(measure: dict[str, Any]) -> list[tuple[str, bool]]:
-    if not isinstance(measure, dict):
-        return []
-    output_name = str(measure.get("output_name", "")).strip()
-    source_class = str(measure.get("source_class", "")).lower()
-    field_name = str(measure.get("field", "")).lower()
-    formula = str(measure.get("formula", "")).lower()
-    final_operation = str(measure.get("final_operation", "")).upper()
-    aliases: list[tuple[str, bool]] = []
-
-    def add(name: str, *, absolute: bool = False) -> None:
-        if name and (name, absolute) not in aliases:
-            aliases.append((name, absolute))
-
-    if "withdraw" in output_name or "withdrawal" in formula:
-        add("withdrawal_amount", absolute=True)
-        add("total_withdrawal", absolute=True)
-        add("total_withdrawal_amount", absolute=True)
-    if "deposit" in output_name or "deposit" in formula:
-        add("deposit_amount")
-        add("total_deposit")
-        add("total_deposit_amount")
-    if field_name == "progress_pct":
-        add("avg_progress_pct")
-        add("avg_goal_progress_pct")
-        add("avg_goal_progress")
-    if field_name == "risk_score":
-        add("avg_risk_score")
-        add("risk_score")
-        add("avg_health_risk")
-    if field_name == "liquidity_score":
-        add("avg_liquidity_score")
-        add("avg_liquidity")
-    if field_name == "diversification_score":
-        add("avg_diversification_score")
-        add("diversification_score")
-        add("avg_diversification")
-    if field_name == "goal_match_pct":
-        add("avg_goal_match_pct")
-    if field_name == "shortfall":
-        add("avg_shortfall")
-        add("avg_goal_shortfall")
-        add("total_shortfall")
-    if field_name == "returns_pct":
-        add("avg_returns_pct")
-        add("avg_holding_return_pct")
-    if field_name == "amount" and "cash" in output_name.lower():
-        add("avg_net_cash_flow")
-        add("avg_cash_flow")
-        add("avg_cash_flow_amount")
-        add("net_cash_flow")
-        add("total_cash")
-    if field_name == "current_value":
-        add("holding_value")
-        add("total_holding_value")
-        add("avg_holding_value")
-    if "rebalanc" in output_name.lower() and "amount" in output_name.lower():
-        add("avg_rebalance_amount")
-        add("avg_rebalancing_amount")
-        add("total_rebalancing_amount")
-        add("rebalancing_amount")
-    if "gap" in output_name.lower() or field_name == "gap" or "gap" in formula:
-        add("gap")
-        add("avg_gap")
-        add("avg_rebalance_gap")
-        add("avg_rebalancing_gap")
-    if "scenario" in output_name.lower() and "change" in output_name.lower():
-        add("avg_scenario_change")
-        add("avg_scenario_change_pct")
-    if "scenario" in output_name.lower() and "count" in output_name.lower():
-        add("avg_scenario_count")
-        add("scenario_count")
-    if "transaction" in output_name.lower() and "count" in output_name.lower():
-        add("avg_transaction_count")
-        add("transaction_count")
-    if "goal" in output_name.lower() and "count" in output_name.lower():
-        add("avg_goal_count")
-        add("goal_count")
-    if "investor" in output_name.lower() and "count" in output_name.lower():
-        add("n_investors")
-        add("total_investors")
-        add("investor_count")
-    if "holding_gain" in output_name.lower() or ("current_value - cost" in formula and "portfolio_holding" in source_class):
-        add("avg_holding_gain")
-        add("holding_gain")
-    if final_operation == "COUNT":
-        add("count")
-    if output_name:
-        add(output_name)
-    return aliases
-
-
-def _augment_query_spec_aliases(query_spec: dict[str, Any], data: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    if not data or not isinstance(query_spec, dict):
-        return data
-    measures = query_spec.get("measures")
-    measures = measures if isinstance(measures, list) else []
-    group_by = query_spec.get("group_by")
-    group_by = group_by if isinstance(group_by, list) else []
-    first_group_name = ""
-    if group_by and isinstance(group_by[0], dict):
-        first_group_name = str(group_by[0].get("output_name", "")).strip()
-
-    normalized: list[dict[str, Any]] = []
-    for row in data:
-        if not isinstance(row, dict):
-            normalized.append(row)
-            continue
-        updated = dict(row)
-        if first_group_name and first_group_name in updated:
-            _set_if_missing(updated, "group_value", updated.get(first_group_name))
-        measure_columns: list[str] = []
-        for measure in measures:
-            if not isinstance(measure, dict):
-                continue
-            output_name = str(measure.get("output_name", "")).strip()
-            if output_name and output_name in updated:
-                measure_columns.append(output_name)
-                value = updated.get(output_name)
-                for alias, absolute in _measure_alias_candidates(measure):
-                    alias_value = abs(value) if absolute and _numeric_decimal(value) is not None else value
-                    _set_if_missing(updated, alias, alias_value)
-        if len(measure_columns) >= 1:
-            _set_if_missing(updated, "metric", updated.get(measure_columns[0]))
-            _set_if_missing(updated, "group_avg", updated.get(measure_columns[0]))
-        if len(measure_columns) >= 2:
-            _set_if_missing(updated, "metric_a", updated.get(measure_columns[0]))
-            _set_if_missing(updated, "metric_b", updated.get(measure_columns[1]))
-        if len(measure_columns) >= 3:
-            _set_if_missing(updated, "metric_c", updated.get(measure_columns[2]))
-        normalized.append(updated)
-    return normalized
-
-
 def normalize_semantic_result(query: str, query_spec: dict[str, Any], data: Any) -> Any:
+    """Preserve backend values; apply only explicit result-shape policies."""
     if not isinstance(data, list):
         return data
     if not all(isinstance(row, dict) for row in data):
         return data
     normalized = [dict(row) for row in data]
-    normalized = _normalize_bucket_rows(query_spec, normalized)
     normalized = _drop_null_group_rows(query_spec, normalized)
-    normalized = _drop_null_month_rows(query_spec, normalized)
-    normalized = _reshape_missing_count_rows(query, normalized)
-    normalized = _augment_query_spec_aliases(query_spec, normalized)
-    normalized = _round_analytic_values(query, query_spec, normalized)
     return normalized
 
 
@@ -589,14 +264,6 @@ def validate_semantic_result(query: str, query_spec: dict[str, Any], data: Any) 
     grouped_query = _is_grouped_query(query, query_spec)
     ranking_required = bool(ranking.get("required"))
     list_like = any(marker in normalize_compare_text(query) for marker in ["which", "show", "list", "identify", "find"])
-
-    if grouped_query and group_by and not ranking_required and len(data) == 1:
-        return {
-            "is_valid": False,
-            "severity": "repairable_warning",
-            "reason": "Grouped query returned a single row, which indicates the grouping dimension was lost.",
-            "rewrite_hint": "Preserve the group_by dimension in the final output and group at the requested final grain.",
-        }
 
     if group_by:
         first_group = group_by[0] if isinstance(group_by[0], dict) else {}
@@ -704,45 +371,33 @@ def should_validate_semantics(query_spec: dict[str, Any]) -> bool:
 _IRI_PREFIX = re.compile(r"^https?://", re.IGNORECASE)
 
 
-def iri_local_name(value: Any) -> Any:
-    """Reduce an RDF resource IRI to its local name, leaving other values alone.
-
-    SPARQL returns bound resources as full IRIs
-    (``https://wealth.example.org/kg/investor/INV-003``) while the benchmark and
-    the SQL backend both speak local identifiers (``INV-003``). Normalizing here
-    keeps KG output shape comparable with SQL output shape and lets cross-backend
-    set operations key on the same value space.
-    """
+def iri_local_name(value: Any, allowed_prefixes: tuple[str, ...] = ()) -> Any:
+    """Map an IRI to a local ID only for a declared identity namespace."""
     if not isinstance(value, str):
         return value
     text = value.strip()
-    if not _IRI_PREFIX.match(text):
+    if not _IRI_PREFIX.match(text) or not any(text.startswith(prefix) for prefix in allowed_prefixes):
         return value
     tail = re.split(r"[#/]", text)[-1]
     return tail if tail else value
 
 
-def normalize_result_iris(data: Any) -> Any:
-    """Apply :func:`iri_local_name` to every cell of a row list."""
+def normalize_result_iris(data: Any, allowed_prefixes: tuple[str, ...] = ()) -> Any:
+    """Apply only source-declared IRI-to-local-ID mappings."""
     if not isinstance(data, list):
         return data
     normalized = []
     for row in data:
         if isinstance(row, dict):
-            normalized.append({key: iri_local_name(value) for key, value in row.items()})
+            normalized.append({key: iri_local_name(value, allowed_prefixes) for key, value in row.items()})
         else:
             normalized.append(row)
     return normalized
 
 
 def set_operation_key(value: Any) -> str:
-    """Canonical join key for deterministic set operations.
-
-    Strips IRI prefixes and non-alphanumeric noise so that ``INV-003``,
-    ``inv003`` and ``https://wealth.example.org/kg/investor/INV-003`` collapse to
-    the same key regardless of which backend produced the row.
-    """
-    return re.sub(r"[^a-z0-9]+", "", str(iri_local_name(value) or "").lower())
+    """Exact string key; equivalence across backends requires a declared map."""
+    return str(value) if value is not None else ""
 
 
 def _has_staged_aggregation(sql_text: str) -> bool:
