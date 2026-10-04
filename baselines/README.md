@@ -1,6 +1,6 @@
 # Finance baselines
 
-This directory contains the five 1,000-question baseline pipelines and their
+This directory contains six 1,000-question baseline pipelines and their
 current GPT-5 Mini graded CSV reports. The current snapshot passes
 `domain_intro.prompt` and `phase0_business_rules.md` to every generation call
 in addition to the runtime schema/DDL or retrieved RDF facts. Earlier result
@@ -13,6 +13,7 @@ sets remain under `results/` as historical snapshots.
 | GraphRAG local retrieval | `graph_rag_local/` | `results/graph_rag_local_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv` |
 | Parallel SPARQL ensemble | `parallel_pipeline_baseline/` | `results/parallel_sparql_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv` |
 | Parallel SQL ensemble | `parallel_pipeline_sql_baseline/` | `results/parallel_sql_domain_intro_phase0_rules_1000q_20261004_graded_gpt_5_mini.csv` |
+| DAIL-SQL | `dail_sql_baseline/` | `results/dail_sql_gpt_oss_120b_domain_context_1000q_20261005_graded_gpt_5_mini.csv` |
 
 `results/query_type_grading_results_domain_context_gpt_5_mini.md` contains the independent MATCH,
 MISMATCH, and PARTIAL counts for every query type in each pipeline.
@@ -85,6 +86,7 @@ python baselines/graph_rag_local/run_pipeline.py run
 
 python baselines/parallel_pipeline_baseline/run_pipeline.py
 python baselines/parallel_pipeline_sql_baseline/run_pipeline.py
+python baselines/dail_sql_baseline/run_pipeline.py
 ```
 
 Each runner saves progress incrementally under its own `output/` directory.
@@ -103,9 +105,13 @@ python baselines/grading/grade_openai_gpt_oss_120b_all_train_direct_llm_gpt_5_6_
 
 No API keys or local `.env` files are included.
 
-To rebuild the two Markdown summaries from the current graded CSVs:
+To rebuild the Markdown reports from the current graded CSVs:
 
 ```bash
 python baselines/scripts/generate_grading_markdown.py
 python baselines/scripts/generate_baseline_metrics.py
+python baselines/dail_sql_baseline/scripts/generate_reports.py
 ```
+
+The DAIL-SQL-specific query-type, 125-question category, metrics, and
+implementation reports use the `dail_sql_` filename prefix under `results/`.
