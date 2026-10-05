@@ -1,0 +1,476 @@
+{
+  "fingerprint": "239cf1f3d3ac1184a6d41b08c595c3282174eb47d846755270f576ba3c8456b8",
+  "entries": [
+    {
+      "id": "term_portfolio_construction",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Portfolio Construction",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "category",
+        "cost",
+        "current_value",
+        "investment_type",
+        "sector"
+      ],
+      "terms": [
+        "Portfolio Construction"
+      ],
+      "definition": "The process of building investor portfolios based on risk tolerance, investment goals, and time horizon.",
+      "quote": "building investor portfolios aligned to risk tolerance, investment goals, and time horizon.",
+      "conflicts": []
+    },
+    {
+      "id": "term_xirr",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "date",
+        "amount"
+      ],
+      "terms": [
+        "XIRR",
+        "Extended Internal Rate of Return"
+      ],
+      "definition": "The annualised return of an investment calculated from irregular cash flows.",
+      "quote": "XIRR is the annualised return of an investment computed from irregular cash flows",
+      "conflicts": []
+    },
+    {
+      "id": "term_risk_tolerance",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "Risk Tolerance"
+      ],
+      "definition": "An investor's capacity and willingness to accept potential losses in exchange for potential gains.",
+      "quote": "Capital preservation focus; low volatility tolerance; debt-heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": "def_xirr",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date",
+        "cost",
+        "current_value"
+      ],
+      "terms": [
+        "XIRR",
+        "Extended Internal Rate of Return",
+        "Definition"
+      ],
+      "definition": "Annualized return computed from irregular cash flows using the XIRR formula.",
+      "quote": "XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": []
+    },
+    {
+      "id": "constraint_xirr_high",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [],
+      "terms": [
+        "XIRR",
+        "plausibility threshold",
+        "suspect"
+      ],
+      "definition": "Computed XIRR exceeds 25% indicates a potential data quality issue.",
+      "quote": "Computed XIRR > 25% | **FLAG as suspect.**",
+      "conflicts": []
+    },
+    {
+      "id": "constraint_xirr_low",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [],
+      "terms": [
+        "XIRR",
+        "stale valuation"
+      ],
+      "definition": "Computed XIRR below -50% could indicate a missing recent market valuation.",
+      "quote": "Computed XIRR < -50% | Flag as suspect; likely missing recent valuation or stale `current_value`.",
+      "conflicts": []
+    },
+    {
+      "id": "default_time_horizon_very_short",
+      "document": "domain_intro",
+      "kind": "default",
+      "topic": "Time Horizon",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [],
+      "terms": [
+        "Very Short Term"
+      ],
+      "definition": "A time horizon less than 1 year.",
+      "quote": "Very Short Term: < 1 year",
+      "conflicts": []
+    },
+    {
+      "id": "advisory_concentration_conservative",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Allocation Drift",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+      "fields": [
+        "allocation_pct"
+      ],
+      "terms": [
+        "Conservative investor",
+        "single sector allocation",
+        "compliance review"
+      ],
+      "definition": "Conservative investors with more than 30% in a single sector require compliance review.",
+      "quote": "Conservative investors: any single sector allocation > 30% → flag for compliance review.",
+      "conflicts": []
+    },
+    {
+      "id": "constraint_purchase_date",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Data Quality",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "purchase date",
+        "future",
+        "1990-01-01"
+      ],
+      "definition": "Purchase date must not be in the future, nor before 1990-01-01.",
+      "quote": "`purchase_date` must not be in the future and must not predate 1990-01-01",
+      "conflicts": []
+    },
+    {
+      "id": "constraint_cost",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Data Quality",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": [
+        "cost",
+        "zero",
+        "NULL"
+      ],
+      "definition": "Cost must be greater than zero and not NULL.",
+      "quote": "`cost` must be > 0 and not NULL",
+      "conflicts": []
+    },
+    {
+      "id": "term_investment_goal",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goals",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "Wealth Preservation",
+        "Growth",
+        "Income Generation",
+        "Retirement Planning",
+        "Child Education",
+        "Emergency Fund"
+      ],
+      "definition": "The specific financial objectives an investor aims to achieve.",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": []
+    }
+  ],
+  "review": [
+    {
+      "id": "term_portfolio_construction",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Portfolio Construction",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "category",
+        "cost",
+        "current_value",
+        "investment_type",
+        "sector"
+      ],
+      "terms": [
+        "Portfolio Construction"
+      ],
+      "definition": "The process of building investor portfolios based on risk tolerance, investment goals, and time horizon.",
+      "quote": "building investor portfolios aligned to risk tolerance, investment goals, and time horizon.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "2ba7eca0e05301c62be43076777542ba1f4f55a7513701e7cc43bd8bb3dba9f3",
+      "active": true
+    },
+    {
+      "id": "term_xirr",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "date",
+        "amount"
+      ],
+      "terms": [
+        "XIRR",
+        "Extended Internal Rate of Return"
+      ],
+      "definition": "The annualised return of an investment calculated from irregular cash flows.",
+      "quote": "XIRR is the annualised return of an investment computed from irregular cash flows",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "aea1935651793338dd56bd995a938d7448a7759cd4d37c718d7626d769a2869c",
+      "active": false
+    },
+    {
+      "id": "term_risk_tolerance",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "Risk Tolerance"
+      ],
+      "definition": "An investor's capacity and willingness to accept potential losses in exchange for potential gains.",
+      "quote": "Capital preservation focus; low volatility tolerance; debt-heavy allocation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "7fdcf1c21ae7b5a099cc7728414608203d655be2f99cc59e80b0413b9f52d267",
+      "active": true
+    },
+    {
+      "id": "def_xirr",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date",
+        "cost",
+        "current_value"
+      ],
+      "terms": [
+        "XIRR",
+        "Extended Internal Rate of Return",
+        "Definition"
+      ],
+      "definition": "Annualized return computed from irregular cash flows using the XIRR formula.",
+      "quote": "XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": [],
+      "errors": [
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "2e4d78862b7660d6ff406711b2da5996f43b5d96d1131bc7468df1590fbc7441",
+      "active": false
+    },
+    {
+      "id": "constraint_xirr_high",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [],
+      "terms": [
+        "XIRR",
+        "plausibility threshold",
+        "suspect"
+      ],
+      "definition": "Computed XIRR exceeds 25% indicates a potential data quality issue.",
+      "quote": "Computed XIRR > 25% | **FLAG as suspect.**",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence",
+        "Fields must be a nonempty string list",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "0b715fe47051f0c38d8f6d2828edc5fafe1d870d58574c2021ce42851a0f2cac",
+      "active": false
+    },
+    {
+      "id": "constraint_xirr_low",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [],
+      "terms": [
+        "XIRR",
+        "stale valuation"
+      ],
+      "definition": "Computed XIRR below -50% could indicate a missing recent market valuation.",
+      "quote": "Computed XIRR < -50% | Flag as suspect; likely missing recent valuation or stale `current_value`.",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence",
+        "Fields must be a nonempty string list",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "5fd0769c9136f1ae2116765243d4b548b03bfed95bfd4765de420e4d568d616d",
+      "active": false
+    },
+    {
+      "id": "default_time_horizon_very_short",
+      "document": "domain_intro",
+      "kind": "default",
+      "topic": "Time Horizon",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [],
+      "terms": [
+        "Very Short Term"
+      ],
+      "definition": "A time horizon less than 1 year.",
+      "quote": "Very Short Term: < 1 year",
+      "conflicts": [],
+      "errors": [
+        "Fields must be a nonempty string list"
+      ],
+      "evidence_hash": "25952c32ea65a740a1ad3d69a0c72fced1e4257153cf7619321ef3c10743d339",
+      "active": false
+    },
+    {
+      "id": "advisory_concentration_conservative",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Allocation Drift",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+      "fields": [
+        "allocation_pct"
+      ],
+      "terms": [
+        "Conservative investor",
+        "single sector allocation",
+        "compliance review"
+      ],
+      "definition": "Conservative investors with more than 30% in a single sector require compliance review.",
+      "quote": "Conservative investors: any single sector allocation > 30% → flag for compliance review.",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence"
+      ],
+      "evidence_hash": "3818212687ed397e5b783b60f291ddd795409f029dc19f6fa4e4d578e572aec1",
+      "active": false
+    },
+    {
+      "id": "constraint_purchase_date",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Data Quality",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "purchase date",
+        "future",
+        "1990-01-01"
+      ],
+      "definition": "Purchase date must not be in the future, nor before 1990-01-01.",
+      "quote": "`purchase_date` must not be in the future and must not predate 1990-01-01",
+      "conflicts": [],
+      "errors": [
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "8ee419ec1db35b89a1d67f22f431aaed40002714bfe2963d080322436e8be809",
+      "active": false
+    },
+    {
+      "id": "constraint_cost",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Data Quality",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": [
+        "cost",
+        "zero",
+        "NULL"
+      ],
+      "definition": "Cost must be greater than zero and not NULL.",
+      "quote": "`cost` must be > 0 and not NULL",
+      "conflicts": [],
+      "errors": [
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "479384740cf0552f552bc73b5dab2e37a997d812e71fe235b651cc3585381b28",
+      "active": false
+    },
+    {
+      "id": "term_investment_goal",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goals",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "Wealth Preservation",
+        "Growth",
+        "Income Generation",
+        "Retirement Planning",
+        "Child Education",
+        "Emergency Fund"
+      ],
+      "definition": "The specific financial objectives an investor aims to achieve.",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "6016aa0e6127128d2754ba724f8b4b35e184862c52b4cb5401005bb8bd0262e5",
+      "active": true
+    }
+  ],
+  "quarantined_documents": [
+    {
+      "document": "business_rules",
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/phase0_business_rules.md",
+      "reason": "Evaluation-scoped document excluded from preparation and inference"
+    }
+  ]
+}

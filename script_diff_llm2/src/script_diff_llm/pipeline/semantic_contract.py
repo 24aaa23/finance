@@ -181,6 +181,20 @@ def normalize_semantic_result(query: str, query_spec: dict[str, Any], data: Any)
     return normalized
 
 
+def _identity_column(query_spec: dict[str, Any], actual_columns: list[str]) -> str | None:
+    key = str(query_spec.get('entity_key') or '').strip()
+    direct = _equivalent_column(key, actual_columns) if key else None
+    if direct:
+        return direct
+    for measure in query_spec.get('measures', []):
+        if (isinstance(measure, dict) and measure.get('field') == key
+                and not any(measure.get(k) for k in ('formula', 'per_entity_operation', 'final_operation'))):
+            alias = _equivalent_column(measure.get('output_name', ''), actual_columns)
+            if alias:
+                return alias
+    return None
+
+
 def validate_semantic_result(query: str, query_spec: dict[str, Any], data: Any) -> dict[str, Any]:
     if not isinstance(data, list):
         return {
@@ -282,7 +296,7 @@ def validate_semantic_result(query: str, query_spec: dict[str, Any], data: Any) 
 
     if ranking_required:
         entity_key = str(query_spec.get("entity_key", "")).strip()
-        if entity_key and _equivalent_column(entity_key, actual_columns) is None:
+        if entity_key and _identity_column(query_spec, actual_columns) is None:
             return {
                 "is_valid": False,
                 "severity": "repairable_warning",
@@ -318,7 +332,7 @@ def validate_semantic_result(query: str, query_spec: dict[str, Any], data: Any) 
             }
 
     entity_key = str(query_spec.get("entity_key", "")).strip()
-    if list_like and entity_key and not group_by and _equivalent_column(entity_key, actual_columns) is None:
+    if list_like and entity_key and not group_by and _identity_column(query_spec, actual_columns) is None:
         return {
             "is_valid": False,
             "severity": "repairable_warning",
@@ -326,7 +340,7 @@ def validate_semantic_result(query: str, query_spec: dict[str, Any], data: Any) 
             "rewrite_hint": "Return the entity identity column in the final output so each row identifies which entity satisfied the query.",
         }
     if entity_key and not group_by:
-        entity_column = _equivalent_column(entity_key, actual_columns)
+        entity_column = _identity_column(query_spec, actual_columns)
         if entity_column:
             seen = set()
             duplicates = set()

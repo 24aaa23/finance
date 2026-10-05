@@ -1,0 +1,92 @@
+{
+  "configuration": {
+    "condition": "with_context",
+    "context_preparation": "per-model; independently reviewed policies only",
+    "endpoint": "https://bedrock-mantle.us-east-1.api.aws/v1",
+    "experiment_sha256": "e94a66da148d1f605083c844d0820e7df57ee84b4670416568724d41f2b59f5a",
+    "fuseki_endpoint": "http://127.0.0.1:3030/wealth/query",
+    "grader": "manual only; gpt-5-mini",
+    "implementation": {
+      "src/script_diff_llm/__init__.py": "ecca3e32b61fa50e3b5ebe9a33b33c4c6b61ea263eb930d872302037fe2c7dde",
+      "src/script_diff_llm/backends/__init__.py": "a9c130da42d9d6e09c8cdf60ed994fd8d4f19202ce450bd168414890f5cf0d32",
+      "src/script_diff_llm/backends/kg.py": "7044a72cf57a036a53950aedd75dd33c21d2dffa39243076108c9d6102d313a8",
+      "src/script_diff_llm/backends/sparql_contract.py": "06c3ba17ec352c7e8a8df8bcd5c3091d662e215078e38e2b3b83cb1571bf0546",
+      "src/script_diff_llm/backends/sql.py": "63c2d9c362397c64061dfcd4b1a75430560eb11954bdd916c7cca80d04b77fa8",
+      "src/script_diff_llm/backends/sql_schema.py": "9378930b50f7d8ff3b5971acaae03ac8873704e11374cf59852806ed29783965",
+      "src/script_diff_llm/config/__init__.py": "df46203f99cb34b8cc94558a79cc1b63f9e3277cb4b5dd8bb8dfc48be7697cd7",
+      "src/script_diff_llm/config/experiments.py": "97a3d869bb06e0b2c28aff4455e82164b40b22ac2c082e7b09514a26443f9636",
+      "src/script_diff_llm/config/paths.py": "30036b2a122dafbe8c41d452e076cae0ff8b4ab7d700eda1313a2b78ff73ff86",
+      "src/script_diff_llm/config/runtime.py": "8ae8a3897f5e6e2d996ac176b5a9ae9589e8dbb5372ef6970109a7b18a011a90",
+      "src/script_diff_llm/evaluation/__init__.py": "ee806326e4e080db6d0fd10f74cc7787ee1db4bb2e3700afc484c25dd3ac60a1",
+      "src/script_diff_llm/evaluation/benchmark_io.py": "76e407813ec6a3f173797986ae223c87219bb7004d41450b04da360706a753b3",
+      "src/script_diff_llm/evaluation/reporting.py": "81d5c204dc77dbeb6cde98471c6da22e3e64dccdf78d3aa7395ba0ab5bb69127",
+      "src/script_diff_llm/llm/__init__.py": "f868efe94949adc2940fa8d42b3de3cb0385cee40ee694d905358945ff7820a5",
+      "src/script_diff_llm/llm/clients.py": "c072733dce32500e3eb59cc0f38ef8e514236b1cc92d2ead3791fe04cb1f8fad",
+      "src/script_diff_llm/pipeline/__init__.py": "3df27275467dfe40c9a6dbd579e7e35ab6846942c0bb8981f05d0234fd27ca46",
+      "src/script_diff_llm/pipeline/contracts.py": "5ea11b7b5d6abf9177bc78b0fc8ab46b0f08531525c7126fd24798c00808aa01",
+      "src/script_diff_llm/pipeline/core_pipeline.py": "5164f341264423fb2ada78a8ade77baa95b7f5f6819b2add90339b343cc1b453",
+      "src/script_diff_llm/pipeline/dag/__init__.py": "6593743475c359fca34155d7546e4447ea165c531df9b79ceefe2776c470b8ec",
+      "src/script_diff_llm/pipeline/dag/executor.py": "fb0c400c8066d3ccee1892a8c716d64924bfb1e9d5caf548224070e63a2d1ce1",
+      "src/script_diff_llm/pipeline/dag/planner.py": "c3c7d5d50e4f4ccf22b88f322e9383bd9767d62f2425ad5c294fd686f72fe4b7",
+      "src/script_diff_llm/pipeline/decomposition.py": "cfff460136509721672b873f38a3693b142b8300ffe07e9b012f0db4f2a07530",
+      "src/script_diff_llm/pipeline/domain_context.py": "15e4f9487b4309d30ee2cbb2a0e5591ba70231b6fc762ec052ab16b118175cfd",
+      "src/script_diff_llm/pipeline/explanation.py": "ba351c6cd9f95ca78dba9698c5dc3d9f1ce8e8f97e5140178adfd310665557c5",
+      "src/script_diff_llm/pipeline/gpt_oss_pipeline.py": "c07de1d22b8ce398d4ceab40d665d41a352cf2d4078142b22048f61eafa6621d",
+      "src/script_diff_llm/pipeline/kg_pipeline.py": "e70661a2a577f23b52d5aeab2f2416029fe90b71feda410d6eb6c1e1823246e6",
+      "src/script_diff_llm/pipeline/operators.py": "7b7cba13ddeaba805756da8b7dfde95497dec9e88bb1142761ef869bd6888c7a",
+      "src/script_diff_llm/pipeline/registry.py": "274d5f7e16d93ed7f94b48ce7a05839f6258f7253f0d933410969756078cb794",
+      "src/script_diff_llm/pipeline/semantic_catalog.py": "8de7c494c4c34911aa8ded9f6fc34d446009d518c50e957999d5ae70c73dee72",
+      "src/script_diff_llm/pipeline/semantic_contract.py": "b5053d1012b2dd1502a4b28cf016e3afc248c71a2b4bcb6ee00d0d54245ad7d0",
+      "src/script_diff_llm/pipeline/spec_normalization.py": "27291165c95b4ed65695a2298131b26d5037162179be30117dcc9f23e48cf9ab",
+      "src/script_diff_llm/pipeline/specification.py": "d35c4bdcf383564d2fd28e64482e6e92592c1d6926d913e3b4d827293d40fde4"
+    },
+    "model": "gemma_3_27b_it",
+    "model_config_sha256": "3b31e1a40f6ab2cab788a24ed11ee1b806d0793e5f1d3a4b7ac61528a7437947",
+    "model_id": "google.gemma-3-27b-it",
+    "settings": {
+      "DAG_LEVEL_MAX_WORKERS": "2",
+      "DETERMINISTIC_EXPLAIN": "1",
+      "GPT_OSS_LLM_GRADER_PIPELINE_VERSION": "ablation-v5-test1000-v1",
+      "QUERY_SHUFFLE_SEED": "4043113952",
+      "TEST_MAX_WORKERS": "4",
+      "TEST_QUERY_LIMIT": "1000",
+      "TEST_QUERY_OFFSET": "0"
+    },
+    "sources": {
+      "BUSINESS_RULES_FILE": {
+        "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/phase0_business_rules.md",
+        "sha256": "4820bfd42c2c69231669027420d10eab0cf5493e6c46193914806c5c33e072b2"
+      },
+      "DOMAIN_CONTEXT_APPROVAL_FILE": null,
+      "DOMAIN_INTRO_FILE": {
+        "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/domain_intro.prompt",
+        "sha256": "949546f7d36d89a79c20f39c8fc00bf7e60d15634c8f9915381aa56dd0dbeece"
+      },
+      "GROUND_TRUTH_OVERRIDE_FILE": {
+        "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/216_questions_full_results.json",
+        "sha256": "d0d7a4582b5607e26d3e535c5ac4a4e84bf16e41831c05e7b6078c801faeda29"
+      },
+      "INPUT_SAMPLE_FILE": {
+        "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/wealth_management_1000_test_set_questions.xlsx",
+        "sha256": "2ded0897ee307ac325d10cf340ca8f303e3e8ccba63f815dc87abe23143ba5d6"
+      },
+      "INSTANCE_FILE": {
+        "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/kg/wealth_management_diverse_kg.ttl",
+        "sha256": "2496802ef967eec865e64443cd3c38b350815581f58e701b519ba28c77e33265"
+      },
+      "RDF_ALIAS_MAP_FILE": {
+        "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/kg/rdf_id_alias_map.json",
+        "sha256": "94edaacba30cfb3b1d735b803a36f6a272999d5a58cfdb37a79a8da7d682ef46"
+      },
+      "SCHEMA_FILE": {
+        "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/kg/wealth_management_diverse_schema.ttl",
+        "sha256": "f1cbe4fbfcd4a0317a41997e1311bf3cefbb1b2e672ac8a23d8fe51e03f6517b"
+      },
+      "SQLITE_DB_PATH": {
+        "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db",
+        "sha256": "f96a4bcb184cf7c5b8dc0da007c18058f83775b0b0b4db3f901c8d0945c026c2"
+      }
+    }
+  },
+  "signature": "f7d6517e39b0c11eb1d81fd3f62f7343391d36032097281c9d25ea5db833635e"
+}

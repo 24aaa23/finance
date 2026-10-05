@@ -1,0 +1,153 @@
+{
+  "summary": {
+    "ablations/v5_test1000/runs/deepseek_v3_2/with_context/run_01": {
+      "eligible_nodes": 195,
+      "executable_nodes": 195,
+      "same_saved_requested_values": 184,
+      "different_saved_requested_values": 5
+    },
+    "ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01": {
+      "eligible_nodes": 197,
+      "executable_nodes": 197,
+      "same_saved_requested_values": 187,
+      "different_saved_requested_values": 5
+    },
+    "ablations/v5_test1000/runs/gemma_3_27b_it/with_context/run_01": {
+      "eligible_nodes": 173,
+      "executable_nodes": 173,
+      "same_saved_requested_values": 165
+    },
+    "ablations/v5_test1000/runs/gemma_3_27b_it/without_context/run_01": {
+      "eligible_nodes": 155,
+      "executable_nodes": 155,
+      "same_saved_requested_values": 148
+    },
+    "ablations/v5_test1000/runs/kimi_k2_thinking/without_context/run_01": {
+      "eligible_nodes": 58,
+      "executable_nodes": 58,
+      "same_saved_requested_values": 58
+    },
+    "outputs/openai_gpt_oss_120b/all/test1000/context_v5_01": {
+      "eligible_nodes": 161,
+      "executable_nodes": 161,
+      "same_saved_requested_values": 153,
+      "different_saved_requested_values": 1
+    },
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v5": {
+      "eligible_nodes": 156,
+      "executable_nodes": 156,
+      "same_saved_requested_values": 151,
+      "different_saved_requested_values": 1
+    }
+  },
+  "differences": [
+    {
+      "run": "ablations/v5_test1000/runs/deepseek_v3_2/with_context/run_01",
+      "id": "wealth_management_reference_compliance_125_questions:RC125-007",
+      "node": "Q1",
+      "replay_rows": 0,
+      "saved_rows": 755,
+      "compiler": "point_lookup",
+      "sql": "SELECT \"holding_id\" AS \"holding_id\", \"investor_id\" AS \"investor_id\", \"investment_type\" AS \"investment_type\", \"investment_name\" AS \"investment_name\", \"sector\" AS \"sector\", \"segment\" AS \"segment\", \"category\" AS \"category\", \"purchase_date\" AS \"purchase_date\", \"cost\" AS \"cost\", \"current_value\" AS \"current_value\", \"returns_pct\" AS \"returns_pct\", \"dividends\" AS \"dividends\", \"taxes_paid\" AS \"taxes_paid\" FROM \"ATOM_ENTITY_PORTFOLIO_HOLDING_001\" WHERE \"sector\" NOT IN ('Automobile', 'Banking', 'Consumer Goods', 'Corporate', 'Financial Services', 'Government', 'Healthcare', 'Infrastructure', 'Pharma', 'Private Equity', 'Real Estate', 'Technology');"
+    },
+    {
+      "run": "ablations/v5_test1000/runs/deepseek_v3_2/with_context/run_01",
+      "id": "wealth_management_reference_compliance_125_questions:RC125-068",
+      "node": "Q1",
+      "replay_rows": 6,
+      "saved_rows": 5,
+      "compiler": "aggregation",
+      "sql": "SELECT \"category\" AS \"category\" FROM \"ATOM_ENTITY_INVESTOR_PROFILE_001\" GROUP BY \"category\";"
+    },
+    {
+      "run": "ablations/v5_test1000/runs/deepseek_v3_2/with_context/run_01",
+      "id": "wealth_management_temporal_transaction_125_questions:TT125-053",
+      "node": "Q1",
+      "replay_rows": 1,
+      "saved_rows": 1,
+      "compiler": "aggregation",
+      "sql": "SELECT SUM(\"amount\") AS \"net_transaction_amount\" FROM \"ATOM_EVENT_CASH_FLOW_001\" WHERE \"source\" = 'Auto-debit';"
+    },
+    {
+      "run": "ablations/v5_test1000/runs/deepseek_v3_2/with_context/run_01",
+      "id": "wealth_management_temporal_transaction_125_questions:TT125-057",
+      "node": "Q1",
+      "replay_rows": 1,
+      "saved_rows": 1,
+      "compiler": "aggregation",
+      "sql": "SELECT SUM(\"amount\") AS \"net_transaction_amount\" FROM \"ATOM_EVENT_CASH_FLOW_001\" WHERE \"source\" = 'Cash';"
+    },
+    {
+      "run": "ablations/v5_test1000/runs/deepseek_v3_2/with_context/run_01",
+      "id": "wealth_management_temporal_transaction_125_questions:TT125-059",
+      "node": "Q1",
+      "replay_rows": 1,
+      "saved_rows": 1,
+      "compiler": "aggregation",
+      "sql": "SELECT SUM(\"amount\") AS \"net_transaction_amount\" FROM \"ATOM_EVENT_CASH_FLOW_001\" WHERE \"source\" = 'Cheque';"
+    },
+    {
+      "run": "ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01",
+      "id": "wealth_management_reference_compliance_125_questions:RC125-007",
+      "node": "Q1",
+      "replay_rows": 0,
+      "saved_rows": 755,
+      "compiler": "point_lookup",
+      "sql": "SELECT \"holding_id\" AS \"holding_id\", \"investor_id\" AS \"investor_id\", \"investment_type\" AS \"investment_type\", \"investment_name\" AS \"investment_name\", \"sector\" AS \"sector\", \"segment\" AS \"segment\", \"category\" AS \"category\", \"purchase_date\" AS \"purchase_date\", \"cost\" AS \"cost\", \"current_value\" AS \"current_value\", \"returns_pct\" AS \"returns_pct\", \"dividends\" AS \"dividends\", \"taxes_paid\" AS \"taxes_paid\" FROM \"ATOM_ENTITY_PORTFOLIO_HOLDING_001\" WHERE \"sector\" NOT IN ('Automobile', 'Banking', 'Consumer Goods', 'Corporate', 'Financial Services', 'Government', 'Healthcare', 'Infrastructure', 'Pharma', 'Private Equity', 'Real Estate', 'Technology');"
+    },
+    {
+      "run": "ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01",
+      "id": "wealth_management_reference_compliance_125_questions:RC125-041",
+      "node": "Q1",
+      "replay_rows": 11,
+      "saved_rows": 10,
+      "compiler": "aggregation",
+      "sql": "SELECT \"source\" AS \"source\", COUNT(\"cash_flow_id\") AS \"record_count\" FROM \"ATOM_EVENT_CASH_FLOW_001\" GROUP BY \"source\";"
+    },
+    {
+      "run": "ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01",
+      "id": "wealth_management_reference_compliance_125_questions:RC125-065",
+      "node": "Q1",
+      "replay_rows": 5,
+      "saved_rows": 4,
+      "compiler": "aggregation",
+      "sql": "SELECT \"segment\" AS \"segment\" FROM \"ATOM_ENTITY_INVESTOR_PROFILE_001\" GROUP BY \"segment\";"
+    },
+    {
+      "run": "ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01",
+      "id": "wealth_management_temporal_transaction_125_questions:TT125-055",
+      "node": "Q1",
+      "replay_rows": 1,
+      "saved_rows": 1,
+      "compiler": "aggregation",
+      "sql": "SELECT SUM(\"amount\") AS \"net_transaction_amount\" FROM \"ATOM_EVENT_CASH_FLOW_001\" WHERE \"source\" = 'Bank Transfer';"
+    },
+    {
+      "run": "ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01",
+      "id": "wealth_management_temporal_transaction_125_questions:TT125-057",
+      "node": "Q1",
+      "replay_rows": 1,
+      "saved_rows": 1,
+      "compiler": "aggregation",
+      "sql": "SELECT SUM(\"amount\") AS \"net_transaction_amount\" FROM \"ATOM_EVENT_CASH_FLOW_001\" WHERE \"source\" = 'Cash';"
+    },
+    {
+      "run": "outputs/openai_gpt_oss_120b/all/test1000/context_v5_01",
+      "id": "wealth_management_reference_compliance_125_questions:RC125-007",
+      "node": "Q1",
+      "replay_rows": 0,
+      "saved_rows": 755,
+      "compiler": "point_lookup",
+      "sql": "SELECT \"holding_id\" AS \"holding_id\", \"investor_id\" AS \"investor_id\", \"investment_type\" AS \"investment_type\", \"investment_name\" AS \"investment_name\", \"sector\" AS \"sector\", \"segment\" AS \"segment\", \"category\" AS \"category\", \"purchase_date\" AS \"purchase_date\", \"cost\" AS \"cost\", \"current_value\" AS \"current_value\", \"returns_pct\" AS \"returns_pct\", \"dividends\" AS \"dividends\", \"taxes_paid\" AS \"taxes_paid\" FROM \"ATOM_ENTITY_PORTFOLIO_HOLDING_001\" WHERE \"sector\" NOT IN ('Automobile', 'Banking', 'Consumer Goods', 'Corporate', 'Financial Services', 'Government', 'Healthcare', 'Infrastructure', 'Pharma', 'Private Equity', 'Real Estate', 'Technology');"
+    },
+    {
+      "run": "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v5",
+      "id": "wealth_management_reference_compliance_125_questions:RC125-007",
+      "node": "Q1",
+      "replay_rows": 0,
+      "saved_rows": 755,
+      "compiler": "point_lookup",
+      "sql": "SELECT \"holding_id\" AS \"holding_id\", \"investor_id\" AS \"investor_id\", \"investment_name\" AS \"investment_name\", \"sector\" AS \"sector\" FROM \"ATOM_ENTITY_PORTFOLIO_HOLDING_001\" WHERE \"sector\" NOT IN ('Automobile', 'Banking', 'Consumer Goods', 'Corporate', 'Financial Services', 'Government', 'Healthcare', 'Infrastructure', 'Pharma', 'Private Equity', 'Real Estate', 'Technology');"
+    }
+  ]
+}

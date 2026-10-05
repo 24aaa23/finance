@@ -8,7 +8,9 @@ Preparation runs once at startup using the QuerySpec client/model. Results are
 cached by document content/path, runtime schema, preparation version and model.
 No preparation calls, additional prompt text or context trace are added when
 paths are unset. Missing files warn and are ignored; preparation/API/JSON failures
-fall back to the existing pipeline. If one document remains usable, it can still
+fall back to the existing pipeline unless `DOMAIN_CONTEXT_REQUIRED=1` is set.
+That flag stops before benchmark execution on failure or zero active entries.
+The opt-in context launcher enables it. If one document remains usable, it can still
 be prepared. `DOMAIN_CONTEXT_CACHE_DIR` optionally changes the cache directory.
 
 The agent extracts source quotations, mapped fields, kinds, canonical topics and
@@ -95,7 +97,7 @@ No full paid benchmark was executed as part of implementing this feature.
 
 ```bash
 unset DOMAIN_INTRO_FILE BUSINESS_RULES_FILE DOMAIN_CONTEXT_APPROVAL_FILE
-unset DOMAIN_CONTEXT_PREPARE_ONLY DOMAIN_CONTEXT_CACHE_DIR V5_OUTPUT_DIR
+unset DOMAIN_CONTEXT_PREPARE_ONLY DOMAIN_CONTEXT_CACHE_DIR DOMAIN_CONTEXT_REQUIRED V5_OUTPUT_DIR
 bash runners/run_generic_v5.sh all
 ```
 
@@ -103,3 +105,42 @@ Changing databases requires updating the normal source configuration as well as
 these documents. Documents cannot supply missing SQL/RDF data. Keep exact schema
 mappings and independent provenance in the new documents; there are no financial
 thresholds, table names or source-specific formulas hardcoded in the context agent.
+
+## Preparation contract and glossary recovery
+
+Each extracted entry must name one physical `source` as a string and list exact
+unqualified column/property names in `fields`. Lists of sources and logical field
+prefixes are rejected rather than guessed. Supporting quotes must match the source
+text verbatim. Policies are not reclassified as terminology to activate them.
+
+If candidate extraction produces no usable terminology or approved rule, a separate
+glossary-only preparation pass requests source-supported field/entity meanings.
+It validates its results and retries once with the rejection reasons if needed.
+Valid glossary entries are cached alongside the original review candidates; later
+runs with active cached context skip this preparation. New preparation versions
+invalidate old caches and approvals. Strict mode still stops if nothing activates.
+
+An agent-provided `terminology` label does not bypass approval: entries containing
+numeric thresholds, formula markers or operational language in their definition
+or quote are conservatively treated as definitions requiring independent review.
+This can also hold back legitimate numeric descriptions; it preserves the approval
+boundary instead of silently adopting a policy. Review JSON records the reclassification.
+
+## Reliability v6 preparation evidence and observability
+
+Preparation now includes physical primary keys and bounded observed text domains
+from the runtime schemas, without sampled records or benchmark inputs. These
+observations help distinguish similarly named concepts; they are not an exhaustive
+list of permitted future values. Cache identity includes this evidence, so changing
+the stored domain invalidates preparation even if column names stay the same.
+
+Matching phrases returned as a comma-separated string are normalized to a list
+without adding phrases or weakening source, quote, conflict or approval checks.
+Simple singular/plural matching improves terminology selection. Relevant approved
+context can expose a real source missed by retrieval, but never invents schema fields.
+
+Every run saves `domain_context_state.json` with the actual active bundle and its
+hash. Every QuerySpec in an active context run records the fingerprint and selected
+entries, including an empty selection. Availability is not proof that a rule was
+correctly applied. With no supplied context, prompt construction and preparation
+remain inactive; the state artifact explicitly records inactivity.

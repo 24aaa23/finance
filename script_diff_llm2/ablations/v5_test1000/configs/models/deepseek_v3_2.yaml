@@ -1,0 +1,17 @@
+name: DeepSeek V3.2
+slug: deepseek_v3_2
+provider: aws-bedrock-openai-compatible
+default_model: deepseek.v3.2
+model_env: ABLATION_RAW_MODEL
+api_key_env:
+- ABLATION_API_KEY
+- BEDROCK_MANTLE_API_KEY
+- AWS_BEDROCK_API_KEY
+- BEDROCK_API_KEY
+base_url_env: ABLATION_BASE_URL
+region_env:
+- BEDROCK_REGION
+- AWS_REGION
+- AWS_DEFAULT_REGION
+stage_models:
+  llm_grader: gpt-5-mini

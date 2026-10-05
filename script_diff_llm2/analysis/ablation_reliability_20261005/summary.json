@@ -1,0 +1,952 @@
+{
+  "runs": {
+    "ablations/v5_test1000/runs/deepseek_v3_2/with_context/run_01": {
+      "raw_rows": 1000,
+      "statuses": {
+        "PIPELINE_SUCCESS": 746,
+        "DAG_NODE_ERROR": 195,
+        "PRE_SCAN_ERROR": 59
+      },
+      "failure_nodes": {
+        "Query_Spec_Contract": 203,
+        "Pre_Scan_Validate_SQL": 55,
+        "Pre_Scan_Validate": 9,
+        "Binding": 12
+      },
+      "contract_error_prefixes": {
+        "Unknown output column": 139,
+        "Missing downstream binding output": 36,
+        "Unresolved requirements": 27,
+        "measures.0": 10,
+        "output_schema must contain named output columns.": 11,
+        "measures.0.population_filters": 1,
+        "Unknown source": 6,
+        "Unknown base_entity": 3,
+        "measures.1": 4,
+        "Duplicate output alias": 1,
+        "group_by.0": 2,
+        "filters.0": 2,
+        "filters.1": 1,
+        "Query_Spec could not be parsed.": 6,
+        "Ranking metric must be a planned output alias.": 2,
+        "measures.2": 1,
+        "measures.3": 4,
+        "measures.4": 4,
+        "Filter value 'subquery' is not supported by its quoted requirement 'Filter investors who have every component recorded": 4,
+        "measures.0 must be an object.": 1,
+        "filters.0 must be an object.": 1,
+        "measures.0.aggregate_filters.0": 1,
+        "Filter value 'Redemption' is not supported by its quoted requirement 'expressed as a positive outflow amount'.": 1,
+        "Filter value 'Withdrawal' is not supported by its quoted requirement 'expressed as a positive outflow amount'.": 2,
+        "Filter value '2025-01-01' is not supported by its quoted requirement 'Calculate net cash flow during calendar year 2025'.": 1,
+        "Filter value '2025-12-31' is not supported by its quoted requirement 'Calculate net cash flow during calendar year 2025'.": 1
+      },
+      "unsupported_operators": {},
+      "nodes": {
+        "1": 720,
+        "2": 103,
+        "3": 91,
+        "4": 46,
+        "5": 32,
+        "6": 6,
+        "7": 2
+      },
+      "rows_with_context_trace": 184,
+      "single_nodes_with_declared_outputs": 606,
+      "latency_seconds": {
+        "mean": 73.005442,
+        "median": 31.311,
+        "p95": 290.803
+      },
+      "families": {
+        "wealth_management_125_question_benchmark.csv": {
+          "PIPELINE_SUCCESS": 101,
+          "DAG_NODE_ERROR": 22,
+          "PRE_SCAN_ERROR": 2
+        },
+        "wealth_management_at_risk_critical_125_questions.csv": {
+          "PIPELINE_SUCCESS": 85,
+          "DAG_NODE_ERROR": 35,
+          "PRE_SCAN_ERROR": 5
+        },
+        "wealth_management_batch_status_125_questions.csv": {
+          "PIPELINE_SUCCESS": 90,
+          "DAG_NODE_ERROR": 28,
+          "PRE_SCAN_ERROR": 7
+        },
+        "wealth_management_enrichment_context_125_questions.csv": {
+          "PIPELINE_SUCCESS": 90,
+          "PRE_SCAN_ERROR": 18,
+          "DAG_NODE_ERROR": 17
+        },
+        "wealth_management_multi_step_comparative_125_questions.csv": {
+          "PIPELINE_SUCCESS": 77,
+          "DAG_NODE_ERROR": 36,
+          "PRE_SCAN_ERROR": 12
+        },
+        "wealth_management_reference_compliance_125_questions.csv": {
+          "PIPELINE_SUCCESS": 114,
+          "PRE_SCAN_ERROR": 6,
+          "DAG_NODE_ERROR": 5
+        },
+        "wealth_management_scoring_quantitative_125_questions.csv": {
+          "PIPELINE_SUCCESS": 89,
+          "DAG_NODE_ERROR": 28,
+          "PRE_SCAN_ERROR": 8
+        },
+        "wealth_management_temporal_transaction_125_questions.csv": {
+          "PIPELINE_SUCCESS": 100,
+          "DAG_NODE_ERROR": 24,
+          "PRE_SCAN_ERROR": 1
+        }
+      },
+      "graded_reports": {},
+      "raw_sha256": "fda8d19d14a8d2fbadf1683ff67803c7f3bf88bac595cbace9cc3a3bc795233b"
+    },
+    "ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01": {
+      "raw_rows": 1000,
+      "statuses": {
+        "PIPELINE_SUCCESS": 729,
+        "DAG_NODE_ERROR": 200,
+        "PRE_SCAN_ERROR": 71
+      },
+      "failure_nodes": {
+        "Query_Spec_Contract": 212,
+        "Pre_Scan_Validate": 10,
+        "Pre_Scan_Validate_SQL": 71,
+        "Binding": 13
+      },
+      "contract_error_prefixes": {
+        "Missing downstream binding output": 63,
+        "Unknown output column": 123,
+        "Unresolved requirements": 20,
+        "output_schema must contain named output columns.": 14,
+        "Filter value 'Conservative' is not supported by its quoted requirement 'Get investors with Currency Depreciation scenario records'.": 1,
+        "measures.0": 17,
+        "Unknown source": 4,
+        "Unknown base_entity": 3,
+        "filters.0": 1,
+        "filters.1": 1,
+        "Query_Spec could not be parsed.": 8,
+        "measures.1": 1,
+        "measures.2": 3,
+        "Derived measure dependencies contain a cycle.": 1,
+        "measures.3": 3,
+        "measures.4": 8,
+        "group_by.0": 2,
+        "Requirement text is missing.": 2,
+        "group_by.1": 1,
+        "Filter value 'ATOM_ENTITY_INVESTOR_PROFILE_001' is not supported by its quoted requirement 'Cross-reference validation": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HEALTH_001' is not supported by its quoted requirement 'Cross-reference validation": 1,
+        "measures.0.aggregate_filters.0": 1,
+        "Filter value 'Redemption' is not supported by its quoted requirement 'expressed as a positive outflow amount'.": 1,
+        "Filter value 'Withdrawal' is not supported by its quoted requirement 'expressed as a positive outflow amount'.": 2,
+        "Filter value 'Dividend Reinvestment' is not supported by its quoted requirement 'in the cash-flow log'.": 1,
+        "Each requirement must be an object.": 1
+      },
+      "unsupported_operators": {},
+      "nodes": {
+        "1": 714,
+        "2": 126,
+        "3": 93,
+        "4": 43,
+        "5": 17,
+        "6": 5,
+        "7": 2
+      },
+      "rows_with_context_trace": 0,
+      "single_nodes_with_declared_outputs": 585,
+      "latency_seconds": {
+        "mean": 75.106232,
+        "median": 32.682500000000005,
+        "p95": 253.779
+      },
+      "families": {
+        "wealth_management_125_question_benchmark.csv": {
+          "PIPELINE_SUCCESS": 99,
+          "DAG_NODE_ERROR": 23,
+          "PRE_SCAN_ERROR": 3
+        },
+        "wealth_management_at_risk_critical_125_questions.csv": {
+          "PIPELINE_SUCCESS": 83,
+          "DAG_NODE_ERROR": 33,
+          "PRE_SCAN_ERROR": 9
+        },
+        "wealth_management_batch_status_125_questions.csv": {
+          "PIPELINE_SUCCESS": 90,
+          "DAG_NODE_ERROR": 31,
+          "PRE_SCAN_ERROR": 4
+        },
+        "wealth_management_enrichment_context_125_questions.csv": {
+          "PIPELINE_SUCCESS": 81,
+          "PRE_SCAN_ERROR": 19,
+          "DAG_NODE_ERROR": 25
+        },
+        "wealth_management_multi_step_comparative_125_questions.csv": {
+          "PIPELINE_SUCCESS": 78,
+          "PRE_SCAN_ERROR": 19,
+          "DAG_NODE_ERROR": 28
+        },
+        "wealth_management_reference_compliance_125_questions.csv": {
+          "PIPELINE_SUCCESS": 111,
+          "DAG_NODE_ERROR": 9,
+          "PRE_SCAN_ERROR": 5
+        },
+        "wealth_management_scoring_quantitative_125_questions.csv": {
+          "PIPELINE_SUCCESS": 96,
+          "DAG_NODE_ERROR": 22,
+          "PRE_SCAN_ERROR": 7
+        },
+        "wealth_management_temporal_transaction_125_questions.csv": {
+          "PIPELINE_SUCCESS": 91,
+          "PRE_SCAN_ERROR": 5,
+          "DAG_NODE_ERROR": 29
+        }
+      },
+      "graded_reports": {
+        "graded_pipeline_gpt_5_mini.csv": {
+          "rows": 208,
+          "statuses": {
+            "MATCH": 144,
+            "MISMATCH": 48,
+            "PARTIAL": 6,
+            "TOKEN_OUTPUT_ERROR": 2,
+            "PRE_SCAN_ERROR": 6,
+            "GRADER_API_ERROR": 2
+          },
+          "model": {
+            "gpt-5-mini": 208
+          },
+          "missing_raw_ids": 792,
+          "sha256": "eaaf26b0a16fb9a22d8a706066c14db8164726b8f3ec4fb358b79666ad529c21"
+        }
+      },
+      "raw_sha256": "d542aac56e902b16a1740727dfefe0cf02ef13c663f7df7ac0e9c2ad2629b219"
+    },
+    "ablations/v5_test1000/runs/gemma_3_27b_it/with_context/run_01": {
+      "raw_rows": 1000,
+      "statuses": {
+        "PIPELINE_SUCCESS": 630,
+        "DAG_NODE_ERROR": 364,
+        "SCAN_ERROR": 2,
+        "PRE_SCAN_ERROR": 4
+      },
+      "failure_nodes": {
+        "unknown": 214,
+        "Query_Spec_Contract": 190,
+        "Scan": 2,
+        "Pre_Scan_Validate_SQL": 5
+      },
+      "contract_error_prefixes": {
+        "Missing downstream binding output": 28,
+        "measures.0": 33,
+        "Filter value 'investor_id' is not supported by its quoted requirement 'Which Long-term investors have a risk score above 50, hold a Corporate Bond, and have at least one rebalancing action?'.": 1,
+        "Filter value 'investor_id' is not supported by its quoted requirement 'and have at least one rebalancing action?'.": 1,
+        "Filter value 'investor_id' is not supported by its quoted requirement 'Which Medium-term investors have a risk score above 50, hold a Corporate Bond, and have at least one rebalancing action?'.": 1,
+        "Unresolved requirements": 27,
+        "Filter value 'investor_id' is not supported by its quoted requirement \"Which Long-term investors have a risk score above 50, hold a position with investment type 'ETF', and have at least one rebalancing action?\".": 2,
+        "Filter value 'investor_id' is not supported by its quoted requirement 'have at least one rebalancing action'.": 1,
+        "Filter value '0' is not supported by its quoted requirement 'Which investment goals are earning a negative average annual return?'.": 1,
+        "Filter value '0.3' is not supported by its quoted requirement 'List investment goals with poor progress, below 30 percent complete.'.": 1,
+        "Filter value '0' is not supported by its quoted requirement 'Which holdings are currently in the red (negative returns percentage, counting only holdings with a recorded cost and current value)?'.": 1,
+        "measures.0.aggregate_filters.0": 6,
+        "measures.1": 17,
+        "Filter value 'INV-001' is not supported by its quoted requirement 'and how many holdings do they own?'.": 1,
+        "Filter value 'INV-003' is not supported by its quoted requirement 'and how many rebalancing actions were recorded?'.": 1,
+        "Filter value 'INV-006' is not supported by its quoted requirement 'and how many holdings do they own?'.": 1,
+        "Filter value 'INV-008' is not supported by its quoted requirement 'and how many rebalancing actions were recorded?'.": 1,
+        "Filter value 'INV-011' is not supported by its quoted requirement 'and how many holdings do they own?'.": 1,
+        "Filter value 'INV-016' is not supported by its quoted requirement 'and how many holdings do they own?'.": 1,
+        "Filter value 'INV-018' is not supported by its quoted requirement 'and how many rebalancing actions were recorded?'.": 1,
+        "Filter value 'INV-021' is not supported by its quoted requirement 'and how many holdings do they own?'.": 1,
+        "measures.2": 9,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_EVENT_CASH_FLOW_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001' is not supported by its quoted requirement 'Among investors with every component recorded'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_INVESTMENT_GOAL_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_SECTOR_ALLOCATION_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001' is not supported by its quoted requirement 'Among investors with every component recorded'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_INVESTMENT_GOAL_001 WHERE goal_id IS NOT NULL AND investment_goal IS NOT NULL AND target_amount IS NOT NULL AND current_value IS NOT NULL' is not supported by its quoted requirement 'Among investors with every component recorded'.": 1,
+        "measures.3": 6,
+        "Unknown output column": 5,
+        "Ranking metric must be a planned output alias.": 4,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_EVENT_CASH_FLOW_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_SECTOR_ALLOCATION_001' is not supported by its quoted requirement 'Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total rebalance amount plus total sector investment (all components in INR); break ties by investor_id.'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_INVESTMENT_GOAL_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_SECTOR_ALLOCATION_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_CASH_FLOW_001' is not supported by its quoted requirement 'Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total sector investment minus average goal shortfall (all components in INR); break ties by investor_id.'.": 1,
+        "measures.4": 9,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 WHERE cost IS NOT NULL AND current_value IS NOT NULL INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_CASH_FLOW_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_SECTOR_ALLOCATION_001' is not supported by its quoted requirement 'Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total holding gain (counting only holdings with a recorded cost and current value) plus total rebalance amount plus total sector investment (all components in INR); break ties by investor_id.'.": 1,
+        "Filter value 'Child Education,Emergency Fund,Growth,Income Generation,Retirement Planning,Wealth Preservation' is not supported by its quoted requirement 'which investor profiles have a investment_goal value outside this set?'.": 1,
+        "filters.0": 1,
+        "Filter value 'portfolio_holding.investor_id' is not supported by its quoted requirement 'which investor_ids referenced by portfolio-holding records are not found in the investor-profile table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id' is not supported by its quoted requirement 'which investment-goal records belong to an investor whose profile risk_tolerance is outside this set?'.": 1,
+        "Filter value 'SELECT investor_id FROM ATOM_ENTITY_SECTOR_ALLOCATION_001' is not supported by its quoted requirement 'which investor_ids referenced by sector-allocation records are not found in the investor-profile table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the investor-profile table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'Aggressive,Conservative,Moderate' is not supported by its quoted requirement 'How many portfolio holdings belong to an investor whose profile risk_tolerance conforms to the allowed set (Aggressive, Conservative, Moderate)?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the investor-profile table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HEALTH_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the portfolio-health table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HEALTH_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the portfolio-health table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HOLDING_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the portfolio-holding table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HOLDING_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the portfolio-holding table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HOLDING_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the portfolio-holding table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTMENT_GOAL_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the investment-goal table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTMENT_GOAL_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the investment-goal table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTMENT_GOAL_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the investment-goal table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_EVENT_CASH_FLOW_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the cash-flow table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_EVENT_CASH_FLOW_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the cash-flow table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_EVENT_CASH_FLOW_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the cash-flow table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_SECTOR_ALLOCATION_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the sector-allocation table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_SECTOR_ALLOCATION_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the sector-allocation table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id' is not supported by its quoted requirement 'List the investor profiles that have no associated rebalancing-action record.'.": 1,
+        "Filter value 'ATOM_ENTITY_SECTOR_ALLOCATION_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the sector-allocation table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HEALTH_001' is not supported by its quoted requirement 'How many investors have a portfolio-health record but are missing a rebalancing-action record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001' is not supported by its quoted requirement 'How many investors have a portfolio-health record but are missing a rebalancing-action record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HEALTH_001' is not supported by its quoted requirement 'How many investors have a portfolio-health record but are missing a scenario-rebalancing record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_EVENT_SCENARIO_REBALANCING_001' is not supported by its quoted requirement 'How many investors have a portfolio-health record but are missing a scenario-rebalancing record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001' is not supported by its quoted requirement 'How many investors have a portfolio-holding record but are missing a rebalancing-action record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001' is not supported by its quoted requirement 'How many investors have a portfolio-holding record but are missing a rebalancing-action record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_INVESTOR_PROFILE_001' is not supported by its quoted requirement 'List investors who have a portfolio-holding record'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001' is not supported by its quoted requirement 'How many investors have a portfolio-holding record but are missing a scenario-rebalancing record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_EVENT_SCENARIO_REBALANCING_001' is not supported by its quoted requirement 'How many investors have a portfolio-holding record but are missing a scenario-rebalancing record?'.": 1,
+        "Ranking direction must be asc or desc.": 3,
+        "Filter value '2021-01-01,2021-12-31' is not supported by its quoted requirement 'during calendar year 2021'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'List investors whose net cash flow during calendar year 2024 was negative (net withdrawals).'.": 1,
+        "Filter value '2022-01-01,2022-12-31' is not supported by its quoted requirement 'during calendar year 2022'.": 1,
+        "Filter value '2025-01-01,2025-12-31' is not supported by its quoted requirement 'List investors whose net cash flow during calendar year 2025 was negative (net withdrawals).'.": 1,
+        "Filter value '2023-01-01,2023-12-31' is not supported by its quoted requirement 'during calendar year 2023'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'during calendar year 2024'.": 4,
+        "Filter value '2025-01-01,2025-12-31' is not supported by its quoted requirement 'during calendar year 2025'.": 5,
+        "Filter value '2021-01-01,2021-12-31' is not supported by its quoted requirement 'How many transactions were recorded during calendar year 2021?'.": 1,
+        "Filter value '2023-01-01,2023-12-31' is not supported by its quoted requirement 'How many transactions were recorded during calendar year 2023?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'How many transactions were recorded during calendar year 2024?'.": 1,
+        "Filter value '2025-01-01' is not supported by its quoted requirement 'that were recorded during calendar year 2025'.": 1,
+        "Filter value '2025-12-31' is not supported by its quoted requirement 'that were recorded during calendar year 2025'.": 1,
+        "Filter value '2025-01-01,2025-12-31' is not supported by its quoted requirement 'How many transactions were recorded during calendar year 2025?'.": 1,
+        "Filter value '2024-01-01' is not supported by its quoted requirement 'What was the total Deposit amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-12-31' is not supported by its quoted requirement 'What was the total Deposit amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'What was the total Dividend Reinvestment amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'What was the total Interest Credit amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'What was the total Lump Sum amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'What was the total Redemption amount recorded in calendar year 2024, expressed as a positive outflow amount?'.": 1,
+        "Filter value '2024-01-01' is not supported by its quoted requirement 'What was the total SIP amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-12-31' is not supported by its quoted requirement 'What was the total SIP amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'What was the total Tax Refund amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01' is not supported by its quoted requirement 'What was the total Withdrawal amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-12-31' is not supported by its quoted requirement 'What was the total Withdrawal amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-06-30' is not supported by its quoted requirement 'What was the net cash flow during the first half of 2024 (1 Jan - 30 Jun 2024)?'.": 1,
+        "Filter value '2025-01-01,2025-12-31' is not supported by its quoted requirement 'whose net cash flow during calendar year 2025 was negative.'.": 6,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'whose net cash flow during calendar year 2024 was negative.'.": 3
+      },
+      "unsupported_operators": {
+        "JOIN": 44,
+        "SQL": 100,
+        "SELECT": 57,
+        "SELECT COUNT(*)": 1,
+        "ANTI JOIN": 5,
+        "COUNT": 2,
+        "ANTI_JOIN": 1,
+        "SELECT COUNT": 2,
+        "SELECT investor_id": 1,
+        "ANTI-JOIN": 1
+      },
+      "nodes": {
+        "1": 929,
+        "2": 30,
+        "4": 17,
+        "6": 3,
+        "3": 19,
+        "5": 2
+      },
+      "rows_with_context_trace": 143,
+      "single_nodes_with_declared_outputs": 894,
+      "latency_seconds": {
+        "mean": 39.544103,
+        "median": 25.731,
+        "p95": 63.635
+      },
+      "families": {
+        "wealth_management_125_question_benchmark.csv": {
+          "PIPELINE_SUCCESS": 90,
+          "DAG_NODE_ERROR": 35
+        },
+        "wealth_management_at_risk_critical_125_questions.csv": {
+          "DAG_NODE_ERROR": 31,
+          "PIPELINE_SUCCESS": 94
+        },
+        "wealth_management_batch_status_125_questions.csv": {
+          "PIPELINE_SUCCESS": 102,
+          "DAG_NODE_ERROR": 21,
+          "SCAN_ERROR": 2
+        },
+        "wealth_management_enrichment_context_125_questions.csv": {
+          "PIPELINE_SUCCESS": 75,
+          "DAG_NODE_ERROR": 49,
+          "PRE_SCAN_ERROR": 1
+        },
+        "wealth_management_multi_step_comparative_125_questions.csv": {
+          "PIPELINE_SUCCESS": 55,
+          "DAG_NODE_ERROR": 68,
+          "PRE_SCAN_ERROR": 2
+        },
+        "wealth_management_reference_compliance_125_questions.csv": {
+          "DAG_NODE_ERROR": 69,
+          "PIPELINE_SUCCESS": 56
+        },
+        "wealth_management_scoring_quantitative_125_questions.csv": {
+          "DAG_NODE_ERROR": 34,
+          "PIPELINE_SUCCESS": 91
+        },
+        "wealth_management_temporal_transaction_125_questions.csv": {
+          "PIPELINE_SUCCESS": 67,
+          "DAG_NODE_ERROR": 57,
+          "PRE_SCAN_ERROR": 1
+        }
+      },
+      "graded_reports": {},
+      "raw_sha256": "9d6d3554d19c4c96c47ffbad2e3a1258447979a549f90e1f76daefbf0c794780"
+    },
+    "ablations/v5_test1000/runs/gemma_3_27b_it/without_context/run_01": {
+      "raw_rows": 1000,
+      "statuses": {
+        "DAG_NODE_ERROR": 392,
+        "PIPELINE_SUCCESS": 602,
+        "PRE_SCAN_ERROR": 5,
+        "SCAN_ERROR": 1
+      },
+      "failure_nodes": {
+        "unknown": 238,
+        "Query_Spec_Contract": 179,
+        "Pre_Scan_Validate_SQL": 5,
+        "Scan_SQL": 1
+      },
+      "contract_error_prefixes": {
+        "Missing downstream binding output": 16,
+        "Unresolved requirements": 19,
+        "Filter value 'investor_id' is not supported by its quoted requirement 'Which Long-term investors have a risk score above 50, hold a Corporate Bond, and have at least one rebalancing action?'.": 1,
+        "Filter value 'investor_id' is not supported by its quoted requirement 'and have at least one rebalancing action?'.": 1,
+        "Filter value '0.3' is not supported by its quoted requirement 'List investment goals with poor progress, below 30 percent complete.'.": 1,
+        "Filter value '0' is not supported by its quoted requirement 'Which holdings are currently in the red (negative returns percentage, counting only holdings with a recorded cost and current value)?'.": 1,
+        "measures.0": 33,
+        "measures.0.aggregate_filters.0": 7,
+        "measures.1": 27,
+        "Filter value 'INV-001' is not supported by its quoted requirement 'and how many holdings do they own?'.": 2,
+        "Filter value 'INV-003' is not supported by its quoted requirement 'and how many rebalancing actions were recorded?'.": 1,
+        "Filter value 'INV-008' is not supported by its quoted requirement 'and how many rebalancing actions were recorded?'.": 1,
+        "Filter value 'INV-006' is not supported by its quoted requirement 'and how many holdings do they own?'.": 2,
+        "Filter value 'INV-011' is not supported by its quoted requirement 'and how many holdings do they own?'.": 2,
+        "Filter value 'INV-013' is not supported by its quoted requirement 'and how many rebalancing actions were recorded?'.": 1,
+        "Filter value 'INV-015' is not supported by its quoted requirement 'and total sector-allocation amount?'.": 1,
+        "Filter value 'INV-016' is not supported by its quoted requirement 'and how many holdings do they own?'.": 2,
+        "Filter value 'INV-018' is not supported by its quoted requirement 'and how many rebalancing actions were recorded?'.": 1,
+        "Filter value 'INV-021' is not supported by its quoted requirement 'and how many holdings do they own?'.": 2,
+        "measures.2": 19,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 WHERE cost IS NOT NULL AND current_value IS NOT NULL INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_SECTOR_ALLOCATION_001' is not supported by its quoted requirement 'Among investors with every component recorded'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 WHERE cost IS NOT NULL AND current_value IS NOT NULL INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001' is not supported by its quoted requirement 'Among investors with every component recorded, list the top 10 ranked by a composite score defined as total holding gain (counting only holdings with a recorded cost and current value) plus total rebalance amount (all components in INR); break ties by investor_id.'.": 1,
+        "measures.3": 14,
+        "Unknown output column": 4,
+        "Ranking metric must be a planned output alias.": 4,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_EVENT_CASH_FLOW_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_SECTOR_ALLOCATION_001' is not supported by its quoted requirement 'Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total rebalance amount plus total sector investment (all components in INR); break ties by investor_id.'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_INVESTMENT_GOAL_001 WHERE goal_id IS NOT NULL AND investor_id IS NOT NULL AND investment_goal IS NOT NULL AND description IS NOT NULL AND target_amount IS NOT NULL AND current_value IS NOT NULL AND shortfall IS NOT NULL' is not supported by its quoted requirement 'Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total sector investment minus average goal shortfall (all components in INR); break ties by investor_id.'.": 1,
+        "measures.4": 9,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 WHERE cost IS NOT NULL AND current_value IS NOT NULL INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_CASH_FLOW_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_SECTOR_ALLOCATION_001' is not supported by its quoted requirement 'Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total holding gain (counting only holdings with a recorded cost and current value) plus total rebalance amount plus total sector investment (all components in INR); break ties by investor_id.'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_INVESTMENT_GOAL_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_ENTITY_SECTOR_ALLOCATION_001 INTERSECT SELECT DISTINCT investor_id FROM ATOM_EVENT_CASH_FLOW_001' is not supported by its quoted requirement 'Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total holding gain (counting only holdings with a recorded cost and current value) plus total sector investment minus average goal shortfall (all components in INR); break ties by investor_id.'.": 1,
+        "measures.5": 2,
+        "measures.6": 2,
+        "measures.7": 2,
+        "measures.8": 2,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001' is not supported by its quoted requirement 'which investor_ids referenced by portfolio-holding records are not found in the investor-profile table?'.": 1,
+        "Filter value 'SELECT investor_id FROM ATOM_ENTITY_SECTOR_ALLOCATION_001' is not supported by its quoted requirement 'which investor_ids referenced by sector-allocation records are not found in the investor-profile table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the investor-profile table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the investor-profile table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HEALTH_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the portfolio-health table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HEALTH_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the portfolio-health table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HEALTH_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the portfolio-health table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HEALTH_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the portfolio-health table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HOLDING_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the portfolio-holding table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HOLDING_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the portfolio-holding table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_PORTFOLIO_HOLDING_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the portfolio-holding table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTMENT_GOAL_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the investment-goal table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTMENT_GOAL_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the investment-goal table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTMENT_GOAL_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the investment-goal table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_EVENT_CASH_FLOW_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the cash-flow table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_EVENT_CASH_FLOW_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the cash-flow table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_EVENT_CASH_FLOW_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the cash-flow table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_SECTOR_ALLOCATION_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the sector-allocation table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_SECTOR_ALLOCATION_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the sector-allocation table have an investor_id not found in the rebalancing-action table?'.": 1,
+        "Filter value 'ATOM_ENTITY_SECTOR_ALLOCATION_001.investor_id' is not supported by its quoted requirement 'which investors appearing in the sector-allocation table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_SECTOR_ALLOCATION_001.investor_id' is not supported by its quoted requirement 'How many distinct investors in the sector-allocation table have an investor_id not found in the scenario-rebalancing table?'.": 1,
+        "Filter value 'ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id' is not supported by its quoted requirement 'List the investor profiles that have no associated rebalancing-action record.'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HEALTH_001' is not supported by its quoted requirement 'How many investors have a portfolio-health record but are missing a rebalancing-action record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001' is not supported by its quoted requirement 'How many investors have a portfolio-health record but are missing a rebalancing-action record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HEALTH_001' is not supported by its quoted requirement 'How many investors have a portfolio-health record but are missing a scenario-rebalancing record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_EVENT_SCENARIO_REBALANCING_001' is not supported by its quoted requirement 'How many investors have a portfolio-health record but are missing a scenario-rebalancing record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001' is not supported by its quoted requirement 'How many investors have a portfolio-holding record but are missing a rebalancing-action record?'.": 1,
+        "Filter value 'SELECT DISTINCT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001' is not supported by its quoted requirement 'How many investors have a portfolio-holding record but are missing a rebalancing-action record?'.": 1,
+        "Ranking direction must be asc or desc.": 2,
+        "Query_Spec could not be parsed.": 1,
+        "output_schema must contain named output columns.": 1,
+        "Filter value '2021-01-01,2021-12-31' is not supported by its quoted requirement 'during calendar year 2021'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'List investors whose net cash flow during calendar year 2024 was negative (net withdrawals).'.": 1,
+        "Filter value '2022-01-01,2022-12-31' is not supported by its quoted requirement 'during calendar year 2022'.": 1,
+        "Filter value '2025-01-01,2025-12-31' is not supported by its quoted requirement 'List investors whose net cash flow during calendar year 2025 was negative (net withdrawals).'.": 1,
+        "Filter value '2023-01-01,2023-12-31' is not supported by its quoted requirement 'during calendar year 2023'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'during calendar year 2024'.": 4,
+        "Filter value '2025-01-01,2025-12-31' is not supported by its quoted requirement 'during calendar year 2025'.": 5,
+        "Filter value '2022-01-01,2022-12-31' is not supported by its quoted requirement 'How many transactions were recorded during calendar year 2022?'.": 1,
+        "Filter value '2023-01-01,2023-12-31' is not supported by its quoted requirement 'How many transactions were recorded during calendar year 2023?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'How many transactions were recorded during calendar year 2024?'.": 1,
+        "Filter value '2025-01-01' is not supported by its quoted requirement 'that were recorded during calendar year 2025'.": 1,
+        "Filter value '2025-12-31' is not supported by its quoted requirement 'that were recorded during calendar year 2025'.": 1,
+        "Filter value '2025-01-01,2025-12-31' is not supported by its quoted requirement 'How many transactions were recorded during calendar year 2025?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'Which 10 investors have the highest total net cash flow during calendar year 2024?'.": 1,
+        "Filter value '2024-01-01' is not supported by its quoted requirement 'What was the total Deposit amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-12-31' is not supported by its quoted requirement 'What was the total Deposit amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'What was the total Dividend Reinvestment amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'What was the total Interest Credit amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'What was the total Lump Sum amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'What was the total Redemption amount recorded in calendar year 2024, expressed as a positive outflow amount?'.": 1,
+        "Filter value '2024-01-01' is not supported by its quoted requirement 'What was the total SIP amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-12-31' is not supported by its quoted requirement 'What was the total SIP amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'What was the total Tax Refund amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01' is not supported by its quoted requirement 'What was the total Withdrawal amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-12-31' is not supported by its quoted requirement 'What was the total Withdrawal amount recorded in calendar year 2024?'.": 1,
+        "Filter value '2024-01-01,2024-06-30' is not supported by its quoted requirement 'What was the net cash flow during the first half of 2024 (1 Jan - 30 Jun 2024)?'.": 1,
+        "Filter value '2025-01-01,2025-12-31' is not supported by its quoted requirement 'whose net cash flow during calendar year 2025 was negative.'.": 5,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'whose net cash flow during calendar year 2024 was negative.'.": 3,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement 'total net cash flow during calendar year 2024'.": 1,
+        "Filter value '2024-01-01,2024-12-31' is not supported by its quoted requirement \"What was the total net cash flow during calendar year 2024 for investors who hold at least one position with investment type 'Gold'?\".": 1
+      },
+      "unsupported_operators": {
+        "JOIN": 40,
+        "SQL": 145,
+        "Join": 1,
+        "SELECT": 27,
+        "COUNT": 4,
+        "SELECT COUNT(*)": 6,
+        "Count": 2,
+        "Literal": 1,
+        "Select": 1,
+        "SELECT investor_id": 3,
+        "ANTI_JOIN": 1,
+        "SELECT DISTINCT": 2,
+        "SELECT COUNT": 1,
+        "ANTI JOIN": 2,
+        "LEFT ANTI JOIN": 1,
+        "Aggregation": 1
+      },
+      "nodes": {
+        "1": 940,
+        "2": 32,
+        "3": 15,
+        "4": 12,
+        "5": 1
+      },
+      "rows_with_context_trace": 0,
+      "single_nodes_with_declared_outputs": 905,
+      "latency_seconds": {
+        "mean": 39.060913,
+        "median": 25.171999999999997,
+        "p95": 62.354
+      },
+      "families": {
+        "wealth_management_125_question_benchmark.csv": {
+          "DAG_NODE_ERROR": 35,
+          "PIPELINE_SUCCESS": 90
+        },
+        "wealth_management_at_risk_critical_125_questions.csv": {
+          "DAG_NODE_ERROR": 19,
+          "PIPELINE_SUCCESS": 106
+        },
+        "wealth_management_batch_status_125_questions.csv": {
+          "DAG_NODE_ERROR": 29,
+          "PIPELINE_SUCCESS": 96
+        },
+        "wealth_management_enrichment_context_125_questions.csv": {
+          "DAG_NODE_ERROR": 51,
+          "PIPELINE_SUCCESS": 72,
+          "PRE_SCAN_ERROR": 1,
+          "SCAN_ERROR": 1
+        },
+        "wealth_management_multi_step_comparative_125_questions.csv": {
+          "PIPELINE_SUCCESS": 46,
+          "DAG_NODE_ERROR": 77,
+          "PRE_SCAN_ERROR": 2
+        },
+        "wealth_management_reference_compliance_125_questions.csv": {
+          "PIPELINE_SUCCESS": 59,
+          "DAG_NODE_ERROR": 66
+        },
+        "wealth_management_scoring_quantitative_125_questions.csv": {
+          "DAG_NODE_ERROR": 50,
+          "PIPELINE_SUCCESS": 74,
+          "PRE_SCAN_ERROR": 1
+        },
+        "wealth_management_temporal_transaction_125_questions.csv": {
+          "PIPELINE_SUCCESS": 59,
+          "DAG_NODE_ERROR": 65,
+          "PRE_SCAN_ERROR": 1
+        }
+      },
+      "graded_reports": {},
+      "raw_sha256": "359ef470aca03eebae4cee26b0ed0da258339224fa86c68f83511463e23e3af0"
+    },
+    "ablations/v5_test1000/runs/kimi_k2_thinking/without_context/run_01": {
+      "raw_rows": 466,
+      "statuses": {
+        "PIPELINE_SUCCESS": 410,
+        "DAG_NODE_ERROR": 53,
+        "PRE_SCAN_ERROR": 3
+      },
+      "failure_nodes": {
+        "Query_Spec_Contract": 52,
+        "Pre_Scan_Validate_SQL": 3,
+        "Exception": 1
+      },
+      "contract_error_prefixes": {
+        "Query_Spec could not be parsed.": 42,
+        "output_schema must contain named output columns.": 44,
+        "Unknown source": 1,
+        "Unknown base_entity": 1,
+        "measures.0": 13,
+        "measures.1": 13,
+        "measures.2": 8,
+        "measures.3": 2,
+        "measures.4": 2,
+        "measures.5": 2,
+        "measures.6": 2,
+        "Unresolved requirements": 1,
+        "Every group_by entry must be an object.": 1,
+        "group_by.0 must be an object.": 1,
+        "group_by.1 must be an object.": 1,
+        "filters.0": 2,
+        "filters.1": 2,
+        "filters.2": 1,
+        "filters.3": 1,
+        "filters.4": 3,
+        "filters.5": 2,
+        "Each requirement must be an object.": 1,
+        "Filter value 'currentValue' is not supported by its quoted requirement 'loss-making holding (counting only holdings with a recorded cost and current value)'.": 1,
+        "measures.0.aggregate_filters.0": 1
+      },
+      "unsupported_operators": {},
+      "nodes": {
+        "1": 466
+      },
+      "rows_with_context_trace": 0,
+      "single_nodes_with_declared_outputs": 454,
+      "latency_seconds": {
+        "mean": 190.7483154506438,
+        "median": 127.365,
+        "p95": 723.48
+      },
+      "families": {
+        "wealth_management_125_question_benchmark.csv": {
+          "PIPELINE_SUCCESS": 113,
+          "DAG_NODE_ERROR": 10,
+          "PRE_SCAN_ERROR": 2
+        },
+        "wealth_management_at_risk_critical_125_questions.csv": {
+          "PIPELINE_SUCCESS": 91,
+          "DAG_NODE_ERROR": 34
+        },
+        "wealth_management_batch_status_125_questions.csv": {
+          "PIPELINE_SUCCESS": 117,
+          "DAG_NODE_ERROR": 7,
+          "PRE_SCAN_ERROR": 1
+        },
+        "wealth_management_enrichment_context_125_questions.csv": {
+          "PIPELINE_SUCCESS": 89,
+          "DAG_NODE_ERROR": 2
+        }
+      },
+      "graded_reports": {},
+      "raw_sha256": "b00e842400f7202a01054c615b983ca048f8a4804ebeb253fd58f16727aa7a57"
+    },
+    "outputs/openai_gpt_oss_120b/all/test1000/context_v5_01": {
+      "raw_rows": 1000,
+      "statuses": {
+        "PIPELINE_SUCCESS": 903,
+        "DAG_NODE_ERROR": 97
+      },
+      "failure_nodes": {
+        "Query_Spec_Contract": 95,
+        "Binding": 1,
+        "Exception": 2
+      },
+      "contract_error_prefixes": {
+        "Unknown source": 5,
+        "Unknown base_entity": 4,
+        "measures.0": 11,
+        "Unresolved requirements": 47,
+        "Filter value 'investor_id_q1' is not supported by its quoted requirement 'Intersection of investors from Q1 and Q2'.": 1,
+        "Filter value 'investor_id_q2' is not supported by its quoted requirement 'Intersection of investors from Q1 and Q2'.": 1,
+        "Query_Spec could not be parsed.": 5,
+        "output_schema must contain named output columns.": 8,
+        "Analytic plan has no measures after recovery.": 3,
+        "Filter value 'cost' is not supported by its quoted requirement 'negative return'.": 1,
+        "measures.0.population_filters": 4,
+        "measures.1": 13,
+        "measures.1.population_filters": 4,
+        "measures.2": 12,
+        "measures.3": 9,
+        "measures.4": 22,
+        "measures.5": 21,
+        "measures.6": 14,
+        "measures.7": 16,
+        "measures.8": 16,
+        "measures.9": 14,
+        "measures.10": 14,
+        "Unknown output column": 1,
+        "measures.11": 12,
+        "measures.13": 2,
+        "measures.14": 2
+      },
+      "unsupported_operators": {},
+      "nodes": {
+        "1": 992,
+        "3": 2,
+        "4": 1,
+        "2": 4,
+        "6": 1
+      },
+      "rows_with_context_trace": 0,
+      "single_nodes_with_declared_outputs": 755,
+      "latency_seconds": {
+        "mean": 29.699196,
+        "median": 22.795,
+        "p95": 59.897
+      },
+      "families": {
+        "wealth_management_125_question_benchmark.csv": {
+          "PIPELINE_SUCCESS": 119,
+          "DAG_NODE_ERROR": 6
+        },
+        "wealth_management_at_risk_critical_125_questions.csv": {
+          "PIPELINE_SUCCESS": 117,
+          "DAG_NODE_ERROR": 8
+        },
+        "wealth_management_batch_status_125_questions.csv": {
+          "PIPELINE_SUCCESS": 117,
+          "DAG_NODE_ERROR": 8
+        },
+        "wealth_management_enrichment_context_125_questions.csv": {
+          "PIPELINE_SUCCESS": 123,
+          "DAG_NODE_ERROR": 2
+        },
+        "wealth_management_multi_step_comparative_125_questions.csv": {
+          "DAG_NODE_ERROR": 47,
+          "PIPELINE_SUCCESS": 78
+        },
+        "wealth_management_reference_compliance_125_questions.csv": {
+          "PIPELINE_SUCCESS": 119,
+          "DAG_NODE_ERROR": 6
+        },
+        "wealth_management_scoring_quantitative_125_questions.csv": {
+          "PIPELINE_SUCCESS": 117,
+          "DAG_NODE_ERROR": 8
+        },
+        "wealth_management_temporal_transaction_125_questions.csv": {
+          "PIPELINE_SUCCESS": 113,
+          "DAG_NODE_ERROR": 12
+        }
+      },
+      "graded_reports": {
+        "graded_pipeline_gpt_5_mini.csv": {
+          "rows": 1000,
+          "statuses": {
+            "MATCH": 785,
+            "MISMATCH": 129,
+            "PARTIAL": 81,
+            "GRADER_API_ERROR": 4,
+            "TOKEN_OUTPUT_ERROR": 1
+          },
+          "model": {
+            "gpt-5-mini": 1000
+          },
+          "missing_raw_ids": 0,
+          "sha256": "d3b01df77e12d65d96845b67e88f66513a85e94ea20ad9e3006c594acc9f29af"
+        },
+        "graded_pipeline_tera.csv": {
+          "rows": 5,
+          "statuses": {
+            "MATCH": 5
+          },
+          "model": {
+            "gpt-5.6-terra": 5
+          },
+          "missing_raw_ids": 995,
+          "sha256": "c728c5b373e203750bd750eaabdacaadfc74ee5419637b2eb0e71384bcb978c4"
+        }
+      },
+      "raw_sha256": "1b52ac9bed8f7920918150cbd556a02e5958fc7b1d7100d039b58b9cd78f8dd6"
+    },
+    "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v5": {
+      "raw_rows": 1000,
+      "statuses": {
+        "PIPELINE_SUCCESS": 912,
+        "DAG_NODE_ERROR": 86,
+        "PRE_SCAN_ERROR": 2
+      },
+      "failure_nodes": {
+        "Query_Spec_Contract": 85,
+        "Pre_Scan_Validate_SQL": 2,
+        "Exception": 1
+      },
+      "contract_error_prefixes": {
+        "Unknown source": 6,
+        "Unknown base_entity": 5,
+        "measures.0": 18,
+        "Analytic plan has no measures after recovery.": 3,
+        "Unresolved requirements": 40,
+        "measures.0.population_filters": 1,
+        "Query_Spec could not be parsed.": 5,
+        "output_schema must contain named output columns.": 7,
+        "measures.2": 7,
+        "measures.1": 10,
+        "filters.5": 1,
+        "Unknown output column": 3,
+        "Every group_by entry must be an object.": 1,
+        "group_by.0 must be an object.": 1,
+        "Missing downstream binding output": 1,
+        "measures.3": 10,
+        "measures.4": 16,
+        "measures.5": 15,
+        "measures.6": 15,
+        "measures.7": 15,
+        "measures.8": 13,
+        "measures.9": 6,
+        "measures.10": 6,
+        "measures.11": 6,
+        "Filter value 'ETF_investor_ids' is not supported by its quoted requirement \"investors who hold at least one position with investment type 'ETF'\".": 1
+      },
+      "unsupported_operators": {},
+      "nodes": {
+        "1": 994,
+        "2": 5,
+        "3": 1
+      },
+      "rows_with_context_trace": 0,
+      "single_nodes_with_declared_outputs": 710,
+      "latency_seconds": {
+        "mean": 36.375242,
+        "median": 23.063499999999998,
+        "p95": 57.328
+      },
+      "families": {
+        "wealth_management_125_question_benchmark.csv": {
+          "PIPELINE_SUCCESS": 123,
+          "DAG_NODE_ERROR": 2
+        },
+        "wealth_management_at_risk_critical_125_questions.csv": {
+          "PIPELINE_SUCCESS": 114,
+          "DAG_NODE_ERROR": 11
+        },
+        "wealth_management_batch_status_125_questions.csv": {
+          "PIPELINE_SUCCESS": 117,
+          "DAG_NODE_ERROR": 8
+        },
+        "wealth_management_enrichment_context_125_questions.csv": {
+          "PIPELINE_SUCCESS": 121,
+          "DAG_NODE_ERROR": 4
+        },
+        "wealth_management_multi_step_comparative_125_questions.csv": {
+          "DAG_NODE_ERROR": 40,
+          "PIPELINE_SUCCESS": 84,
+          "PRE_SCAN_ERROR": 1
+        },
+        "wealth_management_reference_compliance_125_questions.csv": {
+          "PIPELINE_SUCCESS": 119,
+          "PRE_SCAN_ERROR": 1,
+          "DAG_NODE_ERROR": 5
+        },
+        "wealth_management_scoring_quantitative_125_questions.csv": {
+          "PIPELINE_SUCCESS": 122,
+          "DAG_NODE_ERROR": 3
+        },
+        "wealth_management_temporal_transaction_125_questions.csv": {
+          "PIPELINE_SUCCESS": 112,
+          "DAG_NODE_ERROR": 13
+        }
+      },
+      "graded_reports": {
+        "graded_pipeline_tera.csv": {
+          "rows": 1000,
+          "statuses": {
+            "MATCH": 811,
+            "MISMATCH": 126,
+            "PARTIAL": 61,
+            "PRE_SCAN_ERROR": 2
+          },
+          "model": {
+            "gpt-5.6-terra": 1000
+          },
+          "missing_raw_ids": 0,
+          "sha256": "c1d4981872b7939f36a4b74f3e46eb08965d0171ba74127f75b5ef8e3b05a4b5"
+        }
+      },
+      "raw_sha256": "778fdcd035eda591f063379fb6d00b35a09524af7592be1e1c06bd2e382e39e4"
+    }
+  },
+  "paired_raw_comparisons": {
+    "ablations/v5_test1000/runs/deepseek_v3_2/with_context/run_01": {
+      "shared_rows": 1000,
+      "raw_status_transitions": {
+        "PIPELINE_SUCCESS -> PIPELINE_SUCCESS": 604,
+        "DAG_NODE_ERROR -> PIPELINE_SUCCESS": 107,
+        "PIPELINE_SUCCESS -> DAG_NODE_ERROR": 96,
+        "DAG_NODE_ERROR -> DAG_NODE_ERROR": 76,
+        "DAG_NODE_ERROR -> PRE_SCAN_ERROR": 17,
+        "PRE_SCAN_ERROR -> DAG_NODE_ERROR": 23,
+        "PIPELINE_SUCCESS -> PRE_SCAN_ERROR": 29,
+        "PRE_SCAN_ERROR -> PIPELINE_SUCCESS": 35,
+        "PRE_SCAN_ERROR -> PRE_SCAN_ERROR": 13
+      }
+    },
+    "ablations/v5_test1000/runs/gemma_3_27b_it/with_context/run_01": {
+      "shared_rows": 1000,
+      "raw_status_transitions": {
+        "PIPELINE_SUCCESS -> PIPELINE_SUCCESS": 525,
+        "DAG_NODE_ERROR -> PIPELINE_SUCCESS": 102,
+        "DAG_NODE_ERROR -> DAG_NODE_ERROR": 287,
+        "PIPELINE_SUCCESS -> DAG_NODE_ERROR": 74,
+        "DAG_NODE_ERROR -> PRE_SCAN_ERROR": 3,
+        "PRE_SCAN_ERROR -> DAG_NODE_ERROR": 3,
+        "PIPELINE_SUCCESS -> PRE_SCAN_ERROR": 1,
+        "PRE_SCAN_ERROR -> PIPELINE_SUCCESS": 2,
+        "SCAN_ERROR -> PIPELINE_SUCCESS": 1,
+        "PIPELINE_SUCCESS -> SCAN_ERROR": 2
+      }
+    }
+  },
+  "context_cache_review": {
+    "ablations/v5_test1000/context_cache/gemma_3_27b_it/239cf1f3d3ac1184a6d41b08c595c3282174eb47d846755270f576ba3c8456b8.json": {
+      "active": 3,
+      "active_kinds": {
+        "terminology": 3
+      },
+      "inactive_errors": {
+        "Conflicting topic or duplicate id": 5,
+        "Quote is not verbatim source evidence": 3,
+        "Fields must be a nonempty string list": 3
+      },
+      "quarantined": [
+        {
+          "document": "business_rules",
+          "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/phase0_business_rules.md",
+          "reason": "Evaluation-scoped document excluded from preparation and inference"
+        }
+      ]
+    },
+    "ablations/v5_test1000/context_cache/deepseek_v3_2/b1941bae2d876885d52a9c9218aafc8c1db4525408db6cfdef114e746e03cd29.json": {
+      "active": 9,
+      "active_kinds": {
+        "terminology": 9
+      },
+      "inactive_errors": {
+        "Invalid matching terms": 25,
+        "Quote is not verbatim source evidence": 4
+      },
+      "quarantined": [
+        {
+          "document": "business_rules",
+          "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/phase0_business_rules.md",
+          "reason": "Evaluation-scoped document excluded from preparation and inference"
+        }
+      ]
+    }
+  }
+}

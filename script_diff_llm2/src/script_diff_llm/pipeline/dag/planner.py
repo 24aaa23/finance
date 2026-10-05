@@ -1,4 +1,5 @@
 from typing import Any, Callable
+import copy
 
 import networkx as nx
 
@@ -47,6 +48,8 @@ def canonicalize_set_operator(operator_name: str) -> str:
 
 
 def build_subquery_dag(query: str, nodes: list[dict[str, Any]]) -> nx.DiGraph:
+    nodes = copy.deepcopy(nodes)
+    fallback_backend = fallback_backend_for_query(query)
     if not isinstance(nodes, list) or any(
         not isinstance(node, dict) or not isinstance(node.get("id"), str)
         or not isinstance(node.get("inputs", []), list)
@@ -55,8 +58,40 @@ def build_subquery_dag(query: str, nodes: list[dict[str, Any]]) -> nx.DiGraph:
         for node in nodes
     ):
         nodes = []
+    # Validate executable operators and complete field bindings before any
+    # model/scan work. A SQL verb is not an executor operator. Reject the plan
+    # as a whole rather than silently skipping one of the user's conditions.
+    if nodes:
+        backends = {node.get('backend') for node in nodes if node.get('backend') in ('SQL', 'KG')}
+        if len(backends) == 1:
+            fallback_backend = next(iter(backends))
+        by_id = {node['id']: node for node in nodes}
+        supported = {'Subquery', 'Set_Intersect', 'Set_Union', 'Set_Difference'}
+        valid = len(by_id) == len(nodes) and all(by_id)
+        for node in nodes:
+            operator = node.get('operator') or ('Subquery' if node.get('backend') else 'Set_Intersect')
+            operator = 'Subquery' if str(operator).casefold() == 'subquery' else canonicalize_set_operator(operator)
+            # A single database node with a SQL verb still denotes one complete
+            # backend query. Its description is restored verbatim below.
+            if len(nodes) == 1 and node.get('backend') in ('SQL', 'KG') and operator not in supported:
+                operator = 'Subquery'
+            node['operator'] = operator
+            valid &= operator in supported
+            if operator == 'Subquery':
+                valid &= node.get('backend', 'KG') in ('SQL', 'KG')
+            for inp in node.get('inputs', []):
+                source = inp.get('source')
+                if not isinstance(source, str) or source.count('.') != 1:
+                    valid = False
+                    continue
+                predecessor, field = source.split('.')
+                outputs = by_id.get(predecessor, {}).get('outputs', [])
+                valid &= bool(inp.get('name')) and predecessor != node['id'] and any(
+                    output.get('name') == field for output in outputs)
+        if not valid:
+            print('[WARN] Decomposition has unsupported operators or invalid bindings; preserving the full question in one backend node.')
+            nodes = []
     if not nodes:
-        fallback_backend = fallback_backend_for_query(query)
         print(f"[WARN] Decomposition returned empty. Falling back to single {fallback_backend} node.")
         nodes = [{
             "id": "Q1",
@@ -70,7 +105,10 @@ def build_subquery_dag(query: str, nodes: list[dict[str, Any]]) -> nx.DiGraph:
     # A single backend node is the entire question, so a model paraphrase
     # must not replace the user's predicates or invent a metric definition.
     if len(nodes) == 1 and nodes[0].get("operator", "Subquery") == "Subquery":
-        nodes = [{**nodes[0], "description": query}]
+        # These are inter-node bindings, not a final-answer schema. No consumer
+        # exists in a one-node DAG; speculative aliases/types must not constrain
+        # the actual QuerySpec output.
+        nodes = [{**nodes[0], "description": query, "inputs": [], "outputs": []}]
 
     dag = nx.DiGraph()
     for node in nodes:
@@ -97,10 +135,13 @@ def build_subquery_dag(query: str, nodes: list[dict[str, Any]]) -> nx.DiGraph:
                     type=inp.get("type"),
                 )
 
-    if not nx.is_directed_acyclic_graph(dag):
-        print("[WARN] Generated DAG has cycles. Falling back to simple DAG.")
+    if not nx.is_directed_acyclic_graph(dag) or (len(dag) > 1 and sum(dag.out_degree(n) == 0 for n in dag) != 1):
+        print("[WARN] Generated DAG has cycles or no single final result. Falling back to simple DAG.")
         dag = nx.DiGraph()
-        dag.add_node("Q1", id="Q1", description=query, operator="Subquery", backend=fallback_backend_for_query(query), inputs=[], outputs=[])
+        dag.add_node("Q1", id="Q1", description=query, operator="Subquery", backend=fallback_backend, inputs=[], outputs=[])
+    for node in dag:
+        if dag.out_degree(node) == 0 and dag.nodes[node].get('operator') == 'Subquery':
+            dag.nodes[node]['outputs'] = []
     return dag
 
 

@@ -1,0 +1,17 @@
+name: Kimi K2 Thinking
+slug: kimi_k2_thinking
+provider: aws-bedrock-openai-compatible
+default_model: moonshotai.kimi-k2-thinking
+model_env: ABLATION_RAW_MODEL
+api_key_env:
+- ABLATION_API_KEY
+- BEDROCK_MANTLE_API_KEY
+- AWS_BEDROCK_API_KEY
+- BEDROCK_API_KEY
+base_url_env: ABLATION_BASE_URL
+region_env:
+- BEDROCK_REGION
+- AWS_REGION
+- AWS_DEFAULT_REGION
+stage_models:
+  llm_grader: gpt-5-mini

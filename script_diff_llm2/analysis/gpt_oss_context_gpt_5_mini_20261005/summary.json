@@ -1,0 +1,239 @@
+{
+  "rows": 1000,
+  "raw_grades": {
+    "PIPELINE_SUCCESS": 903,
+    "DAG_NODE_ERROR": 97
+  },
+  "grades": {
+    "MATCH": 785,
+    "MISMATCH": 129,
+    "PARTIAL": 81,
+    "GRADER_API_ERROR": 4,
+    "TOKEN_OUTPUT_ERROR": 1
+  },
+  "paired_payload_fields_verified": [
+    "Question",
+    "Ground Truth",
+    "New Pipeline Result",
+    "Scan Raw Rows",
+    "Node Traces",
+    "Pipeline Version"
+  ],
+  "sha256": {
+    "outputs/openai_gpt_oss_120b/all/test1000/context_v5_01/raw_pipeline.csv": "1b52ac9bed8f7920918150cbd556a02e5958fc7b1d7100d039b58b9cd78f8dd6",
+    "outputs/openai_gpt_oss_120b/all/test1000/context_v5_01/graded_pipeline_gpt_5_mini.csv": "d3b01df77e12d65d96845b67e88f66513a85e94ea20ad9e3006c594acc9f29af"
+  },
+  "settings": {
+    "Direct LLM Grader Model": {
+      "gpt-5-mini": 1000
+    },
+    "Grading Policy": {
+      "strict_v1": 1000
+    },
+    "Direct LLM Grading Path": {
+      "direct_llm_semantic_judgment": 995,
+      "direct_llm_grader_exception": 5
+    },
+    "Pipeline Version": {
+      "generic-contract-recovery-v5": 1000
+    }
+  },
+  "raw_grade_cross": {
+    "PIPELINE_SUCCESS -> MATCH": 785,
+    "DAG_NODE_ERROR -> MISMATCH": 97,
+    "PIPELINE_SUCCESS -> PARTIAL": 81,
+    "PIPELINE_SUCCESS -> MISMATCH": 32,
+    "PIPELINE_SUCCESS -> GRADER_API_ERROR": 4,
+    "PIPELINE_SUCCESS -> TOKEN_OUTPUT_ERROR": 1
+  },
+  "failure_stages": {
+    "": 903,
+    "Q1:Query_Spec_Contract": 92,
+    "Q3:Query_Spec_Contract": 1,
+    "Q4:Query_Spec_Contract": 1,
+    "Q1:Binding": 1,
+    "Q2:Exception": 2
+  },
+  "contract_tag_incidence": {
+    "unknown_source": 5,
+    "unknown_base": 7,
+    "missing_expression": 17,
+    "unresolved": 46,
+    "missing_output": 11,
+    "unparsed_spec": 5,
+    "missing_measures": 3,
+    "alias_operand": 10,
+    "physical_operand": 1
+  },
+  "backends": {
+    "SQL / MATCH": 695,
+    "KG / MATCH": 88,
+    "SQL / MISMATCH": 113,
+    "SQL / PARTIAL": 69,
+    "KG / MISMATCH": 11,
+    "KG+SQL / MISMATCH": 5,
+    "KG / PARTIAL": 12,
+    "SQL / GRADER_API_ERROR": 4,
+    "KG / TOKEN_OUTPUT_ERROR": 1,
+    "KG+SQL / MATCH": 2
+  },
+  "node_counts": {
+    "1": 992,
+    "3": 2,
+    "4": 1,
+    "2": 4,
+    "6": 1
+  },
+  "context_trace_rows": 0,
+  "families": {
+    "wealth_management_125_question_benchmark.csv": {
+      "grades": {
+        "MATCH": 116,
+        "MISMATCH": 7,
+        "PARTIAL": 2
+      },
+      "raw_status": {
+        "PIPELINE_SUCCESS": 119,
+        "DAG_NODE_ERROR": 6
+      }
+    },
+    "wealth_management_at_risk_critical_125_questions.csv": {
+      "grades": {
+        "MATCH": 106,
+        "PARTIAL": 8,
+        "MISMATCH": 9,
+        "GRADER_API_ERROR": 1,
+        "TOKEN_OUTPUT_ERROR": 1
+      },
+      "raw_status": {
+        "PIPELINE_SUCCESS": 117,
+        "DAG_NODE_ERROR": 8
+      }
+    },
+    "wealth_management_batch_status_125_questions.csv": {
+      "grades": {
+        "MATCH": 115,
+        "MISMATCH": 8,
+        "PARTIAL": 2
+      },
+      "raw_status": {
+        "PIPELINE_SUCCESS": 117,
+        "DAG_NODE_ERROR": 8
+      }
+    },
+    "wealth_management_enrichment_context_125_questions.csv": {
+      "grades": {
+        "MATCH": 103,
+        "PARTIAL": 6,
+        "MISMATCH": 16
+      },
+      "raw_status": {
+        "PIPELINE_SUCCESS": 123,
+        "DAG_NODE_ERROR": 2
+      }
+    },
+    "wealth_management_multi_step_comparative_125_questions.csv": {
+      "grades": {
+        "MISMATCH": 49,
+        "PARTIAL": 34,
+        "MATCH": 41,
+        "GRADER_API_ERROR": 1
+      },
+      "raw_status": {
+        "DAG_NODE_ERROR": 47,
+        "PIPELINE_SUCCESS": 78
+      }
+    },
+    "wealth_management_reference_compliance_125_questions.csv": {
+      "grades": {
+        "MATCH": 94,
+        "MISMATCH": 10,
+        "PARTIAL": 21
+      },
+      "raw_status": {
+        "PIPELINE_SUCCESS": 119,
+        "DAG_NODE_ERROR": 6
+      }
+    },
+    "wealth_management_scoring_quantitative_125_questions.csv": {
+      "grades": {
+        "MATCH": 107,
+        "PARTIAL": 6,
+        "MISMATCH": 10,
+        "GRADER_API_ERROR": 2
+      },
+      "raw_status": {
+        "PIPELINE_SUCCESS": 117,
+        "DAG_NODE_ERROR": 8
+      }
+    },
+    "wealth_management_temporal_transaction_125_questions.csv": {
+      "grades": {
+        "MATCH": 103,
+        "MISMATCH": 20,
+        "PARTIAL": 2
+      },
+      "raw_status": {
+        "PIPELINE_SUCCESS": 113,
+        "DAG_NODE_ERROR": 12
+      }
+    }
+  },
+  "long_payload_grades": {
+    "PARTIAL": 15,
+    "MATCH": 2,
+    "MISMATCH": 3
+  },
+  "grader_error_ids": [
+    "wealth_management_at_risk_critical_125_questions:ARC125-4T-001",
+    "wealth_management_at_risk_critical_125_questions:ARC125-4T-014",
+    "wealth_management_multi_step_comparative_125_questions:MC125-086",
+    "wealth_management_scoring_quantitative_125_questions:SQA125-3T-006",
+    "wealth_management_scoring_quantitative_125_questions:SQA125-4T-009"
+  ],
+  "prior_v5_comparison": {
+    "grades": {
+      "MATCH": 811,
+      "MISMATCH": 126,
+      "PARTIAL": 61,
+      "PRE_SCAN_ERROR": 2
+    },
+    "raw_status": {
+      "PIPELINE_SUCCESS": 912,
+      "DAG_NODE_ERROR": 86,
+      "PRE_SCAN_ERROR": 2
+    },
+    "models": {
+      "gpt-5.6-terra": 1000
+    },
+    "transitions": {
+      "MATCH -> MATCH": 728,
+      "MATCH -> MISMATCH": 49,
+      "MISMATCH -> MATCH": 47,
+      "MATCH -> PARTIAL": 30,
+      "PARTIAL -> PARTIAL": 31,
+      "MISMATCH -> MISMATCH": 58,
+      "MISMATCH -> PARTIAL": 20,
+      "MATCH -> GRADER_API_ERROR": 3,
+      "MATCH -> TOKEN_OUTPUT_ERROR": 1,
+      "PARTIAL -> MISMATCH": 22,
+      "PARTIAL -> MATCH": 8,
+      "PRE_SCAN_ERROR -> MATCH": 2,
+      "MISMATCH -> GRADER_API_ERROR": 1
+    },
+    "unchanged_successful_scan_payloads": 506,
+    "unchanged_payload_grade_transitions": {
+      "MATCH -> MATCH": 462,
+      "PARTIAL -> PARTIAL": 19,
+      "MATCH -> PARTIAL": 6,
+      "MISMATCH -> PARTIAL": 1,
+      "MISMATCH -> MISMATCH": 13,
+      "MATCH -> GRADER_API_ERROR": 2,
+      "PRE_SCAN_ERROR -> MATCH": 1,
+      "MISMATCH -> MATCH": 1,
+      "PARTIAL -> MISMATCH": 1
+    },
+    "new_raw_failures": 72,
+    "recovered_raw_failures": 63
+  }
+}

@@ -7,6 +7,7 @@ mode="${1:-all}"
 case "$mode" in prepare|all|raw|grade) ;; *) echo 'Usage: bash runners/run_domain_context_v5.sh [prepare|all|raw|grade]' >&2; exit 2 ;; esac
 export DOMAIN_INTRO_FILE="${DOMAIN_INTRO_FILE-$PIPELINE_ROOT/domain_intro.prompt}"
 export BUSINESS_RULES_FILE="${BUSINESS_RULES_FILE-$PIPELINE_ROOT/phase0_business_rules.md}"
+export DOMAIN_CONTEXT_REQUIRED=1
 export V5_OUTPUT_DIR="${V5_OUTPUT_DIR:-$PIPELINE_ROOT/outputs/openai_gpt_oss_120b/all/test1000/generic_domain_context_v1}"
 if [[ "$mode" == prepare ]]; then
     export DOMAIN_CONTEXT_PREPARE_ONLY=1

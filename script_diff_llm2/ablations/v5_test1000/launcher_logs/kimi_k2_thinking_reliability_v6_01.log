@@ -1,0 +1,277 @@
+{
+  "TEST_MAX_WORKERS": "4",
+  "REPORT_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/kimi_k2_thinking/without_context/reliability_v6_01/raw_pipeline.csv",
+  "TEST_QUERY_OFFSET": "0",
+  "TEST_QUERY_LIMIT": "1000",
+  "REPORT_SAVE_EVERY": "1",
+  "PIPELINE_OUTPUT_DIR": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/kimi_k2_thinking/without_context/reliability_v6_01",
+  "SQLITE_DB_PATH": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db",
+  "INPUT_SAMPLE_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/wealth_management_1000_test_set_questions.xlsx",
+  "GROUND_TRUTH_OVERRIDE_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/216_questions_full_results.json",
+  "SCHEMA_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/kg/wealth_management_diverse_schema.ttl",
+  "INSTANCE_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/kg/wealth_management_diverse_kg.ttl",
+  "RDF_ALIAS_MAP_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/kg/rdf_id_alias_map.json",
+  "ABLATION_RAW_MODEL": "moonshotai.kimi-k2-thinking",
+  "ABLATION_BASE_URL": "https://bedrock-mantle.us-east-1.api.aws/v1",
+  "EXPERIMENT_CONFIG": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/experiments/kimi_k2_thinking_without_context.yaml",
+  "INPUT_SAMPLE_SHEET": "ALL_BENCHMARK_SHEETS",
+  "FUSEKI_ENDPOINT": "http://127.0.0.1:3030/wealth/query",
+  "DOMAIN_INTRO_FILE": "",
+  "BUSINESS_RULES_FILE": "",
+  "DOMAIN_CONTEXT_APPROVAL_FILE": "",
+  "DOMAIN_CONTEXT_REQUIRED": ""
+}
+[ABLATION] Raw only. The grader will not start.
+[SYSTEM] SQLite DB: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[SYSTEM] SQLite DB exists: True
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: Apache Jena Fuseki
+[SYSTEM] Fuseki endpoint: http://127.0.0.1:3030/wealth/query
+[SYSTEM] Fuseki scan timeout: 60 seconds
+[SYSTEM] Experiment config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/experiments/kimi_k2_thinking_without_context.yaml
+[SYSTEM] Model config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/models/kimi_k2_thinking.yaml
+[SYSTEM] SQL asset: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/sql/wealth_management_diverse/asset.yaml
+[SYSTEM] Fuseki health check passed.
+[SYSTEM] Model provider: aws-bedrock-openai-compatible
+[SYSTEM] Model endpoint env: ABLATION_BASE_URL
+[SYSTEM] Primary model: moonshotai.kimi-k2-thinking
+[SYSTEM] RAG/Retrieve model: moonshotai.kimi-k2-thinking
+[SYSTEM] Planner model: moonshotai.kimi-k2-thinking
+[SYSTEM] Query_Spec model: moonshotai.kimi-k2-thinking
+[SYSTEM] Refine model: moonshotai.kimi-k2-thinking
+[SYSTEM] Generate model: moonshotai.kimi-k2-thinking
+[SYSTEM] Validate model: moonshotai.kimi-k2-thinking
+[SYSTEM] Explain model: moonshotai.kimi-k2-thinking
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: multi_candidate
+[SYSTEM] Benchmark query workers: 4
+[SYSTEM] Benchmark start delay: 0 seconds
+[SYSTEM] Report save interval: every 1 completed row(s)
+[SYSTEM] Report file: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/kimi_k2_thinking/without_context/reliability_v6_01/raw_pipeline.csv
+[SYSTEM] Loading RDF Knowledge Graph metadata from schema + Fuseki...
+[SYSTEM] Successfully loaded 27 classes with Fuseki dynamic properties.
+[SYSTEM] Using Apache Jena Fuseki as the RDF instance graph. Skipping rdflib instance load.
+[SYSTEM] Loaded RDF ID alias map with 1658 normalized keys.
+[SQL SCHEMA] Loaded 8 tables from /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[DEBUG] SQLITE_DB_PATH = /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[DEBUG] DB exists = True
+[DEBUG] DB absolute = /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+
+[SYSTEM] Loading /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/wealth_management_1000_test_set_questions.xlsx...
+[SYSTEM] Loading ground-truth overrides from /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/216_questions_full_results.json...
+[SYSTEM] Loaded 216 ground-truth override entries.
+[SYSTEM] Applied full ground-truth overrides to 216 benchmark row(s).
+[SYSTEM] Query window offset=0, limit=1000.
+[SYSTEM] Successfully loaded 1000 benchmark queries from the new dataset.
+
+[SYSTEM] Running raw pipeline. Saving incrementally...
+[SYSTEM] Pending queries this run: 1000
+--- Planning DAG using semantic_decompose ---
+--- Planning DAG using semantic_decompose ---
+--- Planning DAG using semantic_decompose ---
+--- Planning DAG using semantic_decompose ---
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the name of investor INV-081?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022824896064
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What category and sector focus is investor INV-084 associated with?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022816503360
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What are the risk tolerance and time horizon of investor INV-082?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022808110656
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the investment goal and segment of investor INV-083?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022799717952
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=55.297s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 1/1000 this run (1/1000 total window): PIPELINE_SUCCESS in 76.552s
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=87.546s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 2/1000 this run (2/1000 total window): PIPELINE_SUCCESS in 99.213s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What are the risk, liquidity, and diversification scores of investor INV-085?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022824896064
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=success rows=1 elapsed=89.415s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 3/1000 this run (3/1000 total window): PIPELINE_SUCCESS in 123.304s
+ [Q1] complete. status=success rows=1 elapsed=79.488s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---Processed 4/1000 this run (4/1000 total window): PIPELINE_SUCCESS in 126.037s
+
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the goal-match percentage of investor INV-086?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022799717952
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What are the risk tolerance and time horizon of investor INV-088?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022808110656
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the name of investor INV-087?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022816503360
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=87.888s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 5/1000 this run (5/1000 total window): PIPELINE_SUCCESS in 124.638s
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=68.035s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---Processed 6/1000 this run (6/1000 total window): PIPELINE_SUCCESS in 116.75s
+
+ [Q1] complete. status=success rows=1 elapsed=50.093s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 7/1000 this run (7/1000 total window): PIPELINE_SUCCESS in 103.651s
+ [Q1] complete. status=success rows=1 elapsed=79.475s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 8/1000 this run (8/1000 total window): PIPELINE_SUCCESS in 102.086s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What category and sector focus is investor INV-090 associated with?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022808110656
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the goal-match percentage of investor INV-092?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022816503360
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What are the risk, liquidity, and diversification scores of investor INV-091?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022799717952
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the investment goal and segment of investor INV-089?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022824896064
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=43.539s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---Processed 9/1000 this run (9/1000 total window): PIPELINE_SUCCESS in 61.99s
+
+ [Q1] complete. status=success rows=1 elapsed=45.459s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 10/1000 this run (10/1000 total window): PIPELINE_SUCCESS in 66.32s
+ [Q1] complete. status=success rows=1 elapsed=63.086s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 11/1000 this run (11/1000 total window): PIPELINE_SUCCESS in 81.127s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the investment goal and segment of investor INV-095?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022808110656
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the name of investor INV-093?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022799717952
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What are the risk tolerance and time horizon of investor INV-094?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=133022816503360
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=115.952s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 12/1000 this run (12/1000 total window): PIPELINE_SUCCESS in 175.579s
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=80.681s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 13/1000 this run (13/1000 total window): PIPELINE_SUCCESS in 117.521s

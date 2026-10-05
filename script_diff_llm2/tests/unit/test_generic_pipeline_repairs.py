@@ -56,8 +56,13 @@ class GenericPipelineRepairsTest(unittest.TestCase):
         self.assertEqual(dag.nodes["Q1"]["description"], question)
 
     def test_multi_node_local_scopes_remain_separate(self):
-        nodes = [{"id": "Q1", "operator": "Subquery", "backend": "SQL", "description": "Active devices"},
-                 {"id": "Q2", "operator": "Subquery", "backend": "KG", "description": "Connected devices"}]
+        nodes = [{"id": "Q1", "operator": "Subquery", "backend": "SQL", "description": "Active devices",
+                  "outputs": [{"name": "device_id"}]},
+                 {"id": "Q2", "operator": "Subquery", "backend": "KG", "description": "Connected devices",
+                  "outputs": [{"name": "device_id"}]},
+                 {"id": "Q3", "operator": "Set_Intersect", "inputs": [
+                     {"name": "active", "source": "Q1.device_id"},
+                     {"name": "connected", "source": "Q2.device_id"}]}]
         dag = build_subquery_dag("Active and connected devices", nodes)
         self.assertEqual(dag.nodes["Q1"]["description"], "Active devices")
 

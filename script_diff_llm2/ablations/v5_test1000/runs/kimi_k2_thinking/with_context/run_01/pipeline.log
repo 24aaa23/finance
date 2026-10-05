@@ -1,0 +1,108 @@
+[SYSTEM] SQLite DB: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[SYSTEM] SQLite DB exists: True
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: Apache Jena Fuseki
+[SYSTEM] Fuseki endpoint: http://127.0.0.1:3030/wealth/query
+[SYSTEM] Fuseki scan timeout: 60 seconds
+[SYSTEM] Experiment config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/experiments/kimi_k2_thinking_with_context.yaml
+[SYSTEM] Model config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/models/kimi_k2_thinking.yaml
+[SYSTEM] SQL asset: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/sql/wealth_management_diverse/asset.yaml
+[SYSTEM] Fuseki health check passed.
+[SYSTEM] Model provider: aws-bedrock-openai-compatible
+[SYSTEM] Model endpoint env: ABLATION_BASE_URL
+[SYSTEM] Primary model: moonshotai.kimi-k2-thinking
+[SYSTEM] RAG/Retrieve model: moonshotai.kimi-k2-thinking
+[SYSTEM] Planner model: moonshotai.kimi-k2-thinking
+[SYSTEM] Query_Spec model: moonshotai.kimi-k2-thinking
+[SYSTEM] Refine model: moonshotai.kimi-k2-thinking
+[SYSTEM] Generate model: moonshotai.kimi-k2-thinking
+[SYSTEM] Validate model: moonshotai.kimi-k2-thinking
+[SYSTEM] Explain model: moonshotai.kimi-k2-thinking
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: multi_candidate
+[SYSTEM] Benchmark query workers: 4
+[SYSTEM] Benchmark start delay: 0 seconds
+[SYSTEM] Report save interval: every 1 completed row(s)
+[SYSTEM] Report file: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/kimi_k2_thinking/with_context/run_01/raw_pipeline.csv
+[SYSTEM] Loading RDF Knowledge Graph metadata from schema + Fuseki...
+[SYSTEM] Successfully loaded 27 classes with Fuseki dynamic properties.
+[SYSTEM] Using Apache Jena Fuseki as the RDF instance graph. Skipping rdflib instance load.
+[SYSTEM] Loaded RDF ID alias map with 1658 normalized keys.
+[SQL SCHEMA] Loaded 8 tables from /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[DOMAIN CONTEXT] business_rules quarantined: Evaluation-scoped document excluded from preparation and inference
+[DOMAIN CONTEXT] candidates attempt 1/2 failed: Incomplete preparation response: length. Diagnostics: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/context_cache/kimi_k2_thinking/0d18776538fc36b48069d71b4e30b3f62d4974c5e9919d5ba6d3333721fdd326.candidates.failure.json
+[DOMAIN CONTEXT] candidates attempt 2/2 failed: Incomplete preparation response: length. Diagnostics: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/context_cache/kimi_k2_thinking/0d18776538fc36b48069d71b4e30b3f62d4974c5e9919d5ba6d3333721fdd326.candidates.failure.json
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/src/script_diff_llm/pipeline/domain_context.py", line 236, in prepare_domain_context
+    candidate_entries = _extract_entries(
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/src/script_diff_llm/pipeline/domain_context.py", line 140, in _extract_entries
+    raise ValueError(f'Incomplete preparation response: {finish_reason}')
+ValueError: Incomplete preparation response: length
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/runners/train/run_pipeline.py", line 22, in <module>
+    main()
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/src/script_diff_llm/pipeline/core_pipeline.py", line 543, in main
+    domain_context = prepare_domain_context(
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/src/script_diff_llm/pipeline/domain_context.py", line 307, in prepare_domain_context
+    raise RuntimeError(f'Domain context failed; benchmark not started: {error}') from error
+RuntimeError: Domain context failed; benchmark not started: Incomplete preparation response: length
+[SYSTEM] SQLite DB: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[SYSTEM] SQLite DB exists: True
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: Apache Jena Fuseki
+[SYSTEM] Fuseki endpoint: http://127.0.0.1:3030/wealth/query
+[SYSTEM] Fuseki scan timeout: 60 seconds
+[SYSTEM] Experiment config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/experiments/kimi_k2_thinking_with_context.yaml
+[SYSTEM] Model config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/models/kimi_k2_thinking.yaml
+[SYSTEM] SQL asset: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/sql/wealth_management_diverse/asset.yaml
+[SYSTEM] Fuseki health check passed.
+[SYSTEM] Model provider: aws-bedrock-openai-compatible
+[SYSTEM] Model endpoint env: ABLATION_BASE_URL
+[SYSTEM] Primary model: moonshotai.kimi-k2-thinking
+[SYSTEM] RAG/Retrieve model: moonshotai.kimi-k2-thinking
+[SYSTEM] Planner model: moonshotai.kimi-k2-thinking
+[SYSTEM] Query_Spec model: moonshotai.kimi-k2-thinking
+[SYSTEM] Refine model: moonshotai.kimi-k2-thinking
+[SYSTEM] Generate model: moonshotai.kimi-k2-thinking
+[SYSTEM] Validate model: moonshotai.kimi-k2-thinking
+[SYSTEM] Explain model: moonshotai.kimi-k2-thinking
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: multi_candidate
+[SYSTEM] Benchmark query workers: 4
+[SYSTEM] Benchmark start delay: 0 seconds
+[SYSTEM] Report save interval: every 1 completed row(s)
+[SYSTEM] Report file: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/kimi_k2_thinking/with_context/run_01/raw_pipeline.csv
+[SYSTEM] Loading RDF Knowledge Graph metadata from schema + Fuseki...
+[SYSTEM] Successfully loaded 27 classes with Fuseki dynamic properties.
+[SYSTEM] Using Apache Jena Fuseki as the RDF instance graph. Skipping rdflib instance load.
+[SYSTEM] Loaded RDF ID alias map with 1658 normalized keys.
+[SQL SCHEMA] Loaded 8 tables from /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[DOMAIN CONTEXT] business_rules quarantined: Evaluation-scoped document excluded from preparation and inference
+[DOMAIN CONTEXT] candidates attempt 1/2 failed: Incomplete preparation response: length. Diagnostics: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/context_cache/kimi_k2_thinking/0d18776538fc36b48069d71b4e30b3f62d4974c5e9919d5ba6d3333721fdd326.candidates.failure.json
+[DOMAIN CONTEXT] candidates attempt 2/2 failed: Incomplete preparation response: length. Diagnostics: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/context_cache/kimi_k2_thinking/0d18776538fc36b48069d71b4e30b3f62d4974c5e9919d5ba6d3333721fdd326.candidates.failure.json
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/src/script_diff_llm/pipeline/domain_context.py", line 236, in prepare_domain_context
+    candidate_entries = _extract_entries(
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/src/script_diff_llm/pipeline/domain_context.py", line 140, in _extract_entries
+    raise ValueError(f'Incomplete preparation response: {finish_reason}')
+ValueError: Incomplete preparation response: length
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/runners/train/run_pipeline.py", line 22, in <module>
+    main()
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/src/script_diff_llm/pipeline/core_pipeline.py", line 543, in main
+    domain_context = prepare_domain_context(
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/src/script_diff_llm/pipeline/domain_context.py", line 307, in prepare_domain_context
+    raise RuntimeError(f'Domain context failed; benchmark not started: {error}') from error
+RuntimeError: Domain context failed; benchmark not started: Incomplete preparation response: length

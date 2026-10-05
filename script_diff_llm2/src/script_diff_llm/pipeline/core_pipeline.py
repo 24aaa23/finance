@@ -68,7 +68,7 @@ from script_diff_llm.pipeline.operators import (
 from script_diff_llm.pipeline.registry import build_operator_registry
 from script_diff_llm.pipeline.specification import semantic_build_query_spec as semantic_build_query_spec_operator
 from script_diff_llm.pipeline.semantic_catalog import load_semantic_catalog
-from script_diff_llm.pipeline.domain_context import prepare_domain_context
+from script_diff_llm.pipeline.domain_context import prepare_domain_context, save_domain_context_state
 
 load_local_env_file()
 CONFIG = load_runtime_config()
@@ -544,6 +544,7 @@ def main():
         SCRIPT_DIR, sql_schema, kg_metadata, query_spec_client, QUERY_SPEC_MODEL,
         log_call_fn=api_logger.log_call,
     )
+    save_domain_context_state(OUTPUT_DIR, domain_context, QUERY_SPEC_MODEL)
 
     if os.getenv("DOMAIN_CONTEXT_PREPARE_ONLY", "").strip() == "1":
         print("[DOMAIN CONTEXT] Preparation-only run complete; benchmark not started")

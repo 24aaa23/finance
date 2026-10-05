@@ -1,6 +1,10 @@
 # script_diff_llm
 
+For four-model raw-only ablations on the 1,000-query dataset, see [ablations/v5_test1000/README.md](ablations/v5_test1000/README.md).
+
 Research/engineering repository for an agentic SQL/KG query pipeline over a wealth-management dataset.
+
+For combined v5 run commands, optional database context, resume behavior, and changing datasets/databases, see [README_V5_RUN_GUIDE.md](README_V5_RUN_GUIDE.md).
 
 The important architecture is subquery-level routing:
 

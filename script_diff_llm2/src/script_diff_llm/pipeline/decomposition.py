@@ -56,6 +56,10 @@ Use SQL for aggregation, ranking, or conventional relational filters.
 Use KG for relationship traversal and multi-hop entity connections.
 
 DECOMPOSITION RULES:
+- The ONLY executable operator names are Subquery, Set_Intersect, Set_Union, Set_Difference.
+- SQL verbs JOIN, SELECT, COUNT and Aggregate are not DAG operators. Perform joins, aggregation, arithmetic, normalization and ranking inside a Subquery's backend query.
+- For a single Subquery, use empty inputs and outputs; QuerySpec determines the final answer schema. Declared outputs are only fields consumed by other DAG nodes.
+- Each input source is exactly one NODE_ID.output_name, not a comma-separated tuple or a placeholder. Grouped records must retain their row relationships; do not turn a compound record into independent ID and dimension lists.
 - Prefer the smallest correct DAG. If one subquery can answer the question directly, keep it as one node.
 - Do not introduce abstract intermediate nodes when the final answer target is already an entity and can be retrieved directly.
 - Assign each requested condition and output to a node using scope_clauses quoted verbatim from the question. Keep date filters on the clauses they modify; do not copy every year to every branch.

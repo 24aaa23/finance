@@ -266,8 +266,17 @@ def _profile_filter_sql(filters: list[dict[str, Any]], profile_columns: set[str]
             clauses.append(f'"{field}" {operator.upper()} "{value}"')
             continue
         if operator in {"=", "!=", "<>", ">", ">=", "<", "<="} and not isinstance(value, list):
-            clauses.append(f'"{field}" {operator.upper()} {_sql_literal(value)}')
+            if value is None:
+                if operator not in {'=', '!=', '<>'}:
+                    return None
+                clauses.append(f'"{field}" IS {"NOT " if operator != "=" else ""}NULL')
+            else:
+                clauses.append(f'"{field}" {operator.upper()} {_sql_literal(value)}')
         elif operator in {"in", "not_in"} and isinstance(value, list) and value:
+            if None in value:
+                # Do not reinterpret SQL three-valued membership semantics.
+                # Leave ambiguous null-containing sets to semantic generation.
+                return None
             values = ", ".join(_sql_literal(entry) for entry in value)
             keyword = "NOT IN" if operator == "not_in" else "IN"
             clauses.append(f'"{field}" {keyword} ({values})')
@@ -316,6 +325,132 @@ def _entity_measure_expression(measure: dict[str, Any], columns: set[str]) -> st
 
 def _derived_formula_sql(formula: str, aliases: list[str]) -> str | None:
     return _entity_measure_expression({"formula": formula}, set(aliases))
+
+
+def _deterministic_projection_sql(inputs: Dict[str, Any]) -> str | None:
+    """Compile a fully explicit single-source projection; otherwise use the LLM.
+
+    No joins, aggregation, ranking, bound inputs, implicit output columns or
+    metric reinterpretation are inferred by this fast path.
+    """
+    spec = inputs.get('query_spec')
+    schema = inputs.get('sql_schema') or inputs.get('global_schema') or {}
+    if not isinstance(spec, dict) or spec.get('query_type') != 'point_lookup':
+        return None
+    grain = spec.get('grain') or {}
+    if (inputs.get('bound_inputs') or spec.get('predicate_tree') or spec.get('group_by')
+            or grain.get('pre_aggregate_by') or grain.get('final_group_by')
+            or (spec.get('ranking') or {}).get('required')
+            or spec.get('join_policy') in {'anti_join', 'union_required'}):
+        return None
+    source = spec.get('base_entity')
+    if source not in schema or any(s != source for s in spec.get('required_classes', [])):
+        return None
+    columns = set(schema[source].get('column_names', []))
+    identifiers = [source, *columns, *spec.get('output_schema', [])]
+    if not all(isinstance(s, str) and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', s) for s in identifiers):
+        return None
+    predicates = spec.get('filters', [])
+    if not isinstance(predicates, list):
+        return None
+    where = _profile_filter_sql(predicates, columns, source)
+    if where is None:
+        return None
+    projections = {}
+    for measure in spec.get('measures', []):
+        if not isinstance(measure, dict) or measure.get('source_class', source) != source:
+            return None
+        if any(measure.get(k) for k in ['per_entity_operation', 'final_operation', 'population_filters',
+                                        'aggregate_filters', 'requires_distinct']):
+            return None
+        if measure.get('operand_kind') == 'aliases' or measure.get('formula_stage') not in (None, 'row'):
+            return None
+        expression = _entity_measure_expression(measure, columns)
+        name = measure.get('output_name')
+        if not expression or not isinstance(name, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name):
+            return None
+        projections[name] = expression
+    outputs = spec.get('output_schema')
+    if not isinstance(outputs, list) or not outputs:
+        return None
+    select = []
+    for name in outputs:
+        expression = projections.get(name) or (f'"{name}"' if name in columns else None)
+        if not expression:
+            return None
+        select.append(f'{expression} AS "{name}"')
+    # A projection containing only the declared entity identity represents an
+    # entity set, including when its carrier table has several related records.
+    key = spec.get('entity_key')
+    distinct = bool(key in columns and all(
+        (projections.get(name) or f'"{name}"') == f'"{key}"' for name in outputs))
+    return 'SELECT ' + ('DISTINCT ' if distinct else '') + ', '.join(select) + f' FROM "{source}"' + (f' WHERE {where}' if where else '') + ';'
+
+
+def _deterministic_single_source_aggregate_sql(inputs: Dict[str, Any]) -> str | None:
+    """Compile explicit one-level aggregates without joins or grain changes."""
+    spec = inputs.get('query_spec')
+    schema = inputs.get('sql_schema') or inputs.get('global_schema') or {}
+    if not isinstance(spec, dict) or spec.get('query_type') != 'aggregation':
+        return None
+    grain = spec.get('grain') or {}
+    if (inputs.get('bound_inputs') or spec.get('predicate_tree') or grain.get('pre_aggregate_by')
+            or spec.get('fanout_control', {}).get('required')
+            or (spec.get('ranking') or {}).get('required')
+            or spec.get('join_policy') in {'anti_join', 'union_required'}):
+        return None
+    source = spec.get('base_entity')
+    if source not in schema or any(s != source for s in spec.get('required_classes', [])):
+        return None
+    columns = set(schema[source].get('column_names', []))
+    if not all(isinstance(name, str) and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name)
+               for name in [source, *columns, *spec.get('output_schema', [])]):
+        return None
+    where = _profile_filter_sql(spec.get('filters', []), columns, source)
+    if where is None:
+        return None
+    projections, grouping = {}, []
+    for group in spec.get('group_by', []):
+        if (not isinstance(group, dict) or group.get('source_class', source) != source
+                or group.get('field') not in columns or group.get('bucket_strategy')):
+            return None
+        name = group.get('output_name')
+        if not isinstance(name, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name):
+            return None
+        expression = f'"{group["field"]}"'
+        projections[name] = expression
+        grouping.append(expression)
+    measures = spec.get('measures', [])
+    if not measures:
+        return None
+    for measure in measures:
+        if not isinstance(measure, dict) or measure.get('source_class', source) != source:
+            return None
+        if (measure.get('aggregate_filters') or measure.get('population_filters')
+                or measure.get('operand_kind') == 'aliases'
+                or measure.get('formula_stage') not in (None, 'row')
+                or (measure.get('per_entity_operation') and measure.get('final_operation'))):
+            return None
+        operation = str(measure.get('final_operation') or measure.get('per_entity_operation') or '').upper()
+        if operation not in {'COUNT', 'COUNT_DISTINCT', 'SUM', 'AVG', 'MIN', 'MAX'}:
+            return None
+        name = measure.get('output_name')
+        if not isinstance(name, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name):
+            return None
+        expression = '*' if measure.get('field') == '*' and operation == 'COUNT' else _entity_measure_expression(measure, columns)
+        if not expression:
+            return None
+        distinct = measure.get('requires_distinct') or operation == 'COUNT_DISTINCT'
+        if distinct and (operation not in {'COUNT', 'COUNT_DISTINCT'} or expression == '*'):
+            return None
+        function = 'COUNT' if operation == 'COUNT_DISTINCT' else operation
+        projections[name] = f'{function}({"DISTINCT " if distinct else ""}{expression})'
+    outputs = spec.get('output_schema')
+    if not isinstance(outputs, list) or not outputs or any(name not in projections for name in outputs):
+        return None
+    return ('SELECT ' + ', '.join(f'{projections[name]} AS "{name}"' for name in outputs)
+            + f' FROM "{source}"' + (f' WHERE {where}' if where else '')
+            + (' GROUP BY ' + ', '.join(grouping) if grouping else '') + ';')
 
 
 def _deterministic_entity_group_sql(inputs: Dict[str, Any]) -> str | None:
@@ -514,6 +649,17 @@ def semantic_generate_sql(inputs: Dict[str, Any], client: Any, model: str) -> Di
     bound_inputs = inputs.get("bound_inputs", {})
     print(f"[SQL SCHEMA] Relevant tables: {relevant_tables}")
 
+    compiled_projection = _deterministic_projection_sql(inputs) if not logic_feedback else None
+    if compiled_projection:
+        return {'sql': compiled_projection, 'reasoning': 'Compiled explicit single-source projections and predicates from QuerySpec.',
+                'sql_schema_tables': _schema_table_names(sql_schema), 'relevant_tables': relevant_tables,
+                'raw_response_preview': '', 'generation_backend': 'deterministic_projection'}
+    compiled_aggregate = _deterministic_single_source_aggregate_sql(inputs) if not logic_feedback else None
+    if compiled_aggregate:
+        return {'sql': compiled_aggregate, 'reasoning': 'Compiled explicit single-source aggregation at the declared grain.',
+                'sql_schema_tables': _schema_table_names(sql_schema), 'relevant_tables': relevant_tables,
+                'raw_response_preview': '', 'generation_backend': 'deterministic_single_source_aggregate'}
+
     # A failed compiled query must reach the repair model instead of being
     # reproduced unchanged by the deterministic fast path.
     deterministic_entity_group = _deterministic_entity_group_sql(inputs) if not logic_feedback else None
@@ -579,6 +725,8 @@ QUERY SPEC CONTRACT RULES:
 - For ranking queries, add a deterministic secondary ORDER BY on a stable entity identity column (for example an entity key column) after the primary metric sort unless the Query Spec already requires a different stable tie-break.
 - If a group_by item contains bucket_labels and bucket_boundaries, use those exact labels and thresholds. Never invent missing boundaries.
 - For a derived measure with formula_stage="final_group", compute the formula from the already aggregated final-group measure aliases in an outer SELECT. Do not average the formula at raw-row or entity grain.
+- MIN(alias) and MAX(alias) in a normalization expression refer to window extrema over the complete eligible entity population: use MIN(alias) OVER () and MAX(alias) OVER () before ranking/LIMIT, not a collapsing aggregate or extrema over the top results.
+- For an entity-list query, project requested entity fields and prevent duplicate entities caused solely by related-record existence joins. Prefer EXISTS/semijoins or SELECT DISTINCT when only entity fields are requested; preserve child rows when requested.
 - Apply population_filters only inside that measure's source aggregation. Metrics from the same table with different filters need separate CTEs. Top-level filters constrain the shared population. Do not apply a numerator-only restriction to the denominator.
 - aggregate_filters apply AFTER the declared entity or final-group aggregation. An average-above threshold uses HAVING/an outer predicate on the computed average, never WHERE on each input value. With scope="population", constrain the shared eligible entity universe before computing other metrics; with scope="metric", restrict only that metric. Use operand_kind to distinguish physical columns from derived aliases; formula_stage alone never makes a physical aggregate a derived expression.
 - When joining separately grouped aggregates on nullable dimensions, use SQLite null-safe IS (or an equivalent explicit null-safe condition), so a null group retains its metrics. Preserve NOT IN null semantics; add IS NULL only when the question explicitly includes missing values.
@@ -697,6 +845,12 @@ SQL Query: {sql}
 Query Spec: {json.dumps(query_spec, indent=2)}
 SQLite Physical Schema:
 {json.dumps(sql_schema, indent=2)}
+
+Validate ONLY User Query and Query Spec as this node's executable scope.
+Original User Query Context describes the whole DAG, not additional predicates
+for this node. Do not reject a subquery for omitting sibling conditions or the
+final aggregation/ranking assigned to a downstream node. Upstream bound values
+must still constrain this node when supplied. Never broaden its local population.
 
 Check for:
 1. Syntax errors

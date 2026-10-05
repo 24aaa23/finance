@@ -1,0 +1,235 @@
+{
+  "WM125-2T-026": {
+    "question": "What is the average goal progress for investors whose stated goal is Retirement Planning, averaging each investor's goal progress first?",
+    "recorded_grade": "PARTIAL",
+    "sql": "WITH per_inv AS (SELECT investor_id, AVG(progress_pct) v FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT AVG(v) avg_progress FROM per_inv g JOIN ATOM_ENTITY_INVESTOR_PROFILE_001 p ON g.investor_id=p.investor_id WHERE p.investment_goal='Retirement Planning'",
+    "probe_rows": 1,
+    "reference_rows": 1,
+    "probe_value": 41.34181905635228,
+    "reference_value": 41.34,
+    "absolute_difference": 0.0018190563522750836,
+    "probe_sample": [
+      {
+        "avg_progress": 41.34181905635228
+      }
+    ]
+  },
+  "WM125-2T-023": {
+    "question": "What is the average goal progress for investors whose stated goal is Emergency Fund, averaging each investor's goal progress first?",
+    "recorded_grade": "MISMATCH",
+    "sql": "WITH per_inv AS (SELECT investor_id, AVG(progress_pct) v FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT AVG(v) avg_progress FROM per_inv g JOIN ATOM_ENTITY_INVESTOR_PROFILE_001 p ON g.investor_id=p.investor_id WHERE p.investment_goal='Emergency Fund'",
+    "probe_rows": 1,
+    "reference_rows": 1,
+    "probe_value": 41.01433484822673,
+    "reference_value": 41.01,
+    "absolute_difference": 0.004334848226733357,
+    "probe_sample": [
+      {
+        "avg_progress": 41.01433484822673
+      }
+    ]
+  },
+  "TT125-055": {
+    "question": "What is the net transaction amount (sum of signed amounts: inflows positive, outflows negative) processed through the Bank Transfer channel?",
+    "recorded_grade": "MISMATCH",
+    "sql": "SELECT SUM(amount) total_amount FROM ATOM_EVENT_CASH_FLOW_001 WHERE source='Bank Transfer'",
+    "probe_rows": 1,
+    "reference_rows": 1,
+    "probe_value": 401051589.0,
+    "reference_value": 401051589.0,
+    "absolute_difference": 0.0,
+    "probe_sample": [
+      {
+        "total_amount": 401051589.0
+      }
+    ]
+  },
+  "EC125-3T-010": {
+    "question": "For each risk tolerance, how many distinct investors both hold a Mutual Fund position and have a Growth goal?",
+    "recorded_grade": "MISMATCH",
+    "sql": "SELECT p.risk_tolerance,COUNT(DISTINCT p.investor_id) investor_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p WHERE EXISTS(SELECT 1 FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 h WHERE h.investor_id=p.investor_id AND h.investment_type='Mutual Fund') AND EXISTS(SELECT 1 FROM ATOM_ENTITY_INVESTMENT_GOAL_001 g WHERE g.investor_id=p.investor_id AND g.investment_goal='Growth') GROUP BY p.risk_tolerance",
+    "probe_rows": 4,
+    "reference_rows": 4,
+    "exact_group_records": true,
+    "probe_sample": [
+      {
+        "risk_tolerance": null,
+        "investor_count": 18
+      },
+      {
+        "risk_tolerance": "Aggressive",
+        "investor_count": 107
+      },
+      {
+        "risk_tolerance": "Conservative",
+        "investor_count": 90
+      },
+      {
+        "risk_tolerance": "Moderate",
+        "investor_count": 113
+      }
+    ]
+  },
+  "EC125-2T-029": {
+    "question": "For each segment and holding sector, how many distinct investors fall into that combination?",
+    "recorded_grade": "MISMATCH",
+    "sql": "SELECT p.segment,h.sector,COUNT(DISTINCT p.investor_id) investor_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 h ON p.investor_id=h.investor_id GROUP BY p.segment,h.sector",
+    "probe_rows": 65,
+    "reference_rows": 65,
+    "exact_group_records": true,
+    "probe_sample": [
+      {
+        "segment": null,
+        "sector": null,
+        "investor_count": 29
+      },
+      {
+        "segment": null,
+        "sector": "Automobile",
+        "investor_count": 38
+      },
+      {
+        "segment": null,
+        "sector": "Banking",
+        "investor_count": 39
+      },
+      {
+        "segment": null,
+        "sector": "Consumer Goods",
+        "investor_count": 42
+      }
+    ]
+  },
+  "SQA125-3T-009": {
+    "question": "Which Aggressive investors have an average annual return above 35 and a risk score above 50?",
+    "recorded_grade": "PARTIAL",
+    "sql": "SELECT p.investor_id, AVG(g.avg_annual_return_pct) goal_metric FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 h ON p.investor_id=h.investor_id JOIN ATOM_ENTITY_INVESTMENT_GOAL_001 g ON p.investor_id=g.investor_id WHERE p.risk_tolerance='Aggressive' AND h.risk_score>50 GROUP BY p.investor_id HAVING AVG(g.avg_annual_return_pct)>35",
+    "probe_rows": 2,
+    "reference_rows": 2,
+    "exact_investor_set": true,
+    "extra_ids": 0,
+    "missing_ids": 0,
+    "probe_sample": [
+      {
+        "investor_id": "INV-1070",
+        "goal_metric": 40.27746205717135
+      },
+      {
+        "investor_id": "INV-1424",
+        "goal_metric": 36.00373301641062
+      }
+    ]
+  },
+  "TT125-004": {
+    "question": "List investors whose net cash flow during calendar year 2024 was negative (net withdrawals).",
+    "recorded_grade": "MISMATCH",
+    "sql": "SELECT investor_id,SUM(amount) net_cash_flow FROM ATOM_EVENT_CASH_FLOW_001 WHERE date>='2024-01-01' AND date<'2025-01-01' GROUP BY investor_id HAVING SUM(amount)<0",
+    "probe_rows": 212,
+    "reference_rows": 212,
+    "exact_investor_set": true,
+    "extra_ids": 0,
+    "missing_ids": 0,
+    "probe_sample": [
+      {
+        "investor_id": "INV-001",
+        "net_cash_flow": -1.0
+      },
+      {
+        "investor_id": "INV-003",
+        "net_cash_flow": -4720.0
+      },
+      {
+        "investor_id": "INV-004",
+        "net_cash_flow": -947.0
+      },
+      {
+        "investor_id": "INV-009",
+        "net_cash_flow": -4688.0
+      }
+    ]
+  },
+  "MC125-007": {
+    "question": "Across risk tolerance, compare the average goal progress, average goal shortfall, average annual return, and average goal volatility of investors.",
+    "recorded_grade": "PARTIAL",
+    "sql": "WITH g AS(SELECT investor_id,AVG(shortfall) v FROM ATOM_ENTITY_INVESTMENT_GOAL_001 GROUP BY investor_id) SELECT risk_tolerance,AVG(v) avg_goal_shortfall FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p LEFT JOIN g ON p.investor_id=g.investor_id GROUP BY risk_tolerance",
+    "probe_rows": 4,
+    "reference_rows": 4,
+    "metric": "avg_goal_shortfall",
+    "max_absolute_difference": 0.002590492367744446,
+    "all_groups_match_to_reference_rounding": true,
+    "probe_sample": [
+      {
+        "risk_tolerance": null,
+        "avg_goal_shortfall": 18627483.33259049
+      },
+      {
+        "risk_tolerance": "Aggressive",
+        "avg_goal_shortfall": 23218312.168938886
+      },
+      {
+        "risk_tolerance": "Conservative",
+        "avg_goal_shortfall": 23686380.489253193
+      },
+      {
+        "risk_tolerance": "Moderate",
+        "avg_goal_shortfall": 22760174.639852766
+      }
+    ]
+  },
+  "MC125-003": {
+    "question": "Across risk tolerance, compare the average rebalance amount, average rebalance shift (target minus current allocation %), and average rebalance count (0 for investors with no rebalancing actions) of investors.",
+    "recorded_grade": "PARTIAL",
+    "sql": "WITH r AS(SELECT investor_id,AVG(target_allocation_pct-current_allocation_pct) v FROM ATOM_EVENT_REBALANCING_ACTION_001 GROUP BY investor_id) SELECT risk_tolerance,AVG(v) avg_rebalance_shift FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p LEFT JOIN r ON p.investor_id=r.investor_id GROUP BY risk_tolerance",
+    "probe_rows": 4,
+    "reference_rows": 4,
+    "metric": "avg_rebalance_shift",
+    "max_absolute_difference": 0.003286153170946937,
+    "all_groups_match_to_reference_rounding": true,
+    "probe_sample": [
+      {
+        "risk_tolerance": null,
+        "avg_rebalance_shift": 0.4267195767195766
+      },
+      {
+        "risk_tolerance": "Aggressive",
+        "avg_rebalance_shift": -1.2875320620051285
+      },
+      {
+        "risk_tolerance": "Conservative",
+        "avg_rebalance_shift": 1.753286153170947
+      },
+      {
+        "risk_tolerance": "Moderate",
+        "avg_rebalance_shift": -1.7602685624012644
+      }
+    ]
+  },
+  "MC125-032": {
+    "question": "Across risk tolerance, compare the average total holding value, average holding return (counting only holdings with a recorded cost and current value), and average rebalance amount of investors.",
+    "recorded_grade": "PARTIAL",
+    "sql": "WITH h AS(SELECT investor_id,AVG(100.0*(current_value-cost)/NULLIF(cost,0)) v FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 WHERE cost IS NOT NULL AND current_value IS NOT NULL GROUP BY investor_id) SELECT risk_tolerance,AVG(v) avg_holding_return FROM ATOM_ENTITY_INVESTOR_PROFILE_001 p LEFT JOIN h ON p.investor_id=h.investor_id GROUP BY risk_tolerance",
+    "probe_rows": 4,
+    "reference_rows": 4,
+    "metric": "avg_holding_return",
+    "max_absolute_difference": 0.004944761317545954,
+    "all_groups_match_to_reference_rounding": true,
+    "probe_sample": [
+      {
+        "risk_tolerance": null,
+        "avg_holding_return": 89.82363956389932
+      },
+      {
+        "risk_tolerance": "Aggressive",
+        "avg_holding_return": 75.79978040287314
+      },
+      {
+        "risk_tolerance": "Conservative",
+        "avg_holding_return": 64.67505523868246
+      },
+      {
+        "risk_tolerance": "Moderate",
+        "avg_holding_return": 89.16051175666563
+      }
+    ]
+  }
+}

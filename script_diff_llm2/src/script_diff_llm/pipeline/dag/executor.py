@@ -301,7 +301,7 @@ class AOPExecutor:
         original_successful_scan = scan_result
         if isinstance(scan_result, dict) and isinstance(scan_result.get("data"), list):
             scan_result["data"] = normalize_semantic_result(
-                root_query,
+                description,
                 inputs.get("query_spec", {}),
                 scan_result.get("data", []),
             )
@@ -312,7 +312,7 @@ class AOPExecutor:
         for attempt in range(1, self.post_scan_validate_max_retries + 1):
             if not should_validate_semantics(inputs.get("query_spec", {})):
                 break
-            validation = validate_semantic_result(root_query, inputs.get("query_spec", {}), scan_result.get("data", []))
+            validation = validate_semantic_result(description, inputs.get("query_spec", {}), scan_result.get("data", []))
             is_valid = bool(validation.get("is_valid", False))
             severity = str(validation.get("severity", "repairable_warning")).lower()
             node_trace["validation_is_valid"] = is_valid
@@ -367,7 +367,7 @@ class AOPExecutor:
                 break
             if isinstance(scan_result, dict) and isinstance(scan_result.get("data"), list):
                 scan_result["data"] = normalize_semantic_result(
-                    root_query,
+                    description,
                     inputs.get("query_spec", {}),
                     scan_result.get("data", []),
                 )
@@ -582,7 +582,7 @@ class AOPExecutor:
                 original_successful_scan = scan_result
             if isinstance(scan_result, dict) and isinstance(scan_result.get("data"), list):
                 scan_result["data"] = normalize_semantic_result(
-                    root_query,
+                    description,
                     inputs.get("query_spec", {}),
                     scan_result.get("data", []),
                 )
@@ -593,7 +593,7 @@ class AOPExecutor:
                 node_trace["validation_reason"] = ""
                 break
 
-            validation = validate_semantic_result(root_query, inputs.get("query_spec", {}), scan_result.get("data", []))
+            validation = validate_semantic_result(description, inputs.get("query_spec", {}), scan_result.get("data", []))
             is_valid = bool(validation.get("is_valid", False))
             severity = str(validation.get("severity", "repairable_warning")).lower()
             node_trace["validation_is_valid"] = is_valid

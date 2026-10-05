@@ -1,0 +1,1345 @@
+{
+  "fingerprint": "b1941bae2d876885d52a9c9218aafc8c1db4525408db6cfdef114e746e03cd29",
+  "entries": [
+    {
+      "id": "1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": "Conservative, Moderate, Aggressive",
+      "definition": "Investor risk classification: Conservative focuses on capital preservation and low volatility, Moderate balances growth and preservation, Aggressive is growth-focused with high volatility tolerance.",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": "2",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Customer Segments",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": "Premium, Standard, Mass",
+      "definition": "Classification of investor clients based on value and advisory needs.",
+      "quote": "- **Premium** — High-value clients with sophisticated advisory needs.\n- **Standard** — Mid-tier clients.\n- **Mass** — Retail clients.",
+      "conflicts": []
+    },
+    {
+      "id": "3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goals",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": "Wealth Preservation, Growth, Income Generation, Retirement Planning, Child Education, Emergency Fund",
+      "definition": "Defined financial objectives for an investor's portfolio construction.",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": []
+    },
+    {
+      "id": "4",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Time Horizon",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "time_horizon"
+      ],
+      "terms": "Very Short Term, Short Term, Medium Term, Long Term, Very Long Term",
+      "definition": "The duration of an investment plan.",
+      "quote": "- Very Short Term: < 1 year\n- Short Term: 1–3 years\n- Medium Term: 3–7 years\n- Long Term: 7–15 years\n- Very Long Term: > 15 years",
+      "conflicts": []
+    },
+    {
+      "id": "5",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "date",
+        "amount"
+      ],
+      "terms": "Extended Internal Rate of Return",
+      "definition": "Annualised return computed from irregular cash flows (investments and withdrawals/current value). Inflows are negative cash flows; redemptions/current value are positive cash flows.",
+      "quote": "**Definition:** XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": []
+    },
+    {
+      "id": "6",
+      "document": "domain_intro",
+      "kind": "default",
+      "topic": "XIRR Data Quality Warning",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "date",
+        "amount"
+      ],
+      "terms": "XIRR plausibility cap",
+      "definition": "A data quality warning must be surfaced when computed XIRR exceeds 25%.",
+      "quote": "> **Rule:** If XIRR exceeds 25%, always surface a data quality warning to the caller:\n> *\"XIRR of {value}% exceeds the 25% plausibility threshold. Verify purchase_date, cost, and cash_flow records for investor {investor_id} before using this figure.\"*",
+      "conflicts": []
+    },
+    {
+      "id": "7",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "XIRR Cross-Check",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date",
+        "cost"
+      ],
+      "terms": "XIRR > 25%",
+      "definition": "If XIRR > 25%, cross-check `portfolio_holding.purchase_date` for incorrectly early dates and `portfolio_holding.cost` for abnormally low values.",
+      "quote": "Computed XIRR > **25%** | Cross-check `portfolio_holding.purchase_date` — an incorrectly early purchase date inflates XIRR\nComputed XIRR > **25%** | Cross-check `portfolio_holding.cost` — an abnormally low purchase cost (data entry error) will inflate returns.",
+      "conflicts": []
+    },
+    {
+      "id": "8",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Returns Percentage",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": "returns_pct",
+      "definition": "Simple percentage return = `(current_value - cost) / cost × 100`",
+      "quote": "**Definition:** Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": []
+    },
+    {
+      "id": "9",
+      "document": "domain_intro",
+      "kind": "default",
+      "topic": "Portfolio Health Score Range",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "terms": "goal_match_pct, risk_score, liquidity_score, diversification_score",
+      "definition": "All portfolio health scores are on a 0–100 scale.",
+      "quote": "All scores are on a **0–100 scale**.",
+      "conflicts": []
+    },
+    {
+      "id": "10",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Goal Progress",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": "progress_pct, achievement_pct",
+      "definition": "Goal achievement percentage = `(current_value / target_amount) × 100`.",
+      "quote": "- `achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": []
+    },
+    {
+      "id": "11",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Stale Portfolio Valuation",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": "stale valuation",
+      "definition": "If `current_value` not refreshed in > 30 days, note caveat in return or health analysis; do not treat as live market value.",
+      "quote": "**Stale valuation** | `current_value` not refreshed in > 30 days | Note caveat in any return or health analysis; do not treat as live market value",
+      "conflicts": []
+    },
+    {
+      "id": "12",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Field Integrity - purchase_date",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": "purchase_date",
+      "definition": "`purchase_date` must not be in the future and must not predate 1990-01-01.",
+      "quote": "`purchase_date` must not be in the future and must not predate 1990-01-01 | `portfolio_holding.purchase_date` | Flag holding; exclude from XIRR",
+      "conflicts": []
+    },
+    {
+      "id": "13",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Field Integrity - cost",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": "cost",
+      "definition": "`cost` must be > 0 and not NULL. Exclude from return calculations if not.",
+      "quote": "`cost` must be > 0 and not NULL | `portfolio_holding.cost` | Exclude from return calculations; flag as incomplete",
+      "conflicts": []
+    },
+    {
+      "id": "14",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Risk Tolerance - Equity Ceiling",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": "Conservative investor equity overweight",
+      "definition": "If `risk_tolerance = 'Conservative'` and total equity allocation > 40%, flag as suitability breach.",
+      "quote": "**Conservative investor equity overweight** | `risk_tolerance = 'Conservative'` and total equity allocation > 40% | Flag as suitability breach; require advisory review",
+      "conflicts": []
+    },
+    {
+      "id": "15",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Lock-in - ELSS",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": "ELSS lock-in",
+      "definition": "For `investment_type = 'ELSS'`, do not recommend redemption if `(today - purchase_date) < 3 years`.",
+      "quote": "**Lock-in violation — ELSS** | `investment_type = 'ELSS'` and `(today - purchase_date) < 3 years` | Do not recommend redemption; surface lock-in warning",
+      "conflicts": []
+    },
+    {
+      "id": "16",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Cost Minimum Threshold",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost",
+        "investment_type"
+      ],
+      "terms": "minimum investment threshold",
+      "definition": "Flag `cost` as potentially erroneous if it is below typical instrument minimums (e.g., < ₹500 for Mutual Fund, < ₹1,000 for Stock).",
+      "quote": "**Cost vs. investment type minimum threshold** | `cost` < ₹500 for Mutual Fund / < ₹1,000 for Stock | Flag as potentially erroneous; most instruments have minimum investment thresholds",
+      "conflicts": []
+    },
+    {
+      "id": "17",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Cash Flow Sign Convention",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "type"
+      ],
+      "terms": "Cash flow sign convention",
+      "definition": "For XIRR calculation, inflows (SIP, Lump Sum, Deposit) are negative cash flows; redemptions/withdrawals are positive.",
+      "quote": "Cash flow sign convention | `cash_flow.amount` | Inflows (SIP, Lump Sum, Deposit) → negative for XIRR; Redemption/Withdrawal → positive",
+      "conflicts": []
+    },
+    {
+      "id": "18",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Rebalancing Trigger Drift",
+      "backend": "sql",
+      "source": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "fields": [
+        "current_allocation_pct",
+        "target_allocation_pct"
+      ],
+      "terms": "Allocation Drift",
+      "definition": "If drift (`|current_allocation_pct - target_allocation_pct|`) > 10 percentage points for any sector, trigger rebalancing recommendation.",
+      "quote": "- Drift = `|current_allocation_pct - target_allocation_pct|` in `rebalancing_action`.\n- If drift > **10 percentage points** for any sector → trigger rebalancing recommendation.",
+      "conflicts": []
+    },
+    {
+      "id": "19",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Single-Sector Concentration - Conservative",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+      "fields": [
+        "allocation_pct"
+      ],
+      "terms": "Single-sector concentration",
+      "definition": "For Conservative investors, flag any single sector allocation > 30% for compliance review.",
+      "quote": "- Conservative investors: any single sector allocation > **30%** → flag for compliance review.",
+      "conflicts": []
+    },
+    {
+      "id": "20",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Goal At Risk",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": "goal achievement, high-priority advisory",
+      "definition": "If `achievement_pct` < 50% and goal `target_date` is within 2 years, flag as a **high-priority advisory case**.",
+      "quote": "- If `achievement_pct` < 50% and goal `target_date` is within 2 years → flag as **high-priority advisory case**.",
+      "conflicts": []
+    },
+    {
+      "id": "21",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Non-Aggregatable Fields",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investor_id",
+        "risk_tolerance",
+        "segment",
+        "investment_goal"
+      ],
+      "terms": "investor_id, risk_tolerance, segment, investment_goal",
+      "definition": "Fields `investor_id`, `risk_tolerance`, `segment`, `investment_goal` are identifiers or categories and must NEVER be aggregated (SUM/AVG/MIN/MAX). Use only for GROUP BY, COUNT(DISTINCT), or JOIN.",
+      "quote": "| `investor_id` | All tables | Opaque identifier — SUM/AVG/MIN/MAX are nonsensical; use only for GROUP BY, COUNT(DISTINCT), or JOIN |\n| `risk_tolerance` | `investor_profile` | Ordinal category — do not SUM or AVG; use COUNT/distribution only |\n| `segment` | `investor_profile`, `portfolio_holding` | Category — no numeric meaning; use COUNT or GROUP BY |\n| `investment_goal` | `investor_profile`, `investment_goal` | Category — no numeric meaning; use COUNT or GROUP BY |",
+      "conflicts": []
+    },
+    {
+      "id": "22",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Aggregation of `cost`",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": "total invested cost",
+      "definition": "The allowed aggregation for `cost` is SUM (to get total invested amount). Do NOT SUM across investors for comparison.",
+      "quote": "| `cost` | `portfolio_holding` | SUM (total invested) | Do NOT SUM across investors to compare; normalise by `current_value` for meaningful cross-investor comparison |",
+      "conflicts": []
+    },
+    {
+      "id": "23",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Aggregation of `current_value`",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": "total portfolio value",
+      "definition": "The allowed aggregation for `current_value` is SUM per `investor_id` to get total portfolio value.",
+      "quote": "| `current_value` | `portfolio_holding` | SUM (portfolio total) | SUM per `investor_id` = total portfolio value",
+      "conflicts": []
+    },
+    {
+      "id": "24",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Aggregation Method for `returns_pct`",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": "averaging returns",
+      "definition": "For `returns_pct`, prefer value-weighted average by `cost` or `current_value`. A simple AVG is only valid for equal-weighted analysis. Do NOT SUM.",
+      "quote": "| `returns_pct` | `portfolio_holding` | AVG (equal-weighted), weighted AVG by `cost` or `current_value` | Do NOT SUM; a simple AVG of `returns_pct` is only valid for equal-weighted analysis — always prefer value-weighted average |",
+      "conflicts": []
+    },
+    {
+      "id": "25",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "XIRR Aggregation Method",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "date",
+        "amount"
+      ],
+      "terms": "cohort XIRR, pooling cash flows",
+      "definition": "Never pool all investors' cash flows into a single XIRR calculation. Compute XIRR per investor, then report a distribution (MIN, P25, MEDIAN, P75, MAX).",
+      "quote": "- **Never pool** all investors' cash flows into a single XIRR calculation. XIRR is non-linear and pooling distorts results.\n- **Correct approach:** Compute XIRR per `investor_id`, then report as a distribution: `MIN`, `P25`, `MEDIAN`, `P75`, `MAX`.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance category label",
+      "backend": "kg",
+      "source": "RiskTolerance",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Conservative",
+        "Moderate",
+        "Aggressive"
+      ],
+      "definition": "Investor's capital preservation and volatility tolerance classification",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G2",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Customer segment label",
+      "backend": "kg",
+      "source": "Segment",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Premium",
+        "Standard",
+        "Mass"
+      ],
+      "definition": "Investor classification by value and advisory needs",
+      "quote": "- **Premium** — High-value clients with sophisticated advisory needs.\n- **Standard** — Mid-tier clients.\n- **Mass** — Retail clients.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goal category label",
+      "backend": "kg",
+      "source": "InvestmentGoalType",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Wealth Preservation",
+        "Growth",
+        "Income Generation",
+        "Retirement Planning",
+        "Child Education",
+        "Emergency Fund"
+      ],
+      "definition": "Financial objective for investment portfolio",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G4",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Asset category label",
+      "backend": "kg",
+      "source": "Category",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Equity",
+        "Debt",
+        "Hybrid",
+        "Alternative"
+      ],
+      "definition": "Broad classification of investment instrument",
+      "quote": "`Equity` | `Debt` | `Hybrid` | `Alternative`",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G5",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment type label",
+      "backend": "kg",
+      "source": "InvestmentType",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Mutual Fund",
+        "Stock",
+        "Bond",
+        "ETF",
+        "ELSS",
+        "PPF"
+      ],
+      "definition": "Specific financial instrument type",
+      "quote": "`Mutual Fund` | `Stock` | `Bond` | `ETF` | `ELSS` | `PPF`",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G6",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Sector label",
+      "backend": "kg",
+      "source": "Sector",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Technology",
+        "Financial Services",
+        "Healthcare",
+        "Consumer Goods",
+        "Energy",
+        "Utilities",
+        "Real Estate",
+        "Materials",
+        "Industrials",
+        "Communication Services"
+      ],
+      "definition": "Industry classification of investment",
+      "quote": "Technology | Financial Services | Healthcare | Consumer Goods | Energy | Utilities | Real Estate | Materials | Industrials | Communication Services",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G7",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment goal field in investor profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "investment_goal"
+      ],
+      "definition": "Financial objective category for investor",
+      "quote": "### Investment Goals\n`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G8",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk tolerance field in investor profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "risk_tolerance"
+      ],
+      "definition": "Investor's capital preservation and volatility tolerance classification",
+      "quote": "### Risk Tolerance\n- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G9",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Segment field in investor profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": [
+        "segment"
+      ],
+      "definition": "Customer classification by value and advisory needs",
+      "quote": "### Customer Segments\n- **Premium** — High-value clients with sophisticated advisory needs.\n- **Standard** — Mid-tier clients.\n- **Mass** — Retail clients.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G10",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Time horizon field",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "time_horizon"
+      ],
+      "terms": [
+        "time_horizon"
+      ],
+      "definition": "Investment duration category",
+      "quote": "### Time Horizons\n- Very Short Term: < 1 year\n- Short Term: 1–3 years\n- Medium Term: 3–7 years\n- Long Term: 7–15 years\n- Very Long Term: > 15 years",
+      "conflicts": []
+    }
+  ],
+  "review": [
+    {
+      "id": "1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": "Conservative, Moderate, Aggressive",
+      "definition": "Investor risk classification: Conservative focuses on capital preservation and low volatility, Moderate balances growth and preservation, Aggressive is growth-focused with high volatility tolerance.",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "44bd5b067e9a321b150ae8060190620abb36a318da5183c5869a97cb64d6c251",
+      "active": false
+    },
+    {
+      "id": "2",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Customer Segments",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": "Premium, Standard, Mass",
+      "definition": "Classification of investor clients based on value and advisory needs.",
+      "quote": "- **Premium** — High-value clients with sophisticated advisory needs.\n- **Standard** — Mid-tier clients.\n- **Mass** — Retail clients.",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "47f87a78dd1d7ef1fa6d571a527e699f335eba2a91f1e8934ef6b64185ee730a",
+      "active": false
+    },
+    {
+      "id": "3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goals",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": "Wealth Preservation, Growth, Income Generation, Retirement Planning, Child Education, Emergency Fund",
+      "definition": "Defined financial objectives for an investor's portfolio construction.",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "3d821cfbe7dac60f79abdab09426935bea5fbfd097bd9bcecd10bafb464e4968",
+      "active": false
+    },
+    {
+      "id": "4",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Time Horizon",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "time_horizon"
+      ],
+      "terms": "Very Short Term, Short Term, Medium Term, Long Term, Very Long Term",
+      "definition": "The duration of an investment plan.",
+      "quote": "- Very Short Term: < 1 year\n- Short Term: 1–3 years\n- Medium Term: 3–7 years\n- Long Term: 7–15 years\n- Very Long Term: > 15 years",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "0f41fd470b837029c4bf74e9250e8ec22609f7555f556c5d50a62ff6b9dc9e9e",
+      "active": false
+    },
+    {
+      "id": "5",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "date",
+        "amount"
+      ],
+      "terms": "Extended Internal Rate of Return",
+      "definition": "Annualised return computed from irregular cash flows (investments and withdrawals/current value). Inflows are negative cash flows; redemptions/current value are positive cash flows.",
+      "quote": "**Definition:** XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "f0ebb9584c7394a8e5fd7909617fb2c794a306625f1049b909a23a84416f9872",
+      "active": false
+    },
+    {
+      "id": "6",
+      "document": "domain_intro",
+      "kind": "default",
+      "topic": "XIRR Data Quality Warning",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "date",
+        "amount"
+      ],
+      "terms": "XIRR plausibility cap",
+      "definition": "A data quality warning must be surfaced when computed XIRR exceeds 25%.",
+      "quote": "> **Rule:** If XIRR exceeds 25%, always surface a data quality warning to the caller:\n> *\"XIRR of {value}% exceeds the 25% plausibility threshold. Verify purchase_date, cost, and cash_flow records for investor {investor_id} before using this figure.\"*",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "2afdd5ccbcbe94f34c7bbc748a2000c52bb70940a9414c1ec1e73548e0019083",
+      "active": false
+    },
+    {
+      "id": "7",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "XIRR Cross-Check",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date",
+        "cost"
+      ],
+      "terms": "XIRR > 25%",
+      "definition": "If XIRR > 25%, cross-check `portfolio_holding.purchase_date` for incorrectly early dates and `portfolio_holding.cost` for abnormally low values.",
+      "quote": "Computed XIRR > **25%** | Cross-check `portfolio_holding.purchase_date` — an incorrectly early purchase date inflates XIRR\nComputed XIRR > **25%** | Cross-check `portfolio_holding.cost` — an abnormally low purchase cost (data entry error) will inflate returns.",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence",
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "4b921b81aa5dc75a8a60ab3dca2563b78da8b11e174ed043a19e5de0ca621cd3",
+      "active": false
+    },
+    {
+      "id": "8",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Returns Percentage",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": "returns_pct",
+      "definition": "Simple percentage return = `(current_value - cost) / cost × 100`",
+      "quote": "**Definition:** Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "b19a128e8bdfcab1d0a9e5cdf1742b8cef33d40caf503a8b021a3b197b37c805",
+      "active": false
+    },
+    {
+      "id": "9",
+      "document": "domain_intro",
+      "kind": "default",
+      "topic": "Portfolio Health Score Range",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "terms": "goal_match_pct, risk_score, liquidity_score, diversification_score",
+      "definition": "All portfolio health scores are on a 0–100 scale.",
+      "quote": "All scores are on a **0–100 scale**.",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "c56a1ba0d1267ae12276cf34b15ded11a312c566f74ac21822abd8fc0cc5f595",
+      "active": false
+    },
+    {
+      "id": "10",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Goal Progress",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": "progress_pct, achievement_pct",
+      "definition": "Goal achievement percentage = `(current_value / target_amount) × 100`.",
+      "quote": "- `achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "aa17478158f305ef246c6fb6979ec812d80f1d687155198a0da5d2c340dbc938",
+      "active": false
+    },
+    {
+      "id": "11",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Stale Portfolio Valuation",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": "stale valuation",
+      "definition": "If `current_value` not refreshed in > 30 days, note caveat in return or health analysis; do not treat as live market value.",
+      "quote": "**Stale valuation** | `current_value` not refreshed in > 30 days | Note caveat in any return or health analysis; do not treat as live market value",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "ae8a73013f7dc97ff11b00aaa3749f45b22123dea7ca1a3d8ddca3fc1ac99019",
+      "active": false
+    },
+    {
+      "id": "12",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Field Integrity - purchase_date",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": "purchase_date",
+      "definition": "`purchase_date` must not be in the future and must not predate 1990-01-01.",
+      "quote": "`purchase_date` must not be in the future and must not predate 1990-01-01 | `portfolio_holding.purchase_date` | Flag holding; exclude from XIRR",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "b7e94845c143091f4e9d034077f7a7050702ff3cdf8caf91e122462c7024f07f",
+      "active": false
+    },
+    {
+      "id": "13",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Field Integrity - cost",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": "cost",
+      "definition": "`cost` must be > 0 and not NULL. Exclude from return calculations if not.",
+      "quote": "`cost` must be > 0 and not NULL | `portfolio_holding.cost` | Exclude from return calculations; flag as incomplete",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "68f29dfcc735d81f2f54905afeba0d3b0875ff1fa477602ce955fcc1fa784d04",
+      "active": false
+    },
+    {
+      "id": "14",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Risk Tolerance - Equity Ceiling",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": "Conservative investor equity overweight",
+      "definition": "If `risk_tolerance = 'Conservative'` and total equity allocation > 40%, flag as suitability breach.",
+      "quote": "**Conservative investor equity overweight** | `risk_tolerance = 'Conservative'` and total equity allocation > 40% | Flag as suitability breach; require advisory review",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "8146803c6ad5da56abbace62a223bcc56750735ea79cc8b6f15378b88c39b9fe",
+      "active": false
+    },
+    {
+      "id": "15",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Lock-in - ELSS",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": "ELSS lock-in",
+      "definition": "For `investment_type = 'ELSS'`, do not recommend redemption if `(today - purchase_date) < 3 years`.",
+      "quote": "**Lock-in violation — ELSS** | `investment_type = 'ELSS'` and `(today - purchase_date) < 3 years` | Do not recommend redemption; surface lock-in warning",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "4a6b03266a9744a8e885520950c97bb1bcf511470eb3d2e5be9896a37d008176",
+      "active": false
+    },
+    {
+      "id": "16",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Cost Minimum Threshold",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost",
+        "investment_type"
+      ],
+      "terms": "minimum investment threshold",
+      "definition": "Flag `cost` as potentially erroneous if it is below typical instrument minimums (e.g., < ₹500 for Mutual Fund, < ₹1,000 for Stock).",
+      "quote": "**Cost vs. investment type minimum threshold** | `cost` < ₹500 for Mutual Fund / < ₹1,000 for Stock | Flag as potentially erroneous; most instruments have minimum investment thresholds",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "f04402b083ec3cc1bb5f75adb3337d06a5a32b3f98466fbf21dd7bce60215c17",
+      "active": false
+    },
+    {
+      "id": "17",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Cash Flow Sign Convention",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "type"
+      ],
+      "terms": "Cash flow sign convention",
+      "definition": "For XIRR calculation, inflows (SIP, Lump Sum, Deposit) are negative cash flows; redemptions/withdrawals are positive.",
+      "quote": "Cash flow sign convention | `cash_flow.amount` | Inflows (SIP, Lump Sum, Deposit) → negative for XIRR; Redemption/Withdrawal → positive",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "bce69b7c623888ab8adce21d7db258f41715c2b7d5e1758cd192de38b86038bf",
+      "active": false
+    },
+    {
+      "id": "18",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Rebalancing Trigger Drift",
+      "backend": "sql",
+      "source": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "fields": [
+        "current_allocation_pct",
+        "target_allocation_pct"
+      ],
+      "terms": "Allocation Drift",
+      "definition": "If drift (`|current_allocation_pct - target_allocation_pct|`) > 10 percentage points for any sector, trigger rebalancing recommendation.",
+      "quote": "- Drift = `|current_allocation_pct - target_allocation_pct|` in `rebalancing_action`.\n- If drift > **10 percentage points** for any sector → trigger rebalancing recommendation.",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "e8c510aed6ceb5bca82bfe7d09b2a29febf1126ab5da12ed67545cfcfb664b88",
+      "active": false
+    },
+    {
+      "id": "19",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Single-Sector Concentration - Conservative",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+      "fields": [
+        "allocation_pct"
+      ],
+      "terms": "Single-sector concentration",
+      "definition": "For Conservative investors, flag any single sector allocation > 30% for compliance review.",
+      "quote": "- Conservative investors: any single sector allocation > **30%** → flag for compliance review.",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "f46e037203c5705c7414568cc97f5114b3b3bbf3e2467827a496bce1491a8489",
+      "active": false
+    },
+    {
+      "id": "20",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Goal At Risk",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": "goal achievement, high-priority advisory",
+      "definition": "If `achievement_pct` < 50% and goal `target_date` is within 2 years, flag as a **high-priority advisory case**.",
+      "quote": "- If `achievement_pct` < 50% and goal `target_date` is within 2 years → flag as **high-priority advisory case**.",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "d319a58bb490c796bbc96b1ace84b39da1aa27c5b985e72df0124780e1787750",
+      "active": false
+    },
+    {
+      "id": "21",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Non-Aggregatable Fields",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investor_id",
+        "risk_tolerance",
+        "segment",
+        "investment_goal"
+      ],
+      "terms": "investor_id, risk_tolerance, segment, investment_goal",
+      "definition": "Fields `investor_id`, `risk_tolerance`, `segment`, `investment_goal` are identifiers or categories and must NEVER be aggregated (SUM/AVG/MIN/MAX). Use only for GROUP BY, COUNT(DISTINCT), or JOIN.",
+      "quote": "| `investor_id` | All tables | Opaque identifier — SUM/AVG/MIN/MAX are nonsensical; use only for GROUP BY, COUNT(DISTINCT), or JOIN |\n| `risk_tolerance` | `investor_profile` | Ordinal category — do not SUM or AVG; use COUNT/distribution only |\n| `segment` | `investor_profile`, `portfolio_holding` | Category — no numeric meaning; use COUNT or GROUP BY |\n| `investment_goal` | `investor_profile`, `investment_goal` | Category — no numeric meaning; use COUNT or GROUP BY |",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence",
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "6f7914f16994487f141f95c97d44b08f365b1c0182a64590a5eb0103cbbeefc1",
+      "active": false
+    },
+    {
+      "id": "22",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Aggregation of `cost`",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": "total invested cost",
+      "definition": "The allowed aggregation for `cost` is SUM (to get total invested amount). Do NOT SUM across investors for comparison.",
+      "quote": "| `cost` | `portfolio_holding` | SUM (total invested) | Do NOT SUM across investors to compare; normalise by `current_value` for meaningful cross-investor comparison |",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence",
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "bc5df6b795c90ee1043ee1e2055c7ead8b76dde3a55657b463b379caac3caf92",
+      "active": false
+    },
+    {
+      "id": "23",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Aggregation of `current_value`",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": "total portfolio value",
+      "definition": "The allowed aggregation for `current_value` is SUM per `investor_id` to get total portfolio value.",
+      "quote": "| `current_value` | `portfolio_holding` | SUM (portfolio total) | SUM per `investor_id` = total portfolio value",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence",
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "78e6da6fcbf0fe581134b88ac3cac47176624b4adaa10e4cc433c98195d2dfdf",
+      "active": false
+    },
+    {
+      "id": "24",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Aggregation Method for `returns_pct`",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": "averaging returns",
+      "definition": "For `returns_pct`, prefer value-weighted average by `cost` or `current_value`. A simple AVG is only valid for equal-weighted analysis. Do NOT SUM.",
+      "quote": "| `returns_pct` | `portfolio_holding` | AVG (equal-weighted), weighted AVG by `cost` or `current_value` | Do NOT SUM; a simple AVG of `returns_pct` is only valid for equal-weighted analysis — always prefer value-weighted average |",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "8c0bfd724def5cf5e6de75c31134d48b59bcbad4d149e51e0ba4af2f90fdb407",
+      "active": false
+    },
+    {
+      "id": "25",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "XIRR Aggregation Method",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "date",
+        "amount"
+      ],
+      "terms": "cohort XIRR, pooling cash flows",
+      "definition": "Never pool all investors' cash flows into a single XIRR calculation. Compute XIRR per investor, then report a distribution (MIN, P25, MEDIAN, P75, MAX).",
+      "quote": "- **Never pool** all investors' cash flows into a single XIRR calculation. XIRR is non-linear and pooling distorts results.\n- **Correct approach:** Compute XIRR per `investor_id`, then report as a distribution: `MIN`, `P25`, `MEDIAN`, `P75`, `MAX`.",
+      "conflicts": [],
+      "errors": [
+        "Invalid matching terms"
+      ],
+      "evidence_hash": "921b6a41c942ff841dea9d75c457fc01e10d4def6d2f946596b26772aa9d5071",
+      "active": false
+    },
+    {
+      "id": "glossary:G1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance category label",
+      "backend": "kg",
+      "source": "RiskTolerance",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Conservative",
+        "Moderate",
+        "Aggressive"
+      ],
+      "definition": "Investor's capital preservation and volatility tolerance classification",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "43df10b45644426d3b5c8d58375d685502bc1a252601946f90aa68e1eea454fa",
+      "active": true
+    },
+    {
+      "id": "glossary:G2",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Customer segment label",
+      "backend": "kg",
+      "source": "Segment",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Premium",
+        "Standard",
+        "Mass"
+      ],
+      "definition": "Investor classification by value and advisory needs",
+      "quote": "- **Premium** — High-value clients with sophisticated advisory needs.\n- **Standard** — Mid-tier clients.\n- **Mass** — Retail clients.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "1b05e2c623288cba116d6f368089af70ed03d7295dcee25061a97353564ca642",
+      "active": true
+    },
+    {
+      "id": "glossary:G3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goal category label",
+      "backend": "kg",
+      "source": "InvestmentGoalType",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Wealth Preservation",
+        "Growth",
+        "Income Generation",
+        "Retirement Planning",
+        "Child Education",
+        "Emergency Fund"
+      ],
+      "definition": "Financial objective for investment portfolio",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "0a6eb325b9365b543caead7af9640bc3a88ac870b52d4cd53fee93332f07be79",
+      "active": true
+    },
+    {
+      "id": "glossary:G4",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Asset category label",
+      "backend": "kg",
+      "source": "Category",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Equity",
+        "Debt",
+        "Hybrid",
+        "Alternative"
+      ],
+      "definition": "Broad classification of investment instrument",
+      "quote": "`Equity` | `Debt` | `Hybrid` | `Alternative`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "f5dde807fa1c6c81fa4397bfd9549bdf3281def94cccfd57fedecd5b0e6be443",
+      "active": true
+    },
+    {
+      "id": "glossary:G5",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment type label",
+      "backend": "kg",
+      "source": "InvestmentType",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Mutual Fund",
+        "Stock",
+        "Bond",
+        "ETF",
+        "ELSS",
+        "PPF"
+      ],
+      "definition": "Specific financial instrument type",
+      "quote": "`Mutual Fund` | `Stock` | `Bond` | `ETF` | `ELSS` | `PPF`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "4bdf0e66971eff80c7b3d584a45541668542369e6e00d0971e336df02d449c65",
+      "active": true
+    },
+    {
+      "id": "glossary:G6",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Sector label",
+      "backend": "kg",
+      "source": "Sector",
+      "fields": [
+        "label"
+      ],
+      "terms": [
+        "Technology",
+        "Financial Services",
+        "Healthcare",
+        "Consumer Goods",
+        "Energy",
+        "Utilities",
+        "Real Estate",
+        "Materials",
+        "Industrials",
+        "Communication Services"
+      ],
+      "definition": "Industry classification of investment",
+      "quote": "Technology | Financial Services | Healthcare | Consumer Goods | Energy | Utilities | Real Estate | Materials | Industrials | Communication Services",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "40763f2d3e79d5f26865e147ed2e8c24bdbc87fae01c8123082240cf8c4821d5",
+      "active": true
+    },
+    {
+      "id": "glossary:G7",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment goal field in investor profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "investment_goal"
+      ],
+      "definition": "Financial objective category for investor",
+      "quote": "### Investment Goals\n`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "fab255d3d089b3bfac797bfd939bd1dfd04fa6c60d47a80b0eccb83283a77945",
+      "active": true
+    },
+    {
+      "id": "glossary:G8",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk tolerance field in investor profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "risk_tolerance"
+      ],
+      "definition": "Investor's capital preservation and volatility tolerance classification",
+      "quote": "### Risk Tolerance\n- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "7db011e820aed6194d5b245135c8004a5487008f93865455277f930782c5fa92",
+      "active": true
+    },
+    {
+      "id": "glossary:G9",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Segment field in investor profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": [
+        "segment"
+      ],
+      "definition": "Customer classification by value and advisory needs",
+      "quote": "### Customer Segments\n- **Premium** — High-value clients with sophisticated advisory needs.\n- **Standard** — Mid-tier clients.\n- **Mass** — Retail clients.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "06383b58d6f5388cfd4877e7e9a4d01ed30086ab5b9d757c85344c0fd5b0bf2a",
+      "active": true
+    },
+    {
+      "id": "glossary:G10",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Time horizon field",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "time_horizon"
+      ],
+      "terms": [
+        "time_horizon"
+      ],
+      "definition": "Investment duration category",
+      "quote": "### Time Horizons\n- Very Short Term: < 1 year\n- Short Term: 1–3 years\n- Medium Term: 3–7 years\n- Long Term: 7–15 years\n- Very Long Term: > 15 years",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "200bc8bc27cec18edcd2a96bba31b186594380989cd2be8cb841b0601570eabd",
+      "active": false
+    }
+  ],
+  "quarantined_documents": [
+    {
+      "document": "business_rules",
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/phase0_business_rules.md",
+      "reason": "Evaluation-scoped document excluded from preparation and inference"
+    }
+  ]
+}
