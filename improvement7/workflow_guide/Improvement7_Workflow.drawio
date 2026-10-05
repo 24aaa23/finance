@@ -1,0 +1,528 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram name="Main_workflow">
+    <mxGraphModel page="1" pageWidth="1900" pageHeight="2980">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="branch_frame" vertex="1" parent="1" style="rounded=0;fillColor=none;strokeColor=#71808D;dashed=1;">
+          <mxGeometry x="605" y="897" width="590" height="965" as="geometry" />
+        </mxCell>
+        <mxCell id="branch_label" value="PER SOURCE BRANCH" vertex="1" parent="1" style="text;html=0;align=left;fontSize=22;fontColor=#172126;">
+          <mxGeometry x="628" y="901" width="265" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="domain" value="Domain Knowledge - shared startup&#10;Docs + YAML + physical schema&#10;Cache hit 0; cache miss 1-3 calls" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E3EFF9;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="150" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="qu" value="Query Understanding (default on)&#10;1 call per attempt; up to 3&#10;Valid contract -&gt; continue" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E3EFF9;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="345" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="retrieve" value="Retrieve&#10;Select source tables&#10;1 LLM call per invocation" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E3EFF9;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="540" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="decompose" value="Decompose&#10;Plan B source branches&#10;1 LLM call per invocation" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E3EFF9;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="735" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="qs" value="Query_Spec for each branch&#10;1 LLM call per attempt&#10;Up to 3 branch validation attempts" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E3EFF9;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="930" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="generate" value="Generate SQL&#10;Local renderer succeeds: 0 calls&#10;Otherwise: 1 LLM call" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E3EFF9;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="1125" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="pre" value="Pre_Scan_Validate&#10;0 calls; default 3 checks per loop&#10;Limit configurable in environment" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E5F2EA;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="1320" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="scan" value="Scan - read-only SQLite&#10;0 calls; default 3 attempts per loop&#10;Limit configurable in environment" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E5F2EA;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="1515" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="process" value="Processing_Spec - preserve rows&#10;0 calls; up to 3 local attempts&#10;All branches feed Final_Spec" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E5F2EA;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="1710" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="final" value="Final_Spec&#10;Build the calculation plan&#10;1 LLM call per attempt" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E3EFF9;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="1905" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="execute" value="Compile and execute Final_Spec&#10;Joins, filters, sums, math, sorting&#10;Local work inside Final_Spec stage" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E5F2EA;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="2100" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="validate" value="Validate + Explain&#10;Local / structured path: 0 calls&#10;Optional model path: up to 1 each" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#E3EFF9;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="2295" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="report" value="Save answer or execution error&#10;Raw report and diagnostics&#10;Continue with the next question" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#F1F2F4;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="2490" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="grader" value="Separate grader&#10;Compare answer with ground truth&#10;Calls excluded from pipeline average" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#F1F2F4;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="620" y="2685" width="560" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="qu_retry" value="Invalid interpretation&#10;Attempts remain: feedback + retry&#10;Maximum 3 attempts&#10;After attempt 3: fallback below" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="20" y="345" width="470" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="qu_fallback" value="Still invalid after 3 attempts&#10;Return empty contract {}&#10;Original question -&gt; Retrieve" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="20" y="540" width="470" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="decompose_retry" value="Invalid decomposition OR&#10;Query_Spec retries exhausted&#10;Passes left: Decompose again&#10;Max 3 passes; exhausted: error" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="20" y="730" width="470" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="qs_retry" value="Invalid Query_Spec&#10;Attempts remain: feedback + retry&#10;3 failures: replan upstream" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="20" y="930" width="470" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="pre_retry" value="Pre-scan fails; attempts remain&#10;Regenerate SQL&#10;Local 0 calls or LLM fallback 1&#10;No attempts left: error row" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="20" y="1320" width="470" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="scan_retry" value="Scan fails; attempts remain&#10;No SQL: Generate (0 or 1)&#10;Unknown fields: Query_Spec (1)&#10;Valid: Generate; invalid: Refine&#10;Other SQL error: Refine (1)&#10;Similar timeout SQL: Generate too&#10;Then pre-check and Scan again&#10;No attempts left: error row" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="20" y="1515" width="470" height="295" as="geometry" />
+        </mxCell>
+        <mxCell id="final_retry" value="Invalid plan or execution error&#10;Attempts left: Final_Spec again&#10;1 LLM call per new plan&#10;Up to 4 attempts per execution&#10;No attempts left: error row" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="20" y="2100" width="470" height="185" as="geometry" />
+        </mxCell>
+        <mxCell id="consult" value="OPTIONAL ADVICE (default off)&#10;Requests from Decompose,&#10;Query_Spec or Final_Spec&#10;Domain: 1 LLM call&#10;Query Understanding: 1-3&#10;Shared limit: 5 requests" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="1300" y="750" width="480" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="consult_return" value="UNCHANGED interpretation&#10;Repeat ONLY requesting stage&#10;Decompose, Query_Spec OR&#10;Final_Spec - not all three" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="1300" y="1020" width="480" height="165" as="geometry" />
+        </mxCell>
+        <mxCell id="consult_changed" value="CHANGED interpretation&#10;Passes left: Retrieve again&#10;Then restart Decompose&#10;No passes left: error row" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="1300" y="1270" width="480" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="upstream" value="Missing required source data&#10;Request upstream retrieval repair&#10;Decompose -&gt; rerun branches&#10;Up to 3 decomposition passes&#10;Additional model calls each pass" parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#FFF1CE;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="1300" y="2000" width="480" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="limits" value="RETRY BUDGETS ARE LOCAL&#10;They can nest or restart stages.&#10;There is no 3-call total limit.&#10;Exhausted repair -&gt; error row.&#10;Quota or startup failures&#10;can stop the batch." parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#F1F2F4;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="1300" y="2350" width="480" height="215" as="geometry" />
+        </mxCell>
+        <mxCell id="startup_note" value="STARTUP AND QUESTION INPUT&#10;Cache reused across questions.&#10;Invalid domain pack: startup stops.&#10;Question is preprocessed first.&#10;Understanding off: 0 for that agent;&#10;Retrieve still makes its own call." parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#F1F2F4;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="1300" y="150" width="480" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="consult_limits" value="CONSULTATION EXCEPTIONS&#10;Invalid request or budget spent:&#10;return a plan contract error.&#10;Other unavailable advice: reask.&#10;Quota / transient error: propagate.&#10;Reasks add model calls." parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#F1F2F4;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="1300" y="1530" width="480" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="validation_note" value="VALIDATION DOES NOT REPAIR&#10;Execution check fails: error row.&#10;Optional model review rejection:&#10;record verdict, retain result.&#10;Successful report saves actual&#10;executed data, not LLM prose." parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#F1F2F4;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="1300" y="2630" width="480" height="215" as="geometry" />
+        </mxCell>
+        <mxCell id="error_note" value="ERROR EXIT (not forward flow)&#10;Unrepaired stages skip ahead&#10;to report the failed question.&#10;Processing failure: error row.&#10;Understanding API exceptions&#10;need not reach its fallback.&#10;Empty Scan results can be valid." parent="1" vertex="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=0;fontSize=29;spacing=10;fillColor=#F1F2F4;strokeColor=#71808D;fontColor=#172126;">
+          <mxGeometry x="20" y="2350" width="470" height="255" as="geometry" />
+        </mxCell>
+        <mxCell id="e0" edge="1" parent="1" source="domain" target="qu" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="qu" target="retrieve" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="retrieve" target="decompose" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="decompose" target="qs" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="qs" target="generate" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="generate" target="pre" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="pre" target="scan" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="scan" target="process" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="process" target="final" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="final" target="execute" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="execute" target="validate" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="validate" target="report" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="report" target="grader" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="qu" target="qu_retry" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.3333333333333333;entryX=1.0;entryY=0.2903225806451613;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="qu_retry" target="qu" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.5483870967741935;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="545" y="430" />
+              <mxPoint x="545" y="320" />
+              <mxPoint x="900" y="320" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="qu_retry" target="qu_fallback" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="qu_fallback" target="retrieve" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.4962962962962963;entryX=0.0;entryY=0.4962962962962963;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="decompose" target="decompose_retry" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.3333333333333333;entryX=1.0;entryY=0.3125;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="1" source="decompose_retry" target="decompose" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.625;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="830" />
+              <mxPoint x="550" y="710" />
+              <mxPoint x="900" y="710" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e19" edge="1" parent="1" source="qs" target="qs_retry" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.37037037037037035;entryX=1.0;entryY=0.37037037037037035;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e20" edge="1" parent="1" source="qs_retry" target="qs" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.6666666666666666;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="545" y="1020" />
+              <mxPoint x="545" y="885" />
+              <mxPoint x="900" y="885" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e21" edge="1" parent="1" source="qs_retry" target="decompose_retry" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.5;exitY=0.0;entryX=0.5;entryY=1.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e22" edge="1" parent="1" source="pre" target="pre_retry" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.4962962962962963;entryX=1.0;entryY=0.46206896551724136;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e23" edge="1" parent="1" source="pre_retry" target="generate" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.5;exitY=0.0;entryX=0.0;entryY=0.4962962962962963;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="255" y="1192" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e24" edge="1" parent="1" source="scan" target="scan_retry" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.3333333333333333;entryX=1.0;entryY=0.15254237288135594;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e25" edge="1" parent="1" source="scan_retry" target="pre" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.4576271186440678;entryX=0.0;entryY=0.7407407407407407;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="1650" />
+              <mxPoint x="550" y="1420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e26" edge="1" parent="1" source="scan_retry" target="generate" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.5932203389830508;entryX=0.0;entryY=0.1111111111111111;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="5" y="1690" />
+              <mxPoint x="5" y="1140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e27" edge="1" parent="1" source="final" target="final_retry" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.25925925925925924;entryX=1.0;entryY=0.21621621621621623;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="1940" />
+              <mxPoint x="520" y="2140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e28" edge="1" parent="1" source="execute" target="final_retry" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.5185185185185185;entryX=1.0;entryY=0.3783783783783784;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e29" edge="1" parent="1" source="final_retry" target="final" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.5;exitY=0.0;entryX=0.0;entryY=0.4962962962962963;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="255" y="1972" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e30" edge="1" parent="1" source="decompose" target="consult" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.37037037037037035;entryX=0.0;entryY=0.25;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1240" y="785" />
+              <mxPoint x="1240" y="805" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e31" edge="1" parent="1" source="qs" target="consult" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.2962962962962963;entryX=0.0;entryY=0.7727272727272727;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1220" y="970" />
+              <mxPoint x="1220" y="920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e32" edge="1" parent="1" source="consult" target="consult_return" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e33" edge="1" parent="1" source="consult_return" target="decompose" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.42424242424242425;entryX=1.0;entryY=0.8518518518518519;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1280" y="1090" />
+              <mxPoint x="1280" y="850" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e34" edge="1" parent="1" source="consult_return" target="qs" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.42424242424242425;entryX=1.0;entryY=0.8888888888888888;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1280" y="1090" />
+              <mxPoint x="1280" y="1050" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e35" edge="1" parent="1" source="consult_return" target="final" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=0.0;exitY=0.42424242424242425;entryX=1.0;entryY=0.8888888888888888;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1280" y="1090" />
+              <mxPoint x="1280" y="2025" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e36" edge="1" parent="1" source="consult" target="consult_changed" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.6363636363636364;entryX=1.0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1830" y="890" />
+              <mxPoint x="1830" y="1360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e37" edge="1" parent="1" source="consult_changed" target="retrieve" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.6666666666666666;entryX=1.0;entryY=0.4962962962962963;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1850" y="1390" />
+              <mxPoint x="1850" y="607" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e38" edge="1" parent="1" source="final" target="consult" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.2962962962962963;entryX=0.0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1260" y="1945" />
+              <mxPoint x="1260" y="860" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e39" edge="1" parent="1" source="final" target="upstream" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.7407407407407407;entryX=0.0;entryY=0.4;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1230" y="2005" />
+              <mxPoint x="1230" y="2080" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e40" edge="1" parent="1" source="upstream" target="decompose" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.4;entryX=1.0;entryY=0.2222222222222222;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1795" y="2080" />
+              <mxPoint x="1795" y="690" />
+              <mxPoint x="1200" y="690" />
+              <mxPoint x="1200" y="765" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e41" edge="1" parent="1" source="error_note" target="report" style="edgeStyle=segmentEdgeStyle;rounded=0;endArrow=block;strokeColor=#AA7222;strokeWidth=3;exitX=1.0;exitY=0.6666666666666666;entryX=0.0;entryY=0.4962962962962963;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="2520" />
+              <mxPoint x="550" y="2557" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="text0" value="Improvement 7 workflow with self healing" vertex="1" parent="1" style="text;html=0;align=left;fontSize=40;fontColor=#172126;">
+          <mxGeometry x="20" y="20" width="1760" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="text1" value="Blue: can call an LLM   Green: local execution   Yellow: conditional repair   Gold arrows: recovery" vertex="1" parent="1" style="text;html=0;align=left;fontSize=29;fontColor=#172126;">
+          <mxGeometry x="20" y="82" width="1760" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="text2" value="Calls are per underlying model invocation; consultation reasks add calls within an operator attempt." vertex="1" parent="1" style="text;html=0;align=left;fontSize=29;fontColor=#172126;">
+          <mxGeometry x="20" y="2865" width="1760" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="text3" value="Historical average: 7.26 per question over the original 1,000 attempts; startup, later reruns and grading excluded." vertex="1" parent="1" style="text;html=0;align=left;fontSize=29;fontColor=#172126;">
+          <mxGeometry x="20" y="2910" width="1760" height="55" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="Query_understanding_recovery">
+    <mxGraphModel page="1" pageWidth="1400" pageHeight="625">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="attempt" value="Attempt 1&#10;Interpret the question" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E3EFF9;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="10" y="55" width="410" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="check" value="Local checks + cleanup&#10;Is the contract valid?" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E5F2EA;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="500" y="55" width="400" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ok" value="YES -&gt; use contract&#10;Continue to Retrieve" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E5F2EA;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="980" y="55" width="410" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="retry" value="NO -&gt; feedback + retry&#10;Attempts 2 and 3&#10;Only when needed" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#FFF1CE;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="500" y="290" width="400" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="valid" value="Valid on retry&#10;Use contract and continue" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E5F2EA;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="980" y="290" width="410" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="fallback" value="Still invalid after attempt 3 -&gt; return empty contract&#10;Continue base pipeline using the original question" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#FFF1CE;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="500" y="510" width="890" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="edge0" edge="1" parent="1" source="attempt" target="check" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="check" target="ok" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="check" target="retry" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="retry" target="valid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="retry" target="fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="All_self_healing_paths">
+    <mxGraphModel page="1" pageWidth="1400" pageHeight="1105">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="r0_0" value="Pre-scan check fails" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#FFF1CE;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="10" y="15" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r0_1" value="Generate again&#10;Local 0 or LLM 1" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E3EFF9;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="490" y="15" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r0_2" value="Pre-scan check again&#10;Then Scan if valid" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E5F2EA;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="970" y="15" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_0" value="Scan fails&#10;Unknown source fields" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#FFF1CE;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="10" y="205" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_1" value="Query_Spec again&#10;1 LLM call / invocation" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E3EFF9;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="490" y="205" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_2" value="Generate -&gt; pre-scan&#10;Then Scan again" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E5F2EA;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="970" y="205" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_0" value="Scan fails&#10;Other SQL error" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#FFF1CE;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="10" y="395" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_1" value="Refine&#10;1 LLM call / invocation" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E3EFF9;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="490" y="395" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_2" value="Pre-scan -&gt; Scan again&#10;May also regenerate SQL" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E5F2EA;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="970" y="395" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_0" value="Final plan fails&#10;Compile or execution error" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#FFF1CE;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="10" y="585" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_1" value="Final_Spec again&#10;1 LLM call / invocation" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E3EFF9;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="490" y="585" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_2" value="Compile + execute again&#10;Up to 4 plan attempts" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E5F2EA;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="970" y="585" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_0" value="Missing upstream data&#10;Requires retrieval repair" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#FFF1CE;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="10" y="775" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_1" value="Decompose again&#10;1 LLM call / invocation" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E3EFF9;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="490" y="775" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_2" value="Rerun source branches&#10;Then Final_Spec again" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E5F2EA;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="970" y="775" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_0" value="Optional consultation&#10;Requested by a plan stage" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#FFF1CE;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="10" y="965" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_1" value="Domain advice 1 call&#10;Or understanding 1-3" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E3EFF9;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="490" y="965" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_2" value="Reask requesting stage&#10;Or restart if meaning changes" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;arcSize=5;fontSize=30;fontColor=#172126;fillColor=#E5F2EA;strokeColor=#71808D;spacing=8;">
+          <mxGeometry x="970" y="965" width="420" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="edge0" edge="1" parent="1" source="r0_0" target="r0_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="r0_1" target="r0_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="r1_0" target="r1_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="r1_1" target="r1_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="r2_0" target="r2_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" edge="1" parent="1" source="r2_1" target="r2_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" edge="1" parent="1" source="r3_0" target="r3_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" edge="1" parent="1" source="r3_1" target="r3_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge8" edge="1" parent="1" source="r4_0" target="r4_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge9" edge="1" parent="1" source="r4_1" target="r4_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge10" edge="1" parent="1" source="r5_0" target="r5_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge11" edge="1" parent="1" source="r5_1" target="r5_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;strokeColor=#55616B;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

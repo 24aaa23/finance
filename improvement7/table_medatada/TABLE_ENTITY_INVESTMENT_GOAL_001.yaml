@@ -1,0 +1,149 @@
+# ATOM_ENTITY_INVESTMENT_GOAL_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_ENTITY_INVESTMENT_GOAL_001"
+  type: "Atom"
+  subtype: "Entity"
+  name: "investment_goal"
+  display_name: "Investment Goal"
+  
+  
+  description: >
+    Unified investment goal entity consolidating goal definition, progress tracking,
+    performance metrics, and risk metrics. Provides a complete view of investor goals
+    including target amounts, current progress, returns, and volatility. Replaces
+    separate GoalTracking, GoalPerformance, and GoalRiskMetrics entities.
+
+semantics:
+  business_purpose: >
+    Provides unified view of investor financial goals including definition,
+    progress tracking, performance metrics, and risk metrics. Enables goal-based
+    advisory, progress monitoring, and goal achievement forecasting.
+  
+  use_cases:
+    - "goal_progress_tracking"
+    - "goal_performance_analysis"
+    - "goal_risk_assessment"
+    - "financial_planning"
+    - "goal_achievement_forecasting"
+
+
+attributes:
+  - name: "goal_id"
+    display_name: "Goal ID"
+    synonyms: ["goal identifier"]
+    description: "Unique identifier for each investment goal"
+    type: "string"
+    filterable: true
+
+  - name: "investor_id"
+    display_name: "Investor ID"
+    synonyms: ["client ID"]
+    description: "Foreign key to investor_profile"
+    type: "string"
+    filterable: true
+
+  - name: "investment_goal"
+    display_name: "Investment Goal"
+    synonyms: ["goal type", "goal name", "financial objective"]
+    description: "Type/name of the investment goal"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Wealth Preservation"
+      - "Growth"
+      - "Income Generation"
+      - "Retirement Planning"
+      - "Child Education"
+      - "Emergency Fund"
+    sample_values: ["Retirement Planning", "Child Education", "Wealth Preservation"]
+
+  - name: "description"
+    display_name: "Description"
+    synonyms: ["goal description", "details"]
+    description: "Detailed description of the goal"
+    type: "string"
+    searchable: true
+
+  - name: "target_amount"
+    display_name: "Target Amount"
+    synonyms: ["goal amount", "target value", "goal target"]
+    description: "Target amount to achieve for this goal"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+  - name: "current_value"
+    display_name: "Current Value"
+    synonyms: ["current amount", "accumulated amount"]
+    description: "Current accumulated value towards the goal"
+    type: "decimal"
+    aggregatable: true
+
+  - name: "progress_pct"
+    display_name: "Progress Percentage"
+    synonyms: ["progress", "completion percentage", "goal progress"]
+    description: "Percentage of goal completed"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+  - name: "shortfall"
+    display_name: "Shortfall"
+    synonyms: ["gap", "deficit", "remaining amount"]
+    description: "Amount remaining to reach goal target"
+    type: "decimal"
+    aggregatable: true
+
+  - name: "time_to_goal_months"
+    display_name: "Time to Goal (Months)"
+    synonyms: ["months remaining", "time remaining"]
+    description: "Estimated whole number of months remaining to achieve goal"
+    type: "integer"
+    filterable: true
+
+  - name: "avg_annual_return_pct"
+    display_name: "Average Annual Return"
+    synonyms: ["annual return", "yearly return", "CAGR"]
+    description: "Average annual return percentage for investments towards this goal"
+    type: "decimal"
+    aggregatable: true
+
+  - name: "avg_post_tax_return_pct"
+    display_name: "Average Post-Tax Return"
+    synonyms: ["post-tax return", "net return"]
+    description: "Average annual return after taxes"
+    type: "decimal"
+    aggregatable: true
+
+  - name: "avg_sharpe_ratio"
+    display_name: "Average Sharpe Ratio"
+    synonyms: ["sharpe ratio", "risk-adjusted return"]
+    description: "Risk-adjusted return metric for goal investments"
+    type: "decimal"
+    aggregatable: true
+    filterable: true
+
+  - name: "avg_volatility_pct"
+    display_name: "Average Volatility"
+    synonyms: ["volatility", "risk level"]
+    description: "Average volatility percentage of goal investments"
+    type: "decimal"
+    aggregatable: true
+    filterable: true
+
+  - name: "std_dev_annual_return_pct"
+    display_name: "Standard Deviation"
+    synonyms: ["std dev", "return deviation"]
+    description: "Standard deviation of annual returns"
+    type: "decimal"
+    aggregatable: true
+
+derived_attributes:
+  - name: "is_on_track"
+    display_name: "Is On Track"
+    description: "Whether goal progress is on track (progress >= expected based on time)"
+
+  - name: "risk_return_ratio"
+    display_name: "Risk-Return Ratio"
+    description: "Return divided by volatility"

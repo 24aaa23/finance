@@ -1,0 +1,172 @@
+# ATOM_CONTEXT_ASSET_CLASS_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_CONTEXT_ASSET_CLASS_001"
+  type: "Atom"
+  subtype: "Context"
+  name: "asset_class_context"
+  display_name: "Asset Class Context"
+  
+  description: >
+    Unified business intelligence for asset categories and investment types,
+    merging Category (Equity/Debt/Hybrid) and InvestmentType (Mutual Fund/Stock/
+    ELSS/PPF). Contains risk profiles, tax treatment, lock-in rules, and
+    suitability guidelines.
+
+semantics:
+  business_purpose: >
+    Provides comprehensive business intelligence for asset classes combining
+    category characteristics (equity/debt/hybrid) with investment type specifics
+    (mutual fund/stock/ELSS/PPF). Enables tax-aware recommendations, lock-in
+    compliance, and suitability analysis.
+  
+  use_cases:
+    - "tax_planning"
+    - "lock_in_compliance"
+    - "suitability_analysis"
+    - "product_recommendation"
+    - "regulatory_compliance"
+  
+
+attributes:
+  - name: "asset_class_id"
+    display_name: "Asset Class ID"
+    description: "Unique identifier for asset class"
+    type: "string"
+    filterable: true
+
+  - name: "category"
+    display_name: "Category"
+    synonyms: ["asset category", "broad category"]
+    description: "Broad asset category classification"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Alternative"
+      - "Bonds"
+      - "Cash Equivalent"
+      - "Commodities"
+      - "Crypto"
+      - "Debt"
+      - "ETF"
+      - "Equity"
+      - "Fixed Income"
+      - "Gold"
+      - "Hybrid"
+      - "International"
+      - "MF"
+      - "PPF"
+      - "REIT"
+      - "Real Estate"
+      - "SGB"
+
+  - name: "investment_type"
+    display_name: "Investment Type"
+    synonyms: ["product type", "instrument type"]
+    description: "Specific investment product type"
+    type: "string"
+    filterable: true
+    allowed_values:
+     - "Corporate Bond"
+     - "ETF"
+     - "Equity"
+     - "Global Equity"
+     - "Gold"
+     - "Government Bond"
+     - "Hedge Fund"
+     - "InVIT"
+     - "Index Fund"
+     - "Mutual Fund"
+     - "Private Equity"
+     - "REIT"
+     - "Real Estate"
+     - "Venture Capital"
+
+context_values:
+  - value: "Alternative"
+    description: "Alternative investment category such as hedge fund, private equity, or venture capital exposure"
+
+  - value: "Bonds"
+    description: "Debt security category including corporate and government bonds"
+
+  - value: "Cash Equivalent"
+    description: "Highly liquid low-risk cash-like instruments"
+
+  - value: "Commodities"
+    description: "Commodity-linked exposure such as gold or other commodity instruments"
+
+  - value: "Crypto"
+    description: "Crypto or digital asset exposure category"
+
+  - value: "Debt"
+    description: "Debt or fixed-income oriented category"
+
+  - value: "ETF"
+    description: "Exchange-traded fund product/category"
+
+  - value: "Equity"
+    description: "Equity-oriented category or direct equity exposure"
+
+  - value: "Fixed Income"
+    description: "Fixed-income investment category"
+
+  - value: "Gold"
+    description: "Gold-linked investment exposure"
+
+  - value: "Hybrid"
+    description: "Mixed allocation between equity, debt, or other asset classes"
+
+  - value: "International"
+    description: "International or global market exposure"
+
+  - value: "MF"
+    description: "Mutual fund category abbreviation observed in holdings"
+
+  - value: "PPF"
+    description: "Public Provident Fund or long-term savings category"
+
+  - value: "REIT"
+    description: "Real Estate Investment Trust exposure"
+
+  - value: "Real Estate"
+    description: "Real-estate-oriented investment exposure"
+
+  - value: "SGB"
+    description: "Sovereign Gold Bond category"
+
+  - value: "Corporate Bond"
+    description: "Corporate fixed-income instrument"
+
+  - value: "Government Bond"
+    description: "Government fixed-income instrument"
+
+  - value: "Global Equity"
+    description: "Global or international equity exposure"
+
+  - value: "Hedge Fund"
+    description: "Alternative pooled investment product"
+
+  - value: "InVIT"
+    description: "Infrastructure Investment Trust product"
+
+  - value: "Index Fund"
+    description: "Passive fund tracking a market index"
+
+  - value: "Mutual Fund"
+    description: "Pooled mutual fund investment product"
+
+  - value: "Private Equity"
+    description: "Private equity investment exposure"
+
+  - value: "Venture Capital"
+    description: "Venture capital investment exposure"
+
+derived_context:
+  - name: "has_lock_in"
+    description: "Whether investment has mandatory lock-in period"
+
+  - name: "is_tax_saving"
+    description: "Whether investment qualifies for 80C deduction"
+
+  - name: "is_suitable_for_risk"
+    description: "Whether asset class suits given risk tolerance"
