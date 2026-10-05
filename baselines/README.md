@@ -43,6 +43,13 @@ Each of the 20 outputs contains 1,000 questions graded by GPT-5 Mini.
   and pipeline-level accuracy, token latency, inference cost, average cost per
   question, and execution efficiency.
 
+The DAIL-SQL baseline also has a four-model comparison for GPT-OSS 120B, Kimi
+K2 Thinking 1T, Gemma 3 27B IT, and DeepSeek V3.2 685B:
+
+- `results/dail_sql_query_type_grading_results_multimodel_gpt_5_mini.md`
+- `results/dail_sql_category_grading_results_125_each_multimodel_gpt_5_mini.md`
+- `results/dail_sql_multimodel_metrics_gpt_5_mini.md`
+
 Only the local-retrieval GraphRAG baseline is included. The alternative
 GraphRAG implementation and its reports are intentionally absent.
 
@@ -115,3 +122,5 @@ python baselines/dail_sql_baseline/scripts/generate_reports.py
 
 The DAIL-SQL-specific query-type, 125-question category, metrics, and
 implementation reports use the `dail_sql_` filename prefix under `results/`.
+The four-model DAIL-SQL generator accepts the Kimi, Gemma, and DeepSeek graded
+CSV paths as required command-line arguments; run it with `--help` for details.
