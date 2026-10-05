@@ -50,6 +50,10 @@ K2 Thinking 1T, Gemma 3 27B IT, and DeepSeek V3.2 685B:
 - `results/dail_sql_category_grading_results_125_each_multimodel_gpt_5_mini.md`
 - `results/dail_sql_multimodel_metrics_gpt_5_mini.md`
 
+`results/difficulty_grading_results_all_pipelines_multimodel_gpt_5_mini.md`
+reports MATCH, MISMATCH, PARTIAL, and OTHER / ERROR counts by difficulty for
+each of the four models and all six pipelines, including DAIL-SQL.
+
 Only the local-retrieval GraphRAG baseline is included. The alternative
 GraphRAG implementation and its reports are intentionally absent.
 
