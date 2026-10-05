@@ -1,0 +1,76 @@
+# ATOM_CONTEXT_TIME_HORIZON_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_CONTEXT_TIME_HORIZON_001"
+  type: "Atom"
+  subtype: "Context"
+  name: "time_horizon_context"
+  display_name: "Time Horizon Rules"
+
+  description: >
+    Investment time horizon classification with embedded business intelligence
+    including asset allocation strategies, product eligibility rules, liquidity
+    requirements, and risk-return optimization guidelines. Enables duration-based
+    portfolio construction and maturity planning.
+
+semantics:
+  business_purpose: >
+    Provides prescriptive business intelligence for duration-based investing.
+    Enables time-appropriate asset allocation, product selection, and exit
+    strategy planning based on investment horizon.
+  
+  use_cases:
+    - "duration_based_allocation"
+    - "product_eligibility_check"
+    - "liquidity_planning"
+    - "exit_strategy_planning"
+    - "lock_in_compliance"
+
+
+attributes:
+  - name: "horizon_id"
+    display_name: "Horizon ID"
+    description: "Unique identifier for time horizon category"
+    type: "string"
+    filterable: true
+
+  - name: "time_horizon"
+    display_name: "Time Horizon"
+    synonyms: ["duration", "holding period", "investment tenure"]
+    description: "Time horizon classification name"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Short-term"
+      - "Medium-term"
+      - "Long-term"
+
+context_values:
+ 
+  
+  - value: "Short-term"
+    description: "Investments with 0-3 year horizon"
+  
+  - value: "Medium-term"
+    description: "Investments with 3-7 year horizon"
+  
+  - value: "Long-term"
+    description: "Investments with 7+ year horizon"
+  
+ 
+
+derived_context:
+  - name: "allows_equity"
+    description: "Whether time horizon allows equity investments"
+
+  - name: "max_equity_allowed"
+    description: "Maximum equity allocation for this horizon"
+
+  - name: "requires_liquidity"
+    description: "Whether liquidity is a key requirement"
+
+  - name: "can_use_lock_in_products"
+    description: "Whether lock-in products like ELSS/PPF are suitable"
+
+  - name: "is_wealth_creation_suitable"
+    description: "Whether horizon is suitable for wealth creation"

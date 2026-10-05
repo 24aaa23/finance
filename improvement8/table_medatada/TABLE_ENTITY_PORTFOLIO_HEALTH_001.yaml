@@ -1,0 +1,83 @@
+# ATOM_ENTITY_PORTFOLIO_HEALTH_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_ENTITY_PORTFOLIO_HEALTH_001"
+  type: "Atom"
+  subtype: "Entity"
+  name: "portfolio_health"
+  display_name: "Portfolio Health"
+  
+  
+  description: >
+    Pre-computed portfolio health scores across multiple dimensions: goal alignment,
+    risk, liquidity, and diversification. This is stored data (not computed at 
+    runtime) providing instant access to health assessments.
+
+semantics:
+  business_purpose: >
+    Provides pre-computed health assessment scores for portfolio monitoring,
+    risk management, and advisory prioritization. Enables quick identification
+    of portfolios needing attention.
+  
+  use_cases:
+    - "portfolio_monitoring"
+    - "health_assessment"
+    - "advisory_prioritization"
+    - "risk_identification"
+    - "client_review"
+  
+
+attributes:
+  - name: "portfolio_health_id"
+    display_name: "Portfolio Health ID"
+    description: "Unique identifier for health record"
+    type: "string"
+    filterable: true
+
+  - name: "investor_id"
+    display_name: "Investor ID"
+    synonyms: ["client ID"]
+    description: "Foreign key to investor_profile"
+    type: "string"
+    filterable: true
+
+  - name: "goal_match_pct"
+    display_name: "Goal Match Percentage"
+    synonyms: ["goal alignment", "goal match"]
+    description: "How well the portfolio aligns with goals"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+  - name: "risk_score"
+    display_name: "Risk Score"
+    synonyms: ["risk rating", "risk level"]
+    description: "Portfolio risk score (0-100)"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+  - name: "liquidity_score"
+    display_name: "Liquidity Score"
+    synonyms: ["liquidity", "cash availability"]
+    description: "Portfolio liquidity score (0-100)"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+  - name: "diversification_score"
+    display_name: "Diversification Score"
+    synonyms: ["diversification", "spread score"]
+    description: "Portfolio diversification score (0-100)"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+derived_attributes:
+  - name: "overall_health_score"
+    display_name: "Overall Health Score"
+    description: "Weighted average of all health dimensions"
+
+  - name: "health_status"
+    display_name: "Health Status"
+    description: "Categorical health assessment"
