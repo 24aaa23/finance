@@ -1,0 +1,199 @@
+{
+  "started_at": "2026-10-03T13:09:27",
+  "status": "completed",
+  "wall_clock_seconds": 31.247344899999916,
+  "startup_seconds": 4.150263200000154,
+  "current_run_query_seconds": 27.07,
+  "current_run_cycle_seconds": 27.08850970000003,
+  "llm_seconds": 27.036774199998945,
+  "metadata": {
+    "knowledge_cache_hit": true,
+    "knowledge_identity": "6ce3bb06ba4d3ee9217a8b87c6b589d601aa32e6ac2f6652520c257a4c152bd7",
+    "query_delay_seconds": 0.0,
+    "report_file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\financial\\improvement7\\outputs\\timing_smoke\\run.csv",
+    "resumed_rows": 0,
+    "pending_rows": 1
+  },
+  "questions": [
+    {
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "processing_seconds": 27.07,
+      "status": "PIPELINE_SUCCESS",
+      "cycle_seconds": 27.08850970000003,
+      "llm_seconds": 27.036774199998945,
+      "llm_calls": 5
+    }
+  ],
+  "stages": [
+    {
+      "stage": "startup_memory_wait",
+      "query_id": null,
+      "seconds": 0.0019605999996201717
+    },
+    {
+      "stage": "configuration_and_imports",
+      "query_id": null,
+      "seconds": 3.2180484000000433
+    },
+    {
+      "stage": "pipeline_imports",
+      "query_id": null,
+      "seconds": 0.09716680000019551
+    },
+    {
+      "stage": "database_health",
+      "query_id": null,
+      "seconds": 0.006032100000084029
+    },
+    {
+      "stage": "client_setup",
+      "query_id": null,
+      "seconds": 0.47128350000002683
+    },
+    {
+      "stage": "schema_and_documents",
+      "query_id": null,
+      "seconds": 0.10352619999957824
+    },
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "seconds": 0.0342542999997022
+    },
+    {
+      "stage": "memory_wait",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 7.62999998187297e-05
+    },
+    {
+      "stage": "Query_Understanding",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 5.998742499999935
+    },
+    {
+      "stage": "Retrieve",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 1.1530371999997442
+    },
+    {
+      "stage": "Decompose",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 8.352751500000522
+    },
+    {
+      "stage": "Query_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 4.226896800000759
+    },
+    {
+      "stage": "Generate",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 5.5900000006658956e-05
+    },
+    {
+      "stage": "Pre_Scan_Validate",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 0.0023295999999390915
+    },
+    {
+      "stage": "Scan",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 0.011072600000261446
+    },
+    {
+      "stage": "Processing_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 7.060000007186318e-05
+    },
+    {
+      "stage": "Final_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 7.312451499999952
+    },
+    {
+      "stage": "Validate",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 3.529999958118424e-05
+    },
+    {
+      "stage": "Explain",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 3.409999953873921e-05
+    },
+    {
+      "stage": "report_writes",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 0.018762700000479526
+    },
+    {
+      "stage": "final_jsonl_writes",
+      "query_id": null,
+      "seconds": 0.005811400000311551
+    },
+    {
+      "stage": "final_api_log_write",
+      "query_id": null,
+      "seconds": 0.0008182999999917229
+    }
+  ],
+  "llm_calls": [
+    {
+      "stage": "Query_Understanding",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "prompt_characters": 134875,
+      "status": "success",
+      "prompt_tokens": 36992,
+      "completion_tokens": 461,
+      "total_tokens": 37453,
+      "cached_prompt_tokens": 16,
+      "seconds": 5.995979599999373
+    },
+    {
+      "stage": "Retrieve",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "prompt_characters": 2764,
+      "status": "success",
+      "prompt_tokens": 779,
+      "completion_tokens": 91,
+      "total_tokens": 870,
+      "cached_prompt_tokens": null,
+      "seconds": 1.1528690000004644
+    },
+    {
+      "stage": "Decompose",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "prompt_characters": 116818,
+      "status": "success",
+      "prompt_tokens": 30362,
+      "completion_tokens": 935,
+      "total_tokens": 31297,
+      "cached_prompt_tokens": 32,
+      "seconds": 8.352128200000152
+    },
+    {
+      "stage": "Query_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "prompt_characters": 110294,
+      "status": "success",
+      "prompt_tokens": 28862,
+      "completion_tokens": 291,
+      "total_tokens": 29153,
+      "cached_prompt_tokens": 16,
+      "seconds": 4.223983299999418
+    },
+    {
+      "stage": "Final_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "prompt_characters": 116416,
+      "status": "success",
+      "prompt_tokens": 30127,
+      "completion_tokens": 251,
+      "total_tokens": 30378,
+      "cached_prompt_tokens": null,
+      "seconds": 7.311814099999538
+    }
+  ],
+  "timing_scope": "CLI entry through result/log finalization; excludes interpreter bootstrap and this timing summary write",
+  "stage_accounting": "Stage durations may nest; do not add them to wall-clock time.",
+  "cached_tokens_note": "null means the endpoint did not report cache usage; it does not mean zero"
+}

@@ -1,0 +1,107 @@
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: SQLite (read only)
+[SYSTEM] SQLite database: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\wealth_management_diverse.db
+[SYSTEM] SQL scan timeout: 60 seconds
+[SYSTEM] GPT-OSS endpoint: bedrock-runtime regional OpenAI-compatible endpoint
+[SYSTEM] GPT-OSS model: openai.gpt-oss-120b-1:0
+[SYSTEM] RAG/Retrieve model: openai.gpt-oss-120b-1:0
+[SYSTEM] Planner model: openai.gpt-oss-120b-1:0
+[SYSTEM] Query_Spec model: openai.gpt-oss-120b-1:0
+[SYSTEM] Refine model: openai.gpt-oss-120b-1:0
+[SYSTEM] Generate model: openai.gpt-oss-120b-1:0
+[SYSTEM] Validate model: openai.gpt-oss-120b-1:0
+[SYSTEM] Explain model: openai.gpt-oss-120b-1:0
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: fixed V9 operator flow
+[SYSTEM] Report file: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipelien_output_sql\enrichment_context\raw_pipeline_v9.csv
+[SYSTEM] Knowledge identity: 6ce3bb06ba4d3ee9217a8b87c6b589d601aa32e6ac2f6652520c257a4c152bd7; query understanding: True
+[SYSTEM] Source/data run identity: 552c023d02bf57642c6f3abe9eed12b0f9c14fd544b19ce94b1098b3a053c79b
+
+[SYSTEM] Loading C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipelien_output_sql\enrichment_context\input_questions.jsonl...
+[SYSTEM] Input manifest window offset=0, limit=all remaining.
+[SYSTEM] Successfully loaded 1 manifest queries.
+
+[SYSTEM] Running raw pipeline. Saving incrementally...
+[SYSTEM] Pending queries this run: 1
+
+--- Starting DAG Execution ---
+Executing: [Query_Spec] at Node 'q_investor_profile_query_spec'...
+ Query_Spec completed.
+Executing: [Query_Spec] at Node 'q_holdings_query_spec'...
+ Query_Spec completed.
+Executing: [Query_Spec] at Node 'q_rebalancing_query_spec'...
+ Query_Spec completed.
+Executing: [Query_Spec] at Node 'q_portfolio_health_query_spec'...
+   [!] Query_Spec contract failed; regenerating raw retrieval plan.
+ Query_Spec completed.
+Executing: [Generate] at Node 'q_investor_profile_generate'...
+ Generate completed.
+Executing: [Generate] at Node 'q_holdings_generate'...
+ Generate completed.
+Executing: [Generate] at Node 'q_rebalancing_generate'...
+ Generate completed.
+Executing: [Generate] at Node 'q_portfolio_health_generate'...
+ Generate completed.
+Executing: [Pre_Scan_Validate] at Node 'q_investor_profile_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Pre_Scan_Validate] at Node 'q_holdings_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Pre_Scan_Validate] at Node 'q_rebalancing_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Pre_Scan_Validate] at Node 'q_portfolio_health_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Scan] at Node 'q_investor_profile_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "investor_id" AS "investor_id", "segment" AS "segment" FROM "ATOM_ENTITY_INVESTOR_PROFILE_001"
+
+ Scan completed.
+Executing: [Scan] at Node 'q_holdings_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "holding_id" AS "holding_id", "investor_id" AS "investor_id" FROM "ATOM_ENTITY_PORTFOLIO_HOLDING_001"
+
+ Scan completed.
+Executing: [Scan] at Node 'q_rebalancing_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "rebalance_id" AS "rebalance_id", "investor_id" AS "investor_id" FROM "ATOM_EVENT_REBALANCING_ACTION_001"
+
+ Scan completed.
+Executing: [Scan] at Node 'q_portfolio_health_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "portfolio_health_id" AS "portfolio_health_id", "investor_id" AS "investor_id", "risk_score" AS "risk_score" FROM "ATOM_ENTITY_PORTFOLIO_HEALTH_001"
+
+ Scan completed.
+Executing: [Processing_Spec] at Node 'q_investor_profile_processing_spec'...
+ Processing_Spec completed.
+Executing: [Processing_Spec] at Node 'q_holdings_processing_spec'...
+ Processing_Spec completed.
+Executing: [Processing_Spec] at Node 'q_rebalancing_processing_spec'...
+ Processing_Spec completed.
+Executing: [Processing_Spec] at Node 'q_portfolio_health_processing_spec'...
+ Processing_Spec completed.
+Executing: [Final_Spec] at Node 'final_spec'...
+ Final_Spec completed.
+Executing: [Validate] at Node 'validate'...
+ Validate completed.
+Executing: [Explain] at Node 'explain'...
+ Explain completed.
+--- Execution Complete ---
+
+[SUCCESS] Final report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipelien_output_sql\enrichment_context\raw_pipeline_v9.csv.
+[SUCCESS] Debug report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipelien_output_sql\enrichment_context\raw_pipeline_v9_debug.csv.
+[SUCCESS] Lossless JSONL report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipelien_output_sql\enrichment_context\raw_pipeline_v9.jsonl.
+[TIME] Completed query rows in report: 125
+[TIME] Report-wide query time (includes resumed rows): 8146.79 seconds
+[TIME] Report-wide average per-query time: 65.17 seconds
+[TIME] Current-run processing: 47.38 seconds
+[TIME] Startup-to-finish: 50.24s; model requests: 46.95s (10 calls). Slowest model stages: Query_Spec=15.94s, Final_Spec=13.85s, Query_Understanding=8.84s, Decompose=6.64s

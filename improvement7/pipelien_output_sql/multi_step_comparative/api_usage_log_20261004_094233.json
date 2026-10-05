@@ -1,0 +1,62 @@
+{
+    "List the top 10 investors ranked by a composite score (0-100 index) combining total holding gain (counting only holdings with a recorded cost and current value) and risk score. Over investors that have both components, min-max normalise each component to 0-1, and take 100 times their equal-weighted mean; break ties by investor_id.": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve all portfolio holding records with a recorded cost and current value": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records containing the risk score": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve the list of investors (identifiers only)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "List the top 10 investors ranked by a composite score (0-100 index) combining net cash flow, total scenario allocation shift (sum of new minus current allocation %) and risk score. Over investors that have all 3 components, min-max normalise each component to 0-1, and take 100 times their equal-weighted mean; break ties by investor_id.": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve raw cash\u2011flow records needed for net cash flow per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve raw scenario\u2011rebalancing records needed for total allocation shift per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records needed for risk score per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investor identifiers for joining and final output": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    }
+}

@@ -1,0 +1,95 @@
+{
+  "identity": "6ce3bb06ba4d3ee9217a8b87c6b589d601aa32e6ac2f6652520c257a4c152bd7",
+  "pack_hash": "fb42ed33e0a0679ee2e146550f92ebfc5555eeb8b609b12952b93137e325bf7f",
+  "section_count": 505,
+  "excluded_sections": [
+    {
+      "id": "rules:0013",
+      "source": "rules",
+      "start": 2860,
+      "end": 3302,
+      "text": "When grouping by an **investor attribute** (`risk_tolerance, time_horizon, segment, category,\nsector_focus`), **every** averaged metric is computed **per-investor-first** (aggregate to one row per\ninvestor in a CTE, then `AVG` across investors). Do not mix a per-investor-first metric with a\nrow-pooled metric in the same SELECT. *(Resolves concern 3(f): EC-4T-013 averaged allocation\nper-investor-first but pooled returns at holding grain.)*",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    },
+    {
+      "id": "rules:0034",
+      "source": "rules",
+      "start": 6695,
+      "end": 6946,
+      "text": "| C1 | `risk_pressure_score` | SQA-3T-018, SQA-4T-013, SQA-4T-014, SQA-5T-007 (also a term of C3) | `RS + (100 \u2212 LS) + (100 \u2212 DS)`  (0\u2013300; NULL if any health score is NULL \u2192 investor excluded) | **Keep \u2014 the single official `risk_pressure_score`.** |",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    },
+    {
+      "id": "rules:0035",
+      "source": "rules",
+      "start": 6947,
+      "end": 7142,
+      "text": "| ~~C2~~ | ~~`risk_pressure_score` (5-term)~~ | MC-104 | ~~`RS + CONC + VOL \u2212 LS + SCEN\u0394avg`~~ | **DROPPED. MC-104 \u2192 remove & replace** with a single-scale question. The 5-term formula is void. |",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    },
+    {
+      "id": "rules:0036",
+      "source": "rules",
+      "start": 7143,
+      "end": 7327,
+      "text": "| C3 | `quantitative_burden_index` | SQA-5T-002, SQA-5T-006 | normalized 0\u2013100 index (R8.2) of `{SHORT, \u2212GAIN, \u2212NCF, C1}` | Rewritten to the index; SQA-5T-006 threshold reset (R8.3). |",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    },
+    {
+      "id": "rules:0037",
+      "source": "rules",
+      "start": 7328,
+      "end": 7438,
+      "text": "| C4 | `combined_gain_and_ncf` | SQA-4T-006 | `GAIN + NCF` (INR) | Kept; **renamed** from `combined_amount`. |",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    },
+    {
+      "id": "rules:0038",
+      "source": "rules",
+      "start": 7439,
+      "end": 7543,
+      "text": "| C5 | `combined_ncf_and_reb` | TT-033 | `NCF + REB` (INR) | Kept; **renamed** from `combined_amount`. |",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    },
+    {
+      "id": "rules:0039",
+      "source": "rules",
+      "start": 7544,
+      "end": 7634,
+      "text": "| C6 | `combined_holding_value_and_shortfall` | WM-4T-005 | `HVAL + SHORT` (INR) | Kept. |",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    },
+    {
+      "id": "rules:0040",
+      "source": "rules",
+      "start": 7635,
+      "end": 7766,
+      "text": "| C7 | `transaction_rebalance_index` | TT-057 | normalized 0\u2013100 index (R8.2) of `{NCF, REB, SCEN\u0394sum}` | Rewritten to the index. |",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    },
+    {
+      "id": "rules:0041",
+      "source": "rules",
+      "start": 7767,
+      "end": 7956,
+      "text": "| C8 | `temporal_pressure_index` | TT-063 | normalized 0\u2013100 index (R8.2) of `{NCF(period), REB, \u2212AVGSHORT, SCEN\u0394sum}` | Rewritten to the index; NCF window = the year the question states. |",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    },
+    {
+      "id": "rules:0045",
+      "source": "rules",
+      "start": 8878,
+      "end": 9721,
+      "text": "- **C2 / MC-104:** dropped; MC-104 is **remove & replace** (single-scale) \u2014 sheet `5_Composite_Metric_Rewrites`.\n- **`risk_pressure_score`:** C1 (`RS + (100\u2212LS) + (100\u2212DS)`) is the single official definition.\n- **Renames:** C4 \u2192 `combined_gain_and_ncf`; C5 \u2192 `combined_ncf_and_reb` (formulas unchanged).\n- **C8 NCF window:** taken from the year the question states (TT-063 states 2025 \u2192 NCF = 2025 flows). If a\n  question uses a period-bearing term without stating the period, the **question is incomplete** and must\n  be fixed at the question level.\n- **SQA-5T-006 threshold:** the old `> 50,000,000` is meaningless on a 0\u2013100 index \u2192 reset to\n  **`quantitative_burden_index > 65`** (\u2248 top ~3%, 36 investors \u2014 a \"critical burden\" cohort). *[expert-confirmable]*\n- **Scenario-change aggregation:** standardized to `SUM` (`SCEN\u0394sum`) for C7/C8.",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    },
+    {
+      "id": "rules:0057",
+      "source": "rules",
+      "start": 12668,
+      "end": 13377,
+      "text": "- **R2** \u2014 outflow totals presented as positive magnitudes. **RATIFIED.**\n- **R3** \u2014 deterministic id tie-break on all top-k rankings. **RATIFIED.**\n- **R8** \u2014 composite formulas: C1 is the sole `risk_pressure_score`; C2/MC-104 dropped (remove & replace);\n  C3/C7/C8 use the normalized 0\u2013100 index; C4/C5 renamed; C8 NCF window per question. **RATIFIED.**\n- **R9 / A3** \u2014 `returns_pct` equal-weighted for \"average return\". **RATIFIED** (overrides domain_intro \u00a76.2).\n- **PPF lock-in = 15 yr** (A5). **RATIFIED.**\n- Cash-flow signs: inflows positive / outflows negative (R1) is the truth (CLASH 1). **RATIFIED.**\n- The only remaining expert-confirmable value: the **SQA-5T-006 index threshold (`>65`)** (R8.3).",
+      "reason": "Excluded from runtime knowledge cache because the section contains benchmark identifiers or private-looking configuration text."
+    }
+  ]
+}

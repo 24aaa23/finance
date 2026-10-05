@@ -1,0 +1,91 @@
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: SQLite (read only)
+[SYSTEM] SQLite database: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\wealth_management_diverse.db
+[SYSTEM] SQL scan timeout: 60 seconds
+[SYSTEM] GPT-OSS endpoint: bedrock-runtime regional OpenAI-compatible endpoint
+[SYSTEM] GPT-OSS model: openai.gpt-oss-120b-1:0
+[SYSTEM] RAG/Retrieve model: openai.gpt-oss-120b-1:0
+[SYSTEM] Planner model: openai.gpt-oss-120b-1:0
+[SYSTEM] Query_Spec model: openai.gpt-oss-120b-1:0
+[SYSTEM] Refine model: openai.gpt-oss-120b-1:0
+[SYSTEM] Generate model: openai.gpt-oss-120b-1:0
+[SYSTEM] Validate model: openai.gpt-oss-120b-1:0
+[SYSTEM] Explain model: openai.gpt-oss-120b-1:0
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: fixed V9 operator flow
+[SYSTEM] Report file: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipelien_output_sql\temporal_transaction\raw_pipeline_v9.csv
+[SYSTEM] Knowledge identity: 6ce3bb06ba4d3ee9217a8b87c6b589d601aa32e6ac2f6652520c257a4c152bd7; query understanding: True
+[SYSTEM] Source/data run identity: 0fc0aa0eafd9c628c8d8d0b96c10a074cdca27a23036d2d8bfa4725aa3d5b941
+
+[SYSTEM] Loading C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipelien_output_sql\temporal_transaction\input_questions.jsonl...
+[SYSTEM] Input manifest window offset=0, limit=all remaining.
+[SYSTEM] Successfully loaded 1 manifest queries.
+
+[SYSTEM] Running raw pipeline. Saving incrementally...
+[SYSTEM] Pending queries this run: 1
+
+--- Starting DAG Execution ---
+Executing: [Query_Spec] at Node 'q1_query_spec'...
+ Query_Spec completed.
+Executing: [Query_Spec] at Node 'q2_query_spec'...
+ Query_Spec completed.
+Executing: [Query_Spec] at Node 'q3_query_spec'...
+ Query_Spec completed.
+Executing: [Generate] at Node 'q1_generate'...
+ Generate completed.
+Executing: [Generate] at Node 'q2_generate'...
+ Generate completed.
+Executing: [Generate] at Node 'q3_generate'...
+ Generate completed.
+Executing: [Pre_Scan_Validate] at Node 'q1_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Pre_Scan_Validate] at Node 'q2_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Pre_Scan_Validate] at Node 'q3_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Scan] at Node 'q1_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "investor_id" AS "investor_id", "investor_name" AS "investor_name", "risk_tolerance" AS "risk_tolerance" FROM "ATOM_ENTITY_INVESTOR_PROFILE_001" WHERE ("risk_tolerance" = 'Moderate')
+
+ Scan completed.
+Executing: [Scan] at Node 'q2_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "goal_id" AS "goal_id", "investor_id" AS "investor_id", "shortfall" AS "shortfall" FROM "ATOM_ENTITY_INVESTMENT_GOAL_001" WHERE ("shortfall" > 0)
+
+ Scan completed.
+Executing: [Scan] at Node 'q3_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "cash_flow_id" AS "cash_flow_id", "investor_id" AS "investor_id", "amount" AS "amount", "date" AS "date" FROM "ATOM_EVENT_CASH_FLOW_001" WHERE ("date" >= '2025-01-01') AND ("date" <= '2025-12-31')
+
+ Scan completed.
+Executing: [Processing_Spec] at Node 'q1_processing_spec'...
+ Processing_Spec completed.
+Executing: [Processing_Spec] at Node 'q2_processing_spec'...
+ Processing_Spec completed.
+Executing: [Processing_Spec] at Node 'q3_processing_spec'...
+ Processing_Spec completed.
+Executing: [Final_Spec] at Node 'final_spec'...
+ Final_Spec completed.
+Executing: [Validate] at Node 'validate'...
+ Validate completed.
+Executing: [Explain] at Node 'explain'...
+ Explain completed.
+--- Execution Complete ---
+
+[SUCCESS] Final report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipelien_output_sql\temporal_transaction\raw_pipeline_v9.csv.
+[SUCCESS] Debug report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipelien_output_sql\temporal_transaction\raw_pipeline_v9_debug.csv.
+[SUCCESS] Lossless JSONL report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipelien_output_sql\temporal_transaction\raw_pipeline_v9.jsonl.
+[TIME] Completed query rows in report: 125
+[TIME] Report-wide query time (includes resumed rows): 5519.79 seconds
+[TIME] Report-wide average per-query time: 44.16 seconds
+[TIME] Current-run processing: 57.50 seconds
+[TIME] Startup-to-finish: 60.33s; model requests: 57.15s (7 calls). Slowest model stages: Query_Spec=20.44s, Query_Understanding=17.79s, Final_Spec=11.50s, Decompose=6.01s

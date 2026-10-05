@@ -1,0 +1,102 @@
+{
+  "started_at": "2026-10-03T13:08:42",
+  "status": "completed",
+  "wall_clock_seconds": 16.442365099999734,
+  "startup_seconds": 2.1109691999999995,
+  "current_run_query_seconds": 14.279,
+  "current_run_cycle_seconds": 14.32621840000047,
+  "llm_seconds": 14.277322100000674,
+  "metadata": {
+    "knowledge_cache_hit": true,
+    "knowledge_identity": "6ce3bb06ba4d3ee9217a8b87c6b589d601aa32e6ac2f6652520c257a4c152bd7",
+    "query_delay_seconds": 0.0,
+    "report_file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\financial\\improvement7\\outputs\\timing_smoke\\run.csv",
+    "resumed_rows": 0,
+    "pending_rows": 1
+  },
+  "questions": [
+    {
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "processing_seconds": 14.279,
+      "status": "TRANSIENT_ERROR",
+      "cycle_seconds": 14.32621840000047,
+      "llm_seconds": 14.277322100000674,
+      "llm_calls": 1
+    }
+  ],
+  "stages": [
+    {
+      "stage": "startup_memory_wait",
+      "query_id": null,
+      "seconds": 0.0010840000004463946
+    },
+    {
+      "stage": "configuration_and_imports",
+      "query_id": null,
+      "seconds": 1.7167508999991696
+    },
+    {
+      "stage": "pipeline_imports",
+      "query_id": null,
+      "seconds": 0.06291830000009213
+    },
+    {
+      "stage": "database_health",
+      "query_id": null,
+      "seconds": 0.0011820999998235493
+    },
+    {
+      "stage": "client_setup",
+      "query_id": null,
+      "seconds": 0.053648600000087754
+    },
+    {
+      "stage": "schema_and_documents",
+      "query_id": null,
+      "seconds": 0.10020389999954205
+    },
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "seconds": 0.03188829999999143
+    },
+    {
+      "stage": "memory_wait",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 5.850000070495298e-05
+    },
+    {
+      "stage": "Query_Understanding",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 14.279122599999937
+    },
+    {
+      "stage": "report_writes",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "seconds": 0.009822400000302878
+    },
+    {
+      "stage": "final_jsonl_writes",
+      "query_id": null,
+      "seconds": 0.0033917000000656117
+    },
+    {
+      "stage": "final_api_log_write",
+      "query_id": null,
+      "seconds": 0.0005283000000417815
+    }
+  ],
+  "llm_calls": [
+    {
+      "stage": "Query_Understanding",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-001",
+      "prompt_characters": 134875,
+      "status": "error",
+      "error_type": "APIConnectionError",
+      "seconds": 14.277322100000674
+    }
+  ],
+  "timing_scope": "CLI entry through result/log finalization; excludes interpreter bootstrap and this timing summary write",
+  "stage_accounting": "Stage durations may nest; do not add them to wall-clock time.",
+  "cached_tokens_note": "null means the endpoint did not report cache usage; it does not mean zero"
+}

@@ -1,0 +1,61 @@
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: SQLite (read only)
+[SYSTEM] SQLite database: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\wealth_management_diverse.db
+[SYSTEM] SQL scan timeout: 60 seconds
+[SYSTEM] GPT-OSS endpoint: bedrock-runtime regional OpenAI-compatible endpoint
+[SYSTEM] GPT-OSS model: openai.gpt-oss-120b-1:0
+[SYSTEM] RAG/Retrieve model: openai.gpt-oss-120b-1:0
+[SYSTEM] Planner model: openai.gpt-oss-120b-1:0
+[SYSTEM] Query_Spec model: openai.gpt-oss-120b-1:0
+[SYSTEM] Refine model: openai.gpt-oss-120b-1:0
+[SYSTEM] Generate model: openai.gpt-oss-120b-1:0
+[SYSTEM] Validate model: openai.gpt-oss-120b-1:0
+[SYSTEM] Explain model: openai.gpt-oss-120b-1:0
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: fixed V9 operator flow
+[SYSTEM] Report file: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipeline_diagnostic_cached_sql\benchmark\raw_pipeline_v9.csv
+[SYSTEM] Knowledge identity: 6ce3bb06ba4d3ee9217a8b87c6b589d601aa32e6ac2f6652520c257a4c152bd7; query understanding: True
+[SYSTEM] Source/data run identity: c116735d553168eea940a7d2f1b2df5ca21d9df3fa8bcdca92e08fafe95f2f59
+
+[SYSTEM] Loading C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipeline_diagnostic_cached_sql\benchmark\input_questions.jsonl...
+[SYSTEM] Query window offset=0, limit=1.
+[SYSTEM] Successfully loaded 1 benchmark queries from the new dataset.
+
+[SYSTEM] Running raw pipeline. Saving incrementally...
+[SYSTEM] Pending queries this run: 1
+
+--- Starting DAG Execution ---
+Executing: [Query_Spec] at Node 'q1_query_spec'...
+   [!] Query_Spec contract failed; regenerating raw retrieval plan.
+ Query_Spec completed.
+Executing: [Generate] at Node 'q1_generate'...
+ Generate completed.
+Executing: [Pre_Scan_Validate] at Node 'q1_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Scan] at Node 'q1_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "investor_id" AS "investor_id", "investor_name" AS "investor_name" FROM "ATOM_ENTITY_INVESTOR_PROFILE_001"
+
+ Scan completed.
+Executing: [Processing_Spec] at Node 'q1_processing_spec'...
+ Processing_Spec completed.
+Executing: [Final_Spec] at Node 'final_spec'...
+ Final_Spec completed.
+Executing: [Validate] at Node 'validate'...
+ Validate completed.
+Executing: [Explain] at Node 'explain'...
+ Explain completed.
+--- Execution Complete ---
+
+[SUCCESS] Final report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipeline_diagnostic_cached_sql\benchmark\raw_pipeline_v9.csv.
+[SUCCESS] Debug report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipeline_diagnostic_cached_sql\benchmark\raw_pipeline_v9_debug.csv.
+[SUCCESS] Lossless JSONL report successfully saved to C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipeline_diagnostic_cached_sql\benchmark\raw_pipeline_v9.jsonl.
+[TIME] Completed query rows in report: 1
+[TIME] Total per-query generation time: 44.63 seconds (0.74 minutes)
+[TIME] Average per-query time: 44.63 seconds
+[TIME] Wall-clock time for this run: 44.87 seconds (0.75 minutes)

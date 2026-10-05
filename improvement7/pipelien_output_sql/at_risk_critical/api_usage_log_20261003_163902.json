@@ -1,0 +1,638 @@
+{
+    "List investors whose portfolio liquidity score is critically low, below 10.": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve raw portfolio health records where liquidity_score is below 10": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "List Aggressive investors whose risk score is above 75.": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor profiles with risk tolerance": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve portfolio health scores": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "List Aggressive investors whose risk score is above 90.": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor profile records for Aggressive risk tolerance": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records with risk_score > 90": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "List Conservative investors whose risk score is above 75.": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor profile records for Conservative investors": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records with risk_score > 75": {
+        "total_calls": 6,
+        "functions": {
+            "Query_Spec": 6
+        }
+    },
+    "List Conservative investors whose liquidity score is below 25.": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor profiles with risk_tolerance = 'Conservative'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records with liquidity_score < 25": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "List Moderate investors whose diversification score is below 25.": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor profiles with risk tolerance = 'Moderate'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records with diversification_score < 25": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "List Moderate investors whose goal-match percentage is below 25.": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor profile records for filtering by risk tolerance and for joining": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records for filtering by goal\u2011match percentage and for joining": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "List Small Cap segment investors with a low liquidity score below 25.": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor profile records with segment = 'Small Cap'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Aggressive investors have a risk score above 75 and at least one underfunded goal?": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve investor profiles that are Aggressive": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investment\u2011goal rows that have a positive shortfall (under\u2011funded)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Aggressive investors have a liquidity score below 25 and hold at least one loss-making position (negative returns, counting only holdings with a recorded cost and current value)?": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve investor profiles for Aggressive investors": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve portfolio health records with low liquidity": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve holdings that are loss\u2011making (negative returns) and have both cost and current value recorded": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Conservative investors have a risk score above 75 and hold at least one loss-making position (negative returns, counting only holdings with a recorded cost and current value)?": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve investor profiles for Conservative investors": {
+        "total_calls": 3,
+        "functions": {
+            "Query_Spec": 3
+        }
+    },
+    "Retrieve holdings that are loss\u2011making (negative returns) and have both cost and current_value recorded": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Conservative investors have a liquidity score below 25, an underfunded goal, and a loss-making holding (counting only holdings with a recorded cost and current value)?": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 2,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor IDs of investors whose risk tolerance is Conservative": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investor IDs with a liquidity score below 25": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investor IDs that have at least one under\u2011funded goal (shortfall > 0)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve holdings that are loss\u2011making (cost and current_value present and current_value < cost)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Aggressive investors have a risk score above 75, an underfunded goal, and a 'Aggressive Entry' rebalancing action?": {
+        "total_calls": 7,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 4
+        }
+    },
+    "Retrieve investor profiles with risk tolerance Aggressive": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve investment goals with shortfall > 0 (under\u2011funded)": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve rebalancing actions with action = 'Aggressive Entry'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Aggressive investors have a risk score above 75, an underfunded goal, and a 'Asset Reallocation' rebalancing action?": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve investors whose risk_tolerance is Aggressive": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investors with risk_score > 75": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investors with an under\u2011funded goal (shortfall > 0)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investors with a rebalancing action of type 'Asset Reallocation'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Moderate investors have a risk score above 75, an underfunded goal, and a 'Asset Reallocation' rebalancing action?": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve investor profiles with risk_tolerance = 'Moderate'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing actions where action = 'Asset Reallocation'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Aggressive investors have a diversification score below 25, a loss-making holding (counting only holdings with a recorded cost and current value), and an allocation above 0% in the Corporate sector?": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Aggressive investors": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Diversification score below 25": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Loss\u2011making holdings (cost and current_value recorded, current_value < cost)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Corporate sector allocation > 0\u202f%": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Conservative investors have a diversification score below 25, a loss-making holding (counting only holdings with a recorded cost and current value), and an allocation above 0% in the Automobile sector?": {
+        "total_calls": 6,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve sector allocation records": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio holdings for loss\u2011making check": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Conservative investors have a diversification score below 25, a loss-making holding (counting only holdings with a recorded cost and current value), and an allocation above 0% in the Consumer Goods sector?": {
+        "total_calls": 7,
+        "functions": {
+            "Query_Understanding": 2,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 3
+        }
+    },
+    "Get diversification scores per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Fetch Consumer Goods sector allocation per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Count loss\u2011making holdings (cost & current_value present, current_value < cost) per investor": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Aggressive investors have a risk score above 75, a loss-making holding (counting only holdings with a recorded cost and current value), an underfunded goal, and an allocation above 0% in the Automobile sector?": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve holdings where cost and current_value are recorded and the holding is loss\u2011making (current_value < cost)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investment goals with a positive shortfall (under\u2011funded)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve sector allocation rows for the Automobile sector with allocation_pct > 0": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Aggressive investors have a risk score above 75, a loss-making holding (counting only holdings with a recorded cost and current value), an underfunded goal, and an allocation above 0% in the Corporate sector?": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 1
+        }
+    },
+    "Select investor profiles where risk_tolerance = 'Aggressive'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Select portfolio health records where risk_score > 75": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Select holdings with cost and current_value present and current_value < cost (loss\u2011making holding)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Select investment goals where shortfall > 0 (under\u2011funded goal)": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Select sector allocations where sector = 'Corporate' and allocation_pct > 0": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Which Conservative investors have a risk score above 75, a loss-making holding (counting only holdings with a recorded cost and current value), an underfunded goal, and an allocation above 0% in the Consumer Goods sector?": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Conservative investors": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Risk score > 75": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Loss\u2011making holding (cost and current_value present, current_value < cost)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Under\u2011funded goal (shortfall > 0)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Consumer Goods allocation > 0\u202f%": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Moderate investors have a risk score above 75, a loss-making holding (counting only holdings with a recorded cost and current value), an underfunded goal, and an allocation above 0% in the Consumer Goods sector?": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve investor profiles for Moderate risk tolerance": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health scores for risk score filter": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Retrieve all holdings to evaluate loss\u2011making condition": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve investment goals to evaluate under\u2011funded condition": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve sector allocations to check Consumer Goods exposure": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    },
+    "Which Aggressive investors have a liquidity score below 25, a loss-making holding (counting only holdings with a recorded cost and current value), an underfunded goal, and a 'Aggressive Entry' rebalancing action?": {
+        "total_calls": 7,
+        "functions": {
+            "Query_Understanding": 2,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 3
+        }
+    },
+    "Retrieve all investor profiles with risk_tolerance = 'Aggressive'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve portfolio health records for the investors, filtering liquidity_score < 25": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve all holdings that have a recorded cost and current_value (both not null)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve all investment goals where shortfall > 0 (under\u2011funded)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve all rebalancing actions with action = 'Aggressive Entry'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Which Aggressive investors have a liquidity score below 25, a loss-making holding (counting only holdings with a recorded cost and current value), an underfunded goal, and a 'Cash Deployment' rebalancing action?": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 2,
+            "Final_Spec": 1
+        }
+    },
+    "Retrieve Aggressive investors": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve loss\u2011making holdings (cost and current_value present, current_value < cost)": {
+        "total_calls": 4,
+        "functions": {
+            "Query_Spec": 4
+        }
+    },
+    "Retrieve under\u2011funded investment goals (shortfall > 0)": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve rebalancing actions of type 'Cash Deployment'": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    }
+}

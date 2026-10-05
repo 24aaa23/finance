@@ -1,0 +1,26 @@
+{
+  "Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total sector investment minus average goal shortfall (all components in INR); break ties by investor_id.": {
+    "total_calls": 1,
+    "functions": {
+      "Direct_LLM_Grade": 1
+    }
+  },
+  "List the top 10 investors ranked by a composite score (0-100 index) combining net cash flow and total scenario allocation shift (sum of new minus current allocation %), with average goal shortfall counting against the score. Over investors that have all 3 components, min-max normalise each component to 0-1 (use 1 minus the normalised value for average goal shortfall), and take 100 times their equal-weighted mean; break ties by investor_id.": {
+    "total_calls": 1,
+    "functions": {
+      "Direct_LLM_Grade": 1
+    }
+  },
+  "List the top 10 investors ranked by a composite score (0-100 index) combining net cash flow and risk score, with average goal shortfall counting against the score. Over investors that have all 3 components, min-max normalise each component to 0-1 (use 1 minus the normalised value for average goal shortfall), and take 100 times their equal-weighted mean; break ties by investor_id.": {
+    "total_calls": 1,
+    "functions": {
+      "Direct_LLM_Grade": 1
+    }
+  },
+  "Across risk tolerance, compare the average net cash flow, average cash-flow amount, average total holding value, average total rebalance amount, and average total sector investment of investors.": {
+    "total_calls": 1,
+    "functions": {
+      "Direct_LLM_Grade": 1
+    }
+  }
+}

@@ -1,0 +1,81 @@
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: SQLite (read only)
+[SYSTEM] SQLite database: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\wealth_management_diverse.db
+[SYSTEM] SQL scan timeout: 60 seconds
+[SYSTEM] GPT-OSS endpoint: bedrock-runtime regional OpenAI-compatible endpoint
+[SYSTEM] GPT-OSS model: openai.gpt-oss-120b-1:0
+[SYSTEM] RAG/Retrieve model: openai.gpt-oss-120b-1:0
+[SYSTEM] Planner model: openai.gpt-oss-120b-1:0
+[SYSTEM] Query_Spec model: openai.gpt-oss-120b-1:0
+[SYSTEM] Refine model: openai.gpt-oss-120b-1:0
+[SYSTEM] Generate model: openai.gpt-oss-120b-1:0
+[SYSTEM] Validate model: openai.gpt-oss-120b-1:0
+[SYSTEM] Explain model: openai.gpt-oss-120b-1:0
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: fixed V9 operator flow
+[SYSTEM] Report file: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\pipeline_diagnostic_sql\benchmark\raw_pipeline_v9.csv
+Traceback (most recent call last):
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py", line 982, in request
+    response = self._client.send(
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\run_pipeline_v2_sql\runtime_guard.py", line 111, in launch
+    _main()
+  File "C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\run_pipeline_v2_sql\main.py", line 116, in _main
+    knowledge_pack, knowledge_identity = compile_knowledge(
+  File "C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement7\run_pipeline_v2_sql\knowledge.py", line 202, in compile_knowledge
+    response = client.chat.completions.create(**request)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_utils\_utils.py", line 287, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\resources\chat\completions\completions.py", line 1147, in create
+    return self._post(
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\site-packages\openai\_base_client.py", line 1014, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.

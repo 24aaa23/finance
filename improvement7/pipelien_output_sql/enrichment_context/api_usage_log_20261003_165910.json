@@ -1,0 +1,35 @@
+{
+    "For each segment, what is the average number of holdings per investor, the average number of rebalancing actions per investor (investors with none count as 0), and the average risk score?": {
+        "total_calls": 5,
+        "functions": {
+            "Query_Understanding": 1,
+            "Retrieve": 1,
+            "Decompose": 1,
+            "Final_Spec": 2
+        }
+    },
+    "Retrieve each investor's identifier and segment classification.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every portfolio holding record to count holdings per investor.": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve every rebalancing\u2011action record to count actions per investor (investors with none will have zero count).": {
+        "total_calls": 1,
+        "functions": {
+            "Query_Spec": 1
+        }
+    },
+    "Retrieve each investor's risk score from the pre\u2011computed portfolio health table.": {
+        "total_calls": 2,
+        "functions": {
+            "Query_Spec": 2
+        }
+    }
+}
