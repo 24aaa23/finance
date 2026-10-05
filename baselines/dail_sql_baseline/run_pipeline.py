@@ -83,21 +83,30 @@ def load_env(path: Path) -> None:
         os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
-def make_client(env_file: Path) -> OpenAI:
+def make_client(env_file: Path, model: str) -> OpenAI:
     load_env(env_file)
+    use_bedrock_runtime = (
+        os.getenv("TARGET_PROVIDER", "").strip().lower() == "bedrock"
+        or model.lower().startswith("openai.gpt-oss")
+    )
     key = (
-        os.getenv("AWS_BEDROCK_API_KEY")
+        (os.getenv("AWS_BEDROCK_API_KEY") if use_bedrock_runtime else os.getenv("BEDROCK_MANTLE_API_KEY"))
+        or os.getenv("AWS_BEDROCK_API_KEY")
         or os.getenv("AWS_Bedrock_API_gpt_oss_120b")
         or os.getenv("BEDROCK_API_KEY")
     )
     if not key:
         raise RuntimeError(f"Bedrock API key is missing from the environment and {env_file}")
-    base_url = os.getenv("BEDROCK_BASE_URL")
+    base_url_variable = "BEDROCK_BASE_URL" if use_bedrock_runtime else "BEDROCK_MANTLE_BASE_URL"
+    base_url = os.getenv(base_url_variable)
     if not base_url:
         region = os.getenv("BEDROCK_REGION") or os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION")
         if not region:
-            raise RuntimeError("Set BEDROCK_REGION or BEDROCK_BASE_URL")
-        base_url = f"https://bedrock-runtime.{region}.amazonaws.com/openai/v1"
+            raise RuntimeError(f"Set BEDROCK_REGION or {base_url_variable}")
+        if use_bedrock_runtime:
+            base_url = f"https://bedrock-runtime.{region}.amazonaws.com/openai/v1"
+        else:
+            base_url = f"https://bedrock-mantle.{region}.api.aws/v1"
     return OpenAI(api_key=key, base_url=base_url, timeout=180, max_retries=1)
 
 
@@ -370,7 +379,7 @@ def run(args: argparse.Namespace) -> None:
     for path in (args.database, args.benchmark, args.training, args.domain_intro, args.business_rules):
         if not path.exists():
             raise FileNotFoundError(path)
-    client = make_client(args.env_file)
+    client = make_client(args.env_file, args.model)
     ddl, identifiers, tables = load_schema(args.database)
     patterns = phrase_patterns(identifiers)
     reference_context = load_reference_context(args.domain_intro, args.business_rules)
