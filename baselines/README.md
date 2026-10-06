@@ -115,6 +115,12 @@ Each runner saves progress incrementally under its own `output/` directory.
 The committed files under `results/` are the completed 1,000-question graded
 reports, not resumable working outputs.
 
+Target-model routing is shared through `model_provider.py`. Set `TARGET_MODEL`
+and, when needed, `TARGET_PROVIDER` to one of `openai`, `gemini`, `bedrock`, or
+`mantle`. OpenAI targets use `OPENAI_API_KEY`; Gemini targets use
+`GEMINI_API_KEY` and Google's OpenAI-compatible endpoint. Credentials remain in
+the ignored `.env` file and are never committed.
+
 ## Grading
 
 The unchanged grader prompt used for these reports is stored in `grading/`.

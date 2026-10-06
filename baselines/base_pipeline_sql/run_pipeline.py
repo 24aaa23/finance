@@ -73,6 +73,10 @@ while True:
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASELINES_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 FINANCE_ROOT = os.path.abspath(os.path.join(BASELINES_ROOT, ".."))
+if BASELINES_ROOT not in sys.path:
+    sys.path.insert(0, BASELINES_ROOT)
+
+from model_provider import make_model_client, supports_temperature
 
 DOMAIN_INTRO_FILE = os.getenv("DOMAIN_INTRO_FILE", os.path.join(BASELINES_ROOT, "domain_intro.prompt"))
 BUSINESS_RULES_FILE = os.getenv("BUSINESS_RULES_FILE", os.path.join(BASELINES_ROOT, "phase0_business_rules.md"))
@@ -136,6 +140,10 @@ def build_gpt_oss_client() -> LLMClient:
     return LLMClient(api_key=api_key, base_url=base_url, timeout=180, max_retries=1)
 
 
+def build_target_client(model: str) -> LLMClient:
+    return make_model_client(model)
+
+
 # ---------------------------------------------------------------------------
 # 3. API LOGGER
 # ---------------------------------------------------------------------------
@@ -186,10 +194,6 @@ def strip_llm_reasoning_blocks(text: str) -> str:
 def is_quota_exhaustion_error(error: Any) -> bool:
     msg = str(error).lower()
     return any(marker in msg for marker in ("rate limit", "ratelimit", "quota", "throttl", "429", "too many requests"))
-
-
-def supports_temperature(model: str) -> bool:
-    return not str(model or "").lower().startswith("gpt-5")
 
 
 # ---------------------------------------------------------------------------
@@ -449,7 +453,7 @@ def main():
     check_sqlite_health(SQLITE_DB_PATH)
 
     print("[SYSTEM] Building API client...")
-    target_client = build_gpt_oss_client()
+    target_client = build_target_client(TARGET_MODEL)
 
     print(f"\n[STEP 1] Loading schema from {SQLITE_DB_PATH}...")
     db_schema = load_sqlite_schema(SQLITE_DB_PATH)

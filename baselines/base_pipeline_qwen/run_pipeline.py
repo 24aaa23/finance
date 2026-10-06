@@ -19,6 +19,7 @@ import json
 import os
 import re
 import socket
+import sys
 import threading
 import time
 import unicodedata
@@ -67,6 +68,10 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASELINES_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 REPO_ROOT = os.path.abspath(os.path.join(BASELINES_ROOT, ".."))
 SCRIPT_DIFF_ROOT = os.path.join(REPO_ROOT, "script_diff_llm")
+if BASELINES_ROOT not in sys.path:
+    sys.path.insert(0, BASELINES_ROOT)
+
+from model_provider import make_model_client, supports_temperature
 
 DOMAIN_INTRO_FILE = os.getenv("DOMAIN_INTRO_FILE", os.path.join(BASELINES_ROOT, "domain_intro.prompt"))
 BUSINESS_RULES_FILE = os.getenv("BUSINESS_RULES_FILE", os.path.join(BASELINES_ROOT, "phase0_business_rules.md"))
@@ -154,9 +159,7 @@ def build_bedrock_mantle_client() -> LLMClient:
 
 
 def build_target_client(model: str) -> LLMClient:
-    if model.lower().startswith("openai.gpt-oss"):
-        return build_bedrock_runtime_client()
-    return build_bedrock_mantle_client()
+    return make_model_client(model)
 
 
 # ---------------------------------------------------------------------------
@@ -501,7 +504,7 @@ comments, or prose.
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
     }
-    if not model.lower().startswith("gpt-5"):
+    if supports_temperature(model):
         request_kwargs["temperature"] = 0.0
 
     t0 = time.perf_counter()

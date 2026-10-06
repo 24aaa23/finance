@@ -39,6 +39,11 @@ from openai import OpenAI
 
 HERE = Path(__file__).resolve().parent
 FINANCE_ROOT = HERE.parent
+if str(FINANCE_ROOT) not in sys.path:
+    sys.path.insert(0, str(FINANCE_ROOT))
+
+from model_provider import make_model_client, supports_temperature
+
 DEFAULT_DATABASE = FINANCE_ROOT.parent / "wealth_management_diverse.db"
 DEFAULT_BENCHMARK = FINANCE_ROOT / "dataset" / "wealth_management_1000_questions.csv"
 DEFAULT_TRAINING = HERE / "dataset" / "verification_results_v2_sql_correct_train_300.xlsx"
@@ -85,29 +90,7 @@ def load_env(path: Path) -> None:
 
 def make_client(env_file: Path, model: str) -> OpenAI:
     load_env(env_file)
-    use_bedrock_runtime = (
-        os.getenv("TARGET_PROVIDER", "").strip().lower() == "bedrock"
-        or model.lower().startswith("openai.gpt-oss")
-    )
-    key = (
-        (os.getenv("AWS_BEDROCK_API_KEY") if use_bedrock_runtime else os.getenv("BEDROCK_MANTLE_API_KEY"))
-        or os.getenv("AWS_BEDROCK_API_KEY")
-        or os.getenv("AWS_Bedrock_API_gpt_oss_120b")
-        or os.getenv("BEDROCK_API_KEY")
-    )
-    if not key:
-        raise RuntimeError(f"Bedrock API key is missing from the environment and {env_file}")
-    base_url_variable = "BEDROCK_BASE_URL" if use_bedrock_runtime else "BEDROCK_MANTLE_BASE_URL"
-    base_url = os.getenv(base_url_variable)
-    if not base_url:
-        region = os.getenv("BEDROCK_REGION") or os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION")
-        if not region:
-            raise RuntimeError(f"Set BEDROCK_REGION or {base_url_variable}")
-        if use_bedrock_runtime:
-            base_url = f"https://bedrock-runtime.{region}.amazonaws.com/openai/v1"
-        else:
-            base_url = f"https://bedrock-mantle.{region}.api.aws/v1"
-    return OpenAI(api_key=key, base_url=base_url, timeout=180, max_retries=1)
+    return make_model_client(model)
 
 
 def file_sha256(path: Path) -> str:
@@ -256,11 +239,13 @@ def build_prompt(
 
 def generate_sql(client: OpenAI, model: str, prompt: str) -> dict[str, Any]:
     started = time.perf_counter()
-    response = client.chat.completions.create(
-        model=model,
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0,
-    )
+    request: dict[str, Any] = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+    }
+    if supports_temperature(model):
+        request["temperature"] = 0
+    response = client.chat.completions.create(**request)
     latency = time.perf_counter() - started
     if not response.choices:
         raise RuntimeError("Model returned no choices")

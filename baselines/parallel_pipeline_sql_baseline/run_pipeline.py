@@ -42,6 +42,10 @@ load_base_pipeline_env()
 HERE = Path(__file__).resolve().parent
 BASELINES = HERE.parent
 FINANCE = BASELINES.parent
+if str(BASELINES) not in sys.path:
+    sys.path.insert(0, str(BASELINES))
+
+from model_provider import make_model_client, supports_temperature
 
 DOMAIN_INTRO_FILE = Path(os.getenv("DOMAIN_INTRO_FILE", BASELINES / "domain_intro.prompt"))
 BUSINESS_RULES_FILE = Path(os.getenv("BUSINESS_RULES_FILE", BASELINES / "phase0_business_rules.md"))
@@ -151,21 +155,8 @@ class BranchResult:
     elapsed_seconds: float = 0.0
 
 
-def make_target_client() -> OpenAI:
-    key = (
-        os.getenv("AWS_BEDROCK_API_KEY")
-        or os.getenv("AWS_Bedrock_API_gpt_oss_120b")
-        or os.getenv("BEDROCK_API_KEY")
-    )
-    if not key:
-        raise RuntimeError(f"A Bedrock API key is missing from the environment and {BASE_ENV}")
-    region = os.getenv("BEDROCK_REGION") or os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION")
-    base_url = os.getenv("BEDROCK_BASE_URL")
-    if not base_url:
-        if not region:
-            raise RuntimeError("Set BEDROCK_REGION or BEDROCK_BASE_URL.")
-        base_url = f"https://bedrock-runtime.{region}.amazonaws.com/openai/v1"
-    return OpenAI(api_key=key, base_url=base_url, timeout=180, max_retries=1)
+def make_target_client(model: str) -> OpenAI:
+    return make_model_client(model)
 
 
 def classify_api_exception(exc: Exception) -> str:
@@ -257,7 +248,7 @@ comments, or prose.
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
     }
-    if not model.lower().startswith("gpt-5"):
+    if supports_temperature(model):
         request["temperature"] = temperature
     api_logger.log(question, f"Copy_{copy_id}_Generate_SQL")
     response = client.chat.completions.create(**request)
@@ -569,7 +560,7 @@ def run(args: argparse.Namespace) -> None:
         if str(item["global_question_id"]) not in completed
     ]
 
-    client = make_target_client()
+    client = make_target_client(args.target_model)
     api_logger = APILogger(args.report.parent)
     branch_kwargs = {
         "client": client,

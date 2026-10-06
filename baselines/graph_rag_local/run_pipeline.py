@@ -28,6 +28,11 @@ from graph_index import build_index, connect, retrieve, verify_index
 HERE = Path(__file__).resolve().parent
 BASELINES = HERE.parent
 FINANCE = BASELINES.parent
+if str(BASELINES) not in sys.path:
+    sys.path.insert(0, str(BASELINES))
+
+from model_provider import make_model_client, supports_temperature
+
 DOMAIN_INTRO_FILE = Path(os.getenv("DOMAIN_INTRO_FILE", BASELINES / "domain_intro.prompt"))
 BUSINESS_RULES_FILE = Path(os.getenv("BUSINESS_RULES_FILE", BASELINES / "phase0_business_rules.md"))
 
@@ -80,18 +85,9 @@ def load_benchmark(path: Path) -> pd.DataFrame:
     return frame
 
 
-def make_client() -> OpenAI:
+def make_client(model: str) -> OpenAI:
     load_base_pipeline_env()
-    key = os.getenv("AWS_BEDROCK_API_KEY") or os.getenv("AWS_Bedrock_API_gpt_oss_120b") or os.getenv("BEDROCK_API_KEY")
-    if not key:
-        raise RuntimeError("Set AWS_BEDROCK_API_KEY for the GPT-OSS Bedrock endpoint.")
-    base_url = os.getenv("BEDROCK_BASE_URL")
-    if not base_url:
-        region = os.getenv("BEDROCK_REGION") or os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION")
-        if not region:
-            raise RuntimeError("Set BEDROCK_REGION or BEDROCK_BASE_URL.")
-        base_url = f"https://bedrock-runtime.{region}.amazonaws.com/openai/v1"
-    return OpenAI(api_key=key, base_url=base_url, timeout=180, max_retries=1)
+    return make_model_client(model)
 
 
 def parse_answer(raw: str, retrieved_uris: set[str]) -> dict:
@@ -189,7 +185,10 @@ def answer_question_single_shot(
             raise ValueError("Context cannot fit the input budget without removing the last entity")
 
     t0 = time.perf_counter()
-    response = client.chat.completions.create(model=model, temperature=0, messages=messages)
+    request = {"model": model, "messages": messages}
+    if supports_temperature(model):
+        request["temperature"] = 0
+    response = client.chat.completions.create(**request)
     latency = time.perf_counter() - t0
     raw = response.choices[0].message.content or ""
     usage = getattr(response, "usage", None)
@@ -306,7 +305,7 @@ def run(args: argparse.Namespace) -> None:
         completed = {row["Sample Row ID"] for row in rows if row.get("New Status") in {"ANSWERED", "INSUFFICIENT_EVIDENCE"}}
         print(f"[RESUME] Found {len(completed)} completed rows.")
 
-    client = make_client()
+    client = make_client(args.model)
 
     thread_local = threading.local()
     lock = threading.Lock()

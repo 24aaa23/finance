@@ -44,6 +44,10 @@ HERE = Path(__file__).resolve().parent
 BASELINES = HERE.parent
 FINANCE = BASELINES.parent
 SCRIPT_DIFF_ROOT = FINANCE / "script_diff_llm"
+if str(BASELINES) not in sys.path:
+    sys.path.insert(0, str(BASELINES))
+
+from model_provider import make_model_client, supports_temperature
 
 DOMAIN_INTRO_FILE = Path(os.getenv("DOMAIN_INTRO_FILE", BASELINES / "domain_intro.prompt"))
 BUSINESS_RULES_FILE = Path(os.getenv("BUSINESS_RULES_FILE", BASELINES / "phase0_business_rules.md"))
@@ -193,24 +197,7 @@ class BranchResult:
 
 
 def make_target_client(model: str) -> OpenAI:
-    """Route GPT-OSS through Bedrock and Qwen/other target models through Mantle."""
-    provider = os.getenv("TARGET_PROVIDER", "").strip().lower()
-    if provider == "bedrock" or model.lower().startswith("openai.gpt-oss"):
-        return make_bedrock_client()
-    key = (
-        os.getenv("BEDROCK_MANTLE_API_KEY")
-        or os.getenv("AWS_BEDROCK_API_KEY")
-        or os.getenv("BEDROCK_API_KEY")
-    )
-    if not key:
-        raise RuntimeError(f"A Bedrock API key is missing from the environment and {BASE_ENV}")
-    region = os.getenv("BEDROCK_REGION") or os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION")
-    base_url = os.getenv("BEDROCK_MANTLE_BASE_URL")
-    if not base_url:
-        if not region:
-            raise RuntimeError("Set BEDROCK_REGION or BEDROCK_MANTLE_BASE_URL.")
-        base_url = f"https://bedrock-mantle.{region}.api.aws/v1"
-    return OpenAI(api_key=key, base_url=base_url, timeout=180, max_retries=1)
+    return make_model_client(model)
 
 
 def make_bedrock_client() -> OpenAI:
@@ -523,7 +510,7 @@ comments, or prose.
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
     }
-    if not model.lower().startswith("gpt-5"):
+    if supports_temperature(model):
         request["temperature"] = temperature
     api_logger.log(question, f"Round_{round_number}_Copy_{copy_id}_Generate")
     response = client.chat.completions.create(**request)
