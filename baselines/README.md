@@ -35,6 +35,13 @@ The combined comparison covers GPT-OSS 120B, Kimi K2 Thinking 1T, Gemma 3
 27B IT, and DeepSeek V3.2 685B across the same five domain-context baselines.
 Each of the 20 outputs contains 1,000 questions graded by GPT-5 Mini.
 
+The individual GPT-5 Mini graded CSVs for all four models are committed under
+`results/`. Together with the DAIL-SQL outputs, this is a complete set of 24
+files: four models across Base SPARQL, Base SQL, GraphRAG Local, Parallel
+SPARQL, Parallel SQL, and DAIL-SQL. Each file contains 1,000 unique question
+IDs and includes `domain_intro.prompt` plus `phase0_business_rules.md` in the
+generation context.
+
 - `results/query_type_grading_results_multimodel_gpt_5_mini.md`: query-type
   MATCH, MISMATCH, PARTIAL, and error counts.
 - `results/category_grading_results_125_each_multimodel_gpt_5_mini.md`: the
