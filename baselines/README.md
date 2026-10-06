@@ -54,6 +54,10 @@ K2 Thinking 1T, Gemma 3 27B IT, and DeepSeek V3.2 685B:
 reports MATCH, MISMATCH, PARTIAL, and OTHER / ERROR counts by difficulty for
 each of the four models and all six pipelines, including DAIL-SQL.
 
+`results/baseline_generation_prompts_domain_context.md` records the generation
+prompt templates for all six baselines, together with the shared domain
+introduction and Phase 0 business rules. Grader prompts are excluded.
+
 Only the local-retrieval GraphRAG baseline is included. The alternative
 GraphRAG implementation and its reports are intentionally absent.
 
