@@ -1,0 +1,111 @@
+# ATOM_EVENT_CASH_FLOW_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_EVENT_CASH_FLOW_001"
+  type: "Atom"
+  subtype: "Event"
+  name: "cash_flow"
+  display_name: "Cash Flow"
+
+  description: >
+    Time-stamped cash flow events including deposits, withdrawals, SIP contributions,
+    lump sum investments, and redemptions. Primary event source for transaction
+    history, cash flow analysis, and contribution tracking.
+
+semantics:
+  business_purpose: >
+    Tracks all monetary transactions for investor portfolios including contributions
+    and withdrawals. Enables cash flow analysis, contribution tracking, and
+    transaction history reporting.
+  
+  use_cases:
+    - "transaction_history"
+    - "cash_flow_analysis"
+    - "contribution_tracking"
+    - "sip_monitoring"
+    - "withdrawal_analysis"
+  
+
+attributes:
+  - name: "cash_flow_id"
+    display_name: "Cash Flow ID"
+    synonyms: ["transaction ID"]
+    description: "Unique identifier for each cash flow transaction"
+    type: "string"
+    filterable: true
+
+  - name: "investor_id"
+    display_name: "Investor ID"
+    synonyms: ["client ID"]
+    description: "Foreign key to investor_profile"
+    type: "string"
+    filterable: true
+
+  - name: "date"
+    display_name: "Date"
+    synonyms: ["transaction date"]
+    description: "Date of the transaction"
+    type: "date"
+    filterable: true
+
+  - name: "type"
+    display_name: "Type"
+    synonyms: ["transaction type", "flow type"]
+    description: "Type of cash flow (Deposit/Withdrawal/SIP/Lump Sum/Redemption)"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Deposit"
+      - "Withdrawal"
+      - "SIP"
+      - "Lump Sum"
+      - "Redemption"
+      - "Interest Credit"
+      - "Tax Refund"
+      - "Dividend Reinvestment"
+
+  - name: "amount"
+    display_name: "Amount"
+    synonyms: ["transaction amount", "value"]
+    description: "Transaction amount (positive for inflows, negative for outflows)"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+  - name: "source"
+    display_name: "Source"
+    synonyms: ["fund source", "origin", "payment method"]
+    description: "Source of funds or destination of withdrawal"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Systematic"
+      - "Credit Card"
+      - "Cash"
+      - "Cheque"
+      - "Wallet"
+      - "Bank Transfer"
+      - "Auto-debit"
+      - "Net Banking"
+      - "UPI"
+      - "Internal Transfer"
+
+  - name: "notes"
+    display_name: "Notes"
+    synonyms: ["comments", "remarks"]
+    description: "Additional notes about the transaction"
+    type: "string"
+    searchable: true
+
+derived_attributes:
+  - name: "is_inflow"
+    display_name: "Is Inflow"
+    description: "Whether this is an inflow (deposit/contribution)"
+
+  - name: "absolute_amount"
+    display_name: "Absolute Amount"
+    description: "Absolute value of transaction amount"
+
+  - name: "transaction_month"
+    display_name: "Transaction Month"
+    description: "Month of transaction for grouping"

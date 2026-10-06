@@ -1,0 +1,84 @@
+# ATOM_CONTEXT_INVESTMENT_GOAL_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_CONTEXT_INVESTMENT_GOAL_001"
+  type: "Atom"
+  subtype: "Context"
+  name: "investment_goal_context"
+  display_name: "Investment Goal Rules"
+
+
+
+  description: >
+    Investment goal classification with embedded business intelligence including
+    recommended asset allocations, target return expectations, time horizon
+    requirements, milestone tracking rules, and priority-based contribution
+    strategies. Enables goal-based portfolio construction and progress monitoring.
+
+semantics:
+  business_purpose: >
+    Provides prescriptive business intelligence for goal-based investing.
+    Enables automated goal tracking, asset allocation recommendations based
+    on goal type, and progress milestone monitoring.
+  
+  use_cases:
+    - "goal_based_portfolio_construction"
+    - "progress_tracking"
+    - "contribution_planning"
+    - "goal_priority_management"
+    - "milestone_alerts"
+
+
+
+attributes:
+  - name: "goal_type_id"
+    display_name: "Goal Type ID"
+    description: "Unique identifier for goal type"
+    type: "string"
+    filterable: true
+
+  - name: "investment_goal"
+    display_name: "Investment Goal"
+    synonyms: ["goal", "objective", "financial goal"]
+    description: "Investment goal classification name"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Retirement Planning"
+      - "Wealth Preservation"
+      - "Child Education"
+      - "Emergency Fund"
+      - "Income Generation"
+      - "Growth"
+
+context_values:
+  - value: "Retirement Planning"
+    description: "Long-term wealth accumulation and income planning for retirement"
+
+  - value: "Wealth Preservation"
+    description: "Capital protection focused goal prioritizing stability and controlled risk"
+
+  - value: "Child Education"
+    description: "Goal-dated investment for child's education expenses"
+
+  - value: "Emergency Fund"
+    description: "Highly liquid reserve for unexpected expenses"
+
+  - value: "Income Generation"
+    description: "Investment goal focused on generating regular income or cash flow"
+
+  - value: "Growth"
+    description: "Capital appreciation focused investment goal"
+
+derived_context:
+  - name: "is_long_term_goal"
+    description: "Whether goal requires long-term investment horizon"
+
+  - name: "recommended_equity_allocation"
+    description: "Recommended equity allocation for the goal"
+
+  - name: "is_tax_advantaged"
+    description: "Whether goal investments qualify for tax benefits"
+
+  - name: "requires_liquidity"
+    description: "Whether goal requires highly liquid investments"

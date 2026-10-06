@@ -1,0 +1,117 @@
+# ATOM_CONTEXT_INVESTMENT_TYPE_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_CONTEXT_INVESTMENT_TYPE_001"
+  type: "Atom"
+  subtype: "Context"
+  name: "investment_type_context"
+  display_name: "Investment Type Rules"
+
+  description: >
+    Investment product type classification with embedded business intelligence
+    including tax treatment rules, lock-in requirements, risk-return profiles,
+    expense ratios, and regulatory compliance requirements. Enables product-level
+    compliance checks, tax optimization, and suitability validation.
+
+semantics:
+  business_purpose: >
+    Provides comprehensive business intelligence for investment products.
+    Enables automated tax calculations, lock-in compliance, suitability
+    checks, and regulatory requirement validation.
+  
+  use_cases:
+    - "tax_planning"
+    - "lock_in_compliance"
+    - "product_recommendation"
+    - "regulatory_compliance"
+    - "expense_optimization"
+    - "redemption_planning"
+
+
+attributes:
+  - name: "invtype_id"
+    display_name: "Investment Type ID"
+    description: "Unique identifier for investment type"
+    type: "string"
+    filterable: true
+
+  - name: "investment_type"
+    display_name: "Investment Type"
+    synonyms: ["product type", "instrument", "fund type"]
+    description: "Investment product type name"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Corporate Bond"
+      - "ETF"
+      - "Equity"
+      - "Global Equity"
+      - "Gold"
+      - "Government Bond"
+      - "Hedge Fund"
+      - "InVIT"
+      - "Index Fund"
+      - "Mutual Fund"
+      - "Private Equity"
+      - "REIT"
+      - "Real Estate"
+      - "Venture Capital"
+
+context_values:
+  - value: "Corporate Bond"
+    description: "Corporate fixed-income investment instrument"
+
+  - value: "ETF"
+    description: "Exchange-traded fund product traded on an exchange"
+
+  - value: "Equity"
+    description: "Direct or equity-oriented investment exposure"
+
+  - value: "Global Equity"
+    description: "International or global equity exposure"
+
+  - value: "Gold"
+    description: "Gold-linked investment exposure"
+
+  - value: "Government Bond"
+    description: "Government-issued fixed-income investment instrument"
+
+  - value: "Hedge Fund"
+    description: "Alternative pooled investment product"
+
+  - value: "InVIT"
+    description: "Infrastructure Investment Trust product"
+
+  - value: "Index Fund"
+    description: "Passive fund tracking a market index"
+
+  - value: "Mutual Fund"
+    description: "Pooled mutual fund investment product"
+
+  - value: "Private Equity"
+    description: "Private equity investment exposure"
+
+  - value: "REIT"
+    description: "Real Estate Investment Trust exposure"
+
+  - value: "Real Estate"
+    description: "Real-estate-oriented investment exposure"
+
+  - value: "Venture Capital"
+    description: "Venture capital investment exposure"
+
+derived_context:
+  - name: "has_lock_in"
+    description: "Whether investment has mandatory lock-in"
+
+  - name: "is_80c_eligible"
+    description: "Whether investment qualifies for 80C deduction"
+
+  - name: "ltcg_rate"
+    description: "Long-term capital gains tax rate"
+
+  - name: "is_equity_taxed"
+    description: "Whether taxed as equity (15% STCG)"
+
+  - name: "requires_demat"
+    description: "Whether demat account is required"

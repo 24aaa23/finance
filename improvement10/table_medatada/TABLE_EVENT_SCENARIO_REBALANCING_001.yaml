@@ -1,0 +1,140 @@
+# ATOM_EVENT_SCENARIO_REBALANCING_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_EVENT_SCENARIO_REBALANCING_001"
+  type: "Atom"
+  subtype: "Event"
+  name: "scenario_rebalancing"
+  display_name: "Scenario-Based Rebalancing"
+
+
+  description: >
+    Time-stamped scenario-based rebalancing events. Captures rebalancing actions
+    triggered by specific market scenarios (e.g., interest rate changes, market
+    volatility spikes). Each event represents a conditional rebalancing response
+    with rationale and affected assets.
+
+semantics:
+  business_purpose: >
+    Captures scenario-driven portfolio rebalancing triggers. Enables tracking
+    of how market events or conditions trigger rebalancing actions, affected
+    assets/sectors, and the rationale behind allocation changes.
+  
+  use_cases:
+    - "scenario_analysis"
+    - "conditional_rebalancing"
+    - "risk_event_tracking"
+    - "market_response_analysis"
+    - "compliance_documentation"
+
+
+attributes:
+  - name: "scenario_rebalance_id"
+    display_name: "Scenario Rebalance ID"
+    description: "Unique identifier for scenario-based rebalancing"
+    type: "string"
+    filterable: true
+
+  - name: "investor_id"
+    display_name: "Investor ID"
+    synonyms: ["client ID"]
+    description: "Foreign key to investor_profile"
+    type: "string"
+    filterable: true
+
+  - name: "scenario"
+    display_name: "Scenario"
+    synonyms: ["trigger", "market event", "condition"]
+    description: "Type of scenario triggering the rebalancing"
+    type: "string"
+    filterable: true
+    searchable: true
+    allowed_values:
+      - "Approaching Goal"
+      - "Bear Market"
+      - "Bull Market"
+      - "Currency Depreciation"
+      - "Economic Growth"
+      - "Flash Crash"
+      - "Geopolitical Tension"
+      - "Inflation Surge"
+      - "Interest Rate Cut"
+      - "Interest Rate Hike"
+      - "Market Volatility"
+      - "Sector Rotation"
+
+  - name: "triggered_action"
+    display_name: "Triggered Action"
+    synonyms: ["response", "action taken"]
+    description: "Action triggered by the scenario"
+    type: "string"
+    filterable: true
+    searchable: true
+    allowed_values:
+      - "Add Gold"
+      - "Buy Defensive Stocks"
+      - "Exit sector positions"
+      - "Hedge Currency Risk"
+      - "Increase Bonds"
+      - "Increase Cash Position"
+      - "Increase Equity"
+      - "Reduce Equity"
+      - "Reduce Gold"
+      - "Reduce Long Bonds"
+      - "Shift to Debt"   
+
+  - name: "affected_assets_sectors"
+    display_name: "Affected Assets/Sectors"
+    synonyms: ["impacted assets", "affected sectors"]
+    description: "Assets or sectors impacted by the scenario trigger"
+    type: "string"
+    filterable: true
+    searchable: true
+    allowed_values:
+      - "Equity"
+      - "MF"
+      - "Technology"
+      - "Pharma"
+      - "Real Estate"
+      - "Banking"
+      - "Healthcare"
+      - "Consumer"
+      - "Gold"
+      - "Silver"
+      - "Infrastructure"
+      - "Corporate"
+      - "Government Bonds"
+      - "Commodities"
+
+  - name: "current_allocation_pct"
+    display_name: "Current Allocation Percentage"
+    synonyms: ["current weight", "existing allocation"]
+    description: "Current allocation percentage before scenario rebalancing"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+  - name: "new_allocation_pct"
+    display_name: "New Allocation Percentage"
+    synonyms: ["target weight", "new allocation"]
+    description: "New allocation percentage after scenario rebalancing"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+
+  - name: "rationale"
+    display_name: "Rationale"
+    synonyms: ["reason", "justification", "explanation"]
+    description: "Explanation for why this rebalancing was triggered"
+    type: "string"
+    searchable: true
+
+derived_attributes:
+  - name: "allocation_change"
+    display_name: "Allocation Change"
+    description: "Change in allocation from current to new"
+
+  - name: "change_direction"
+    display_name: "Change Direction"
+    description: "Whether allocation was increased or decreased"
+    searchable: true
