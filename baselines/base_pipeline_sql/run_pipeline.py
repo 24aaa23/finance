@@ -42,17 +42,15 @@ def load_local_env_file() -> None:
         os.path.join(os.path.dirname(script_dir), ".env"),
         os.path.join(os.path.dirname(script_dir), "base_pipeline_qwen", ".env"),
     ]
-    env_file = next((p for p in env_candidates if os.path.exists(p)), None)
-    if not env_file:
-        return
-    with open(env_file, encoding="utf-8") as handle:
-        for raw_line in handle:
-            line = raw_line.strip()
-            if not line or line.startswith("#") or "=" not in line:
-                continue
-            key, value = line.split("=", 1)
-            value = value.strip().strip('"').strip("'")
-            os.environ.setdefault(key.strip(), value)
+    for env_file in (p for p in env_candidates if os.path.exists(p)):
+        with open(env_file, encoding="utf-8") as handle:
+            for raw_line in handle:
+                line = raw_line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, value = line.split("=", 1)
+                value = value.strip().strip('"').strip("'")
+                os.environ.setdefault(key.strip(), value)
 
 
 load_local_env_file()
