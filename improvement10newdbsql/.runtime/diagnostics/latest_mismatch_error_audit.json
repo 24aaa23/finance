@@ -1,0 +1,48 @@
+{
+  "scope": "Read-only report/trace diagnosis. No model requests or pipeline changes.",
+  "raw_saved": 721,
+  "raw_statuses": {
+    "PIPELINE_SUCCESS": 674,
+    "QUERY_SPEC_ERROR": 11,
+    "FINAL_SPEC_ERROR": 23,
+    "DECOMPOSITION_ERROR": 5,
+    "CRASH": 2,
+    "SCAN_ERROR": 6
+  },
+  "raw_error_versions": {
+    "aop-improvement10-neowealth-v3": 19,
+    "aop-improvement10-neowealth-v2": 28
+  },
+  "raw_v3_error_statuses": {
+    "QUERY_SPEC_ERROR": 11,
+    "FINAL_SPEC_ERROR": 3,
+    "DECOMPOSITION_ERROR": 3,
+    "CRASH": 2
+  },
+  "graded_saved": 721,
+  "graded_statuses": {
+    "MATCH": 427,
+    "QUERY_SPEC_ERROR": 11,
+    "MISMATCH": 202,
+    "FINAL_SPEC_ERROR": 23,
+    "PARTIAL": 45,
+    "DECOMPOSITION_ERROR": 5,
+    "CRASH": 2,
+    "SCAN_ERROR": 6
+  },
+  "stale_grades_compared_to_raw": 0,
+  "current_mismatches": 202,
+  "mismatch_versions": {
+    "aop-improvement10-neowealth-v3": 24,
+    "aop-improvement10-neowealth-v1": 109,
+    "aop-improvement10-neowealth-v2": 69
+  },
+  "empty_answer_mismatches": 123,
+  "findings": [
+    "QuerySpec still generates IN [true,null] instead of any [=true,is_null]; grouped requirements are rejected correctly, but prompt lacks a grouped filter example and explicit NULL-IN guidance.",
+    "Two v3 crashes have Bedrock RateLimitError HTTP429.",
+    "Other v3 errors include malformed operator=any/value predicate shape, nonexistent source fields and invalid local calculation plans.",
+    "Current v3 mismatches include wrong selected identifier (ISIN vs product identity), missing latest-snapshot constraint, extra eligibility joins, exact short-name equality, wrong date window and incorrect null/presence filters.",
+    "Older execution errors and earlier AND-scope mismatches remain in the report until their queued retries replace them."
+  ]
+}

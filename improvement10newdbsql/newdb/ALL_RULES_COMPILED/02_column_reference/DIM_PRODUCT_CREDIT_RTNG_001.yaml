@@ -1,0 +1,183 @@
+
+identity:
+  id: "TABLE_DIM_PRODUCT_CREDIT_RTNG_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_product_credit_rtng"
+  display_name: "Product Credit Rating"
+  description: >
+    DIMENSION, 16 columns. Fixed-income ratings and terms (rtng = rating).
+    Grain: one row per fixed-income instrument keyed by isin and/or
+    scheme_master_id (in this data only scheme_master_id is unique - isin
+    holds the literal 'N/A' on 3 rows); equity has no place here. Holds FIVE agency-specific ratings
+    plus a consolidated pair, because the same bond is often rated differently by
+    different agencies and Indian regulation requires disclosure of each. The rule
+    that selects the consolidated credit_rating is NOT recorded. Ratings are free
+    text with NO numeric rank and no dim_credit_rating scale table, so you CANNOT
+    sort or compare them without building your own ordinal mapping - and notation
+    varies by agency (CRISIL AAA vs [ICRA]AAA). This is the SOURCE OF RECORD
+    for the fixed-income attributes that dim_product_unified_cat caches. No
+    is_active flag.
+
+layer: "dimension"
+grain: "one row per fixed-income instrument (isin and/or scheme_master_id)"
+not_null_columns: []
+missing_dimension: "dim_credit_rating (no ordinal rank scale)"
+
+semantics:
+  business_purpose: >
+    Fixed-income ratings and terms - source of record for the credit attributes
+    cached in dim_product_unified_cat. Five agency ratings plus a consolidated
+    pair; ratings are free text with no ordinal scale.
+
+attributes:
+  - name: "isin"
+    display_name: "ISIN"
+    description: "Intended instrument identifier - one row per fixed-income instrument; equity and equity MF have no place here. It is NOT a key in this data - NOT UNIQUE: 15 rows, 12 distinct real ISINs, and the literal text 'N/A' on 3 rows (scheme_master_id 40011, 40012, 40014). scheme_master_id is unique on all 15 rows - prefer it to join to the catalogue (matches all rows), and use isin only as a fallback. Whether 'N/A' is literal source text or an export marker for a missing value is not stated by the source; it is kept as the text 'N/A' - never silently replaced with NULL, blank or another default (IS NULL and = 'N/A' select different rows). It matches no product ISIN, so those 3 rows drop out of any ISIN join."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "scheme_master_id"
+    display_name: "Scheme Master ID"
+    description: "-> dim_product_unified_cat.scheme_master_id. The PREFERRED join to the catalogue: it matches every row, whereas 3 rows have isin = 'N/A' and so miss on an isin join."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_product_unified_cat.scheme_master_id"
+
+  - name: "instrument_name"
+    display_name: "Instrument Name"
+    description: "Duplicated in dim_product_unified_cat."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "credit_rating"
+    display_name: "Credit Rating"
+    description: "The CONSOLIDATED headline rating chosen from the agency columns. The schema documentation does NOT state the selection rule (lowest/most conservative, or the primary agency's). Do not assume - the choice directly affects risk reporting. This table is the source of record; the unified catalogue holds a cached copy."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "credit_rating_agency"
+    display_name: "Credit Rating Agency"
+    description: "Which agency the consolidated credit_rating came from."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "care_rating"
+    display_name: "CARE Rating"
+    description: "CARE Ratings grade."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "icra_rating"
+    display_name: "ICRA Rating"
+    description: "ICRA grade (Moody's affiliate). Note ICRA writes its grades as '[ICRA]AAA', so notation differs by agency and a naive string comparison across the five columns will NOT align."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "crisil_rating"
+    display_name: "CRISIL Rating"
+    description: "CRISIL grade (S&P affiliate; largest Indian CRA). Note CRISIL writes 'CRISIL AAA'."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "fitch_rating"
+    display_name: "Fitch Rating"
+    description: "Fitch / India Ratings grade."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "brick_rating"
+    display_name: "Brickwork Rating"
+    description: "TYPE DEFECT: declared hllsketch. Should be varchar(256) - it sits in a run of eight sibling rating columns that are ALL varchar, and Brickwork Ratings is an Indian credit-rating agency whose grades are plainly text. Near-certain cause: the column arrived 100% NULL and the loader could not infer a type. UNQUERYABLE - Redshift restricts hllsketch to HLL functions, so casting or comparing it to a string will ERROR. Treat as unavailable; any 'how many agencies rated this bond' count is wrong by one wherever Brickwork was the rater. EXPORT MISMATCH: the CSV has no brick_rating column; it carries brick_rating_count instead, blank on all 15 rows. The loader keeps this DDL name, so brick_rating loads 100% NULL. A count and a rating are different information - never map brick_rating_count onto this field. Both hllsketch columns in the DDL arrive with a _count suffix, consistent with the export having transformed the sketch type; whether the rating field was transformed or renamed, or a count is intended, is not stated by the source and must be confirmed with the data team."
+    type: "hllsketch"
+    sql_type: "hllsketch"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    type_defect: "should be varchar(256); landed on hllsketch (likely 100% NULL at load)"
+    export_mismatch: "CSV header is brick_rating_count (all 15 values blank); intended field unconfirmed"
+    unqueryable: true
+
+  - name: "interest_rate"
+    display_name: "Interest Rate"
+    description: "Coupon rate."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "maturity_date"
+    display_name: "Maturity Date"
+    description: "Enables duration and maturity-bucket analysis. This table has NO is_active flag, so a matured bond stays in it indefinitely with no status column - use maturity_date < CURRENT_DATE to identify matured instruments."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "face_value"
+    display_name: "Face Value"
+    description: "Typed integer - adequate for standard 100 / 1,000 / 100,000 denominations but cannot represent a fractional face value."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

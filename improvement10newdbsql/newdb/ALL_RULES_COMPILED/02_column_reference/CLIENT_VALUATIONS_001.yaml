@@ -1,0 +1,115 @@
+
+identity:
+  id: "TABLE_CLIENT_VALUATIONS_001"
+  type: "Table"
+  subtype: "Fact"
+  name: "client_valuations"
+  display_name: "Client Valuations"
+  description: >
+    FACT, 9 columns. Instrument-level mark-to-market. Grain: client x
+    instrument x valuation_date. SUBSTANTIALLY OVERLAPS client_holdings:
+    market_value = current_value, cost_value = invested_value, unrealized_pnl =
+    unrealized_gain, valuation_date = as_on_date. The difference is richness -
+    client_holdings is a full position record (quantity, prices, account,
+    held-away flag), this is a narrow valuation-only series. This is likely
+    the retained HISTORICAL series while client_holdings is the current snapshot,
+    but the schema documentation does not state it - confirm each table's retention policy
+    before choosing one for a trend chart.
+
+layer: "fact"
+grain: "client_id x isin x valuation_date"
+not_null_columns: []
+
+semantics:
+  business_purpose: >
+    Narrow instrument-level mark-to-market series (market value, cost value,
+    unrealized P&L) per client per instrument per valuation date; overlaps
+    client_holdings and is inferred to be the retained historical series.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "NULLABLE here - so it is NOT a valid primary key as declared."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "client_id"
+    display_name: "Client ID"
+    description: "-> dim_client_master.id."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_client_master.id"
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "Instrument identity."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "product_id"
+    display_name: "Product ID"
+    description: "-> dim_product_unified_cat.product_id."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_product_unified_cat.product_id"
+
+  - name: "valuation_date"
+    display_name: "Valuation Date"
+    description: "Equivalent to client_holdings.as_on_date."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "market_value"
+    display_name: "Market Value"
+    description: "Equivalent to client_holdings.current_value."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "cost_value"
+    display_name: "Cost Value"
+    description: "Equivalent to client_holdings.invested_value."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "unrealized_pnl"
+    display_name: "Unrealized P&L"
+    description: "TYPE DEFECT: character varying(256) holding a number. Same defect as client_holdings.unrealized_gain - the recurrence suggests one shared upstream transformation emits P&L as a string. COMPUTE market_value - cost_value instead."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    attribute_type_corrected: "fact"
+    type_defect: "numeric stored as varchar; compute market_value - cost_value"
+    verified_identity: "market_value - cost_value"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

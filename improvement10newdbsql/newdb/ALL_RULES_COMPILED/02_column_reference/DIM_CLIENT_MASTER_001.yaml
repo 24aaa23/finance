@@ -1,0 +1,321 @@
+# current_city is present in the data but NOT in the DDL or the schema documentation.
+
+identity:
+  id: "TABLE_DIM_CLIENT_MASTER_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_client_master"
+  display_name: "Client Master"
+  description: >
+    DIMENSION, 28 columns declared; the CSV delivery adds current_city,
+    29 in all. The client 360 record - THE HUB OF THE ENTIRE
+    MODEL, reached by all 7 fact tables plus dim_client_account_map. GRAIN: one
+    row per client. id is NULLABLE, so the hub has no valid primary key as
+    declared - the most significant structural defect in the schema. Holds BOTH
+    individuals (dob) and corporate entities (date_of_incorporation) with no
+    entity_type column. Encodes a group -> family -> client hierarchy via
+    denormalised columns only (no dim_group, no dim_family). TWO independent paths
+    to dim_employee_profile. Type-1 overwrite with no effective dating: historical
+    tier and coverage are LOST. CONTAINS SENSITIVE PII (PAN, name, DOB, gender,
+    marital status, current city) subject to India's DPDP Act.
+
+layer: "dimension"
+grain: "one row per client"
+not_null_columns: []
+
+semantics:
+  business_purpose: >
+    The client 360 record and central hub of the model. One row per client,
+    covering identity, KYC/AML classification, wealth tier, organisational
+    placement, group/family rollup, and two banker relationships. Type-1
+    overwrite; contains sensitive PII.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "The client surrogate key and the hub of the entire model - every fact's client_id points here. NULLABLE, so the hub table of the model has NO valid primary key as declared. The most significant structural defect in the schema. Sample range 7001-7010."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "pan_number"
+    display_name: "PAN Number"
+    description: "Indian Permanent Account Number, the real-world tax identifier. Samples are synthetic (ABCPK1001A, DEFPM2001G). Declared varchar(256) carries NO validation value - the real PAN format is 10 chars; enforcement lives nowhere in this schema. SENSITIVE PII under India's DPDP Act; mask outside production."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    pii: true
+
+  - name: "client_name"
+    display_name: "Client Name"
+    description: "Full client name. PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    pii: true
+
+  - name: "gender"
+    display_name: "Gender"
+    description: "Values seen in samples: Male, Female. Not an exhaustive enumeration. PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    pii: true
+    observed_values: ["Male", "Female"]
+
+  - name: "dob"
+    display_name: "Date of Birth"
+    description: "Date of birth, populated for INDIVIDUALS. PII. See date_of_incorporation - there is no entity_type column, so client type must be inferred from which of the two dates is populated."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    pii: true
+
+  - name: "tier"
+    display_name: "Tier"
+    description: "Wealth segmentation. Values seen: 'Ultra HNI', 'HNI', 'Affluent', 'Retail'. These form an ordered ladder, but the ordering is a business convention - there is NO lookup table and NO numeric rank column, so any sort by tier needs an explicit CASE expression. Type-1 overwrite: a client's historical tier is NOT retained anywhere."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Ultra HNI", "HNI", "Affluent", "Retail"]
+    ordered_ladder: true
+
+  - name: "pep_status"
+    display_name: "PEP Status"
+    description: "Politically Exposed Person - a mandatory AML/KYC risk classification. Sample value 'Non-PEP'. Typed varchar not boolean, so it can express intermediate states such as 'Related to PEP'."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Non-PEP"]
+
+  - name: "occupation"
+    display_name: "Occupation"
+    description: "Values seen: Business, Homemaker, Professional, Salaried, Retired. Not exhaustive."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Business", "Homemaker", "Professional", "Salaried", "Retired"]
+
+  - name: "marital_status"
+    display_name: "Marital Status"
+    description: "Values seen: Married, Single, Widowed. Not exhaustive. PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    pii: true
+    observed_values: ["Married", "Single", "Widowed"]
+
+  - name: "kyc_status"
+    display_name: "KYC Status"
+    description: "Only the compliant value 'KYC Compliant' occurs in this data (all 30 clients). A production feed would also carry pending and non-compliant states."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["KYC Compliant"]
+
+  - name: "lob_id"
+    display_name: "LOB ID"
+    description: "-> dim_lob_hierarchy.lob_id (LOB level). Sample: 1 = 'Neo Wealth Advisory'."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_lob_hierarchy.lob_id"
+    fan_out_hazard: true
+
+  - name: "lob_name"
+    display_name: "LOB Name"
+    description: "Denormalised LOB label."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "sub_lob_id"
+    display_name: "Sub-LOB ID"
+    description: "-> dim_lob_hierarchy.sub_lob_id (leaf level). Samples: 10 = Private Wealth, 11 = Family Office. NAMING TRAP: dim_employee_profile spells the same concept 'sublob_id' with no underscore - you CANNOT write USING (sub_lob_id) against that table."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_lob_hierarchy.sub_lob_id"
+    naming_trap: "spelled sublob_id in dim_employee_profile"
+
+  - name: "sub_lob_name"
+    display_name: "Sub-LOB Name"
+    description: "Denormalised sub-LOB label."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "group_id"
+    display_name: "Group ID"
+    description: "Top rollup level. Sample: 900 = 'Group 900', covering all ten sample clients. No dim_group table exists anywhere in the 21 tables - group rollups are only possible by grouping on these denormalised columns, and the names cannot be validated."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    missing_dimension: "dim_group"
+
+  - name: "group_name"
+    display_name: "Group Name"
+    description: "Denormalised group label. No backing dimension."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "family_id"
+    display_name: "Family ID"
+    description: "Family rollup, nested BELOW group. Samples: 9001 = Krishnan Family (6 clients), 9002 = Mehra Family (4 clients). No dim_family table exists. For a wealth business where family-office consolidated reporting is a core product, this is a notable structural gap."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    missing_dimension: "dim_family"
+
+  - name: "family_name"
+    display_name: "Family Name"
+    description: "Denormalised family label. No backing dimension."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "servicing_banker_1_id"
+    display_name: "Servicing Banker ID"
+    description: "-> dim_employee_profile.id. The banker who MANAGES the client now (ongoing service and trail incentives). The '_1' suffix implies a _2, _3 ... that DO NOT EXIST, so full coverage-team reporting is impossible from this table."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_employee_profile.id"
+
+  - name: "servicing_banker_name"
+    display_name: "Servicing Banker Name"
+    description: "Denormalised banker name."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "acquiring_banker_id"
+    display_name: "Acquiring Banker ID"
+    description: "-> dim_employee_profile.id. The banker who originally WON the client (new-business incentives). Samples show this is frequently a DIFFERENT person from the servicing banker. This table therefore has TWO independent paths to dim_employee_profile - any query needing both names must join that table TWICE with distinct aliases. Joining once and hoping is a common silent error."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_employee_profile.id"
+
+  - name: "acquiring_banker_name"
+    display_name: "Acquiring Banker Name"
+    description: "Denormalised banker name."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "date_of_incorporation"
+    display_name: "Date of Incorporation"
+    description: "Populated for CORPORATE entities (companies, trusts); NULL across all 10 individual samples. Together with dob this is the only way to tell an individual from an entity - fragile, since both are nullable and a row with neither is unclassifiable."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "is_active"
+    display_name: "Is Active"
+    description: "Soft-delete pair, part 1. Plausibly means dormant/closed. Nullable and therefore THREE-VALUED - 'WHERE is_active' silently drops NULL rows. Use COALESCE(is_active, TRUE) = TRUE."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "is_deleted"
+    display_name: "Is Deleted"
+    description: "Soft-delete pair, part 2. Logically removed. The schema documentation does not forbid the contradictory combination is_active = TRUE AND is_deleted = TRUE. Use COALESCE(is_deleted, FALSE) = FALSE."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "current_city"
+    display_name: "Current City"
+    description: "NOT in the DDL - present in the CSV delivery. The client's current city, as free text. Populated on all 30 rows; observed values: Ahmedabad (7), Bengaluru (6), Delhi (6), Goa (6), Mumbai (5). Not a foreign key - there is no city or geography dimension. Personal data (location): treat as PII."
+    type: "string"
+    sql_type: "character varying(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    pii: true
+    provenance: "present in the 2026-08-28 CSV delivery; NOT in NEOWEALTH_DDL.sql"
+    observed_values: ["Ahmedabad", "Bengaluru", "Delhi", "Goa", "Mumbai"]

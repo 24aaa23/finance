@@ -1,0 +1,117 @@
+
+identity:
+  id: "TABLE_DIM_PRODUCT_SEGMENT_MAP_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_product_segment_map"
+  display_name: "Product Segment Map"
+  description: >
+    DIMENSION / BRIDGE, 8 columns. The narrowest dimension. Product-to-segment
+    assignment. Its existence as a separate table allows a product to carry
+    several segments, and a join on product_id CAN multiply fact rows if a product
+    has multiple segment assignments. In this data it does not: 25 rows for
+    25 distinct products (all Direct Equity, all is_active = true), so each product
+    has at most one segment. Preserve every assignment when reproducing SQL - do
+    not deduplicate the bridge, and do not assume future data keeps one segment
+    per product. Segment names are supplied but no definition is: whether a
+    segment is the same classification as sector or a separate grouping is not
+    stated by the source and must be confirmed with the data team. segment_name is
+    NOT unique -- 10 distinct names span 13 segment_ids -- so grouping by segment
+    groups on segment_id with segment_name; a plain list of names returns 10. No
+    dim_segment table, no effective dating.
+
+layer: "dimension"
+subtype_role: "bridge"
+grain: "product x segment"
+not_null_columns: []
+fan_out_hazard: true
+missing_dimension: "dim_segment"
+
+semantics:
+  business_purpose: >
+    Product-to-segment assignment bridge. Summing measures across it fans out
+    whenever a product carries more than one segment (none does in this
+    export). What a segment classifies is not stated by the source and must be confirmed with the data team; keep
+    segment_id and segment_name as supplied and never merge Segment with Sector.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "Nullable surrogate."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "product_id"
+    display_name: "Product ID"
+    description: "-> dim_product_unified_cat.product_id. BRIDGE - a join to a fact table on product_id multiplies the fact rows if a product has multiple segment assignments: a holding worth 1,000,000 in three segments would become three rows totalling 3,000,000. In this data every product_id appears exactly once (25 rows, 25 products, all Direct Equity), so there is at most one segment match per product. Preserve all assignments when reproducing SQL results; do not deduplicate the bridge automatically, and do not infer that future exports carry only one segment per product."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_product_unified_cat.product_id"
+    fan_out_hazard: true
+
+  - name: "segment_id"
+    display_name: "Segment ID"
+    description: "No dim_segment table exists - another ID/name pair with no backing dimension. 13 distinct IDs (601-613) for only 10 distinct names: three names carry two IDs each - 'Information Technology' 601 and 612, 'Energy' 602 and 610, 'Banking & Financial Services' 603 and 608. Every ID maps to one name. So COUNT(DISTINCT segment_id) = 13 while COUNT(DISTINCT segment_name) = 10; use whichever field the question or query names, exactly as supplied. Do not merge IDs or invent a replacement ID."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    missing_dimension: "dim_segment"
+
+  - name: "segment_name"
+    display_name: "Segment Name"
+    description: "Supplied values (10 distinct): Automobiles & Ancillaries, Banking & Financial Services, Consumer & Retail, Defence & Aerospace, Diversified Conglomerates, Energy, Healthcare & Pharma, Information Technology, Infrastructure & Construction, Telecom & Media. NOT unique per segment: the 10 names are spread across 13 segment_ids, so grouping by segment groups on segment_id with segment_name; a plain list of names returns 10. The labels look like an industry grouping, but they are NOT the same values as dim_cmot_company_mstr.sector_name or dim_product_unified_cat.sector (e.g. segment 'Information Technology' vs sector 'IT - Software' / 'Electronics'), and the source gives no definition. Whether a segment is the same classification as sector or a separate grouping must be confirmed with the data team. Keep segment_name as supplied; never present segments as sectors or merge Segment and Sector into one category on label similarity."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Automobiles & Ancillaries", "Banking & Financial Services", "Consumer & Retail", "Defence & Aerospace", "Diversified Conglomerates", "Energy", "Healthcare & Pharma", "Information Technology", "Infrastructure & Construction", "Telecom & Media"]
+    meaning_pending_confirmation: true
+
+  - name: "is_active"
+    display_name: "Is Active"
+    description: "Lets an assignment be retired without deleting the row. There is NO effective-date pair, so the HISTORY of segment assignment is not retained - only the current state plus this flag."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

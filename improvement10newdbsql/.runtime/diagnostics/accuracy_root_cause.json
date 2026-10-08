@@ -1,0 +1,17 @@
+{
+  "root_cause": "Decompose represented OR alternatives as separate mandatory predicates; Query_Spec rejects the correct OR expression and accepts a contradictory AND expression.",
+  "example": "T1_001",
+  "recorded_scan_rows": 0,
+  "documented_scope_scan_rows": 6,
+  "correct_or_contract_errors": [
+    "Query_Spec drops or changes required predicate p2: is_active = True",
+    "Query_Spec drops or changes required predicate p3: is_active is_null None",
+    "Query_Spec drops or changes required predicate p4: is_deleted = False",
+    "Query_Spec drops or changes required predicate p5: is_deleted is_null None"
+  ],
+  "notes": [
+    "No pipeline edits or model API calls in this diagnosis.",
+    "Grading prompt and policy match the original improvement10 implementation.",
+    "14 sampled provided gold SQL queries matched their reference answers on this database."
+  ]
+}

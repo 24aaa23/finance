@@ -1,0 +1,1280 @@
+{
+  "identity": "3c3894fc1bbfd5d33d94d77229aa5e95c4723562cbdd7d4a8128c454ea8ba57b",
+  "pack_hash": "bf01d05e41156bd8fdbddc1731dc7ccb4ed2a2e8f06e70c32d336ca398c9d0a6",
+  "pack": {
+    "rules": [
+      {
+        "id": "K1",
+        "text": "AUM total (aum_value) equals the sum of its three component columns: aum_equity + aum_fixed_income + aum_alternatives. This identity holds for every row and can be used as a data\u2011quality assertion with a tolerance of 0.01 INR.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "aum_value"
+          },
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "aum_equity"
+          },
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "aum_fixed_income"
+          },
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "aum_alternatives"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_AUM_001.yaml"
+        ]
+      },
+      {
+        "id": "K2",
+        "text": "AUM grain is client_id \u00d7 lob_id \u00d7 as_on_date (month\u2011start). To obtain a client\u2011level AUM for a month, SUM(aum_value) after grouping by client_id and as_on_date, collapsing across all lob_id rows for that client.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "client_id"
+          },
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "lob_id"
+          },
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "as_on_date"
+          },
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "aum_value"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_AUM_001.yaml"
+        ]
+      },
+      {
+        "id": "K3",
+        "text": "When joining client_aum to dim_lob_hierarchy, use DISTINCT lob_id (or a sub\u2011query that deduplicates lob_id) because lob_id is not unique in dim_lob_hierarchy and would otherwise fan\u2011out the AUM rows.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "lob_id"
+          },
+          {
+            "table": "TABLE_DIM_LOB_HIERARCHY_001",
+            "column": "lob_id"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_AUM_001.yaml",
+          "yaml/DIM_LOB_HIERARCHY_001.yaml"
+        ]
+      },
+      {
+        "id": "K4",
+        "text": "Unrealised gain must be derived, not read, because client_holdings.unrealized_gain and unrealized_gain_pct are stored as VARCHAR. Compute: unrealised_gain = current_value - invested_value; unrealised_gain_pct = 100.0 * (current_value - invested_value) / NULLIF(invested_value,0).",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "current_value"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "invested_value"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "unrealized_gain"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "unrealized_gain_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K5",
+        "text": "Invested value identity: invested_value = quantity * avg_cost_price (verified on sample rows).",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "invested_value"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "quantity"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "avg_cost_price"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K6",
+        "text": "Current value identity: current_value = quantity * current_price (verified).",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "current_value"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "quantity"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "current_price"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K7",
+        "text": "Realised gain per lot is (sell_price - buy_price) * quantity. Losses appear as negative realised_gain. Sum across lots for a client or product; split on sign to report gross gains vs gross losses.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_REALIZED_GAIN_001",
+            "column": "sell_price"
+          },
+          {
+            "table": "TABLE_CLIENT_REALIZED_GAIN_001",
+            "column": "buy_price"
+          },
+          {
+            "table": "TABLE_CLIENT_REALIZED_GAIN_001",
+            "column": "quantity"
+          },
+          {
+            "table": "TABLE_CLIENT_REALIZED_GAIN_001",
+            "column": "realized_gain"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_REALIZED_GAIN_001.yaml"
+        ]
+      },
+      {
+        "id": "K8",
+        "text": "Holding period in days = sell_date - buy_date (calendar days). Use this to classify equity gains: long\u2011term if holding_period_days > 365, short\u2011term otherwise.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_REALIZED_GAIN_001",
+            "column": "sell_date"
+          },
+          {
+            "table": "TABLE_CLIENT_REALIZED_GAIN_001",
+            "column": "buy_date"
+          },
+          {
+            "table": "TABLE_CLIENT_REALIZED_GAIN_001",
+            "column": "holding_period_days"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_REALIZED_GAIN_001.yaml"
+        ]
+      },
+      {
+        "id": "K9",
+        "text": "Equity\u2011oriented funds are those with asset_alloc_equity_net >= 0.65 (65%). They share the same tax treatment as direct equity (long\u2011term >365\u202fdays, short\u2011term \u2264365\u202fdays).",
+        "fields": [
+          {
+            "table": "TABLE_DIM_MF_FUND_COMPLETE_001",
+            "column": "asset_alloc_equity_net"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_MF_FUND_COMPLETE_001.yaml"
+        ]
+      },
+      {
+        "id": "K10",
+        "text": "Long\u2011term capital\u2011gain tax on equity (direct equity + equity\u2011oriented funds) is 12.5% after a per\u2011client FY exemption of INR\u202f125,000. The exemption is applied once per client per FY across all long\u2011term equity gains; it is not applied per lot.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K11",
+        "text": "Short\u2011term capital\u2011gain tax on equity (including equity\u2011oriented funds) is 20% with no exemption and no indexation. Tax applies only to positive gains.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K12",
+        "text": "Post\u2011tax gain = realised_gain - tax. For long\u2011term gains, tax = GREATEST(0, realised_gain * 0.125 - exemption_share), where exemption_share = MIN(realised_gain, remaining_exemption) allocated proportionally across the client\u2019s long\u2011term equity gains. For short\u2011term gains, tax = GREATEST(0, realised_gain * 0.20).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K13",
+        "text": "Net New Money (NNM) = inflow - outflow. The column net_flow is VARCHAR and must be ignored; compute from inflow and outflow columns (both DOUBLE PRECISION).",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_NET_NEW_MONEY_001",
+            "column": "inflow"
+          },
+          {
+            "table": "TABLE_CLIENT_NET_NEW_MONEY_001",
+            "column": "outflow"
+          },
+          {
+            "table": "TABLE_CLIENT_NET_NEW_MONEY_001",
+            "column": "net_flow"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_NET_NEW_MONEY_001.yaml"
+        ]
+      },
+      {
+        "id": "K14",
+        "text": "NNM grain is client_id \u00d7 product_id \u00d7 period_date (monthly). No ISIN is stored; product_id is an aggregate bucket (e.g., AGG_BONDS) in this delivery, not a catalogue product_id. Use product_type for classification, not the product_id join to dim_product_unified_cat.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_NET_NEW_MONEY_001",
+            "column": "client_id"
+          },
+          {
+            "table": "TABLE_CLIENT_NET_NEW_MONEY_001",
+            "column": "product_id"
+          },
+          {
+            "table": "TABLE_CLIENT_NET_NEW_MONEY_001",
+            "column": "product_type"
+          },
+          {
+            "table": "TABLE_CLIENT_NET_NEW_MONEY_001",
+            "column": "period_date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_NET_NEW_MONEY_001.yaml",
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K15",
+        "text": "Drawdown for a client (or cohort) is calculated as: drawdown = aum_value - running_max(aum_value) over the ordered as_on_date series. If the series never falls, drawdown = 0.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "aum_value"
+          },
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "as_on_date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K16",
+        "text": "Turnover = SUM(amount) from client_transactions, where amount is always positive. Direction is indicated by transaction_type; a net traded flow is SUM(CASE WHEN transaction_type='Redemption' THEN -amount ELSE amount END).",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_TRANSACTIONS_001",
+            "column": "amount"
+          },
+          {
+            "table": "TABLE_CLIENT_TRANSACTIONS_001",
+            "column": "transaction_type"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_TRANSACTIONS_001.yaml"
+        ]
+      },
+      {
+        "id": "K17",
+        "text": "Revenue yield (basis points) = (SUM(revenue_amount) / assets) * 10,000. Assets are the denominator appropriate to the revenue type (e.g., AUM for advisory fees, turnover for brokerage).",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_REVENUE_001",
+            "column": "revenue_amount"
+          },
+          {
+            "table": "TABLE_CLIENT_REVENUE_001",
+            "column": "revenue_type"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_REVENUE_001.yaml"
+        ]
+      },
+      {
+        "id": "K18",
+        "text": "Organic growth = net_new_money / opening_assets. Opening assets are the AUM (or other asset measure) at the start of the period_date for the client.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_NET_NEW_MONEY_001",
+            "column": "inflow"
+          },
+          {
+            "table": "TABLE_CLIENT_NET_NEW_MONEY_001",
+            "column": "outflow"
+          },
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "aum_value"
+          },
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "as_on_date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "yaml/CLIENT_NET_NEW_MONEY_001.yaml",
+          "yaml/CLIENT_AUM_001.yaml"
+        ]
+      },
+      {
+        "id": "K19",
+        "text": "Fee\u2011billable (billable) book = SUM(current_value) where COALESCE(is_held_away,FALSE)=FALSE. Held\u2011away assets are excluded from fee calculations but remain in total\u2011wealth views.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "current_value"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "is_held_away"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K20",
+        "text": "Accrued interest is >0 only for coupon\u2011paying instruments (bonds, fixed deposits). The column is zero for equity and mutual\u2011fund rows.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "accrued_interest"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K21",
+        "text": "Benchmark comparison: first try the pre\u2011joined columns benchmark_return_1y / benchmark_return_3y on client_holdings (populated on 375 of 505 rows). If those are NULL, join client_holdings.benchmark_name (or dim_product_unified_cat.benchmark) to dim_cmot_index_prices.index_name after stripping a trailing ' TRI' (case\u2011insensitive). The join must be on the stripped name; no other identifier exists.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "benchmark_name"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "benchmark_return_1y"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "benchmark_return_3y"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "yaml/CLIENT_HOLDINGS_001.yaml",
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K22",
+        "text": "When joining client_holdings to dim_product_unified_cat, use product_id (the universal key). Do NOT join on ISIN for funds because the ISIN may be NULL or duplicated across schemes.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "product_id"
+          },
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "product_id"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_HOLDINGS_001.yaml",
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K23",
+        "text": "Client scope: include rows unless is_deleted = TRUE or is_active = FALSE. Both columns are nullable; treat NULL as TRUE (i.e., COALESCE(is_active,TRUE) AND COALESCE(is_deleted,FALSE)=FALSE).",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CLIENT_MASTER_001",
+            "column": "is_active"
+          },
+          {
+            "table": "TABLE_DIM_CLIENT_MASTER_001",
+            "column": "is_deleted"
+          },
+          {
+            "table": "TABLE_DIM_EMPLOYEE_PROFILE_001",
+            "column": "is_active"
+          },
+          {
+            "table": "TABLE_DIM_EMPLOYEE_PROFILE_001",
+            "column": "is_deleted"
+          },
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "is_active"
+          },
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "is_deleted"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CLIENT_MASTER_001.yaml",
+          "yaml/DIM_EMPLOYEE_PROFILE_001.yaml",
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K24",
+        "text": "Case\u2011insensitive matching must be applied to free\u2011text columns such as city (dim_client_master.current_city), client name, rating strings, and benchmark names.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CLIENT_MASTER_001",
+            "column": "current_city"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "benchmark_name"
+          },
+          {
+            "table": "TABLE_DIM_PRODUCT_CREDIT_RTNG_001",
+            "column": "credit_rating"
+          },
+          {
+            "table": "TABLE_DIM_PRODUCT_CREDIT_RTNG_001",
+            "column": "credit_rating_agency"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CLIENT_MASTER_001.yaml",
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml",
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K25",
+        "text": "Ranking defaults: \u2022 top/biggest/largest clients \u2192 SUM(aum_value) per client (latest as_on_date). \u2022 top families \u2192 SUM(aum_value) per family_name. \u2022 top employees/RMs \u2192 SUM(revenue_amount) per emp_id (latest revenue_date). \u2022 top products/funds \u2192 SUM(amount) from client_transactions per product_id. If the question does not specify a measure, use the default above and state the measure used.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K26",
+        "text": "Tie\u2011breaking for ranking: order by the measure descending, then by the entity name ascending to guarantee deterministic results.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K27",
+        "text": "If the requested N exceeds the number of available rows, return all rows and report the actual count; do not pad with dummy rows.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K28",
+        "text": "When aggregating percentage columns (e.g., allocation_pct, pct_of_portfolio) across clients, use AVG across client\u2011level percentages. Do NOT SUM across clients because the denominator differs per client.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K29",
+        "text": "Sector allocation for a client is calculated as sector_share = sector_value / total_client_value, where total_client_value is the sum of market_value across all holdings (including sectors with NULL). The un\u2011tagged bucket (\u224880% of book) must be reported explicitly; do not rescale the sector\u2011tagged percentages to sum to 100.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "current_value"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K30",
+        "text": "Equity holdings are identified by product_type = 'Direct Equity'. Do NOT infer equity from ISIN prefix (INE) because that prefix also appears on bonds, REITs and InvITs.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "product_type"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "isin"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_HOLDINGS_001.yaml",
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K31",
+        "text": "Fiscal year runs 1\u202fApril\u202f\u2013\u202f31\u202fMarch. FY2026 = 2025\u201104\u201101 to 2026\u201103\u201131 inclusive. All period\u2011based calculations (e.g., tax exemption, FY\u2011based reporting) must use this window.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K32",
+        "text": "XIRR is NOT computable from the current warehouse. Queries requesting XIRR must return NULL with the message: \"XIRR cannot be computed \u2013 dated cash\u2011flow series with opening and closing valuations are not recorded.\" Do not substitute a holding\u2011period return.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K33",
+        "text": "The column dim_product_credit_rtng.brick_rating is declared as HLLSKETCH but should be VARCHAR. It loads 100\u202f% NULL and cannot be queried; treat it as unavailable.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_PRODUCT_CREDIT_RTNG_001",
+            "column": "brick_rating"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_CREDIT_RTNG_001.yaml"
+        ]
+      },
+      {
+        "id": "K34",
+        "text": "dim_product_credit_rtng.obsolete_into_mstar_id is declared HLLSKETCH, should be VARCHAR, and loads 100\u202f% NULL. The intended fund\u2011merger lineage is unavailable; do not attempt to traverse it.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_CREDIT_RTNG_001.yaml"
+        ]
+      },
+      {
+        "id": "K35",
+        "text": "When joining dim_cmot_company_mstr to equity price tables, use co_code as the company key. Do NOT join dim_cmot_index_prices on co_code because that column identifies an index there; such a join would be meaningless.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CMOT_COMPANY_MSTR_001",
+            "column": "co_code"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CMOT_COMPANY_MSTR_001.yaml"
+        ]
+      },
+      {
+        "id": "K36",
+        "text": "dim_client_account_map is the only bridge that provides account details. The join key is wsw_account_code. Note that only 174 of 505 holdings match on both wsw_account_code and client_id; 210 match on code only but belong to a different client; 121 have no matching account row. Replicate the exact join condition required by the query; never assume code\u2011only matches are valid for client identity.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CLIENT_ACCOUNT_MAP_001",
+            "column": "wsw_account_code"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "wsw_account_code"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "client_id"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CLIENT_ACCOUNT_MAP_001.yaml",
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K37",
+        "text": "dim_lob_hierarchy.lob_id is not unique; its grain is sub\u2011LOB. Any join on lob_id must deduplicate (e.g., join to a sub\u2011query SELECT DISTINCT lob_id, lob_name FROM dim_lob_hierarchy).",
+        "fields": [
+          {
+            "table": "TABLE_DIM_LOB_HIERARCHY_001",
+            "column": "lob_id"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_LOB_HIERARCHY_001.yaml"
+        ]
+      },
+      {
+        "id": "K38",
+        "text": "dim_employee_profile self\u2011reference uses reporting_manager_code \u2192 code (not id). The hierarchy must be traversed with a recursive CTE and a depth guard to avoid cycles.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_EMPLOYEE_PROFILE_001",
+            "column": "reporting_manager_code"
+          },
+          {
+            "table": "TABLE_DIM_EMPLOYEE_PROFILE_001",
+            "column": "code"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_EMPLOYEE_PROFILE_001.yaml"
+        ]
+      },
+      {
+        "id": "K39",
+        "text": "All three\u2011valued boolean flags (is_active, is_deleted) are nullable. Use COALESCE to treat NULL as TRUE for is_active and FALSE for is_deleted when applying scope filters.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CLIENT_MASTER_001",
+            "column": "is_active"
+          },
+          {
+            "table": "TABLE_DIM_CLIENT_MASTER_001",
+            "column": "is_deleted"
+          },
+          {
+            "table": "TABLE_DIM_EMPLOYEE_PROFILE_001",
+            "column": "is_active"
+          },
+          {
+            "table": "TABLE_DIM_EMPLOYEE_PROFILE_001",
+            "column": "is_deleted"
+          },
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "is_active"
+          },
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "is_deleted"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CLIENT_MASTER_001.yaml",
+          "yaml/DIM_EMPLOYEE_PROFILE_001.yaml",
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K40",
+        "text": "Numeric columns stored as VARCHAR (client_holdings.unrealized_gain, unrealized_gain_pct, client_net_new_money.net_flow, client_valuations.unrealized_pnl, dim_mf_returns_history.return_1m/3m/6m/1y) must be cast to DOUBLE before arithmetic. For the return columns, guard against non\u2011numeric values with a regex or CASE that returns NULL on failure.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "unrealized_gain"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "unrealized_gain_pct"
+          },
+          {
+            "table": "TABLE_CLIENT_NET_NEW_MONEY_001",
+            "column": "net_flow"
+          },
+          {
+            "table": "TABLE_CLIENT_VALUATIONS_001",
+            "column": "unrealized_pnl"
+          },
+          {
+            "table": "TABLE_DIM_MF_RETURNS_HISTORY_001",
+            "column": "return_1m"
+          },
+          {
+            "table": "TABLE_DIM_MF_RETURNS_HISTORY_001",
+            "column": "return_3m"
+          },
+          {
+            "table": "TABLE_DIM_MF_RETURNS_HISTORY_001",
+            "column": "return_6m"
+          },
+          {
+            "table": "TABLE_DIM_MF_RETURNS_HISTORY_001",
+            "column": "return_1y"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_HOLDINGS_001.yaml",
+          "yaml/CLIENT_NET_NEW_MONEY_001.yaml",
+          "yaml/CLIENT_VALUATIONS_001.yaml",
+          "yaml/DIM_MF_RETURNS_HISTORY_001.yaml"
+        ]
+      },
+      {
+        "id": "K41",
+        "text": "dim_product_unified_cat.sector is a bare name with no code; dim_cmot_company_mstr provides sector_code and sector_name. The two are not linked; treat them as separate classifications.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "sector"
+          },
+          {
+            "table": "TABLE_DIM_CMOT_COMPANY_MSTR_001",
+            "column": "sector_code"
+          },
+          {
+            "table": "TABLE_DIM_CMOT_COMPANY_MSTR_001",
+            "column": "sector_name"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml",
+          "yaml/DIM_CMOT_COMPANY_MSTR_001.yaml"
+        ]
+      },
+      {
+        "id": "K42",
+        "text": "dim_product_segment_map is a bridge (product_id \u00d7 segment_id). It can cause fan\u2011out if a product has multiple segment rows. In this delivery each product has a single segment, but retain the bridge semantics for future data.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_PRODUCT_SEGMENT_MAP_001",
+            "column": "product_id"
+          },
+          {
+            "table": "TABLE_DIM_PRODUCT_SEGMENT_MAP_001",
+            "column": "segment_id"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_SEGMENT_MAP_001.yaml"
+        ]
+      },
+      {
+        "id": "K43",
+        "text": "dim_master_enums is not linked to any coded column; it is a documentary reference only. The current CSV is a copy of dim_cmot_company_mstr, so the enum data is unavailable. Do not rely on it for validation.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_MASTER_ENUMS_001.yaml"
+        ]
+      },
+      {
+        "id": "K44",
+        "text": "All date columns are stored as TEXT in the DDL but treated as DATE in queries. Use DATE_TRUNC('month', ...) when aligning month\u2011start dates (e.g., client_aum) with daily dates (e.g., client_holdings).",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "as_on_date"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "as_on_date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_AUM_001.yaml",
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K45",
+        "text": "When aggregating across tables, never join on the column named id because each table has its own independent sequence; id is not a global primary key.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_AUM_001",
+            "column": "id"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "id"
+          },
+          {
+            "table": "TABLE_CLIENT_TRANSACTIONS_001",
+            "column": "id"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K46",
+        "text": "All monetary values are in Indian Rupees (\u20b9). Do not convert currencies unless explicitly requested.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K47",
+        "text": "The latest snapshot date for each table is the MAX of its date column. Use that as the anchor for \u201ccurrent\u201d queries; do not use the wall\u2011clock date.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K48",
+        "text": "For any cohort query that results in an empty contrast set, return a single row with the appropriate NULL/0 values; do not fabricate missing rows.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K49",
+        "text": "client_holdings.unrealized_gain_pct values represent whole percent (e.g., 31.56 means 31.56%).",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "unrealized_gain_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K50",
+        "text": "client_valuations.unrealized_pnl is stored as VARCHAR and must be derived as market_value - cost_value.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_VALUATIONS_001",
+            "column": "unrealized_pnl"
+          },
+          {
+            "table": "TABLE_CLIENT_VALUATIONS_001",
+            "column": "market_value"
+          },
+          {
+            "table": "TABLE_CLIENT_VALUATIONS_001",
+            "column": "cost_value"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_VALUATIONS_001.yaml"
+        ]
+      },
+      {
+        "id": "K51",
+        "text": "client_valuations.market_value equals client_holdings.current_value and cost_value equals client_holdings.invested_value; treat them as equivalent for valuation\u2011only queries.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_VALUATIONS_001",
+            "column": "market_value"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "current_value"
+          },
+          {
+            "table": "TABLE_CLIENT_VALUATIONS_001",
+            "column": "cost_value"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "invested_value"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/CLIENT_VALUATIONS_001.yaml",
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K52",
+        "text": "dim_equity_price_latest.exchange is part of the grain; always include it in joins to avoid fan\u2011out duplication of prices across NSE and BSE listings.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_EQUITY_PRICE_LATEST_001",
+            "column": "exchange"
+          },
+          {
+            "table": "TABLE_DIM_EQUITY_PRICE_LATEST_001",
+            "column": "co_code"
+          },
+          {
+            "table": "TABLE_DIM_EQUITY_PRICE_LATEST_001",
+            "column": "nav_date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_EQUITY_PRICE_LATEST_001.yaml"
+        ]
+      },
+      {
+        "id": "K53",
+        "text": "dim_equity_price_latest contains a single\u2011date snapshot (one row per instrument on 2026\u201105\u201119) rather than a full time series; use it only as the current price reference.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_EQUITY_PRICE_LATEST_001",
+            "column": "co_code"
+          },
+          {
+            "table": "TABLE_DIM_EQUITY_PRICE_LATEST_001",
+            "column": "nav_date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_EQUITY_PRICE_LATEST_001.yaml"
+        ]
+      },
+      {
+        "id": "K54",
+        "text": "dim_product_unified_cat.is_listed is a VARCHAR with values 'Listed' and 'Unlisted'; filter using string comparison (e.g., is_listed = 'Listed'), not boolean logic.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "is_listed"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K55",
+        "text": "dim_product_unified_cat.is_etf is a nullable BOOLEAN (three\u2011valued); treat NULL as unknown when filtering.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "is_etf"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K56",
+        "text": "dim_product_unified_cat.asset_class and sub_asset_class are nullable; rows without them belong to the un\u2011tagged bucket in sector/allocation calculations.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "asset_class"
+          },
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "sub_asset_class"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K57",
+        "text": "dim_product_unified_cat.asset_alloc_*_net are net percentages (may not sum to 100). Allow a tolerance of \u00b11\u202fpercentage point when checking that the three nets roughly total 100%.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K58",
+        "text": "Use dim_product_unified_cat.asset_alloc_*_net for look\u2011through allocation: a client\u2019s exposure to an asset class = SUM(holding_current_value * asset_alloc_*_net) across fund holdings.",
+        "fields": [
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "current_value"
+          },
+          {
+            "table": "TABLE_CLIENT_HOLDINGS_001",
+            "column": "product_type"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml",
+          "yaml/CLIENT_HOLDINGS_001.yaml"
+        ]
+      },
+      {
+        "id": "K59",
+        "text": "dim_client_master.current_city is an extra column not present in the DDL; treat it as a dimension (case\u2011insensitive) and mask as PII where required.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CLIENT_MASTER_001",
+            "column": "current_city"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CLIENT_MASTER_001.yaml"
+        ]
+      },
+      {
+        "id": "K60",
+        "text": "dim_client_master.id is nullable and not a primary key; do not rely on uniqueness across rows.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CLIENT_MASTER_001",
+            "column": "id"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CLIENT_MASTER_001.yaml"
+        ]
+      },
+      {
+        "id": "K61",
+        "text": "dim_client_master.sub_lob_id uses a different column name than dim_employee_profile (sublob_id); avoid automatic joins on column name alone.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CLIENT_MASTER_001",
+            "column": "sub_lob_id"
+          },
+          {
+            "table": "TABLE_DIM_EMPLOYEE_PROFILE_001",
+            "column": "sublob_id"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CLIENT_MASTER_001.yaml",
+          "yaml/DIM_EMPLOYEE_PROFILE_001.yaml"
+        ]
+      },
+      {
+        "id": "K62",
+        "text": "dim_client_account_map is the most sensitive table (contains bank account numbers and IFSC codes). In non\u2011production environments mask or tokenise these fields.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CLIENT_ACCOUNT_MAP_001",
+            "column": "account_number"
+          },
+          {
+            "table": "TABLE_DIM_CLIENT_ACCOUNT_MAP_001",
+            "column": "ifsc_code"
+          },
+          {
+            "table": "TABLE_DIM_CLIENT_ACCOUNT_MAP_001",
+            "column": "bank_name"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CLIENT_ACCOUNT_MAP_001.yaml"
+        ]
+      },
+      {
+        "id": "K63",
+        "text": "dim_client_account_map.is_active is a nullable three\u2011valued flag; treat NULL as TRUE when filtering for active accounts.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CLIENT_ACCOUNT_MAP_001",
+            "column": "is_active"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CLIENT_ACCOUNT_MAP_001.yaml"
+        ]
+      },
+      {
+        "id": "K64",
+        "text": "dim_client_account_map stores multiple identifier groups (folio, dp_id, bank details) on the same row; do not infer account type from which identifiers are present.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_CLIENT_ACCOUNT_MAP_001",
+            "column": "folio"
+          },
+          {
+            "table": "TABLE_DIM_CLIENT_ACCOUNT_MAP_001",
+            "column": "dp_id"
+          },
+          {
+            "table": "TABLE_DIM_CLIENT_ACCOUNT_MAP_001",
+            "column": "account_number"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_CLIENT_ACCOUNT_MAP_001.yaml"
+        ]
+      },
+      {
+        "id": "K65",
+        "text": "dim_product_credit_rtng.credit_rating_agency is always 'CRISIL' in this delivery; it can be treated as a constant if needed.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_PRODUCT_CREDIT_RTNG_001",
+            "column": "credit_rating_agency"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_CREDIT_RTNG_001.yaml"
+        ]
+      },
+      {
+        "id": "K66",
+        "text": "dim_product_credit_rtng.interest_rate is expressed as a percent (e.g., 7.25 means 7.25%).",
+        "fields": [
+          {
+            "table": "TABLE_DIM_PRODUCT_CREDIT_RTNG_001",
+            "column": "interest_rate"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_CREDIT_RTNG_001.yaml"
+        ]
+      },
+      {
+        "id": "K67",
+        "text": "dim_product_unified_cat.is_active and is_deleted are nullable three\u2011valued flags; apply COALESCE(is_active,TRUE) and COALESCE(is_deleted,FALSE) for scope filtering.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "is_active"
+          },
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "is_deleted"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      },
+      {
+        "id": "K68",
+        "text": "dim_product_unified_cat.is_listed values are case\u2011insensitive; treat 'listed' and 'Listed' as equivalent.",
+        "fields": [
+          {
+            "table": "TABLE_DIM_PRODUCT_UNIFIED_CAT_001",
+            "column": "is_listed"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml"
+        ]
+      }
+    ],
+    "conflicts": [
+      {
+        "context": "dim_master_enums CSV contains company master rows instead of enum rows; the intended enum table is missing.",
+        "resolution": "Treat dim_master_enums as undocumented; do not use it for look\u2011ups until a correct export is provided."
+      },
+      {
+        "context": "dim_product_credit_rtng.obsolete_into_mstar_id declared as HLLSKETCH but should be VARCHAR; CSV provides a count column instead.",
+        "resolution": "Mark the column as unavailable for queries; ignore the count column."
+      },
+      {
+        "context": "dim_product_credit_rtng.brick_rating declared as HLLSKETCH but should be VARCHAR; CSV has no rating values.",
+        "resolution": "Treat brick_rating as missing data; exclude from any rating\u2011based analysis."
+      }
+    ],
+    "coverage": {},
+    "source_review": {
+      "domain": "supplied",
+      "rules": "supplied",
+      "yaml/CLIENT_AUM_001.yaml": "supplied",
+      "yaml/CLIENT_HOLDINGS_001.yaml": "supplied",
+      "yaml/CLIENT_NET_NEW_MONEY_001.yaml": "supplied",
+      "yaml/CLIENT_REALIZED_GAIN_001.yaml": "supplied",
+      "yaml/CLIENT_REVENUE_001.yaml": "supplied",
+      "yaml/CLIENT_TRANSACTIONS_001.yaml": "supplied",
+      "yaml/CLIENT_VALUATIONS_001.yaml": "supplied",
+      "yaml/DIM_CLIENT_ACCOUNT_MAP_001.yaml": "supplied",
+      "yaml/DIM_CLIENT_MASTER_001.yaml": "supplied",
+      "yaml/DIM_CMOT_COMPANY_MSTR_001.yaml": "supplied",
+      "yaml/DIM_CMOT_INDEX_PRICES_001.yaml": "supplied",
+      "yaml/DIM_EMPLOYEE_PROFILE_001.yaml": "supplied",
+      "yaml/DIM_EQUITY_PRICE_LATEST_001.yaml": "supplied",
+      "yaml/DIM_LOB_HIERARCHY_001.yaml": "supplied",
+      "yaml/DIM_MASTER_ENUMS_001.yaml": "supplied",
+      "yaml/DIM_MF_FUND_COMPLETE_001.yaml": "supplied",
+      "yaml/DIM_MF_NAV_HISTORY_001.yaml": "supplied",
+      "yaml/DIM_MF_RETURNS_HISTORY_001.yaml": "supplied",
+      "yaml/DIM_PRODUCT_CREDIT_RTNG_001.yaml": "supplied",
+      "yaml/DIM_PRODUCT_SEGMENT_MAP_001.yaml": "supplied",
+      "yaml/DIM_PRODUCT_UNIFIED_CAT_001.yaml": "supplied"
+    },
+    "validation_notes": [
+      "K21: ignored optional field reference not present in YAML.",
+      "K21: ignored unknown optional source reference.",
+      "K29: ignored optional field reference not present in YAML.",
+      "K34: ignored optional field reference not present in YAML.",
+      "K35: ignored optional field reference not present in YAML.",
+      "K35: ignored unknown optional source reference.",
+      "K57: ignored optional field reference not present in YAML.",
+      "K58: ignored optional field reference not present in YAML."
+    ],
+    "review_status": "completed"
+  }
+}

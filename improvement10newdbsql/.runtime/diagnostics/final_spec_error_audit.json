@@ -1,0 +1,854 @@
+{
+  "scope": "Offline structural audit only; no reference answers read, no model calls, no runtime code edits.",
+  "total_failures": 40,
+  "categories": {
+    "grouping_contract": 15,
+    "expression_literals": 6,
+    "other_plan_contract": 4,
+    "expression_syntax": 9,
+    "unsupported_metric": 5,
+    "unsupported_string_function": 1
+  },
+  "candidate_contract_clear": 12,
+  "rows": [
+    {
+      "id": "T1_017",
+      "question": "Which occupations turn up across every client record including closed ones and how many in each?",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: occupation"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: occupation"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T1_073",
+      "question": "How many employees do we have on staff?",
+      "category": "expression_literals",
+      "original_errors": [
+        "__spec_step_1 expression: field does not exist on the selected input: true",
+        "__spec_step_1 expression: field does not exist on the selected input: false"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "coalesce(column('is_active'), true) and not coalesce(column('is_deleted'), false)",
+          "after": "coalesce (column ('is_active'),True )and not coalesce (column ('is_deleted'),False )"
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T1_147",
+      "question": "Can you show me a breakdown of my clients' investments by asset class?",
+      "category": "expression_literals",
+      "original_errors": [
+        "__spec_step_3 expression: field does not exist on the selected input: TRUE",
+        "__spec_step_4 expression: field does not exist on the selected input: FALSE",
+        "__spec_step_5 expression: field does not exist on the selected input: TRUE",
+        "__spec_step_6 expression: field does not exist on the selected input: FALSE"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "coalesce(column('is_active'), TRUE)",
+          "after": "coalesce (column ('is_active'),True )"
+        },
+        {
+          "before": "coalesce(column('is_deleted'), FALSE)",
+          "after": "coalesce (column ('is_deleted'),False )"
+        },
+        {
+          "before": "coalesce(column('is_active_right'), TRUE)",
+          "after": "coalesce (column ('is_active_right'),True )"
+        },
+        {
+          "before": "coalesce(column('is_deleted_right'), FALSE)",
+          "after": "coalesce (column ('is_deleted_right'),False )"
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T1_161",
+      "question": "What are the current market details",
+      "category": "other_plan_contract",
+      "original_errors": [
+        "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+        "projection: field does not exist on the selected input: equity_price_snapshot",
+        "projection: field does not exist on the selected input: index_price_snapshot"
+      ],
+      "candidate_expression_changes": [],
+      "remaining_errors": [
+        "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+        "projection: field does not exist on the selected input: equity_price_snapshot",
+        "projection: field does not exist on the selected input: index_price_snapshot"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T1_165",
+      "question": "What is the total AUM across all clients in the NeoSapients platform?",
+      "category": "expression_syntax",
+      "original_errors": [
+        "__spec_step_3: invalid expression: invalid syntax (<unknown>, line 1)"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "coalesce(column('is_active'), TRUE) = TRUE and coalesce(column('is_deleted'), FALSE) = FALSE",
+          "after": "coalesce (column ('is_active'),True )==True and coalesce (column ('is_deleted'),False )==False "
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T2_062",
+      "question": "list all clients who live in bengaluaru and has name starting with a consonant.",
+      "category": "expression_syntax",
+      "original_errors": [
+        "__spec_step_1: invalid expression: invalid syntax (<unknown>, line 1)"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "case when lower(substr(column('client_name'),1,1)) NOT IN ('a','e','i','o','u') then 1 else 0 end",
+          "after": "case when lower (substr (column ('client_name'),1 ,1 ))not IN ('a','e','i','o','u')then 1 else 0 end "
+        }
+      ],
+      "remaining_errors": [
+        "__spec_step_1: invalid expression: invalid syntax (<unknown>, line 1)"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T2_072",
+      "question": "Show Ultra HNI individuals",
+      "category": "expression_literals",
+      "original_errors": [
+        "__spec_step_1 expression: field does not exist on the selected input: true",
+        "__spec_step_2 expression: field does not exist on the selected input: false"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "coalesce(column('is_active'), true)",
+          "after": "coalesce (column ('is_active'),True )"
+        },
+        {
+          "before": "coalesce(column('is_deleted'), false)",
+          "after": "coalesce (column ('is_deleted'),False )"
+        },
+        {
+          "before": "column('id')",
+          "after": "column ('id')"
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T2_078",
+      "question": "Which clients with assets under management above \u20b920 Cr had zero purchase transactions during the past 1 month?",
+      "category": "expression_syntax",
+      "original_errors": [
+        "__spec_step_16: invalid expression: invalid syntax (<unknown>, line 1)",
+        "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "column('as_on_date') == column('latest_as_on_date')",
+          "after": "column ('as_on_date')==column ('latest_as_on_date')"
+        },
+        {
+          "before": "coalesce(column('is_active'), 1) * (1 - coalesce(column('is_deleted'), 0))",
+          "after": "coalesce (column ('is_active'),1 )*(1 -coalesce (column ('is_deleted'),0 ))"
+        },
+        {
+          "before": "coalesce(column('purchase_cnt'), 0) = 0",
+          "after": "coalesce (column ('purchase_cnt'),0 )==0 "
+        }
+      ],
+      "remaining_errors": [
+        "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T2_086",
+      "question": "Which banks do our Private Wealth clients bank with?",
+      "category": "expression_literals",
+      "original_errors": [
+        "__spec_step_1 expression: field does not exist on the selected input: true",
+        "__spec_step_2 expression: field does not exist on the selected input: false"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "coalesce(column('is_active'), true)",
+          "after": "coalesce (column ('is_active'),True )"
+        },
+        {
+          "before": "coalesce(column('is_deleted'), false)",
+          "after": "coalesce (column ('is_deleted'),False )"
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T2_094",
+      "question": "For each company we track, what is its BSE group and its latest closing price?",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: co_code, company_name"
+      ],
+      "candidate_expression_changes": [],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: co_code, company_name"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_015",
+      "question": "How much AUM sits with clients whose acquiring banker has already left?",
+      "category": "expression_syntax",
+      "original_errors": [
+        "__spec_step_3: invalid expression: expression cannot contain assignment, perhaps you meant \"==\"? (<unknown>, line 1)"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "where(coalesce(column('is_active'), true) = false or coalesce(column('is_deleted'), false) = true, 1, 0)",
+          "after": "where (coalesce (column ('is_active'),True )==False or coalesce (column ('is_deleted'),False )==True ,1 ,0 )"
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T3_048",
+      "question": "list all clients in Goa and who is their banker",
+      "category": "expression_syntax",
+      "original_errors": [
+        "__spec_step_1: invalid expression: cannot assign to function call here. Maybe you meant '==' instead of '='? (<unknown>, line 1)"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "(coalesce(column('is_active'), 1) = 1) and (coalesce(column('is_deleted'), 0) = 0)",
+          "after": "(coalesce (column ('is_active'),1 )==1 )and (coalesce (column ('is_deleted'),0 )==0 )"
+        },
+        {
+          "before": "column('servicing_banker_name')",
+          "after": "column ('servicing_banker_name')"
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T3_052",
+      "question": "For each of my clients, return the client name and the overall assets under management (AUM).",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: id"
+      ],
+      "candidate_expression_changes": [],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: id"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_058",
+      "question": "Give me Ram Krishnan's sector-wise holdings allocation.",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: sector"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "sector_value / nullif(total_value, 0)",
+          "after": "sector_value /nullif (total_value ,0 )"
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: sector"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_075",
+      "question": "Provide a list of every client in my book along with the total assets under management for each client.",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final projection omits interpreted outputs: client_id",
+        "Final aggregate grouping differs from interpreted output grain: id"
+      ],
+      "candidate_expression_changes": [],
+      "remaining_errors": [
+        "Final projection omits interpreted outputs: client_id",
+        "Final aggregate grouping differs from interpreted output grain: id"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_086",
+      "question": "Show the client names for all my clients along with each client\u2019s total assets under management (AUM).",
+      "category": "expression_syntax",
+      "original_errors": [
+        "__spec_step_6: invalid expression: invalid syntax (<unknown>, line 1)"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "coalesce(column('is_active'), 1)",
+          "after": "coalesce (column ('is_active'),1 )"
+        },
+        {
+          "before": "coalesce(column('is_deleted'), 0)",
+          "after": "coalesce (column ('is_deleted'),0 )"
+        },
+        {
+          "before": "column('as_on_date') = column('max_as_on_date')",
+          "after": "column ('as_on_date')==column ('max_as_on_date')"
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T3_089",
+      "question": "Show the current portfolio allocation for client Ram Krishnan.",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: product_type"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "column('sum_current') / nullif(column('total_current'), 0) * 100",
+          "after": "column ('sum_current')/nullif (column ('total_current'),0 )*100 "
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: product_type"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_090",
+      "question": "Show the full list of my clients along with the total assets under management for each client.",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: id"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "coalesce(column('is_active'), 1)",
+          "after": "coalesce (column ('is_active'),1 )"
+        },
+        {
+          "before": "coalesce(column('is_deleted'), 0)",
+          "after": "coalesce (column ('is_deleted'),0 )"
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: id"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_091",
+      "question": "Show the full set of my clients along with the total amount of assets under management for each client.",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: id"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "column('id')",
+          "after": "column ('id')"
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: id"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_102",
+      "question": "What is Ram Krishnan's sector-wise holdings allocation?",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: sector"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "sector_value / nullif(total_value, 0)",
+          "after": "sector_value /nullif (total_value ,0 )"
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: sector"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_173",
+      "question": "How many rated instruments does each rating agency cover?",
+      "category": "grouping_contract",
+      "original_errors": [
+        "__spec_step_13: left_on/right_on requires exactly two datasets.",
+        "Final aggregate grouping differs from interpreted output grain: care_rating, icra_rating, crisil_rating, fitch_rating"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "null",
+          "after": "null "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        }
+      ],
+      "remaining_errors": [
+        "__spec_step_13: left_on/right_on requires exactly two datasets.",
+        "Final aggregate grouping differs from interpreted output grain: care_rating, icra_rating, crisil_rating, fitch_rating"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_218",
+      "question": "i have a meeting with Ram, summarise his portfolio and help me prep for it",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: product_type"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "column('current_value') - column('invested_value')",
+          "after": "column ('current_value')-column ('invested_value')"
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: product_type"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_221",
+      "question": "show revenue from each employee",
+      "category": "other_plan_contract",
+      "original_errors": [
+        "projection: field does not exist on the selected input: name"
+      ],
+      "candidate_expression_changes": [],
+      "remaining_errors": [
+        "projection: field does not exist on the selected input: name"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T3_233",
+      "question": "What are the portfolio holdings and total AUM for Ram Krishnan?",
+      "category": "other_plan_contract",
+      "original_errors": [
+        "Final projection omits interpreted outputs: holding"
+      ],
+      "candidate_expression_changes": [],
+      "remaining_errors": [
+        "Final projection omits interpreted outputs: holding"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_004",
+      "question": "Which clients sit above the 90th percentile of AUM for May 2026? Just their client ids.",
+      "category": "unsupported_metric",
+      "original_errors": [
+        "__spec_step_2: unsupported aggregate/filter operation: percentile_90",
+        "__spec_step_4 expression: field does not exist on the selected input: p90_aum"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "column('client_aum_sum') > column('p90_aum')",
+          "after": "column ('client_aum_sum')>column ('p90_aum')"
+        }
+      ],
+      "remaining_errors": [
+        "__spec_step_2: unsupported aggregate/filter operation: percentile_90",
+        "__spec_step_4 expression: field does not exist on the selected input: p90_aum"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_005",
+      "question": "How did realised gain build up month by month through FY2026?",
+      "category": "expression_literals",
+      "original_errors": [
+        "__spec_step_1 expression: field does not exist on the selected input: true",
+        "__spec_step_2 expression: field does not exist on the selected input: false"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "coalesce(column('is_active'), true)",
+          "after": "coalesce (column ('is_active'),True )"
+        },
+        {
+          "before": "coalesce(column('is_deleted'), false)",
+          "after": "coalesce (column ('is_deleted'),False )"
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T4_007",
+      "question": "How is FY2026 turnover split across product types, as percentages?",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: product_type"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "where(column('transaction_type') == 'Redemption', -column('amount'), column('amount'))",
+          "after": "where (column ('transaction_type')=='Redemption',-column ('amount'),column ('amount'))"
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "column('net_turnover') / nullif(column('total_turnover'), 0) * 100",
+          "after": "column ('net_turnover')/nullif (column ('total_turnover'),0 )*100 "
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: product_type"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_009",
+      "question": "What share of FY2026 fund turnover went through each AMC?",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: amc_display_name"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "column('turnover') / nullif(column('total_turnover'), 0)",
+          "after": "column ('turnover')/nullif (column ('total_turnover'),0 )"
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: amc_display_name"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_003",
+      "question": "What is the median position size on the 19 May 2026 book?",
+      "category": "unsupported_metric",
+      "original_errors": [
+        "Final projection omits interpreted outputs: median_position_size",
+        "Missing retrieval: [{\"source_class\": \"calculation_operator\", \"field\": \"percentile_cont\"}]"
+      ],
+      "candidate_expression_changes": [],
+      "remaining_errors": [
+        "Final projection omits interpreted outputs: median_position_size",
+        "Missing retrieval: [{\"source_class\": \"calculation_operator\", \"field\": \"percentile_cont\"}]"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_013",
+      "question": "How did net new money build up month by month across FY2026?",
+      "category": "expression_syntax",
+      "original_errors": [
+        "__spec_step_3: invalid expression: invalid syntax (<unknown>, line 1)"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "column('inflow') - column('outflow')",
+          "after": "column ('inflow')-column ('outflow')"
+        },
+        {
+          "before": "sum(column('monthly_nnm')) over (order by period_date)",
+          "after": "sum (column ('monthly_nnm'))over (order by period_date )"
+        }
+      ],
+      "remaining_errors": [
+        "__spec_step_3: invalid expression: invalid syntax (<unknown>, line 1)"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_011",
+      "question": "What is the upper quartile expense ratio across the catalogue?",
+      "category": "unsupported_metric",
+      "original_errors": [
+        "Final projection omits interpreted outputs: upper_quartile_expense_ratio",
+        "Missing retrieval: [{\"source_class\": \"TABLE_DIM_MF_FUND_COMPLETE_001\", \"field\": \"expense_ratio\", \"note\": \"The requested metric requires a percentile_cont (75th percentile) aggregation, which is not supported by the available calculation operators (count, sum, avg, min, max, etc.). A suitable operator or custom implementation is needed to compute the upper quartile.\"}]"
+      ],
+      "candidate_expression_changes": [],
+      "remaining_errors": [
+        "Final projection omits interpreted outputs: upper_quartile_expense_ratio",
+        "Missing retrieval: [{\"source_class\": \"TABLE_DIM_MF_FUND_COMPLETE_001\", \"field\": \"expense_ratio\", \"note\": \"The requested metric requires a percentile_cont (75th percentile) aggregation, which is not supported by the available calculation operators (count, sum, avg, min, max, etc.). A suitable operator or custom implementation is needed to compute the upper quartile.\"}]"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_012",
+      "question": "Which clients hold more positions than the median client on 19 May 2026? Just their client ids.",
+      "category": "other_plan_contract",
+      "original_errors": [
+        "__spec_step_3: explicit equal-length join_key or left_on/right_on keys are required."
+      ],
+      "candidate_expression_changes": [],
+      "remaining_errors": [
+        "__spec_step_3: explicit equal-length join_key or left_on/right_on keys are required."
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_016",
+      "question": "What is the ninetieth percentile of holding period on FY2026 exits?",
+      "category": "unsupported_metric",
+      "original_errors": [
+        "__spec_step_1: invalid expression: Unsupported function or argument count: percentile"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "percentile(column('holding_period_days'), 0.9)",
+          "after": "percentile (column ('holding_period_days'),0.9 )"
+        }
+      ],
+      "remaining_errors": [
+        "__spec_step_1: invalid expression: Unsupported function or argument count: percentile"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_018",
+      "question": "What share of our accounts does each account type make up?",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: account_type"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "column('type_count') / nullif(column('total_accounts'), 0)",
+          "after": "column ('type_count')/nullif (column ('total_accounts'),0 )"
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: account_type"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_024",
+      "question": "How does the average expense ratio compare between direct plans and regular plans?",
+      "category": "unsupported_string_function",
+      "original_errors": [
+        "__spec_step_1: invalid expression: Unsupported function or argument count: like",
+        "__spec_step_2: invalid expression: Unsupported function or argument count: like"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "where(like(column('fund_name'), '%Direct%'), column('expense_ratio'), null)",
+          "after": "where (like (column ('fund_name'),'%Direct%'),column ('expense_ratio'),null )"
+        },
+        {
+          "before": "where(like(column('fund_name'), '%Regular%'), column('expense_ratio'), null)",
+          "after": "where (like (column ('fund_name'),'%Regular%'),column ('expense_ratio'),null )"
+        }
+      ],
+      "remaining_errors": [
+        "__spec_step_1: invalid expression: Unsupported function or argument count: like",
+        "__spec_step_2: invalid expression: Unsupported function or argument count: like"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_021",
+      "question": "Which five companies' shares took the biggest share of our total FY2026 traded value?",
+      "category": "grouping_contract",
+      "original_errors": [
+        "Final aggregate grouping differs from interpreted output grain: company_name"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "where(column('transaction_type') == 'Redemption', -column('amount'), column('amount'))",
+          "after": "where (column ('transaction_type')=='Redemption',-column ('amount'),column ('amount'))"
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "1",
+          "after": "1 "
+        },
+        {
+          "before": "column('net_amount') / nullif(column('total_net_amount'), 0)",
+          "after": "column ('net_amount')/nullif (column ('total_net_amount'),0 )"
+        }
+      ],
+      "remaining_errors": [
+        "Final aggregate grouping differs from interpreted output grain: company_name"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_029",
+      "question": "What is the ninetieth percentile of daily closing level for each index we track, highest first?",
+      "category": "unsupported_metric",
+      "original_errors": [
+        "Final projection omits interpreted outputs: index_name, p90_close",
+        "Final ranking must preserve interpreted ordering and tie-breaks.",
+        "Missing retrieval: [{\"source_class\": \"TABLE_DIM_CMOT_INDEX_PRICES_001\", \"field\": \"nav_close\", \"note\": \"The requested metric requires a percentile_cont aggregation, which is not supported by the available calculation operators (count_rows, count, count_distinct, sum, avg, min, max).\"}]"
+      ],
+      "candidate_expression_changes": [],
+      "remaining_errors": [
+        "Final projection omits interpreted outputs: index_name, p90_close",
+        "Final ranking must preserve interpreted ordering and tie-breaks.",
+        "Missing retrieval: [{\"source_class\": \"TABLE_DIM_CMOT_INDEX_PRICES_001\", \"field\": \"nav_close\", \"note\": \"The requested metric requires a percentile_cont aggregation, which is not supported by the available calculation operators (count_rows, count, count_distinct, sum, avg, min, max).\"}]"
+      ],
+      "compiler_contract_clear": false
+    },
+    {
+      "id": "T4_052",
+      "question": "For Amit Patel (employee), list the client among their clients with the highest AUM (include client name and AUM).",
+      "category": "expression_syntax",
+      "original_errors": [
+        "__spec_step_2: invalid expression: cannot assign to function call here. Maybe you meant '==' instead of '='? (<unknown>, line 1)"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "where((coalesce(column('is_active'), 1) = 1) and (coalesce(column('is_deleted'), 0) = 0), 1, 0)",
+          "after": "where ((coalesce (column ('is_active'),1 )==1 )and (coalesce (column ('is_deleted'),0 )==0 ),1 ,0 )"
+        },
+        {
+          "before": "where(column('as_on_date') == column('latest_as_on_date'), 1, 0)",
+          "after": "where (column ('as_on_date')==column ('latest_as_on_date'),1 ,0 )"
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T4_056",
+      "question": "For Amit Patel, list the top client by AUM managed by this employee (relationship manager). Return client name and AUM.",
+      "category": "expression_literals",
+      "original_errors": [
+        "__spec_step_1 expression: field does not exist on the selected input: true",
+        "__spec_step_2 expression: field does not exist on the selected input: false"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "coalesce(column('is_active'), true)",
+          "after": "coalesce (column ('is_active'),True )"
+        },
+        {
+          "before": "coalesce(column('is_deleted'), false)",
+          "after": "coalesce (column ('is_deleted'),False )"
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    },
+    {
+      "id": "T4_058",
+      "question": "For Amit Patel, which client is the top client by AUM that the employee manages? Return the client name and AUM.",
+      "category": "expression_syntax",
+      "original_errors": [
+        "__spec_step_1: invalid expression: invalid syntax (<unknown>, line 1)"
+      ],
+      "candidate_expression_changes": [
+        {
+          "before": "coalesce(column('is_active'), TRUE) = TRUE and coalesce(column('is_deleted'), FALSE) = FALSE",
+          "after": "coalesce (column ('is_active'),True )==True and coalesce (column ('is_deleted'),False )==False "
+        }
+      ],
+      "remaining_errors": [],
+      "compiler_contract_clear": true
+    }
+  ]
+}

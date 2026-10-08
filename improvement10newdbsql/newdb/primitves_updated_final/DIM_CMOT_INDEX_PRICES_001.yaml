@@ -1,0 +1,131 @@
+# TABLE_DIM_CMOT_INDEX_PRICES_001 - grounded in NEOWEALTH_DDL.sql / Neowealth_schema.xlsx
+# Provenance tags preserved: [D] = declared in source, [I] = inferred,
+# [C] = observed in the 2026-08-28 CSV delivery (Wealth Management data/dim_cmot_index_prices.csv).
+
+identity:
+  id: "TABLE_DIM_CMOT_INDEX_PRICES_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_cmot_index_prices"
+  display_name: "Index Prices"
+  description: >
+    [I] TIME SERIES, 10 columns. Benchmark index OHLC - Nifty 50, Sensex, sectoral
+    indices and so on. [C] This export holds five series only (Nifty 50, Nifty 500,
+    Nifty Midcap 150, Nifty Smallcap 250, Nifty 10yr G-sec), 2026-05-04 to
+    2026-05-19. GRAIN: one row per index per date. co_code HERE MEANS AN
+    INDEX, NOT A COMPANY - the vendor reuses one code space for both, so this table
+    must NEVER be joined to dim_cmot_company_mstr on co_code. Join on index_name.
+    This table answers the 'did we beat the market' question, but BOTH paths that
+    reach it are FREE-TEXT JOINS on index names (from benchmark_name and from
+    benchmark, two different column names for the same concept), and any spelling
+    mismatch fails SILENTLY. The schema's weakest join. Also note nav_close sits at
+    ordinal 4, BEFORE nav_open - always select these by name.
+
+layer: "dimension"
+structural_type: "time_series"                      # [I] named dim_ but structurally a time series
+grain: "index_name x nav_date"                      # [D]
+not_null_columns: []                                # [D]
+attribute_type_provenance: "inferred_per_section_11"
+open_question: "are index_name values PRICE or TOTAL-RETURN (TRI) indices?"   # [C] none carries a TRI suffix in this export - see index_name
+
+semantics:
+  business_purpose: >
+    Benchmark index OHLC time series for relative-performance ('beat the market')
+    analysis. Reached only by fragile free-text joins on index_name. co_code here
+    is an index, not a company.
+
+attributes:
+  - name: "co_code"
+    display_name: "Index Code"
+    description: "[I] HERE co_code IDENTIFIES AN INDEX, NOT A COMPANY. The vendor reuses one code space for both entity types. NEVER join this table to dim_cmot_company_mstr on co_code - it would produce meaningless matches. Join on index_name instead."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    warning: "identifies an INDEX, not a company; never join to dim_cmot_company_mstr on co_code"
+
+  - name: "index_name"
+    display_name: "Index Name"
+    description: "[I] The safe key for this table, and the target of the two free-text benchmark joins (dim_mf_fund_complete.benchmark_name and dim_product_unified_cat.benchmark). There is NO index_id anywhere in the schema. [I] Also unrecorded: whether these are PRICE or TOTAL RETURN (TRI) indices - a fund's NAV return is net of expenses and includes reinvested dividends, so a fair comparison needs a TRI. Check the actual values for a TRI suffix before publishing any relative-performance figure. [C] Five values, 12 daily rows each (2026-05-04 to 2026-05-19): 'Nifty 50', 'Nifty 500', 'Nifty Midcap 150', 'Nifty Smallcap 250', 'Nifty 10yr G-sec'. None carries a TRI suffix - they are price series - and no benchmark label in dim_mf_fund_complete, dim_product_unified_cat or client_holdings equals any of them exactly. Preserve the names as supplied; the ' TRI' strip (NEOWEALTH_DOMAIN_KNOWLEDGE.md 3.8 / 01_domain_and_business_rules.md §3.8) is applied at query time only."
+    observed_values: ["Nifty 50", "Nifty 500", "Nifty Midcap 150", "Nifty Smallcap 250", "Nifty 10yr G-sec"]
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "nav_date"
+    display_name: "Index Date"
+    description: "[D] Part of the grain: (index_name, nav_date)."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "nav_close"
+    display_name: "Close"
+    description: "[D] NOTE THE ORDINAL POSITION: nav_close is column 4, BEFORE nav_open at column 5 - the only place in the schema where OHLC is not in O-H-L-C order. Cosmetic, but SELECT * returns them in a surprising order and a POSITIONAL column mapping downstream would silently swap open and close. ALWAYS SELECT THESE BY NAME."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "nav_open"
+    display_name: "Open"
+    description: "[D] Opening level. See the ordinal warning on nav_close."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "nav_high"
+    display_name: "High"
+    description: "[D] Intraday high."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "nav_low"
+    display_name: "Low"
+    description: "[D] Intraday low. There is NO nav_volume here - correct, since an index has no traded volume of its own."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "[D] Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "[D] ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "[D] 64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

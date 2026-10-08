@@ -1,0 +1,353 @@
+
+identity:
+  id: "TABLE_DIM_PRODUCT_UNIFIED_CAT_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_product_unified_cat"
+  display_name: "Product Unified Catalogue"
+  description: >
+    DIMENSION, 33 columns - THE WIDEST TABLE IN THE SCHEMA and the
+    product-side hub, counterpart to dim_client_master. GRAIN: one row per
+    product. Its purpose is to give every investable instrument - equity, MF,
+    bonds, ETFs - a SINGLE product_id so facts reference one key regardless of
+    asset class. It is an EIGHT-WAY IDENTIFIER CROSSWALK (isin, scheme_master_id,
+    product_id, product_short_code, rta_code, amfi_code, mstar_id, co_code,
+    bse_symbol, nse_symbol) and is the ONLY place these systems meet on one row.
+    Because the identifiers apply to different asset classes, MOST ARE NULL ON ANY
+    GIVEN ROW - a wide, sparse dimension. Never assume an identifier is present
+    without checking product_type first. product_type is the SWITCHBOARD that
+    decides which specialist dimension is valid to join onward to.
+
+layer: "dimension"
+grain: "one row per product"
+not_null_columns: []
+routing_switchboard: "product_type"
+
+semantics:
+  business_purpose: >
+    The unified product catalogue and product-side hub. One row per product,
+    giving every investable instrument a single product_id across asset classes.
+    A wide, sparse identifier crosswalk; product_type routes to the correct
+    specialist dimension.
+
+attributes:
+  - name: "scheme_master_id"
+    display_name: "Scheme Master ID"
+    description: "Internal scheme surrogate key; also present in dim_product_credit_rtng. Use this column (not isin) to join to the credit-rating table -- 3 rated instruments have isin = 'N/A' and so are missed by an isin join."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_product_credit_rtng.scheme_master_id"
+
+  - name: "product_id"
+    display_name: "Product ID"
+    description: "THE UNIVERSAL PRODUCT KEY and the reason this table exists - it gives every investable instrument one key regardless of asset class. Referenced by 5 fact tables plus dim_product_segment_map. Format is type-prefixed and human-readable (PROD_EQ_001, PROD_MF_010), but filter on product_type rather than parsing the string."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "product_type"
+    display_name: "Product Type"
+    description: "THE ROUTING DISCRIMINATOR that decides which specialist dimension is valid to join onward to. Observed values (98 rows): Mutual Funds (30), Direct Equity (25), Bonds (15), Fixed Deposits (10), AIF (8), PMS (5), REITs (3), InvITs (2) - the fixed-income types the schema documentation samples omitted are present."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Mutual Funds", "Direct Equity", "Bonds", "Fixed Deposits", "AIF", "REITs", "PMS", "InvITs"]
+
+  - name: "product_short_code"
+    display_name: "Product Short Code"
+    description: "Internal short code."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "International Securities Identification Number - the one identifier that spans every asset class and every vendor table (present in 11 tables). Take ISIN from HERE rather than from a fact row. NOT unique in dim_equity_price_latest, whose grain includes exchange."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "instrument_name"
+    display_name: "Instrument Name"
+    description: "The formal instrument name - the one the fact tables denormalise. One of three overlapping name columns here."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "display_name"
+    display_name: "Display Name"
+    description: "The UI-facing label. The schema documentation does not define how it differs from instrument_name."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "company_name"
+    display_name: "Company Name"
+    description: "The issuer; meaningful for equity."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "sector"
+    display_name: "Sector"
+    description: "Sector as a bare NAME with no code. NAMING TRAP: dim_cmot_company_mstr splits the same concept into sector_code + sector_name, giving two representations to reconcile. No dim_sector table exists."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    naming_trap: "dim_cmot_company_mstr splits this into sector_code + sector_name"
+    missing_dimension: "dim_sector"
+
+  - name: "category"
+    display_name: "Category"
+    description: "Product category. Note 'category' also appears in dim_mf_fund_complete, dim_mf_nav_history and dim_mf_returns_history - four tables carry it."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "amc_display_name"
+    display_name: "AMC Display Name"
+    description: "Asset Management Company name. NAMING TRAP: dim_mf_fund_complete calls this 'amc_name'. No dim_amc table exists."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    naming_trap: "called amc_name in dim_mf_fund_complete"
+    missing_dimension: "dim_amc"
+
+  - name: "asset_class_id"
+    display_name: "Asset Class ID"
+    description: "Level 1 asset classification. No dim_asset_class table exists - the hierarchy lives only as denormalised columns and cannot be validated or extended."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    missing_dimension: "dim_asset_class"
+
+  - name: "asset_class"
+    display_name: "Asset Class"
+    description: "Level 1 asset classification name."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "sub_asset_class_id"
+    display_name: "Sub-Asset Class ID"
+    description: "Level 2 asset classification. No backing dimension. NOT A RELIABLE IDENTITY: ID 1004 carries several labels - Contra, Dividend Yield, Flexi Cap, FoF Overseas, Focused and Value under asset_class_id 901 (8 products), and Dynamic Bond, Gilt and Liquid under 902 (3 products) - 11 products in all. Adding asset_class_id does not resolve it, because several labels remain within each parent. Also, asset_class_id 903 ('Hybrid') holds two products: PROD_MF_019 carries sub_asset_class_id 903 ('Hybrid') - the same value as its asset_class_id - and PROD_MF_020 carries 1011 ('Balanced Advantage'). Blank on 28 rows. Keep sub_asset_class_id and sub_asset_class together on each product row exactly as supplied; SQL filters and groups use them directly. Do not overwrite labels, invent replacement IDs, infer one authoritative name per ID, or build a shared category entity on this ID until the data team confirms what 1004 means."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "sub_asset_class"
+    display_name: "Sub-Asset Class"
+    description: "Level 2 asset classification name. Not determined by sub_asset_class_id - one ID carries several names (see sub_asset_class_id). Blank on 28 rows. Preserve as supplied."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "rta_code"
+    display_name: "RTA Code"
+    description: "Registrar & Transfer Agent scheme code (CAMS/KFin). MUTUAL FUNDS ONLY - NULL on equity rows."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "amfi_code"
+    display_name: "AMFI Code"
+    description: "AMFI scheme code. MUTUAL FUNDS ONLY."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "mstar_id"
+    display_name: "Morningstar ID"
+    description: "Morningstar identifier -> dim_mf_fund_complete.mstar_id. MUTUAL FUNDS ONLY. This is the crosswalk that reaches the NAV and returns history."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_mf_fund_complete.mstar_id"
+
+  - name: "co_code"
+    display_name: "Company Code"
+    description: "Equity data vendor company code -> dim_cmot_company_mstr.co_code. WARNING: the same column name in dim_cmot_index_prices identifies an INDEX, not a company. Populated on 30 of 98 rows: all 25 Direct Equity products (every one matches dim_cmot_company_mstr.co_code), plus 3 REITs (1050, 1051, 1052) and 2 InvITs (1053, 1054), whose codes do NOT appear in the supplied company master. Blank for every other product type. Whether those five codes should reference dim_cmot_company_mstr (company export incomplete) or another table is not stated by the source and must be confirmed with the data team. Preserve each original co_code; leave the five unmatched - do not invent company records or guess another target."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_cmot_company_mstr.co_code"
+    warning: "co_code identifies an INDEX in dim_cmot_index_prices"
+
+  - name: "bse_symbol"
+    display_name: "BSE Symbol"
+    description: "BSE scrip code. Typed INTEGER, which is substantively CORRECT (BSE codes are numeric, e.g. 500325) - but the shared '_symbol' suffix with the text nse_symbol invites treating them alike. NAMING TRAP: dim_cmot_company_mstr calls this 'bse_code'."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    naming_trap: "called bse_code in dim_cmot_company_mstr"
+
+  - name: "nse_symbol"
+    display_name: "NSE Symbol"
+    description: "NSE trading symbol - alphabetic ticker, e.g. RELIANCE. Text, unlike bse_symbol."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "benchmark"
+    display_name: "Benchmark"
+    description: "Intended link to dim_cmot_index_prices.index_name by FREE-TEXT MATCH - which, by exact match, finds nothing in this data (see below). NAMING TRAP: dim_mf_fund_complete calls the same concept 'benchmark_name'. There is NO index_id anywhere, so a spelling variation ('Nifty 50' vs 'NIFTY 50' vs 'Nifty 50 TRI') breaks the link SILENTLY, yielding no benchmark rather than an error. Populated on all 98 rows with 4 values: 'Nifty 50 TRI' (39), 'Nifty 500 TRI' (30), 'Nifty 10 yr Benchmark G-Sec Index' (28), 'Nasdaq 100 TRI' (1). NONE equals an index_name exactly (0 of 98): the TRI labels name total-return series while the price table holds price series ('Nifty 50'), the G-Sec label is spelled differently from 'Nifty 10yr G-sec', and Nasdaq 100 has no series at all. For the 30 funds it differs from dim_mf_fund_complete.benchmark_name on 19. Preserve each label and its unmatched status in stored data and the KG - never strip ' TRI' or store an alias. The ' TRI' strip in 01_domain_and_business_rules.md §3.8 is a QUERY-TIME house rule only, which an equivalent KG query must reproduce exactly as the SQL does. A verified mapping or matching series would be a separate enrichment."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    join_target: "dim_cmot_index_prices.index_name (free-text match)"
+    naming_trap: "called benchmark_name in dim_mf_fund_complete"
+
+  - name: "credit_rating"
+    display_name: "Credit Rating"
+    description: "Cached copy. DUPLICATED from dim_product_credit_rtng, which is INFERRED to be the source of record. Read the specialist table for risk and compliance reporting; reconcile the two and alert on mismatches."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    duplicated_from: "dim_product_credit_rtng.credit_rating"
+
+  - name: "interest_rate"
+    display_name: "Interest Rate"
+    description: "Coupon rate. Duplicated from dim_product_credit_rtng."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+    duplicated_from: "dim_product_credit_rtng.interest_rate"
+
+  - name: "maturity_date"
+    display_name: "Maturity Date"
+    description: "Duplicated from dim_product_credit_rtng."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    duplicated_from: "dim_product_credit_rtng.maturity_date"
+
+  - name: "face_value"
+    display_name: "Face Value"
+    description: "Duplicated from dim_product_credit_rtng. Typed integer, so it CANNOT represent a fractional face value."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+    duplicated_from: "dim_product_credit_rtng.face_value"
+
+  - name: "is_etf"
+    display_name: "Is ETF"
+    description: "Boolean, nullable and three-valued."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "is_listed"
+    display_name: "Is Listed"
+    description: "Declared character varying(256): a text field, unlike its neighbours is_etf, is_active and is_deleted, which are booleans. Observed values: 'Listed' (72 rows) and 'Unlisted' (26 rows); no blanks. Filter on the text (is_listed = 'Listed'); a bare 'WHERE is_listed' does not apply to a text column. The is_ prefix does not make it a Boolean - keep the string datatype and the original values."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Listed", "Unlisted"]
+
+  - name: "is_active"
+    display_name: "Is Active"
+    description: "Nullable three-valued flag."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "is_deleted"
+    display_name: "Is Deleted"
+    description: "Nullable three-valued flag."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

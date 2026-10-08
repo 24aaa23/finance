@@ -1,0 +1,142 @@
+
+identity:
+  id: "TABLE_CLIENT_TRANSACTIONS_001"
+  type: "Table"
+  subtype: "Fact"
+  name: "client_transactions"
+  display_name: "Client Transactions"
+  description: >
+    FACT, 12 columns. Buy/sell activity ledger. Grain: one row per
+    executed transaction - THE ONLY TRUE EVENT/LEDGER TABLE in the schema;
+    everything else is a snapshot or a period aggregate. 3,004 rows, 2014-10-22
+    to 2026-04-21. amount ~= units * nav_price on every row, and amount and units
+    are always stored positive: direction is carried ONLY by transaction_type,
+    which holds Purchase (2,972) and Redemption (32). Net traded flow = SUM(CASE
+    WHEN transaction_type='Redemption' THEN -amount ELSE amount END). Turnover =
+    SUM(amount) over both directions, not netted.
+
+layer: "fact"
+grain: "one row per executed transaction"
+not_null_columns: []
+warning: "amount and units are positive on every row; only transaction_type (Purchase / Redemption) separates redemptions from purchases - a net figure must subtract Redemption rows explicitly."
+
+semantics:
+  business_purpose: >
+    Buy/sell activity ledger - the schema's only true event/ledger table. One row
+    per executed transaction. amount and units are always positive; use
+    transaction_type to determine direction when computing a net flow.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "Nullable - not a valid PK as declared."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "client_id"
+    display_name: "Client ID"
+    description: "-> dim_client_master.id."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_client_master.id"
+
+  - name: "client_pan"
+    display_name: "Client PAN"
+    description: "Denormalised PAN. Do not join on it. PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    pii: true
+    do_not_join: true
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "Instrument identity."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "product_id"
+    display_name: "Product ID"
+    description: "-> dim_product_unified_cat.product_id."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_product_unified_cat.product_id"
+
+  - name: "product_type"
+    display_name: "Product Type"
+    description: "Denormalised routing discriminator."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "transaction_type"
+    display_name: "Transaction Type"
+    description: "Purchase or Redemption - observed values: Purchase (2,972 rows) and Redemption (32), no blanks; no Buy/Sell/SIP/Switch/Dividend labels occur. This is the ONLY source of transaction direction: amount and units do not carry a sign. Filter on the labels exactly as supplied (transaction_type = 'Purchase'); do not assume other values exist."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Purchase", "Redemption"]
+
+  - name: "transaction_date"
+    display_name: "Transaction Date"
+    description: "Event date. This is the schema's only true event/ledger table - everything else is a snapshot or a period aggregate."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "amount"
+    display_name: "Amount"
+    description: "The rupee consideration, always stored positive, Redemption rows included. amount ~= units * nav_price holds on all 3,004 rows to within rounding (max relative difference < 0.001%). Direction is carried only by transaction_type, never by the sign of this column: net flow = SUM(CASE WHEN transaction_type='Redemption' THEN -amount ELSE amount END); turnover = SUM(amount) over both directions. Summing amount without a transaction_type filter therefore adds redemptions to purchases."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "units"
+    display_name: "Units"
+    description: "Typed double precision while client_holdings.quantity is real - same concept, two precisions."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "nav_price"
+    display_name: "NAV Price"
+    description: "Per-unit execution price. Named for mutual funds but serves as the generic execution price for equity too."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

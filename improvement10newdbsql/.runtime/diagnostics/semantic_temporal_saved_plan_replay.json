@@ -1,0 +1,1070 @@
+{
+  "scope": "Offline saved-plan replay with saved retrieval SQL on read-only database; no reference answers used, model calls or report edits.",
+  "failures": 23,
+  "replayed": 23,
+  "contract_clear": 14,
+  "execution_clear": 10,
+  "rows": [
+    {
+      "id": "T2_001",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "Metric long_term_lot_count must preserve outer aggregation count."
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "Metric long_term_lot_count must preserve outer aggregation count."
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "Metric long_term_lot_count must preserve outer aggregation count."
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "Metric long_term_lot_count must preserve outer aggregation count."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T2_078",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_2",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_1"
+              ],
+              "input_schemas": {
+                "__spec_step_1": [
+                  "latest_as_on_date"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Date offset must be an integer literal between -10000 and 10000.",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 2,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_7",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_6"
+              ],
+              "input_schemas": {
+                "__spec_step_6": [
+                  "id",
+                  "client_id",
+                  "transaction_type",
+                  "transaction_date",
+                  "latest_as_on_date"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Date offset must be an integer literal between -10000 and 10000.",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 3,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_7",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_6"
+              ],
+              "input_schemas": {
+                "__spec_step_6": [
+                  "id",
+                  "client_id",
+                  "transaction_type",
+                  "transaction_date",
+                  "latest_as_on_date"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Date offset must be an integer literal between -10000 and 10000.",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "__spec_step_8 expression: field does not exist on the selected input: window_start",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T3_021",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 1
+        },
+        {
+          "attempt": 2,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 1
+        },
+        {
+          "attempt": 3,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 1
+        },
+        {
+          "attempt": 4,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 1
+        }
+      ]
+    },
+    {
+      "id": "T3_091",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 30
+        },
+        {
+          "attempt": 2,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 30
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "projection: field does not exist on the selected input: client_key as client_id",
+            "Final projection omits interpreted outputs: client_id",
+            "Final aggregate grouping differs from interpreted output grain: client_id"
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "Final aggregate grouping differs from interpreted output grain: client_id"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T4_034",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "__spec_step_2: explicit equal-length join_key or left_on/right_on keys are required.",
+            "__spec_step_11 order_by: field does not exist on the selected input: instrument_name",
+            "projection: field does not exist on the selected input: instrument_name",
+            "projection: field does not exist on the selected input: isin"
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "code": "MISSING_FINAL_DATASET",
+              "error": ""
+            }
+          ],
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_126",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "Step requires an explicit input dataset; 'previous' has no predecessor.",
+            "__spec_step_1: Math_Compute requires exactly one input dataset.",
+            "__spec_step_1 expression: field does not exist on the selected input: is_active",
+            "__spec_step_1 expression: field does not exist on the selected input: is_deleted",
+            "__spec_step_2 expression: field does not exist on the selected input: is_active",
+            "__spec_step_2 expression: field does not exist on the selected input: is_deleted",
+            "__spec_step_4 filter: field does not exist on the selected input: client_active",
+            "__spec_step_8 aggregate source: field does not exist on the selected input: equity_pct_row",
+            "__spec_step_9 aggregate source: field does not exist on the selected input: fixed_income_pct_row",
+            "__spec_step_10 aggregate source: field does not exist on the selected input: alternatives_pct_row",
+            "__spec_step_14 filter: field does not exist on the selected input: client_active",
+            "__spec_step_14 filter: field does not exist on the selected input: product_active",
+            "__spec_step_17: explicit equal-length join_key or left_on/right_on keys are required.",
+            "__spec_step_19: explicit equal-length join_key or left_on/right_on keys are required.",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+            "Final aggregate grouping differs from interpreted output grain: sector"
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "__spec_step_9 aggregate source: field does not exist on the selected input: equity_pct_row",
+            "__spec_step_10 aggregate source: field does not exist on the selected input: fixed_income_pct_row",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+            "Final aggregate grouping differs from interpreted output grain: sector"
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+            "Final aggregate grouping differs from interpreted output grain: sector"
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+            "Final aggregate grouping differs from interpreted output grain: sector"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T5_001",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 4
+        },
+        {
+          "attempt": 2,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_4",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_3"
+              ],
+              "input_schemas": {
+                "__spec_step_3": [
+                  "as_on_date",
+                  "total_aum",
+                  "year",
+                  "month"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: month",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 3,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_4",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_3"
+              ],
+              "input_schemas": {
+                "__spec_step_3": [
+                  "as_on_date",
+                  "total_aum",
+                  "year",
+                  "month"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: month",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "Final projection omits interpreted outputs: mom_change, mom_pct, total_aum",
+            "Final ranking must preserve interpreted ordering and tie-breaks."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T5_004",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 10
+        },
+        {
+          "attempt": 2,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_4",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_3"
+              ],
+              "input_schemas": {
+                "__spec_step_3": [
+                  "client_id",
+                  "first_trade",
+                  "last_trade"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: last_trade",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 3,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 10
+        },
+        {
+          "attempt": 4,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_4",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_3"
+              ],
+              "input_schemas": {
+                "__spec_step_3": [
+                  "client_id",
+                  "first_trade",
+                  "last_trade"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: last_trade",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T5_005",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 1
+        },
+        {
+          "attempt": 2,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_1",
+              "operator": "Math_Compute",
+              "inputs": [
+                "q1_processed"
+              ],
+              "input_schemas": {
+                "q1_processed": [
+                  "id",
+                  "code",
+                  "is_active",
+                  "is_deleted",
+                  "doj"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: None",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 3,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_1",
+              "operator": "Math_Compute",
+              "inputs": [
+                "q1_processed"
+              ],
+              "input_schemas": {
+                "q1_processed": [
+                  "id",
+                  "code",
+                  "is_active",
+                  "is_deleted",
+                  "doj"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: None",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 4,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 1
+        }
+      ]
+    },
+    {
+      "id": "T5_003",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "Invalid expression: invalid syntax (<unknown>, line 1)",
+            "__spec_step_3: invalid expression: invalid syntax (<unknown>, line 1)"
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "Invalid expression: invalid syntax (<unknown>, line 1)",
+            "__spec_step_3: invalid expression: invalid syntax (<unknown>, line 1)"
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "Invalid expression: invalid syntax (<unknown>, line 1)",
+            "__spec_step_3: invalid expression: invalid syntax (<unknown>, line 1)"
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "Invalid expression: invalid syntax (<unknown>, line 1)",
+            "__spec_step_3: invalid expression: invalid syntax (<unknown>, line 1)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T5_010",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "Final projection omits interpreted outputs: quarter_start",
+            "Final aggregate grouping differs from interpreted output grain: quarter_start"
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "Final projection omits interpreted outputs: quarter_start",
+            "Final aggregate grouping differs from interpreted output grain: quarter_start"
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 4
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "__spec_step_4 group_by: field does not exist on the selected input: year",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+            "Final projection omits interpreted outputs: quarter_start",
+            "Final aggregate grouping differs from interpreted output grain: quarter_start"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T5_018",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 470
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "Metric cumulative_turnover must preserve outer aggregation sum."
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 470
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "Metric cumulative_turnover must preserve outer aggregation sum."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T5_008",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "__spec_step_1: ordered-window functions require an explicit Order_By on their input before calculation."
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "__spec_step_1: ordered-window functions require an explicit Order_By on their input before calculation."
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "__spec_step_1: ordered-window functions require an explicit Order_By on their input before calculation."
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "__spec_step_1: ordered-window functions require an explicit Order_By on their input before calculation."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T5_026",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "__spec_step_4 group_by: field does not exist on the selected input: year_num",
+            "__spec_step_5 group_by: field does not exist on the selected input: year_num",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+            "Final ranking must preserve interpreted ordering and tie-breaks."
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "Final ranking must preserve interpreted ordering and tie-breaks."
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "Final ranking must preserve interpreted ordering and tie-breaks."
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "__spec_step_5 group_by: field does not exist on the selected input: fiscal_year",
+            "__spec_step_6 group_by: field does not exist on the selected input: fiscal_year",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically.",
+            "Final ranking must preserve interpreted ordering and tie-breaks."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T5_027",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 1
+        },
+        {
+          "attempt": 2,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_3",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_2"
+              ],
+              "input_schemas": {
+                "__spec_step_2": [
+                  "id",
+                  "client_id",
+                  "product_id",
+                  "as_on_date",
+                  "product_type",
+                  "mstar_id",
+                  "nav_date"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: as_on_date",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "__spec_step_5 expression: field does not exist on the selected input: nav_day",
+            "__spec_step_5 expression: field does not exist on the selected input: as_on_day",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_5",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_4"
+              ],
+              "input_schemas": {
+                "__spec_step_4": [
+                  "id",
+                  "client_id",
+                  "product_id",
+                  "as_on_date",
+                  "product_type",
+                  "mstar_id",
+                  "nav_date",
+                  "as_on_day",
+                  "nav_day"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: as_on_day",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T5_039",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "__spec_step_1: Invalid date literal for transaction_date: \"dateadd('month', -3, (SELECT MAX(transaction_date) FROM client_transactions))\". Use an actual ISO date/datetime; retrieve operands and calculate relative/latest boundaries in final steps. Do not quote SQL, CURRENT_DATE or placeholders."
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "__spec_step_4 expression: field does not exist on the selected input: max_year",
+            "__spec_step_9 expression: field does not exist on the selected input: txn_year",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "__spec_step_4 expression: field does not exist on the selected input: max_year",
+            "__spec_step_9 expression: field does not exist on the selected input: txn_year",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "__spec_step_4: explicit equal-length join_key or left_on/right_on keys are required.",
+            "__spec_step_11: explicit equal-length join_key or left_on/right_on keys are required."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T5_042",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "final: aggregations must be a nonempty list.",
+            "Step input dataset does not exist: clients",
+            "__spec_step_6 left join key: field does not exist on the selected input: id",
+            "__spec_step_7 left join key: field does not exist on the selected input: id",
+            "__spec_step_8 order_by: field does not exist on the selected input: id",
+            "projection: field does not exist on the selected input: id",
+            "projection: field does not exist on the selected input: client_name"
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "__spec_step_8 expression: field does not exist on the selected input: latest_year",
+            "__spec_step_13 expression: field does not exist on the selected input: lp_year",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_11",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_10"
+              ],
+              "input_schemas": {
+                "__spec_step_10": [
+                  "latest_tx_date",
+                  "latest_year",
+                  "join_key",
+                  "latest_tx_date_right",
+                  "latest_month"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: latest_month",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "Invalid expression: invalid syntax (<unknown>, line 1)",
+            "__spec_step_8: invalid expression: invalid syntax (<unknown>, line 1)",
+            "__spec_step_16: invalid expression: invalid syntax (<unknown>, line 1)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T5_051",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "__spec_step_4: invalid expression: Unsupported expression syntax: Call"
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_5",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_4"
+              ],
+              "input_schemas": {
+                "__spec_step_4": [
+                  "as_on_date",
+                  "total_aum",
+                  "year",
+                  "month"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: month",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "__spec_step_4: unsupported date part: month_number"
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_5",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_4"
+              ],
+              "input_schemas": {
+                "__spec_step_4": [
+                  "as_on_date",
+                  "total_aum",
+                  "year",
+                  "month"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: month",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T6_017",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "__spec_step_8: explicit equal-length join_key or left_on/right_on keys are required."
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "__spec_step_10 left join key: field does not exist on the selected input: join_key",
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "Independent outputs require an explicit merge; only measures at the same grouping grain can be combined automatically."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T6_022",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "Invalid expression: invalid syntax (<unknown>, line 1)",
+            "__spec_step_2: invalid expression: invalid syntax (<unknown>, line 1)"
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "__spec_step_2: invalid expression: Unsupported function or argument count: DATE"
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_2",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_1"
+              ],
+              "input_schemas": {
+                "__spec_step_1": [
+                  "max_nav_date"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "Non-numeric value in arithmetic column: max_nav_date",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 4,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 1
+        }
+      ]
+    },
+    {
+      "id": "T6_033",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "__spec_step_1: unsupported operator: Copy",
+            "Final aggregate grouping differs from interpreted output grain: id"
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "Final aggregate grouping differs from interpreted output grain: id"
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "Final aggregate grouping differs from interpreted output grain: id"
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "Final aggregate grouping differs from interpreted output grain: id"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T6_049",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [
+            "Invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (12, 0))",
+            "__spec_step_3: invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (12, 0))",
+            "__spec_step_11: invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (12, 0))"
+          ]
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "Invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (12, 0))",
+            "__spec_step_3: invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (12, 0))",
+            "__spec_step_11: invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (12, 0))"
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [
+            "Invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (11, 0))",
+            "__spec_step_3: invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (11, 0))",
+            "__spec_step_11: invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (11, 0))"
+          ]
+        },
+        {
+          "attempt": 4,
+          "errors": [
+            "Invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (2, 0))",
+            "__spec_step_3: invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (2, 0))",
+            "__spec_step_11: invalid expression: Invalid expression tokens: ('EOF in multi-line statement', (2, 0))"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T6_084",
+      "candidates": [
+        {
+          "attempt": 1,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 0
+        },
+        {
+          "attempt": 2,
+          "errors": [
+            "Invalid expression: invalid syntax. Perhaps you forgot a comma? (<unknown>, line 1)",
+            "__spec_step_2: invalid expression: invalid syntax. Perhaps you forgot a comma? (<unknown>, line 1)"
+          ]
+        },
+        {
+          "attempt": 3,
+          "errors": [],
+          "execution_errors": [
+            {
+              "stage": "Spec_Execution",
+              "step": "__spec_step_2",
+              "operator": "Math_Compute",
+              "inputs": [
+                "__spec_step_1"
+              ],
+              "input_schemas": {
+                "__spec_step_1": [
+                  "id",
+                  "client_name",
+                  "is_active",
+                  "is_deleted",
+                  "id_right",
+                  "client_id",
+                  "benchmark_name",
+                  "benchmark_return_1y"
+                ]
+              },
+              "code": "OPERATOR_ERROR",
+              "error": "substr length must be a nonnegative integer literal.",
+              "exception_type": "ValueError"
+            }
+          ],
+          "row_count": 0
+        },
+        {
+          "attempt": 4,
+          "errors": [],
+          "execution_errors": [],
+          "row_count": 0
+        }
+      ]
+    }
+  ]
+}

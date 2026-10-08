@@ -1,0 +1,122 @@
+
+identity:
+  id: "TABLE_CLIENT_REVENUE_001"
+  type: "Table"
+  subtype: "Fact"
+  name: "client_revenue"
+  display_name: "Client Revenue"
+  description: >
+    FACT, 10 columns. Fee and commission income. Grain: one revenue
+    posting per client, employee, date, type and product type. THE ONLY FACT
+    TABLE CARRYING AN EMPLOYEE KEY, so it is the sole basis for RM productivity
+    and incentive reporting. Attribution is ambiguous: dim_client_master records
+    TWO bankers per client and the schema documentation does not say which role emp_id
+    represents. Coarsest product grain of any fact table - product_type only, no
+    product_id, no isin.
+
+layer: "fact"
+grain: "client_id x emp_id x revenue_date x revenue_type x product_type"
+not_null_columns: []
+
+semantics:
+  business_purpose: >
+    Fee and commission income - the only fact table with an employee key, hence
+    the sole basis for RM productivity and incentive reporting. Attributed at
+    product_type level only. Employee-role attribution is ambiguous.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "Nullable."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "client_id"
+    display_name: "Client ID"
+    description: "-> dim_client_master.id."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_client_master.id"
+
+  - name: "emp_id"
+    display_name: "Employee ID"
+    description: "-> dim_employee_profile.id. Integer join, PREFERRED. This is the ONLY fact table carrying an employee key, so it is the sole basis for RM productivity and incentive reporting. The schema documentation does NOT say which role this represents - servicing banker, acquiring banker, or neither - nor whether it is the banker at time of posting. Do not assume it equals either dim_client_master banker."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_employee_profile.id"
+
+  - name: "emp_code"
+    display_name: "Employee Code"
+    description: "-> dim_employee_profile.code. Text join; denormalised duplicate of the emp_id path. You must resolve emp_id -> code before traversing the employee hierarchy, which is keyed on code."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_employee_profile.code"
+
+  - name: "revenue_date"
+    display_name: "Revenue Date"
+    description: "Posting date."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "revenue_type"
+    display_name: "Revenue Type"
+    description: "Uncontrolled varchar(256) with no declared enumeration. Observed values (675 rows, no blanks): Advisory Fee (147), Upfront Commission (145), Trail Commission (135), Transaction Fee (127), Brokerage (121). The recurring-vs-one-off split is usually the most important cut of this table; Advisory Fee and Trail Commission read as recurring and the other three as one-off, but the source does not declare it. Filter on these labels exactly as supplied."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Advisory Fee", "Upfront Commission", "Trail Commission", "Transaction Fee", "Brokerage"]
+
+  - name: "revenue_amount"
+    display_name: "Revenue Amount"
+    description: "Fee or commission income amount."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "product_type"
+    display_name: "Product Type"
+    description: "Revenue is attributed at product_type level ONLY - there is no product_id and no isin here, so revenue CANNOT be attributed to an individual instrument. Coarsest product grain of any fact table."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "lob_id"
+    display_name: "LOB ID"
+    description: "-> dim_lob_hierarchy.lob_id, enabling LOB P&L without a detour through the client master. Unlike client_aum, no denormalised lob_name is carried, so labelling always requires the join - and the join must be de-duplicated (see the fan-out hazard)."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_lob_hierarchy.lob_id"
+    fan_out_hazard: true
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"

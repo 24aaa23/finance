@@ -1,0 +1,1622 @@
+{
+  "graded_rows": 597,
+  "statuses": {
+    "MATCH": 356,
+    "MISMATCH": 189,
+    "PARTIAL": 31,
+    "DECOMPOSITION_ERROR": 3,
+    "TOKEN_OUTPUT_ERROR": 1,
+    "SCAN_ERROR": 5,
+    "FINAL_SPEC_ERROR": 12
+  },
+  "definite_contradictory_scope_filters": 92,
+  "affected_grade_counts": {
+    "MISMATCH": 90,
+    "MATCH": 2
+  },
+  "affected_rows": [
+    {
+      "id": "T1_001",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"tier\" AS \"tier\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"tier\" = 'Ultra HNI') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"tier\" AS \"tier\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"tier\" = 'Ultra HNI') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T1_024",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"segment_id\" AS \"segment_id\", \"is_active\" AS \"is_active\" FROM \"dim_product_segment_map\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T1_047",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T1_065",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"gender\" AS \"gender\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"gender\" AS \"gender\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T1_067",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"family_name\" AS \"family_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"family_name\" AS \"family_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T1_073",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T1_075",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"euin\" AS \"euin\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"euin\" IS NOT NULL) AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"euin\" AS \"euin\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"euin\" IS NOT NULL) AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T1_094",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"segment_name\" AS \"segment_name\", \"segment_id\" AS \"segment_id\", \"is_active\" AS \"is_active\" FROM \"dim_product_segment_map\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T1_152",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"instrument_name\" AS \"instrument_name\", \"product_type\" AS \"product_type\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"product_type\" = 'Mutual Funds') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"instrument_name\" AS \"instrument_name\", \"product_type\" AS \"product_type\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"product_type\" = 'Mutual Funds') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T1_148",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"asset_class\" AS \"asset_class\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"asset_class\" AS \"asset_class\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T1_153",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_001",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_005",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"dob\" AS \"dob\", \"date_of_incorporation\" AS \"date_of_incorporation\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"dob\" <= '1966-03-31') AND (\"dob\" IS NOT NULL) AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"dob\" AS \"dob\", \"date_of_incorporation\" AS \"date_of_incorporation\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"dob\" <= '1966-03-31') AND (\"dob\" IS NOT NULL) AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_034",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_038",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"client_name\" AS \"client_name\", \"kyc_status\" AS \"kyc_status\", \"pep_status\" AS \"pep_status\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"client_name\" AS \"client_name\", \"kyc_status\" AS \"kyc_status\", \"pep_status\" AS \"pep_status\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_039",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_053",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"family_name\" AS \"family_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"family_name\" = 'Fernandes Family') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"family_name\" AS \"family_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"family_name\" = 'Fernandes Family') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_061",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NOT NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_057",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"family_name\" AS \"family_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"family_name\" = 'Fernandes Family') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"family_name\" AS \"family_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"family_name\" = 'Fernandes Family') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_064",
+      "grade": "MATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_069",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"tier\" AS \"tier\", \"gender\" AS \"gender\", \"dob\" AS \"dob\", \"pep_status\" AS \"pep_status\", \"occupation\" AS \"occupation\", \"marital_status\" AS \"marital_status\", \"kyc_status\" AS \"kyc_status\", \"lob_id\" AS \"lob_id\", \"lob_name\" AS \"lob_name\", \"sub_lob_id\" AS \"sub_lob_id\", \"sub_lob_name\" AS \"sub_lob_name\", \"group_id\" AS \"group_id\", \"group_name\" AS \"group_name\", \"family_id\" AS \"family_id\", \"family_name\" AS \"family_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"servicing_banker_name\" AS \"servicing_banker_name\", \"acquiring_banker_id\" AS \"acquiring_banker_id\", \"acquiring_banker_name\" AS \"acquiring_banker_name\", \"date_of_incorporation\" AS \"date_of_incorporation\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\", \"current_city\" AS \"current_city\" FROM \"dim_client_master\" WHERE (\"tier\" = 'Ultra HNI') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"tier\" AS \"tier\", \"gender\" AS \"gender\", \"dob\" AS \"dob\", \"pep_status\" AS \"pep_status\", \"occupation\" AS \"occupation\", \"marital_status\" AS \"marital_status\", \"kyc_status\" AS \"kyc_status\", \"lob_id\" AS \"lob_id\", \"lob_name\" AS \"lob_name\", \"sub_lob_id\" AS \"sub_lob_id\", \"sub_lob_name\" AS \"sub_lob_name\", \"group_id\" AS \"group_id\", \"group_name\" AS \"group_name\", \"family_id\" AS \"family_id\", \"family_name\" AS \"family_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"servicing_banker_name\" AS \"servicing_banker_name\", \"acquiring_banker_id\" AS \"acquiring_banker_id\", \"acquiring_banker_name\" AS \"acquiring_banker_name\", \"date_of_incorporation\" AS \"date_of_incorporation\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\", \"current_city\" AS \"current_city\" FROM \"dim_client_master\" WHERE (\"tier\" = 'Ultra HNI') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_071",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"client_name\" AS \"client_name\", \"gender\" AS \"gender\", \"tier\" AS \"tier\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"tier\" = 'Ultra HNI') AND (\"gender\" = 'Female') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"client_name\" AS \"client_name\", \"gender\" AS \"gender\", \"tier\" AS \"tier\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"tier\" = 'Ultra HNI') AND (\"gender\" = 'Female') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_079",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"sub_lob_name\" AS \"sub_lob_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"sub_lob_name\" = 'Private Wealth') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"sub_lob_name\" AS \"sub_lob_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"sub_lob_name\" = 'Private Wealth') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_085",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"tier\" AS \"tier\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"tier\" = 'HNI') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"tier\" AS \"tier\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"tier\" = 'HNI') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T2_091",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"segment_id\" AS \"segment_id\", \"segment_name\" AS \"segment_name\", \"is_active\" AS \"is_active\" FROM \"dim_product_segment_map\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_001",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"lob_id\" AS \"lob_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"lob_id\" AS \"lob_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_007",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"sub_lob_id\" AS \"sub_lob_id\", \"sub_lob_name\" AS \"sub_lob_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"sub_lob_id\" AS \"sub_lob_id\", \"sub_lob_name\" AS \"sub_lob_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_019",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_025",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_024",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"code\" AS \"code\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"code\" AS \"code\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_031",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_033",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_034",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_038",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"asset_class\" AS \"asset_class\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"asset_class\" AS \"asset_class\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_049",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_046",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"current_city\" AS \"current_city\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"current_city\" = 'Goa') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"current_city\" AS \"current_city\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"current_city\" = 'Goa') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_051",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_052",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_060",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"sector\" AS \"sector\", \"asset_class\" AS \"asset_class\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"sector\" AS \"sector\", \"asset_class\" AS \"asset_class\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_061",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_062",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"family_name\" AS \"family_name\", \"current_city\" AS \"current_city\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"family_name\" AS \"family_name\", \"current_city\" AS \"current_city\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_072",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_070",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"family_name\" AS \"family_name\", \"family_id\" AS \"family_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"family_name\" AS \"family_name\", \"family_id\" AS \"family_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_071",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_081",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"family_name\" AS \"family_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"family_name\" = 'Krishnan Family') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"family_name\" AS \"family_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"family_name\" = 'Krishnan Family') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_087",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"current_city\" AS \"current_city\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"current_city\" = 'Goa') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"current_city\" AS \"current_city\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"current_city\" = 'Goa') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_086",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_101",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_102",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_107",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_108",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_113",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Grace Fernandes') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Grace Fernandes') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_115",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_name\" AS \"servicing_banker_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Joseph Fernandes') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_name\" AS \"servicing_banker_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Joseph Fernandes') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_118",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_name\" AS \"servicing_banker_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Roshni Fernandes') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_name\" AS \"servicing_banker_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Roshni Fernandes') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_117",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"client_name\" AS \"client_name\", \"servicing_banker_name\" AS \"servicing_banker_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Martin Fernandes') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"client_name\" AS \"client_name\", \"servicing_banker_name\" AS \"servicing_banker_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Martin Fernandes') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_139",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"tier\" AS \"tier\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"tier\" AS \"tier\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_137",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"amc_display_name\" AS \"amc_display_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"amc_display_name\" AS \"amc_display_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_148",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Sita Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Sita Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_149",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"designation\" AS \"designation\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"designation\" AS \"designation\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_161",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"sublob_name\" AS \"sublob_name\", \"sublob_id\" AS \"sublob_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"sublob_name\" AS \"sublob_name\", \"sublob_id\" AS \"sublob_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"sub_lob_id\" AS \"sub_lob_id\", \"sbu_name\" AS \"sbu_name\", \"is_active\" AS \"is_active\" FROM \"dim_lob_hierarchy\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_166",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"tier\" AS \"tier\", \"lob_id\" AS \"lob_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"tier\" AS \"tier\", \"lob_id\" AS \"lob_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_170",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_178",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_product_unified_cat\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"product_id\" AS \"product_id\", \"segment_name\" AS \"segment_name\", \"is_active\" AS \"is_active\" FROM \"dim_product_segment_map\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"segment_name\" IS NOT NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_184",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"isin\" AS \"isin\", \"fund_id\" AS \"fund_id\", \"amc_id\" AS \"amc_id\", \"amc_name\" AS \"amc_name\", \"is_active\" AS \"is_active\" FROM \"dim_mf_fund_complete\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_198",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"co_code\" AS \"co_code\", \"isin\" AS \"isin\", \"mcap_type\" AS \"mcap_type\", \"is_active\" AS \"is_active\" FROM \"dim_cmot_company_mstr\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_215",
+      "grade": "MATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_225",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T3_233",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_004",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_002",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_017",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"kyc_status\" AS \"kyc_status\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"kyc_status\" AS \"kyc_status\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_019",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"sub_lob_id\" AS \"sub_lob_id\", \"sub_lob_name\" AS \"sub_lob_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_deleted\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"sub_lob_id\" AS \"sub_lob_id\", \"sub_lob_name\" AS \"sub_lob_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_deleted\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_023",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_028",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"fund_id\" AS \"fund_id\", \"isin\" AS \"isin\", \"amc_name\" AS \"amc_name\", \"is_active\" AS \"is_active\", \"is_obsolete\" AS \"is_obsolete\" FROM \"dim_mf_fund_complete\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_obsolete\" = 0) AND (\"is_obsolete\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_027",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"tier\" AS \"tier\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"tier\" AS \"tier\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_035",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_074",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Vikram Singh') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Vikram Singh') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_075",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Kavita Nair') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Kavita Nair') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_080",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Priya Sharma') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Priya Sharma') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"acquiring_banker_id\" AS \"acquiring_banker_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"acquiring_banker_id\" AS \"acquiring_banker_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_082",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Priya Sharma') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Priya Sharma') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_086",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Rajesh Kumar') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Rajesh Kumar') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_085",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"acquiring_banker_id\" AS \"acquiring_banker_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"acquiring_banker_id\" AS \"acquiring_banker_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_093",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Sneha Reddy') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"acquiring_banker_id\" AS \"acquiring_banker_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_096",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"acquiring_banker_id\" AS \"acquiring_banker_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"acquiring_banker_id\" AS \"acquiring_banker_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_102",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Vikram Singh') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Vikram Singh') AND (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_103",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Vikram Singh') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Vikram Singh') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_105",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Vikram Singh') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"name\" AS \"name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_employee_profile\" WHERE (\"name\" = 'Vikram Singh') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL) AND (\"servicing_banker_1_id\" IS NOT NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"servicing_banker_1_id\" AS \"servicing_banker_1_id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL) AND (\"servicing_banker_1_id\" IS NOT NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_108",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"current_city\" AS \"current_city\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"current_city\" AS \"current_city\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"is_active\" IS NULL) AND (\"is_active\" = 1) AND (\"is_deleted\" IS NULL) AND (\"is_deleted\" = 0)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_111",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_113",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"client_name\" AS \"client_name\", \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Sitas') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"client_name\" AS \"client_name\", \"id\" AS \"id\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Sitas') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_115",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_active",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        },
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" = 1) AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    },
+    {
+      "id": "T4_128",
+      "grade": "MISMATCH",
+      "scans": [
+        {
+          "field": "is_deleted",
+          "sql": "SELECT \"id\" AS \"id\", \"client_name\" AS \"client_name\", \"is_active\" AS \"is_active\", \"is_deleted\" AS \"is_deleted\" FROM \"dim_client_master\" WHERE (\"client_name\" = 'Ram Krishnan') AND (\"is_active\" IS NULL) AND (\"is_deleted\" = 0) AND (\"is_deleted\" IS NULL)",
+          "row_count": 0
+        }
+      ]
+    }
+  ],
+  "scope": "Read-only diagnosis; no pipeline edits or model calls. Filters flagged only when a non-null equality and IS NULL are joined by AND without OR."
+}

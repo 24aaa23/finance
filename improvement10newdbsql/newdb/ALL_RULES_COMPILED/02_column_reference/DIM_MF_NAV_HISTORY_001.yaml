@@ -1,0 +1,115 @@
+
+identity:
+  id: "TABLE_DIM_MF_NAV_HISTORY_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_mf_nav_history"
+  display_name: "MF NAV History"
+  description: >
+    TIME SERIES, 9 columns, despite the dim_ prefix - the prefix reflects a
+    convention of grouping all externally-sourced market data under dim_, not a
+    claim about grain. One of only TWO tables lacking source_load_ts (the other is
+    dim_mf_returns_history); both are append-only, where the business date is the
+    version. GRAIN: (mstar_id, nav_date) or (isin, nav_date). THE HIGHEST-ROW-COUNT
+    TABLE IN THE SCHEMA by a wide margin - thousands of funds x thousands of
+    trading days. ALWAYS DATE-BOUND ANY QUERY AGAINST IT. Single price point per
+    day (correct for funds, which strike one NAV after close), so no intraday
+    volatility is computable. Watch for gaps: holidays and genuine data loss look
+    identical.
+
+layer: "dimension"
+structural_type: "time_series"
+grain: "mstar_id x nav_date (or isin x nav_date)"
+not_null_columns: []
+note: "highest-row-count table; always date-bound queries. Lacks source_load_ts (append-only)."
+
+semantics:
+  business_purpose: >
+    Daily mutual-fund NAV time series, one price point per fund per day. The
+    largest table in the schema; append-only. Compute returns with LAG over
+    nav_date rather than assuming a fixed calendar offset.
+
+attributes:
+  - name: "mstar_id"
+    display_name: "Morningstar ID"
+    description: "Part of the grain: (mstar_id, nav_date). -> dim_mf_fund_complete.mstar_id."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_mf_fund_complete.mstar_id"
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "Alternative grain key: (isin, nav_date)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "fund_name"
+    display_name: "Fund Name"
+    description: "Denormalised onto every daily row. Deliberate: on a columnar warehouse these low-cardinality repeated strings compress extremely well, and it lets a NAV chart be drawn without joining the fund master."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "category"
+    display_name: "Category"
+    description: "Denormalised onto every daily row."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "nav_date"
+    display_name: "NAV Date"
+    description: "WATCH FOR GAPS: nothing guarantees a row for every fund on every trading day. Weekends and market holidays are absent by design; a genuine data gap looks IDENTICAL. With no dim_date you cannot distinguish 'market closed' from 'data missing'. Compute returns with LAG(nav_value) OVER (PARTITION BY mstar_id ORDER BY nav_date) rather than assuming a fixed calendar offset."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "nav_value"
+    display_name: "NAV Value"
+    description: "A SINGLE price point per day - no open/high/low. Correct for mutual funds, which strike ONE NAV per day after close. Consequence: intraday ranges and high/low volatility CANNOT be computed for funds, only close-to-close returns. Should reconcile to client_holdings.current_price for a fund holding on the same date."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "nav_currency"
+    display_name: "NAV Currency"
+    description: "Implies multi-currency capability (offshore/feeder funds). Overwhelmingly INR for an India-domiciled book. Nullable with NO default, so a NULL currency is indistinguishable from INR - any cross-currency aggregation must handle that explicitly."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

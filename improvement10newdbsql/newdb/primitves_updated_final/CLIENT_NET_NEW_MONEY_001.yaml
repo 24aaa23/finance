@@ -1,0 +1,117 @@
+# TABLE_CLIENT_NET_NEW_MONEY_001 - grounded in NEOWEALTH_DDL.sql / Neowealth_schema.xlsx
+# Provenance tags preserved: [D] = declared in source, [I] = inferred,
+# [C] = observed in the 2026-08-28 CSV delivery (Wealth Management data/client_net_new_money.csv).
+
+identity:
+  id: "TABLE_CLIENT_NET_NEW_MONEY_001"
+  type: "Table"
+  subtype: "Fact"
+  name: "client_net_new_money"
+  display_name: "Client Net New Money"
+  description: >
+    [D] FACT, 9 columns. Flow analysis. [I] Grain: client x product x period. NNM
+    is a primary wealth-management KPI because it isolates genuine asset gathering
+    from market movement - AUM can grow purely because markets rose, NNM cannot.
+    NOTE: no isin (flows tracked at product_id only) and no lob_id (unlike
+    client_aum and client_revenue), so LOB attribution must go through
+    dim_client_master.lob_id, which attributes by the client's CURRENT LOB rather
+    than the LOB at the time of the flow.
+
+layer: "fact"
+grain: "client_id x product_id x period_date"      # [I]
+not_null_columns: []                                # [D]
+attribute_type_provenance: "inferred_per_section_11"
+
+semantics:
+  business_purpose: >
+    Net new money (inflow minus outflow) per client per product per period - a
+    headline KPI isolating genuine asset gathering from market movement. Tracked
+    at product_id granularity; no isin and no lob_id.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "[D] Nullable."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "client_id"
+    display_name: "Client ID"
+    description: "[I] -> dim_client_master.id."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_client_master.id"
+
+  - name: "product_id"
+    display_name: "Product ID"
+    description: "[I] Declared join -> dim_product_unified_cat.product_id - which matches no row in this export (see [C] below). This is the ONLY product-bearing fact table with NO isin - flows are tracked at product_id granularity only. [C] In this export product_id holds 4 AGGREGATE codes, not catalogue product keys: AGG_BONDS (102 rows, product_type 'Bonds'), AGG_DIRECT_EQUITY (150, 'Direct Equity'), AGG_FIXED_DEPOSITS (180, 'Fixed Deposits'), AGG_MUTUAL_FUNDS (180, 'Mutual Funds'). NONE of the 612 rows matches a dim_product_unified_cat.product_id (individual products such as PROD_EQ_001), so the declared join returns no rows - and an equivalent query must keep returning none. Read the bucket from product_type on the same row. Whether AGG_* codes denote investment categories is pending data-team confirmation (column alignment review 2026-10-05, relationship rule 3). A confirmed category relationship may be added separately; it must not replace this join or spread a category total across individual products. Preserve the original product_id, product_type, client and period values."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_product_unified_cat.product_id"
+
+  - name: "product_type"
+    display_name: "Product Type"
+    description: "[D] Denormalised."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "period_date"
+    display_name: "Period Date"
+    description: "[D] A period aggregate, not an event date. [I] Inferred monthly by analogy with client_aum's month-start dating, but the workbook supplies no sample rows to confirm the period length. [C] The CSV delivery confirms month-start dating: six periods, 2025-12-01 to 2026-05-01, 102 rows each."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "inflow"
+    display_name: "Inflow"
+    description: "[D] Gross money in, positive magnitude."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "outflow"
+    display_name: "Outflow"
+    description: "[D] Gross money out, stored as its own POSITIVE magnitude - so net attrition shows as outflow > inflow."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "net_flow"
+    display_name: "Net Flow"
+    description: "[D] TYPE DEFECT: character varying(256) while both its operands are proper double precision. COMPUTE inflow - outflow instead of reading it, since a text column sorts and compares as text. [C] The stored text equals inflow - outflow on all 612 rows, with a leading minus sign on the 87 net-outflow rows; outflow is never negative. NNM is a headline KPI - it isolates genuine asset gathering from market movement, which AUM growth cannot."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    attribute_type_corrected: "fact"
+    type_defect: "numeric stored as varchar; compute inflow - outflow"
+    verified_identity: "inflow - outflow"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "[D] Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

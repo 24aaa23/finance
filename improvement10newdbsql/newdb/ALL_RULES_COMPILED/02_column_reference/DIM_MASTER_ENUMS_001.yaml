@@ -1,0 +1,136 @@
+
+identity:
+  id: "TABLE_DIM_MASTER_ENUMS_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_master_enums"
+  display_name: "Master Enums"
+  description: >
+    DIMENSION, 10 columns. Generic key-value lookup - the 'one lookup table to
+    rule them all' pattern, where every coded vocabulary lives partitioned by a
+    category column. NOTHING IN THE SCHEMA LINKS IT TO THE COLUMNS IT GOVERNS.
+    There is no enum_id on dim_client_master.tier, no revenue_type_id on
+    client_revenue - every coded column stores a FREE-TEXT LABEL, not a foreign
+    key. So this table is DOCUMENTARY, NOT ENFORCING: it records what the valid
+    values are but cannot prevent an invalid one, joining to it requires fragile
+    text matching, and renaming a value here will NOT update labels already
+    written into the client, product and fact tables. Its most valuable use is as
+    a DATA-QUALITY REFERENCE - compare SELECT DISTINCT tier against the registered
+    values to detect misspellings. DELIVERY DEFECT: dim_master_enums.csv is a
+    byte-identical copy of dim_cmot_company_mstr.csv (25 company records with
+    co_code, isin, company_name, nse_symbol ...), not an enum export. This reference
+    deliberately still describes the INTENDED enum table: none of id, type_key,
+    master_category_name, name, master_type_key or is_deleted is in the CSV, so
+    they load NULL, and is_active, source_table, source_load_ts and row_hash load
+    the COMPANY values. The intended enum table is OUT OF SCOPE for SQL/KG
+    equivalence until the correct export is supplied; do not claim it converted, and do not re-describe it as
+    company data.
+
+layer: "dimension"
+grain: "one row per enum value"
+not_null_columns: []
+role: "documentary reference only - not linked to the columns it governs"
+delivery_defect: "CSV is a byte-identical copy of dim_cmot_company_mstr.csv; intended enum table out of scope until a correct export is supplied"
+
+semantics:
+  business_purpose: >
+    Generic key-value lookup for coded vocabularies. Not linked by foreign keys to
+    the columns it governs, so it is documentary rather than enforcing; best used
+    as a data-quality reference.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "Integer surrogate."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "type_key"
+    display_name: "Type Key"
+    description: "The CODE of the individual value within its enumeration."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "master_category_name"
+    display_name: "Master Category Name"
+    description: "Identifies WHICH enumeration a row belongs to."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "name"
+    display_name: "Name"
+    description: "The human-readable label to display."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "master_type_key"
+    display_name: "Master Type Key"
+    description: "The presence of TWO key-ish columns (type_key and master_type_key) suggests a two-level structure, but this is moot: in this data every enum payload column (id, type_key, master_category_name, name, master_type_key) is NULL - the 25 rows carry only company-master is_active / lineage values - so the table cannot be used to resolve labels regardless of key structure. Read coded values directly from the label already stored on the client/product tables."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    select_distinct_required: true
+
+  - name: "is_active"
+    display_name: "Is Active"
+    description: "Soft-delete pair lets retired enum values be hidden from pickers while remaining resolvable for historical rows - a genuinely useful property."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "is_deleted"
+    display_name: "Is Deleted"
+    description: "Soft-delete pair, part 2."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

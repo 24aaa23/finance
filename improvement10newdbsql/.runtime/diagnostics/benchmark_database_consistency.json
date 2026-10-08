@@ -1,0 +1,349 @@
+{
+  "scope": "Run provided gold SQL against supplied read-only database to audit dataset consistency, not to generate pipeline answers. No model calls.",
+  "checks": [
+    {
+      "id": "T1_001",
+      "question": "How many Ultra HNI clients are on the books?",
+      "sql_status": "success",
+      "reference_rows": 1,
+      "actual_rows": 1,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "ultra_hni_client_count": 6
+        }
+      ],
+      "database_sample": [
+        {
+          "ultra_hni_client_count": 6
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_019",
+      "question": "How many instruments has each rating agency rated?",
+      "sql_status": "success",
+      "reference_rows": 1,
+      "actual_rows": 1,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "credit_rating_agency": "CRISIL",
+          "instrument_count": 15
+        }
+      ],
+      "database_sample": [
+        {
+          "credit_rating_agency": "CRISIL",
+          "instrument_count": 15
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_024",
+      "question": "How many products have at least one segment assigned to them?",
+      "sql_status": "success",
+      "reference_rows": 1,
+      "actual_rows": 1,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "products_with_segment": 25
+        }
+      ],
+      "database_sample": [
+        {
+          "products_with_segment": 25
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_037",
+      "question": "How many different instruments do we hold across the whole holdings table?",
+      "sql_status": "success",
+      "reference_rows": 1,
+      "actual_rows": 1,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "distinct_instruments_held": 84
+        }
+      ],
+      "database_sample": [
+        {
+          "distinct_instruments_held": 84
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_047",
+      "question": "How many clients have traded at least once?",
+      "sql_status": "success",
+      "reference_rows": 1,
+      "actual_rows": 1,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "clients_who_traded": 30
+        }
+      ],
+      "database_sample": [
+        {
+          "clients_who_traded": 30
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_065",
+      "question": "How many clients are there of each gender?",
+      "sql_status": "success",
+      "reference_rows": 2,
+      "actual_rows": 2,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "gender": "Female",
+          "client_count": 14
+        },
+        {
+          "gender": "Male",
+          "client_count": 16
+        }
+      ],
+      "database_sample": [
+        {
+          "gender": "Female",
+          "client_count": 14
+        },
+        {
+          "gender": "Male",
+          "client_count": 16
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_073",
+      "question": "How many employees do we have on staff?",
+      "sql_status": "success",
+      "reference_rows": 1,
+      "actual_rows": 1,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "employee_record_count": 10
+        }
+      ],
+      "database_sample": [
+        {
+          "employee_record_count": 10
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_075",
+      "question": "How many staff have an EUIN recorded?",
+      "sql_status": "success",
+      "reference_rows": 1,
+      "actual_rows": 1,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "staff_with_euin": 10
+        }
+      ],
+      "database_sample": [
+        {
+          "staff_with_euin": 10
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_076",
+      "question": "What job titles do our staff hold?",
+      "sql_status": "success",
+      "reference_rows": 6,
+      "actual_rows": 6,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "role_name": "Branch Manager"
+        },
+        {
+          "role_name": "Portfolio Advisor"
+        },
+        {
+          "role_name": "Relationship Manager"
+        }
+      ],
+      "database_sample": [
+        {
+          "role_name": "Branch Manager"
+        },
+        {
+          "role_name": "Portfolio Advisor"
+        },
+        {
+          "role_name": "Relationship Manager"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_088",
+      "question": "How many fixed income instruments do we hold ratings for?",
+      "sql_status": "success",
+      "reference_rows": 1,
+      "actual_rows": 1,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "rated_instrument_count": 15
+        }
+      ],
+      "database_sample": [
+        {
+          "rated_instrument_count": 15
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_094",
+      "question": "What business segments do we assign products to?",
+      "sql_status": "success",
+      "reference_rows": 10,
+      "actual_rows": 10,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "segment_name": "Automobiles & Ancillaries"
+        },
+        {
+          "segment_name": "Banking & Financial Services"
+        },
+        {
+          "segment_name": "Consumer & Retail"
+        }
+      ],
+      "database_sample": [
+        {
+          "segment_name": "Automobiles & Ancillaries"
+        },
+        {
+          "segment_name": "Banking & Financial Services"
+        },
+        {
+          "segment_name": "Consumer & Retail"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_152",
+      "question": "List all available mutual funds",
+      "sql_status": "success",
+      "reference_rows": 30,
+      "actual_rows": 30,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "fund_name": "Aditya Birla SL Frontline Equity Fund - Direct Growth"
+        },
+        {
+          "fund_name": "Axis Bluechip Fund - Direct Growth"
+        },
+        {
+          "fund_name": "Axis Focused 25 Fund - Direct Growth"
+        }
+      ],
+      "database_sample": [
+        {
+          "fund_name": "Aditya Birla SL Frontline Equity Fund - Direct Growth"
+        },
+        {
+          "fund_name": "Axis Bluechip Fund - Direct Growth"
+        },
+        {
+          "fund_name": "Axis Focused 25 Fund - Direct Growth"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T1_153",
+      "question": "List all clients",
+      "sql_status": "success",
+      "reference_rows": 30,
+      "actual_rows": 30,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "client_name": "Aditya Patel"
+        },
+        {
+          "client_name": "Ananya Mehra"
+        },
+        {
+          "client_name": "Arjun Mehra"
+        }
+      ],
+      "database_sample": [
+        {
+          "client_name": "Aditya Patel"
+        },
+        {
+          "client_name": "Ananya Mehra"
+        },
+        {
+          "client_name": "Arjun Mehra"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "T3_052",
+      "question": "For each of my clients, return the client name and the overall assets under management (AUM).",
+      "sql_status": "success",
+      "reference_rows": 30,
+      "actual_rows": 30,
+      "exact_equal_ignoring_order": true,
+      "reference_sample": [
+        {
+          "client_name": "Venkat Krishnan",
+          "total_aum": 402042696.84
+        },
+        {
+          "client_name": "Roshni Fernandes",
+          "total_aum": 321812877.61
+        },
+        {
+          "client_name": "Sita Krishnan",
+          "total_aum": 229162514.58
+        }
+      ],
+      "database_sample": [
+        {
+          "client_name": "Venkat Krishnan",
+          "total_aum": 402042696.84
+        },
+        {
+          "client_name": "Roshni Fernandes",
+          "total_aum": 321812877.61
+        },
+        {
+          "client_name": "Sita Krishnan",
+          "total_aum": 229162514.58
+        }
+      ],
+      "error": ""
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+
+identity:
+  id: "TABLE_DIM_LOB_HIERARCHY_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_lob_hierarchy"
+  display_name: "LOB Hierarchy"
+  description: >
+    DIMENSION, 11 columns. Organisational structure: SBU -> LOB -> Sub-LOB,
+    flattened one row per leaf. No id column. GRAIN IS SUB-LOB, NOT LOB. lob_id is
+    therefore NOT UNIQUE, SELECT lob_name returns duplicates, and joining any fact
+    on lob_id alone FANS OUT and multiplies measures by the number of sub-LOBs.
+    This is the single most likely cause of inflated totals when working with this
+    schema. sbu_name has no id or code - the top level is identified by NAME ONLY.
+
+layer: "dimension"
+grain: "one row per sub-LOB (leaf); lob_id NOT unique"
+not_null_columns: []
+fan_out_hazard: true
+
+semantics:
+  business_purpose: >
+    Organisational hierarchy SBU -> LOB -> Sub-LOB, flattened one row per leaf.
+    Grain is sub-LOB, so lob_id is not unique - the primary fan-out hazard in the
+    schema.
+
+attributes:
+  - name: "lob_id"
+    display_name: "LOB ID"
+    description: "Line of Business, the MIDDLE level. NOT UNIQUE in this table - the grain is sub-LOB, so LOB columns repeat across every sub-LOB. This is the single most likely cause of inflated totals in the whole schema."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    not_unique: true
+
+  - name: "lob_code"
+    display_name: "LOB Code"
+    description: "Short business code for the LOB."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "lob_name"
+    display_name: "LOB Name"
+    description: "LOB display name. SELECT lob_name FROM dim_lob_hierarchy RETURNS DUPLICATES."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "sub_lob_id"
+    display_name: "Sub-LOB ID"
+    description: "Sub-LOB, the LEAF level and the true grain of this table. Samples: 10 = Private Wealth, 11 = Family Office."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "sub_lob_code"
+    display_name: "Sub-LOB Code"
+    description: "Short business code for the sub-LOB."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "sub_lob_name"
+    display_name: "Sub-LOB Name"
+    description: "Sub-LOB display name."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "sbu_name"
+    display_name: "SBU Name"
+    description: "Strategic Business Unit, the TOP level. Has NO accompanying sbu_id or sbu_code - the top of the hierarchy is identified by NAME ONLY, so SBU rollups group on a text label vulnerable to whitespace and casing, and the SBU cannot be renamed safely."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "is_active"
+    display_name: "Is Active"
+    description: "Note this table has is_active but NO is_deleted, unlike the client and employee dimensions - the soft-delete convention is applied inconsistently across the schema."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

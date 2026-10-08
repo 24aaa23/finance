@@ -1,0 +1,38 @@
+{
+  "scope": "Small mechanical execution corrections only. No change to DAG, agent flow, business rules, metric definitions, threshold values, name/snapshot defaults or reference answers. No model calls or result CSV edits.",
+  "pipeline_version": "aop-improvement10-neowealth-v4",
+  "reports_reviewed": {
+    "gpt-oss": {
+      "saved_rows": 721,
+      "execution_errors": 47,
+      "status_counts": {
+        "QUERY_SPEC_ERROR": 11,
+        "FINAL_SPEC_ERROR": 23,
+        "DECOMPOSITION_ERROR": 5,
+        "CRASH": 2,
+        "SCAN_ERROR": 6
+      }
+    },
+    "deepseek-v3.2": {
+      "saved_rows": 547,
+      "execution_errors": 61,
+      "status_counts": {
+        "FINAL_SPEC_ERROR": 56,
+        "DECOMPOSITION_ERROR": 1,
+        "SCAN_ERROR": 3,
+        "QUERY_SPEC_ERROR": 1
+      }
+    }
+  },
+  "gpt_oss_finalspec_saved_candidates_execute": 10,
+  "gpt_oss_finalspec_total": 23,
+  "reviewed_error_rows": 108,
+  "tests": {
+    "new_mechanical_regressions": 8,
+    "pipeline_passed": 325,
+    "pipeline_legacy_fixture_failures": 8,
+    "runner_and_grader_passed": 15
+  },
+  "code_backup": ".runtime/backups/before_execution_mechanical_20261009",
+  "sdk_retry_note": "Bedrock client already uses max_retries=5 and timeout=90s. SDK backoff retained; exhausted HTTP429/408/5xx failures now marked transient for resume. No unbounded retries."
+}

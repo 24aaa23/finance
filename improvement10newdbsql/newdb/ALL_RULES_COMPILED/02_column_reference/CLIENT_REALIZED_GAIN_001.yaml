@@ -1,0 +1,169 @@
+
+identity:
+  id: "TABLE_CLIENT_REALIZED_GAIN_001"
+  type: "Table"
+  subtype: "Fact"
+  name: "client_realized_gain"
+  display_name: "Client Realized Gain"
+  description: >
+    FACT, 15 columns. Closed positions and booked P&L. Grain: one row per
+    MATCHED BUY-SELL LOT - each row carries both legs, so this is pre-computed
+    lot-matching output, not raw events. The matching method
+    (FIFO/LIFO/specific-identification) is NOT recorded and it matters for Indian
+    tax reporting. VERIFIED: realized_gain = (sell_price - buy_price) *
+    quantity, gross of costs; holding_period_days = sell_date - buy_date in
+    calendar days. There is NO realized_loss column - losses are negative
+    realized_gain.
+
+layer: "fact"
+grain: "one row per matched buy-sell lot"
+not_null_columns: []
+
+semantics:
+  business_purpose: >
+    Closed-position booked P&L, one row per matched buy-sell lot with both legs.
+    Realized gain and holding period are verified arithmetic identities; losses
+    are negative realized_gain. Lot-matching method is not recorded.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "Nullable. Sample range 110001+."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "client_id"
+    display_name: "Client ID"
+    description: "-> dim_client_master.id. Samples reference 7001-7004."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_client_master.id"
+
+  - name: "client_pan"
+    display_name: "Client PAN"
+    description: "Denormalised PAN. Do not join on it. PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    pii: true
+    do_not_join: true
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "Instrument identity."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "product_id"
+    display_name: "Product ID"
+    description: "-> dim_product_unified_cat.product_id."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_product_unified_cat.product_id"
+
+  - name: "product_type"
+    display_name: "Product Type"
+    description: "Denormalised. REQUIRED for capital-gains classification: the Indian long/short-term boundary depends on asset class, so holding_period_days alone cannot classify a gain."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "instrument_name"
+    display_name: "Instrument Name"
+    description: "Denormalised instrument label."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "buy_date"
+    display_name: "Buy Date"
+    description: "Buy leg of the matched lot. Samples span 2023-03-07 to 2025-07-06."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "sell_date"
+    display_name: "Sell Date"
+    description: "Sell leg. Samples span 2025-12-22 to 2026-05-08."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "buy_price"
+    display_name: "Buy Price"
+    description: "Per-unit purchase price of the lot."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "sell_price"
+    display_name: "Sell Price"
+    description: "Per-unit sale price of the lot."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "quantity"
+    display_name: "Quantity"
+    description: "Units in the matched lot."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "realized_gain"
+    display_name: "Realized Gain"
+    description: "VERIFIED on sample id 110001 (SBI, 130 units, 505.19 -> 799.52): (799.52 - 505.19) * 130 = 38262.90, EXACT. So realized_gain = (sell_price - buy_price) * quantity, GROSS of costs - no brokerage, STT or tax is netted off. There is NO realized_loss column and no sign flag, so a loss must be a NEGATIVE realized_gain. SUM() therefore yields a NET figure; split on sign to report gross gains and losses separately."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+    verified_identity: "(sell_price - buy_price) * quantity"
+
+  - name: "holding_period_days"
+    display_name: "Holding Period Days"
+    description: "VERIFIED on id 110001: 2024-07-01 -> 2026-04-05 = 643 days, exact. Plain calendar-day difference sell_date - buy_date. Samples range 210-1091 days. Combine with product_type to classify short vs long term; the schema encodes no threshold."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+    verified_identity: "sell_date - buy_date (calendar days)"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

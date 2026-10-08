@@ -1,0 +1,161 @@
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: DuckDB (read only)
+[SYSTEM] SQL database: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\newdb\neowealth.duckdb
+[SYSTEM] SQL scan timeout: 60 seconds
+[SYSTEM] GPT-OSS endpoint: https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1
+[SYSTEM] GPT-OSS model: openai.gpt-oss-120b-1:0
+[SYSTEM] RAG/Retrieve model: openai.gpt-oss-120b-1:0
+[SYSTEM] Planner model: openai.gpt-oss-120b-1:0
+[SYSTEM] Query_Spec model: openai.gpt-oss-120b-1:0
+[SYSTEM] Refine model: openai.gpt-oss-120b-1:0
+[SYSTEM] Generate model: openai.gpt-oss-120b-1:0
+[SYSTEM] Validate model: openai.gpt-oss-120b-1:0
+[SYSTEM] Explain model: openai.gpt-oss-120b-1:0
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: fixed V9 operator flow
+[SYSTEM] Report file: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\outputs\full_run\raw_pipeline.csv
+[SYSTEM] Knowledge identity: 3c3894fc1bbfd5d33d94d77229aa5e95c4723562cbdd7d4a8128c454ea8ba57b; query understanding: True
+[SYSTEM] Source/data run identity: 17deb470c1babe838e9cd932c27902c274a6c10b2678133af3abd12b3cac601d
+
+[SYSTEM] Loading C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\outputs\full_run\input_questions.jsonl...
+[SYSTEM] Input manifest window offset=0, limit=all remaining.
+[SYSTEM] Successfully loaded 328 manifest queries.
+
+[SYSTEM] Running raw pipeline. Saving incrementally...
+[SYSTEM] Pending queries this run: 328
+
+--- Starting DAG Execution ---
+Executing: [Query_Spec] at Node 'q1_query_spec'...
+ Query_Spec completed.
+Executing: [Query_Spec] at Node 'q2_query_spec'...
+ Query_Spec completed.
+Executing: [Generate] at Node 'q1_generate'...
+ Generate completed.
+Executing: [Generate] at Node 'q2_generate'...
+ Generate completed.
+Executing: [Pre_Scan_Validate] at Node 'q1_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Pre_Scan_Validate] at Node 'q2_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Scan] at Node 'q1_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "product_id" AS "product_id" FROM "dim_product_unified_cat"
+
+ Scan completed.
+Executing: [Scan] at Node 'q2_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "product_id" AS "product_id", "segment_id" AS "segment_id" FROM "dim_product_segment_map"
+
+ Scan completed.
+Executing: [Processing_Spec] at Node 'q1_processing_spec'...
+ Processing_Spec completed.
+Executing: [Processing_Spec] at Node 'q2_processing_spec'...
+ Processing_Spec completed.
+Executing: [Final_Spec] at Node 'final_spec'...
+ Final_Spec completed.
+Executing: [Validate] at Node 'validate'...
+ Validate completed.
+Executing: [Explain] at Node 'explain'...
+ Explain completed.
+--- Execution Complete ---
+
+--- Starting DAG Execution ---
+Executing: [Query_Spec] at Node 'q1_query_spec'...
+   [!] Query_Spec contract failed; regenerating raw retrieval plan.
+   [!] Query_Spec contract failed; regenerating raw retrieval plan.
+
+--- Starting DAG Execution ---
+Executing: [Query_Spec] at Node 'q1_query_spec'...
+ Query_Spec completed.
+Executing: [Generate] at Node 'q1_generate'...
+ Generate completed.
+Executing: [Pre_Scan_Validate] at Node 'q1_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Scan] at Node 'q1_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "scheme_master_id" AS "scheme_master_id", "isin" AS "isin", "care_rating" AS "care_rating", "icra_rating" AS "icra_rating", "crisil_rating" AS "crisil_rating", "fitch_rating" AS "fitch_rating", "brick_rating" AS "brick_rating", "credit_rating_agency" AS "credit_rating_agency" FROM "dim_product_credit_rtng"
+
+ Scan completed.
+Executing: [Processing_Spec] at Node 'q1_processing_spec'...
+ Processing_Spec completed.
+Executing: [Final_Spec] at Node 'final_spec'...
+
+--- Starting DAG Execution ---
+Executing: [Query_Spec] at Node 'q1_query_spec'...
+
+--- Starting DAG Execution ---
+Executing: [Query_Spec] at Node 'q1_query_spec'...
+   [!] Query_Spec contract failed; regenerating raw retrieval plan.
+ Query_Spec completed.
+Executing: [Generate] at Node 'q1_generate'...
+ Generate completed.
+Executing: [Pre_Scan_Validate] at Node 'q1_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Scan] at Node 'q1_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "id" AS "id", "occupation" AS "occupation" FROM "dim_client_master"
+
+ Scan completed.
+Executing: [Processing_Spec] at Node 'q1_processing_spec'...
+ Processing_Spec completed.
+Executing: [Final_Spec] at Node 'final_spec'...
+ Final_Spec completed.
+Executing: [Validate] at Node 'validate'...
+ Validate completed.
+Executing: [Explain] at Node 'explain'...
+ Explain completed.
+--- Execution Complete ---
+ Final_Spec completed.
+Executing: [Validate] at Node 'validate'...
+ Validate completed.
+Executing: [Explain] at Node 'explain'...
+ Explain completed.
+--- Execution Complete ---
+   [!] Query_Spec contract failed; regenerating raw retrieval plan.
+
+--- Starting DAG Execution ---
+Executing: [Query_Spec] at Node 'q1_query_spec'...
+ Query_Spec completed.
+Executing: [Generate] at Node 'q1_generate'...
+ Generate completed.
+Executing: [Pre_Scan_Validate] at Node 'q1_pre_scan_validate'...
+   [+] Pre_Scan_Validate passed.
+ Pre_Scan_Validate completed.
+Executing: [Scan] at Node 'q1_scan'...
+
+[DEBUG SQL EXECUTED]
+SELECT "id" AS "id", "tier" AS "tier", "is_active" AS "is_active", "is_deleted" AS "is_deleted" FROM "dim_client_master" WHERE ("tier" = 'Ultra HNI') AND (("is_active" = 1 OR "is_active" IS NULL)) AND (("is_deleted" = 0 OR "is_deleted" IS NULL))
+
+ Scan completed.
+Executing: [Processing_Spec] at Node 'q1_processing_spec'...
+ Processing_Spec completed.
+Executing: [Final_Spec] at Node 'final_spec'...
+ Final_Spec completed.
+Executing: [Validate] at Node 'validate'...
+ Validate completed.
+Executing: [Explain] at Node 'explain'...
+ Explain completed.
+--- Execution Complete ---
+Traceback (most recent call last):
+  File "C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\run_pipeline_v3_sql _\runtime_guard.py", line 120, in launch
+    _main(timing=timing)
+  File "C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\run_pipeline_v3_sql _\main.py", line 804, in _main
+    done, _ = wait(active, return_when=FIRST_COMPLETED)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\concurrent\futures\_base.py", line 307, in wait
+    waiter.event.wait(timeout)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\threading.py", line 607, in wait
+    signaled = self._cond.wait(timeout)
+  File "C:\Users\AMAN KUMAR SINGH\AppData\Local\Programs\Python\Python310\lib\threading.py", line 320, in wait
+    waiter.acquire()
+KeyboardInterrupt

@@ -1,0 +1,177 @@
+
+identity:
+  id: "TABLE_DIM_CLIENT_ACCOUNT_MAP_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_client_account_map"
+  display_name: "Client Account Map"
+  description: >
+    DIMENSION / BRIDGE, 13 columns. Client-to-account bridge. Note it has NO
+    id column. Grain: one row per client account - so client_id is NOT unique
+    here. 47 rows for 30 clients; wsw_account_code is unique (47 distinct).
+    THREE identifier groups coexist ON THE SAME ROW (folio, dp_id, and
+    account_number + bank_name + ifsc_code): account_number, bank_name and
+    ifsc_code are populated on all 47 rows, dp_id on 45 and folio on 25, and 25
+    rows carry all three groups at once. A row is therefore NOT a bank-only,
+    demat-only or folio-only account, and neither account_type nor the identifiers
+    present say which kind of account a row is - account_type holds Individual
+    (30), HUF (12), Joint (3) and NRI (2). What account_type classifies, and what
+    one row represents (e.g. one wealth-management account with linked bank, demat
+    and folio details), is not stated by the source and must be confirmed with the
+    data team. Keep each row's label and identifiers together; never turn a row
+    into a Bank Account or Demat Account from its label or from which identifiers
+    are present - a question about clients with a DP ID, IFSC code or folio on
+    file filters on that identifier being non-null, nothing more. The join from
+    client_holdings.wsw_account_code into this table is UNRELIABLE: of 505
+    holdings, 174 match on code and client_id, 210 match on code but point to an
+    account of a DIFFERENT client, and 121 have no matching account row. Never
+    derive client identity, or any account attribute used to identify a client,
+    through this join. This is the only bridge from client_holdings.wsw_account_code to account details. MOST SENSITIVE TABLE
+    IN THE SCHEMA - holds bank account numbers and IFSC codes, which are payment
+    credentials. Stricter access control than dim_client_master; mask or tokenise
+    everywhere outside production.
+
+layer: "dimension"
+subtype_role: "bridge"
+grain: "one row per client account (client_id NOT unique)"
+not_null_columns: []
+sensitivity: "highest in schema - payment credentials"
+
+semantics:
+  business_purpose: >
+    Client-to-account bridge: one client to many account rows, each row carrying
+    its bank details and, where present, a demat DP ID and an MF folio. The only
+    path from a fact (client_holdings.wsw_account_code) to account details. What a
+    row represents is not stated by the source and must be confirmed with the data team. Most sensitive table in the
+    schema.
+
+attributes:
+  - name: "client_id"
+    display_name: "Client ID"
+    description: "-> dim_client_master.id. Many-to-one: a client with several accounts has several rows here, so client_id is NOT unique in this table."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_client_master.id"
+
+  - name: "account_details_id"
+    display_name: "Account Details ID"
+    description: "The account's surrogate key in the UPSTREAM source system. There is no dim_account table, so this points at nothing inside the warehouse - a dangling reference useful only for tracing back to the source."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    missing_dimension: "dim_account"
+
+  - name: "account_number"
+    display_name: "Account Number"
+    description: "Bank account number. Populated on all 47 rows. PAYMENT CREDENTIAL - this table warrants stricter access control than dim_client_master. Mask or tokenise in every non-production copy."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    pii: true
+    payment_credential: true
+
+  - name: "account_type"
+    display_name: "Account Type"
+    description: "Uncontrolled varchar(256) with no declared enumeration. Observed values: Individual (30 rows), HUF (12), Joint (3), NRI (2) - a holder/ownership category, NOT a bank / demat / folio discriminator. It does not tell you which identifier group to read: Individual, HUF and Joint rows carry bank, DP ID and (on some rows) folio identifiers together, and the 2 NRI rows carry bank identifiers only. What account_type classifies is not stated by the source and must be confirmed with the data team. Keep the original label; never derive an account kind from it."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Individual", "HUF", "Joint", "NRI"]
+    meaning_pending_confirmation: true
+
+  - name: "wsw_account_code"
+    display_name: "Account Code"
+    description: "-> client_holdings.wsw_account_code. THE ONLY account key reachable from a fact table, so this is the one to join on. Unique in this data (47 distinct codes on 47 rows). Of the 505 holdings, 174 match a code here with the same client_id, 210 match a code whose row names a DIFFERENT client_id, and 121 carry a code absent from this table. A code match is a source-record match, not validated client ownership - reproduce each query's own join condition exactly (see client_holdings.wsw_account_code)."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "client_holdings.wsw_account_code"
+
+  - name: "folio"
+    display_name: "Folio"
+    description: "Mutual fund folio number, assigned by the AMC/RTA. Populated on 25 of 47 rows, always alongside dp_id and the bank details on the same row - so its presence does not identify an MF-only account. When folio is populated is not stated by the source and must be confirmed with the data team (Y1)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "dp_id"
+    display_name: "DP ID"
+    description: "Depository Participant ID - part of the NSDL/CDSL demat account identifier for dematerialised securities. Populated on 45 of 47 rows (blank only on the 2 NRI rows), alongside the bank details on the same row - so its presence does not identify a demat-only account. When dp_id is populated is not stated by the source and must be confirmed with the data team (Y1)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "bank_name"
+    display_name: "Bank Name"
+    description: "Part of the banking triple used for settlement, payouts and mandates."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "ifsc_code"
+    display_name: "IFSC Code"
+    description: "Indian Financial System Code - pins the specific bank branch. Payment credential; mask outside production."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    pii: true
+    payment_credential: true
+
+  - name: "is_active"
+    display_name: "Is Active"
+    description: "Distinguishes live from closed accounts. CAUTION: a closed account may still have historical holdings attached, so filtering on this when joining to client_holdings can drop legitimate historical positions. Be deliberate."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

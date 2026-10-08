@@ -1,0 +1,246 @@
+# TABLE_DIM_EMPLOYEE_PROFILE_001 - grounded in NEOWEALTH_DDL.sql / Neowealth_schema.xlsx
+# Provenance tags preserved: [D] = declared in source, [I] = inferred,
+# [C] = observed in the 2026-08-28 CSV delivery (Wealth Management data/dim_employee_profile.csv).
+
+identity:
+  id: "TABLE_DIM_EMPLOYEE_PROFILE_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_employee_profile"
+  display_name: "Employee Profile"
+  description: >
+    [D] DIMENSION, 22 columns. Relationship managers and staff. GRAIN: one row per
+    employee. Referenced from client_revenue (emp_id -> id, emp_code -> code) and
+    TWICE from dim_client_master (servicing_banker_1_id and acquiring_banker_id,
+    both -> id). THE SELF-HIERARCHY IS KEYED ON code, NOT id
+    (reporting_manager_code -> code) - so org rollups need a recursive CTE with a
+    depth guard, and you must resolve emp_id -> code first. Uses the sublob_*
+    spelling where every other table uses sub_lob_*. Contains employee PII.
+
+layer: "dimension"
+grain: "one row per employee"                       # [D]
+not_null_columns: []                                # [D]
+attribute_type_provenance: "inferred_per_section_11"
+
+semantics:
+  business_purpose: >
+    Relationship managers and staff master. One row per employee. Self-referencing
+    org hierarchy keyed on code (not id), requiring a recursive CTE with a depth
+    guard. Contains employee PII.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "[I] Employee surrogate key. Target of client_revenue.emp_id and of BOTH dim_client_master banker columns. [D] IDs seen in the client-master samples: 5001 Rajesh Kumar, 5002 Priya Sharma, 5003 Amit Patel, 5004 Sneha Reddy, 5009 Suresh Iyer, 5010 Deepa Gupta."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "code"
+    display_name: "Code"
+    description: "[I] Employee business code. Target of client_revenue.emp_code AND of reporting_manager_code. The hierarchy is keyed on code, NOT on id - so you cannot traverse the org tree with the same key you join from client_revenue."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "name"
+    display_name: "Name"
+    description: "[D] Employee name. PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    pii: true
+
+  - name: "euin"
+    display_name: "EUIN"
+    description: "[D] Employee Unique Identification Number - the SEBI/AMFI-mandated identifier for individuals authorised to advise on or sell mutual funds in India. [I] Its presence shows this table covers regulated distribution staff; a NULL euin on someone attributed MF revenue is a compliance red flag worth monitoring."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "designation"
+    display_name: "Designation"
+    description: "[I] HR job title. One of three overlapping role descriptors (with role_name and department); the source gives no definitions. [C] Observed values (10 rows): AVP (4), VP (4), Senior VP (2)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["AVP", "VP", "Senior VP"]
+
+  - name: "role_name"
+    display_name: "Role Name"
+    description: "[I] System/functional role. See designation. [C] Observed values (10 rows): Relationship Manager (4), Senior RM (2), Portfolio Advisor, Branch Manager, Wealth Advisor, Team Lead (1 each)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Relationship Manager", "Senior RM", "Portfolio Advisor", "Branch Manager", "Wealth Advisor", "Team Lead"]
+
+  - name: "department"
+    display_name: "Department"
+    description: "[I] Org unit. See designation. [C] Observed values (10 rows): Wealth Advisory (5), Broking (2), Family Office, NRI Advisory, Asset Mgmt (1 each)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Wealth Advisory", "Broking", "Family Office", "NRI Advisory", "Asset Mgmt"]
+
+  - name: "lob_id"
+    display_name: "LOB ID"
+    description: "[I] -> dim_lob_hierarchy.lob_id."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_lob_hierarchy.lob_id"
+    fan_out_hazard: true
+
+  - name: "lob_name"
+    display_name: "LOB Name"
+    description: "[D] Denormalised LOB label."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "sublob_id"
+    display_name: "Sub-LOB ID"
+    description: "[I] -> dim_lob_hierarchy.sub_lob_id. NAMING TRAP: spelled 'sublob_id' HERE but 'sub_lob_id' in dim_client_master and dim_lob_hierarchy. Same concept, three characters different. Any generated join on matching column names will SILENTLY OMIT this edge."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_lob_hierarchy.sub_lob_id"
+    naming_trap: "spelled sub_lob_id elsewhere in the schema"
+
+  - name: "sublob_name"
+    display_name: "Sub-LOB Name"
+    description: "[D] Denormalised sub-LOB label. Same naming trap as sublob_id."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "email"
+    display_name: "Email"
+    description: "[D] Employee email. PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    pii: true
+
+  - name: "mobile"
+    display_name: "Mobile"
+    description: "[D] Employee mobile number. PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    pii: true
+
+  - name: "reporting_manager_code"
+    display_name: "Reporting Manager Code"
+    description: "[I] SELF-REFERENCE -> dim_employee_profile.code (NOT .id). [D] There is no reporting_manager_id, no depth column, no path column and no closure table, so org rollups require a RECURSIVE CTE. Nothing in the schema prevents a cycle - always include a depth guard."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_employee_profile.code"
+    self_reference: true
+
+  - name: "gender"
+    display_name: "Gender"
+    description: "[D] PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    pii: true
+
+  - name: "is_active"
+    display_name: "Is Active"
+    description: "[D] Nullable three-valued flag. See the COALESCE guidance."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "is_deleted"
+    display_name: "Is Deleted"
+    description: "[D] Nullable three-valued flag."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "doj"
+    display_name: "Date of Joining"
+    description: "[D] Date of joining."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "resignation_date"
+    display_name: "Resignation Date"
+    description: "[D] Populated marks a departed employee. [I] IMPORTANT for historical attribution: revenue booked in 2024 should still credit the banker covering the client then, even if they have since left. DO NOT filter out inactive employees when reporting historical periods - use the date range instead of the flag."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "[D] Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "[D] ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "[D] 64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

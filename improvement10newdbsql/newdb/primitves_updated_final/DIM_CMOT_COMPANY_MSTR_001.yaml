@@ -1,0 +1,166 @@
+# TABLE_DIM_CMOT_COMPANY_MSTR_001 - grounded in NEOWEALTH_DDL.sql / Neowealth_schema.xlsx
+# Provenance tags preserved: [D] = declared in source, [I] = inferred,
+# [C] = observed in the 2026-08-28 CSV delivery (Wealth Management data/dim_cmot_company_mstr.csv).
+
+identity:
+  id: "TABLE_DIM_CMOT_COMPANY_MSTR_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_cmot_company_mstr"
+  display_name: "Company Master"
+  description: >
+    [D] DIMENSION, 14 columns. Listed-company master; the equity counterpart to
+    dim_mf_fund_complete. GRAIN: one row per listed company, keyed on co_code - the
+    vendor's company key and the join hub for the equity tables. [I] 'cmot' is a
+    vendor/source-system code for the Indian equity reference-data provider
+    (co_code + nse_symbol + bse_code + bse_group is the classic Capitaline/CMOTS
+    identifier set); the workbook does not define the acronym. mcap_type has NO
+    effective date despite SEBI reclassifying every six months. No dim_sector backs
+    sector_code/sector_name.
+
+layer: "dimension"
+grain: "one row per listed company (keyed on co_code)"   # [D]
+not_null_columns: []                                      # [D]
+attribute_type_provenance: "inferred_per_section_11"
+
+semantics:
+  business_purpose: >
+    Listed-company master and equity join hub, keyed on co_code. Carries the
+    classic vendor identifier set and market-cap band. No backing dim_sector.
+
+attributes:
+  - name: "co_code"
+    display_name: "Company Code"
+    description: "[I] The vendor's internal COMPANY key and the join hub for the equity tables. WARNING: dim_cmot_index_prices reuses this same column name for an INDEX. Never join the two tables on co_code - such a join compiles, returns rows, and is entirely meaningless."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    warning: "co_code identifies an INDEX in dim_cmot_index_prices; never join the two on co_code"
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "[I] Equity ISIN (INE prefix)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "company_name"
+    display_name: "Company Name"
+    description: "[D] Full legal name, e.g. 'Bharat Electronics Ltd', 'Larsen & Toubro Ltd'."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "company_short_name"
+    display_name: "Company Short Name"
+    description: "[D] Display abbreviation."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "nse_symbol"
+    display_name: "NSE Symbol"
+    description: "[D] NSE ticker, e.g. RELIANCE."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "bse_code"
+    display_name: "BSE Code"
+    description: "[D] BSE scrip code, e.g. 500325. NAMING TRAP: dim_product_unified_cat calls the identical concept 'bse_symbol' - same integer type, two names. [I] A company may list on one or both exchanges, so either code may be NULL."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    naming_trap: "called bse_symbol in dim_product_unified_cat"
+
+  - name: "bse_group"
+    display_name: "BSE Group"
+    description: "[D] BSE liquidity/surveillance classification (A, B, T, Z ...). [I] The Z and T groups flag restricted or surveillance-listed scrips, so this column has real risk-monitoring value. [C] Every one of the 25 companies in this export is in group A; no B, T or Z scrip occurs."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["A"]
+
+  - name: "mcap_type"
+    display_name: "Market Cap Type"
+    description: "[D] Market-capitalisation band (Large/Mid/Small Cap) per SEBI's ranked definition. STORED AS A SINGLE CURRENT VALUE WITH NO EFFECTIVE DATE, yet SEBI reclassifies the universe every six months. Historical style analysis using this column applies TODAY's classification to PAST holdings - a subtle but real point-in-time error the schema has no mechanism to fix. [C] Observed values (25 rows): Large Cap (20), Mid Cap (4), Small Cap (1)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Large Cap", "Mid Cap", "Small Cap"]
+
+  - name: "sector_code"
+    display_name: "Sector Code"
+    description: "[D] Sector classification code - the basis for concentration and diversification reporting. No dim_sector table exists."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    missing_dimension: "dim_sector"
+
+  - name: "sector_name"
+    display_name: "Sector Name"
+    description: "[D] Sector name. NAMING TRAP: dim_product_unified_cat stores the same concept as a bare 'sector' column with no code."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    naming_trap: "stored as bare 'sector' in dim_product_unified_cat"
+
+  - name: "is_active"
+    display_name: "Is Active"
+    description: "[D] No is_deleted here. [I] A delisted company would be marked is_active = FALSE rather than removed, which is correct since historical holdings still reference it."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "[D] Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "[D] ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "[D] 64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

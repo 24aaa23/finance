@@ -1,0 +1,19 @@
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: DuckDB (read only)
+[SYSTEM] SQL database: C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\newdb\neowealth.duckdb
+[SYSTEM] SQL scan timeout: 60 seconds
+Traceback (most recent call last):
+  File "C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\run_pipeline_v3_sql _\runtime_guard.py", line 120, in launch
+    _main(timing=timing)
+  File "C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\run_pipeline_v3_sql _\main.py", line 102, in _main
+    check_sqlite_health(SQLITE_DB_PATH)
+  File "C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\run_pipeline_v3_sql _\sqlite_backend.py", line 121, in check_sqlite_health
+    result = execute_sql_on_sqlite(query, db_path)
+  File "C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\run_pipeline_v3_sql _\sqlite_backend.py", line 79, in execute_sql_on_sqlite
+    from .duckdb_backend import run_sql
+  File "C:\Users\AMAN KUMAR SINGH\Desktop\financial\improvement10newdbsql\run_pipeline_v3_sql _\duckdb_backend.py", line 7, in <module>
+    import duckdb
+ModuleNotFoundError: No module named 'duckdb'

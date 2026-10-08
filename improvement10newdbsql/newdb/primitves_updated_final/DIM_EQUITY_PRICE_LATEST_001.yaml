@@ -1,0 +1,158 @@
+# TABLE_DIM_EQUITY_PRICE_LATEST_001 - grounded in NEOWEALTH_DDL.sql / Neowealth_schema.xlsx
+# Provenance tags preserved: [D] = declared in source, [I] = inferred.
+
+identity:
+  id: "TABLE_DIM_EQUITY_PRICE_LATEST_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_equity_price_latest"
+  display_name: "Equity Price (Latest)"
+  description: >
+    [I] TIME SERIES, 13 columns. Equity OHLCV prices. THE NAME SAYS _latest BUT THE
+    STRUCTURE SAYS HISTORY, and the workbook cannot settle which. Verify with
+    SELECT co_code, COUNT(*) ... GROUP BY 1 before writing anything against it.
+    [C] The CSV delivery settles it: 25 rows, one per instrument, all dated
+    2026-05-19 and all on NSE - a single-date snapshot, not a history.
+    GRAIN INCLUDES exchange: the key is (co_code, exchange, nav_date) because the
+    same company trades on both NSE and BSE at different prices - joining on isin +
+    date alone DOUBLES the position. The nav_* prefix is a misnomer carried over
+    from the MF tables; these are OHLCV market prices, not NAVs. nav_volume is
+    integer and can overflow.
+
+layer: "dimension"
+structural_type: "time_series"                      # [I] named dim_ but structurally a time series
+grain: "co_code x exchange x nav_date"              # [D]
+not_null_columns: []                                # [D]
+attribute_type_provenance: "inferred_per_section_11"
+open_question: "one current row per instrument, or full history? [C] Settled for this delivery: one row per instrument on 2026-05-19 (single-date snapshot)."
+
+semantics:
+  business_purpose: >
+    Equity OHLCV market prices. Grain includes exchange (same ISIN trades on NSE
+    and BSE), so exchange must be pinned on every join to avoid doubling. [C] In
+    this delivery it holds one row per instrument on a single date (2026-05-19), NSE only.
+
+attributes:
+  - name: "co_code"
+    display_name: "Company Code"
+    description: "[I] -> dim_cmot_company_mstr.co_code. Part of the grain."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_cmot_company_mstr.co_code"
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "[I] Equity ISIN. NOT UNIQUE in this table - the same ISIN trades on BOTH NSE and BSE, so joining on isin + date alone DOUBLES the position. Always pin exchange."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    not_unique: true
+
+  - name: "company_name"
+    display_name: "Company Name"
+    description: "[D] Denormalised."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "exchange"
+    display_name: "Exchange"
+    description: "[D] PART OF THE GRAIN. The same company trades on both NSE and BSE at slightly different prices, so the key is (co_code, exchange, nav_date), NOT (co_code, nav_date). This is a fan-out hazard on every join."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    fan_out_hazard: true
+
+  - name: "nav_date"
+    display_name: "Price Date"
+    description: "[D] THE TABLE NAME SAYS _latest BUT THE STRUCTURE SAYS HISTORY. A date column plus full OHLCV is the signature of a time series. The workbook CANNOT settle whether this holds one current row per instrument or full history. Run: SELECT co_code, COUNT(*) FROM dim_equity_price_latest GROUP BY 1 ORDER BY 2 DESC LIMIT 5 - the answer changes every query you write against it. [C] Settled in this delivery: 25 rows, one per co_code, all dated 2026-05-19."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "nav_open"
+    display_name: "Open"
+    description: "[D] Opening price. [I] The nav_ prefix is a MISNOMER for equities - NAV is mutual-fund terminology; equities have a market price. The prefix was copied from the MF tables. Harmless once known, but a search for 'price' columns will miss this table entirely."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "nav_high"
+    display_name: "High"
+    description: "[D] Intraday high. Unlike dim_mf_nav_history this table has full OHLC, because exchange-traded instruments do have intraday ranges - so intraday volatility, true-range and gap analysis ARE possible for equity but not for funds."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "nav_low"
+    display_name: "Low"
+    description: "[D] Intraday low."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "nav_close"
+    display_name: "Close"
+    description: "[D] Closing price. [I] Should reconcile to client_holdings.current_price for a direct equity holding on the same date - a good ongoing data-quality check. Compare with a TOLERANCE: current_price is double precision while this is real."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "nav_volume"
+    display_name: "Volume"
+    description: "[D] TYPE DEFECT (latent): declared integer, capped at ~2.15 billion. A heavily traded penny stock can exceed 2.15bn shares in a day and would OVERFLOW. bigint would have been the safe choice."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+    type_defect: "latent overflow - integer capped at ~2.15bn; should be bigint"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "[D] Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "[D] ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "[D] 64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
