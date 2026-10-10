@@ -1,0 +1,150 @@
+{
+  "active": true,
+  "preparation_model": "moonshotai.kimi-k2-thinking",
+  "fingerprint": "17431387871b488d8ce132ac8b0fe19f6f5a82b41806145ebcec8814c193f17e",
+  "review_path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/context_cache/kimi_k2_thinking/17431387871b488d8ce132ac8b0fe19f6f5a82b41806145ebcec8814c193f17e.json",
+  "active_count": 7,
+  "active_entries_sha256": "e3f0fba53352c62e91c70842402359ad3ba213626426acd0fe4c40539063521d",
+  "active_entries": [
+    {
+      "id": "glossary:G1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "investor identifier",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investor_id"
+      ],
+      "terms": [
+        "investor_id"
+      ],
+      "definition": "Unique identifier for an investor",
+      "quote": "Verify purchase_date, cost, and cash_flow records for investor {investor_id}",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "2565309c2d85aaac2148305e3f9788920e0030d01d58e9011e827479e3982e80",
+      "active": true
+    },
+    {
+      "id": "glossary:G2",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding purchase date",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "portfolio_holding.purchase_date"
+      ],
+      "definition": "Date when a portfolio holding was purchased",
+      "quote": "Cross-check `portfolio_holding.purchase_date` — an incorrectly early purchase date inflates XIRR by extending the holding period artificially.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "604cbac0808d2ade283d923a8437225526be83c68dd078fc46bedf216c5c1771",
+      "active": true
+    },
+    {
+      "id": "glossary:G3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding cost basis",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": [
+        "portfolio_holding.cost"
+      ],
+      "definition": "Original purchase cost of a holding",
+      "quote": "Cross-check `portfolio_holding.cost` — an abnormally low purchase cost (data entry error) will inflate returns.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "43975596ba64859c83bb7819317b27ad0709421f7318a21331f9b0cbcf3a499c",
+      "active": true
+    },
+    {
+      "id": "glossary:G4",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding current value",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": [
+        "portfolio_holding.current_value"
+      ],
+      "definition": "Current market value of a holding",
+      "quote": "Current portfolio value or redemptions are **positive** cash flows.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "269ae610c28a3fb82b992318f236420b5a1415a1e690e7e406f8eb450588e53a",
+      "active": true
+    },
+    {
+      "id": "glossary:G6",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "risk tolerance profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "risk_tolerance"
+      ],
+      "definition": "Investor risk tolerance classification",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "93e725b5da859cd79bfdd739d227a2008161ab9584a88905195cb4ef9ac62d68",
+      "active": true
+    },
+    {
+      "id": "glossary:G10",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "investor identifier",
+      "backend": "kg",
+      "source": "Investor",
+      "fields": [
+        "investorId"
+      ],
+      "terms": [
+        "investor_id"
+      ],
+      "definition": "Unique identifier for an investor in KG",
+      "quote": "Verify purchase_date, cost, and cash_flow records for investor {investor_id}",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "eec64be34a2058bfc9c08903f1e9e639572b440589eec2e615a262ad3818d22c",
+      "active": true
+    },
+    {
+      "id": "glossary:G11",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding purchase date",
+      "backend": "kg",
+      "source": "PortfolioHolding",
+      "fields": [
+        "purchaseDate"
+      ],
+      "terms": [
+        "portfolio_holding.purchase_date"
+      ],
+      "definition": "Date when a portfolio holding was purchased in KG",
+      "quote": "Cross-check `portfolio_holding.purchase_date` — an incorrectly early purchase date inflates XIRR by extending the holding period artificially.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "ecec76b584f115b02ae42d1e8c15d34e3024556527c5f3e149e900495304e8b0",
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+# ATOM_CONTEXT_RISK_TOLERANCE_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_CONTEXT_RISK_TOLERANCE_001"
+  type: "Atom"
+  subtype: "Context"
+  name: "risk_tolerance_context"
+  display_name: "Risk Tolerance Rules"
+
+
+  description: >
+    Risk tolerance classification with embedded business intelligence including
+    asset allocation limits, product suitability rules, volatility thresholds,
+    and compliance requirements. This is NOT just a lookup table - it contains
+    the rules that govern how each risk profile should be treated in portfolio
+    construction and compliance validation.
+
+semantics:
+  business_purpose: >
+    Provides prescriptive business intelligence for risk-based portfolio
+    management. Enables automated compliance checking, suitability validation,
+    and risk-appropriate product recommendations.
+  
+  use_cases:
+    - "portfolio_compliance"
+    - "suitability_assessment"
+    - "asset_allocation_validation"
+    - "product_recommendation"
+    - "risk_based_rebalancing"
+
+
+attributes:
+  - name: "risk_tolerance_id"
+    display_name: "Risk Tolerance ID"
+    description: "Unique identifier for risk tolerance level"
+    type: "string"
+    filterable: true
+
+  - name: "risk_tolerance"
+    display_name: "Risk Tolerance"
+    synonyms: ["risk profile", "risk level", "risk appetite"]
+    description: "Risk tolerance classification name"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Conservative"
+      - "Moderate"
+      - "Aggressive"
+
+context_values:
+  - value: "Conservative"
+    description: "Capital preservation focused with minimal volatility tolerance"
+  
+  - value: "Moderate"
+    description: "Balanced approach between growth and capital preservation"
+  
+  - value: "Aggressive"
+    description: "Growth focused with high volatility tolerance"
+
+derived_context:
+  - name: "is_equity_heavy_allowed"
+    description: "Whether equity-heavy portfolios are permitted"
+
+  - name: "max_equity_allocation"
+    description: "Maximum allowed equity allocation percentage"
+
+  - name: "is_high_risk_products_allowed"
+    description: "Whether high-risk products can be recommended"
+
+  - name: "get_suitable_products"
+    description: "Returns list of suitable product types"

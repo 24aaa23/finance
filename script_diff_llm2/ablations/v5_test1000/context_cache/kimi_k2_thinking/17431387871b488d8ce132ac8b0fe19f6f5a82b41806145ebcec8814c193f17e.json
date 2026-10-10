@@ -1,0 +1,1193 @@
+{
+  "fingerprint": "17431387871b488d8ce132ac8b0fe19f6f5a82b41806145ebcec8814c193f17e",
+  "entries": [
+    {
+      "id": 1,
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR calculation",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "date",
+        "type"
+      ],
+      "terms": [
+        "XIRR",
+        "Extended Internal Rate of Return",
+        "annualised return",
+        "irregular cash flows"
+      ],
+      "definition": "XIRR is the annualised return computed from irregular cash flows using Newton-Raphson method where NPV=0, with inflows as negative and outflows as positive",
+      "quote": "XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": []
+    },
+    {
+      "id": 2,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR plausibility guardrail",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "XIRR threshold",
+        "suspect XIRR",
+        "data quality warning"
+      ],
+      "definition": "XIRR results exceeding 25% or below -50% must be flagged as suspect and trigger data quality investigation",
+      "quote": "Computed XIRR > **25%** | **FLAG as suspect.** Do NOT present as a valid result without investigation.",
+      "conflicts": []
+    },
+    {
+      "id": 3,
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "simple returns percentage",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct",
+        "current_value",
+        "cost"
+      ],
+      "terms": [
+        "returns_pct",
+        "simple percentage return",
+        "holding return"
+      ],
+      "definition": "Simple percentage return calculated as (current_value - cost) / cost × 100",
+      "quote": "Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": []
+    },
+    {
+      "id": 4,
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "portfolio health scores",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "terms": [
+        "portfolio health",
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "definition": "Four scoring metrics on a 0-100 scale measuring goal alignment, risk level, liquidity adequacy, and diversification quality",
+      "quote": "All scores are on a **0–100 scale**.",
+      "conflicts": []
+    },
+    {
+      "id": 5,
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "risk score interpretation",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "risk_score"
+      ],
+      "terms": [
+        "risk score ranges",
+        "low risk",
+        "moderate risk",
+        "high risk"
+      ],
+      "definition": "Risk score ranges: 0-40 low risk, 41-70 moderate risk, 71-100 high risk",
+      "quote": "| `risk_score` | 0–40 | Low risk |\n| `risk_score` | 41–70 | Moderate risk |\n| `risk_score` | 71–100 | High risk |",
+      "conflicts": []
+    },
+    {
+      "id": 6,
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "goal progress field naming",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": [
+        "achievement_pct",
+        "progress_pct",
+        "goal progress calculation"
+      ],
+      "definition": "Document uses 'achievement_pct' but physical schema uses 'progress_pct' for (current_value / target_amount) × 100",
+      "quote": "`achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": [
+        "Document refers to 'achievement_pct' but physical schema ATOM_ENTITY_INVESTMENT_GOAL_001 only contains 'progress_pct' field"
+      ]
+    },
+    {
+      "id": 7,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "investment lock-in periods",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": [
+        "ELSS lock-in",
+        "PPF lock-in",
+        "lock-in compliance"
+      ],
+      "definition": "ELSS investments have 3-year lock-in from purchase_date; do not recommend early redemption",
+      "quote": "Lock-in violation — ELSS | `investment_type = 'ELSS'` and `(today - purchase_date) < 3 years` | Do not recommend redemption; surface lock-in warning",
+      "conflicts": []
+    },
+    {
+      "id": 8,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "conservative investor equity limit",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance",
+        "category"
+      ],
+      "terms": [
+        "conservative equity cap",
+        "suitability breach"
+      ],
+      "definition": "Conservative investors must not hold equity allocation exceeding 40%",
+      "quote": "Conservative investors must NOT hold > 40% equity.",
+      "conflicts": []
+    },
+    {
+      "id": 9,
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "segment classification mismatch",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": [
+        "customer segment",
+        "premium standard mass",
+        "segment definition"
+      ],
+      "definition": "Document defines segment as customer tier (Premium/Standard/Mass) but schema uses segment for market cap classification",
+      "quote": "Customer Segments - **Premium** — High-value clients with sophisticated advisory needs. **Standard** — Mid-tier clients. **Mass** — Retail clients.",
+      "conflicts": [
+        "Schema observed_text_domains for segment shows: [\"Diversified\", \"Large Cap\", \"Mid Cap\", \"Small Cap\"] which contradicts document's customer segment definition"
+      ]
+    },
+    {
+      "id": 10,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "PPF lock-in period conflict",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": [
+        "PPF lock-in years",
+        "contradictory lock-in periods"
+      ],
+      "definition": "Document contains conflicting PPF lock-in periods: 15 years in holdings check vs 2 years in business rules",
+      "quote": "Lock-in violation — PPF | `investment_type = 'PPF'` and `(today - purchase_date) < 15 years`",
+      "conflicts": [
+        "Section 4.2 specifies 15-year lock-in: `(today - purchase_date) < 15 years`",
+        "Section 5 states: 'PPF has 2-year lock-in'"
+      ]
+    },
+    {
+      "id": 11,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "cash flow sign convention",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "type"
+      ],
+      "terms": [
+        "cash flow sign",
+        "inflow negative",
+        "outflow positive"
+      ],
+      "definition": "Inflows (SIP, Lump Sum, Deposit) are negative for XIRR; Redemption/Withdrawal are positive",
+      "quote": "Inflows (investments) are **negative** cash flows. Current portfolio value or redemptions are **positive** cash flows.",
+      "conflicts": []
+    },
+    {
+      "id": 12,
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "emergency fund allocation suitability",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "emergency fund equity",
+        "emergency fund allocation"
+      ],
+      "definition": "Emergency Fund goals with equity allocation >10% are unsuitable; must be near-liquid debt instruments",
+      "quote": "Emergency Fund in equity | `investment_goal = 'Emergency Fund'` and equity allocation > 10% | Flag as unsuitable; Emergency Fund must be near-liquid (Debt/liquid funds)",
+      "conflicts": []
+    },
+    {
+      "id": 13,
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "portfolio holding returns",
+      "backend": "kg",
+      "source": "PortfolioHolding",
+      "fields": [
+        "returnsPct",
+        "currentValue",
+        "cost"
+      ],
+      "terms": [
+        "returns_pct",
+        "simple percentage return"
+      ],
+      "definition": "KG field representing simple percentage return calculated as (currentValue - cost) / cost × 100",
+      "quote": "Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": []
+    },
+    {
+      "id": 14,
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "cash flow for XIRR",
+      "backend": "kg",
+      "source": "CashFlow",
+      "fields": [
+        "amount",
+        "date",
+        "type"
+      ],
+      "terms": [
+        "cash flow",
+        "XIRR input"
+      ],
+      "definition": "KG entity representing irregular cash flows with sign conventions for XIRR calculation",
+      "quote": "XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": []
+    },
+    {
+      "id": 15,
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "risk tolerance classification",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "conservative",
+        "moderate",
+        "aggressive",
+        "risk tolerance"
+      ],
+      "definition": "Three-tier risk classification system determining investment approach and allocation limits",
+      "quote": "**Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation. **Moderate** — Balanced growth and preservation; mixed allocation. **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "investor identifier",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investor_id"
+      ],
+      "terms": [
+        "investor_id"
+      ],
+      "definition": "Unique identifier for an investor",
+      "quote": "Verify purchase_date, cost, and cash_flow records for investor {investor_id}",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G2",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding purchase date",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "portfolio_holding.purchase_date"
+      ],
+      "definition": "Date when a portfolio holding was purchased",
+      "quote": "Cross-check `portfolio_holding.purchase_date` — an incorrectly early purchase date inflates XIRR by extending the holding period artificially.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding cost basis",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": [
+        "portfolio_holding.cost"
+      ],
+      "definition": "Original purchase cost of a holding",
+      "quote": "Cross-check `portfolio_holding.cost` — an abnormally low purchase cost (data entry error) will inflate returns.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G4",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding current value",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": [
+        "portfolio_holding.current_value"
+      ],
+      "definition": "Current market value of a holding",
+      "quote": "Current portfolio value or redemptions are **positive** cash flows.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G5",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "percentage return",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": [
+        "portfolio_holding.returns_pct"
+      ],
+      "definition": "Simple percentage return calculation",
+      "quote": "Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G6",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "risk tolerance profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "risk_tolerance"
+      ],
+      "definition": "Investor risk tolerance classification",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G7",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "investment goal type",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "investment_goal"
+      ],
+      "definition": "Type of investment goal",
+      "quote": "- `achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G8",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "goal target amount",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "target_amount"
+      ],
+      "terms": [
+        "target_amount"
+      ],
+      "definition": "Target monetary amount for a goal",
+      "quote": "- `achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G9",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "cash flow amount",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "cash_flow.amount"
+      ],
+      "definition": "Monetary amount of cash flow",
+      "quote": "Sum of `cash_flow.amount` (Withdrawal + Redemption) for a period > `portfolio_holding.current_value`",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G10",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "investor identifier",
+      "backend": "kg",
+      "source": "Investor",
+      "fields": [
+        "investorId"
+      ],
+      "terms": [
+        "investor_id"
+      ],
+      "definition": "Unique identifier for an investor in KG",
+      "quote": "Verify purchase_date, cost, and cash_flow records for investor {investor_id}",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G11",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding purchase date",
+      "backend": "kg",
+      "source": "PortfolioHolding",
+      "fields": [
+        "purchaseDate"
+      ],
+      "terms": [
+        "portfolio_holding.purchase_date"
+      ],
+      "definition": "Date when a portfolio holding was purchased in KG",
+      "quote": "Cross-check `portfolio_holding.purchase_date` — an incorrectly early purchase date inflates XIRR by extending the holding period artificially.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G12",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "cash flow amount",
+      "backend": "kg",
+      "source": "CashFlow",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "cash_flow.amount"
+      ],
+      "definition": "Monetary amount of cash flow in KG",
+      "quote": "Sum of `cash_flow.amount` (Withdrawal + Redemption) for a period > `portfolio_holding.current_value`",
+      "conflicts": []
+    }
+  ],
+  "review": [
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR calculation",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "date",
+        "type"
+      ],
+      "terms": [
+        "XIRR",
+        "Extended Internal Rate of Return",
+        "annualised return",
+        "irregular cash flows"
+      ],
+      "definition": "XIRR is the annualised return computed from irregular cash flows using Newton-Raphson method where NPV=0, with inflows as negative and outflows as positive",
+      "quote": "XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "63e73c0d986f4b3634735d816ae4be6fc3bef683c76120d84ccbdd976d3cf183",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR plausibility guardrail",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "XIRR threshold",
+        "suspect XIRR",
+        "data quality warning"
+      ],
+      "definition": "XIRR results exceeding 25% or below -50% must be flagged as suspect and trigger data quality investigation",
+      "quote": "Computed XIRR > **25%** | **FLAG as suspect.** Do NOT present as a valid result without investigation.",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "ed0ab61d45c7778029d7c302117fadc14cc62a1f2acdfcef77ca3f66c4cfee7a",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "simple returns percentage",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct",
+        "current_value",
+        "cost"
+      ],
+      "terms": [
+        "returns_pct",
+        "simple percentage return",
+        "holding return"
+      ],
+      "definition": "Simple percentage return calculated as (current_value - cost) / cost × 100",
+      "quote": "Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "442ad6bff5aaa16a82f82310600ce5d125c5e1ba75d64c8f9b0f56abe349f273",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "portfolio health scores",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "terms": [
+        "portfolio health",
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "definition": "Four scoring metrics on a 0-100 scale measuring goal alignment, risk level, liquidity adequacy, and diversification quality",
+      "quote": "All scores are on a **0–100 scale**.",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "7b3620b1bc7996dff0f4574da1542bac393234570b969bd1f6be2a5e6d37e776",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "risk score interpretation",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "risk_score"
+      ],
+      "terms": [
+        "risk score ranges",
+        "low risk",
+        "moderate risk",
+        "high risk"
+      ],
+      "definition": "Risk score ranges: 0-40 low risk, 41-70 moderate risk, 71-100 high risk",
+      "quote": "| `risk_score` | 0–40 | Low risk |\n| `risk_score` | 41–70 | Moderate risk |\n| `risk_score` | 71–100 | High risk |",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "9a0c0f28ef47b274955c93b498baf58d5779056d614182aea24b6429b5f4c76f",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "goal progress field naming",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": [
+        "achievement_pct",
+        "progress_pct",
+        "goal progress calculation"
+      ],
+      "definition": "Document uses 'achievement_pct' but physical schema uses 'progress_pct' for (current_value / target_amount) × 100",
+      "quote": "`achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": [
+        "Document refers to 'achievement_pct' but physical schema ATOM_ENTITY_INVESTMENT_GOAL_001 only contains 'progress_pct' field"
+      ],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Unresolved or unreported conflicts",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "5f7f779c479abbf4f8244a1702d1527b09d7937b29cd6c1016cf54c843722f65",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "investment lock-in periods",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": [
+        "ELSS lock-in",
+        "PPF lock-in",
+        "lock-in compliance"
+      ],
+      "definition": "ELSS investments have 3-year lock-in from purchase_date; do not recommend early redemption",
+      "quote": "Lock-in violation — ELSS | `investment_type = 'ELSS'` and `(today - purchase_date) < 3 years` | Do not recommend redemption; surface lock-in warning",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Quote is not verbatim source evidence",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "7947d4fa228ce6b335471c2abeccf5719023bda12c46090922d4e2daf468006a",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "conservative investor equity limit",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance",
+        "category"
+      ],
+      "terms": [
+        "conservative equity cap",
+        "suitability breach"
+      ],
+      "definition": "Conservative investors must not hold equity allocation exceeding 40%",
+      "quote": "Conservative investors must NOT hold > 40% equity.",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "ae5255efcd7b3bb339459317b08332dba3cd00ce45ddb962fea4e19276b668b6",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "segment classification mismatch",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": [
+        "customer segment",
+        "premium standard mass",
+        "segment definition"
+      ],
+      "definition": "Document defines segment as customer tier (Premium/Standard/Mass) but schema uses segment for market cap classification",
+      "quote": "Customer Segments - **Premium** — High-value clients with sophisticated advisory needs. **Standard** — Mid-tier clients. **Mass** — Retail clients.",
+      "conflicts": [
+        "Schema observed_text_domains for segment shows: [\"Diversified\", \"Large Cap\", \"Mid Cap\", \"Small Cap\"] which contradicts document's customer segment definition"
+      ],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Quote is not verbatim source evidence",
+        "Unresolved or unreported conflicts",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "145b7b2defeda4c41e1a81853318d3c9ab9770730570b9234dd6b13892cb64a6",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "PPF lock-in period conflict",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": [
+        "PPF lock-in years",
+        "contradictory lock-in periods"
+      ],
+      "definition": "Document contains conflicting PPF lock-in periods: 15 years in holdings check vs 2 years in business rules",
+      "quote": "Lock-in violation — PPF | `investment_type = 'PPF'` and `(today - purchase_date) < 15 years`",
+      "conflicts": [
+        "Section 4.2 specifies 15-year lock-in: `(today - purchase_date) < 15 years`",
+        "Section 5 states: 'PPF has 2-year lock-in'"
+      ],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Quote is not verbatim source evidence",
+        "Unresolved or unreported conflicts",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "07f13e197386d3c60839d102031f45aae132af27abe1a25a61c79cfa563d082e",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "cash flow sign convention",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "type"
+      ],
+      "terms": [
+        "cash flow sign",
+        "inflow negative",
+        "outflow positive"
+      ],
+      "definition": "Inflows (SIP, Lump Sum, Deposit) are negative for XIRR; Redemption/Withdrawal are positive",
+      "quote": "Inflows (investments) are **negative** cash flows. Current portfolio value or redemptions are **positive** cash flows.",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Quote is not verbatim source evidence",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "4be160d673bf22c54e557527bfb66886438235b372dc5f62760ac83f2429d81f",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "emergency fund allocation suitability",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "emergency fund equity",
+        "emergency fund allocation"
+      ],
+      "definition": "Emergency Fund goals with equity allocation >10% are unsuitable; must be near-liquid debt instruments",
+      "quote": "Emergency Fund in equity | `investment_goal = 'Emergency Fund'` and equity allocation > 10% | Flag as unsuitable; Emergency Fund must be near-liquid (Debt/liquid funds)",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Quote is not verbatim source evidence",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "c2a71304a0d64705d546469fc88a47c4f3fd5cce7306e5619e72d042acf63c36",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "portfolio holding returns",
+      "backend": "kg",
+      "source": "PortfolioHolding",
+      "fields": [
+        "returnsPct",
+        "currentValue",
+        "cost"
+      ],
+      "terms": [
+        "returns_pct",
+        "simple percentage return"
+      ],
+      "definition": "KG field representing simple percentage return calculated as (currentValue - cost) / cost × 100",
+      "quote": "Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "a4a71543482e9e61fc87c52ec23437de3a3e5064e781337b52eac82b4777fcff",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "cash flow for XIRR",
+      "backend": "kg",
+      "source": "CashFlow",
+      "fields": [
+        "amount",
+        "date",
+        "type"
+      ],
+      "terms": [
+        "cash flow",
+        "XIRR input"
+      ],
+      "definition": "KG entity representing irregular cash flows with sign conventions for XIRR calculation",
+      "quote": "XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "e40fbc7eb1e2f2bc7fafde004db9b77f565cee9406685e162eb349c6b5ec1b24",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "risk tolerance classification",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "conservative",
+        "moderate",
+        "aggressive",
+        "risk tolerance"
+      ],
+      "definition": "Three-tier risk classification system determining investment approach and allocation limits",
+      "quote": "**Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation. **Moderate** — Balanced growth and preservation; mixed allocation. **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Quote is not verbatim source evidence",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "40e899f4acf32cc0d82ad3a0a51d13cd91f5479afb90f3b71da7f6c24b49e5d3",
+      "active": false
+    },
+    {
+      "id": "glossary:G1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "investor identifier",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investor_id"
+      ],
+      "terms": [
+        "investor_id"
+      ],
+      "definition": "Unique identifier for an investor",
+      "quote": "Verify purchase_date, cost, and cash_flow records for investor {investor_id}",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "2565309c2d85aaac2148305e3f9788920e0030d01d58e9011e827479e3982e80",
+      "active": true
+    },
+    {
+      "id": "glossary:G2",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding purchase date",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "portfolio_holding.purchase_date"
+      ],
+      "definition": "Date when a portfolio holding was purchased",
+      "quote": "Cross-check `portfolio_holding.purchase_date` — an incorrectly early purchase date inflates XIRR by extending the holding period artificially.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "604cbac0808d2ade283d923a8437225526be83c68dd078fc46bedf216c5c1771",
+      "active": true
+    },
+    {
+      "id": "glossary:G3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding cost basis",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": [
+        "portfolio_holding.cost"
+      ],
+      "definition": "Original purchase cost of a holding",
+      "quote": "Cross-check `portfolio_holding.cost` — an abnormally low purchase cost (data entry error) will inflate returns.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "43975596ba64859c83bb7819317b27ad0709421f7318a21331f9b0cbcf3a499c",
+      "active": true
+    },
+    {
+      "id": "glossary:G4",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding current value",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": [
+        "portfolio_holding.current_value"
+      ],
+      "definition": "Current market value of a holding",
+      "quote": "Current portfolio value or redemptions are **positive** cash flows.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "269ae610c28a3fb82b992318f236420b5a1415a1e690e7e406f8eb450588e53a",
+      "active": true
+    },
+    {
+      "id": "glossary:G5",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "percentage return",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": [
+        "portfolio_holding.returns_pct"
+      ],
+      "definition": "Simple percentage return calculation",
+      "quote": "Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "96c548647737d6acaba34825b1d77d90db892d2cada8bb8694d8ef8ac4665e61",
+      "active": false
+    },
+    {
+      "id": "glossary:G6",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "risk tolerance profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "risk_tolerance"
+      ],
+      "definition": "Investor risk tolerance classification",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "93e725b5da859cd79bfdd739d227a2008161ab9584a88905195cb4ef9ac62d68",
+      "active": true
+    },
+    {
+      "id": "glossary:G7",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "investment goal type",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "investment_goal"
+      ],
+      "definition": "Type of investment goal",
+      "quote": "- `achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "d22bfdbf84eab23d38892f7b724bbf4ccc56063dd96a242f0538f7c7df589a5b",
+      "active": false
+    },
+    {
+      "id": "glossary:G8",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "goal target amount",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "target_amount"
+      ],
+      "terms": [
+        "target_amount"
+      ],
+      "definition": "Target monetary amount for a goal",
+      "quote": "- `achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "f75dc14d7bd636b184f9081e5979b4f39efee64e79c334d6fdb68fbc17854438",
+      "active": false
+    },
+    {
+      "id": "glossary:G9",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "cash flow amount",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "cash_flow.amount"
+      ],
+      "definition": "Monetary amount of cash flow",
+      "quote": "Sum of `cash_flow.amount` (Withdrawal + Redemption) for a period > `portfolio_holding.current_value`",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "92f93f61e97830f6399359c112479aea25e707167b8e1485741a36c9390cd6fb",
+      "active": false
+    },
+    {
+      "id": "glossary:G10",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "investor identifier",
+      "backend": "kg",
+      "source": "Investor",
+      "fields": [
+        "investorId"
+      ],
+      "terms": [
+        "investor_id"
+      ],
+      "definition": "Unique identifier for an investor in KG",
+      "quote": "Verify purchase_date, cost, and cash_flow records for investor {investor_id}",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "eec64be34a2058bfc9c08903f1e9e639572b440589eec2e615a262ad3818d22c",
+      "active": true
+    },
+    {
+      "id": "glossary:G11",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "holding purchase date",
+      "backend": "kg",
+      "source": "PortfolioHolding",
+      "fields": [
+        "purchaseDate"
+      ],
+      "terms": [
+        "portfolio_holding.purchase_date"
+      ],
+      "definition": "Date when a portfolio holding was purchased in KG",
+      "quote": "Cross-check `portfolio_holding.purchase_date` — an incorrectly early purchase date inflates XIRR by extending the holding period artificially.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "ecec76b584f115b02ae42d1e8c15d34e3024556527c5f3e149e900495304e8b0",
+      "active": true
+    },
+    {
+      "id": "glossary:G12",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "cash flow amount",
+      "backend": "kg",
+      "source": "CashFlow",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "cash_flow.amount"
+      ],
+      "definition": "Monetary amount of cash flow in KG",
+      "quote": "Sum of `cash_flow.amount` (Withdrawal + Redemption) for a period > `portfolio_holding.current_value`",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "9bed4a4bf039352252becd6fdaac97033ecbab455c09003e85c8aa934a62b9e6",
+      "active": false
+    }
+  ],
+  "quarantined_documents": [
+    {
+      "document": "business_rules",
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/phase0_business_rules.md",
+      "reason": "Evaluation-scoped document excluded from preparation and inference"
+    }
+  ]
+}

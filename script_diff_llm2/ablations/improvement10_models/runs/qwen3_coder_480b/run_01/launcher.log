@@ -1,0 +1,52 @@
+[INPUT] SQLITE_DB_PATH: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db
+[INPUT] TABLE_METADATA_DIR: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada
+[INPUT] DOMAIN_INTRO_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt
+[INPUT] BUSINESS_RULES_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md
+Validated 17 documents, 8 tables, 8 YAML table matches.
+[TIME] Startup-to-finish: 0.17s; model requests: 0.00s (0 calls).
+[TIMING] /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/.runtime/logs/check_1791295856452318351_298666.timing.json
+[INPUT] SQLITE_DB_PATH: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db
+[INPUT] TABLE_METADATA_DIR: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada
+[INPUT] DOMAIN_INTRO_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt
+[INPUT] BUSINESS_RULES_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md
+Validated 17 documents, 8 tables, 8 YAML table matches.
+[KNOWLEDGE] Cache miss. Mode: simple. Model: qwen.qwen3-coder-480b-a35b-instruct. Live log: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/logs/knowledge_1791295907240850859_299533.jsonl
+[KNOWLEDGE] Using simple process: all documents and schema in one request; up to 3 validation attempts.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: sending request.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 20.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation: response in 30.2s; finish=stop, completion tokens=3694. Validating...
+[KNOWLEDGE] Whole-document compilation: validation passed.
+[KNOWLEDGE] Reviewing 34 draft rules against all original sources for omissions and corrections.
+[KNOWLEDGE] Knowledge completeness review, attempt 1/3: sending request.
+[KNOWLEDGE] Knowledge completeness review: response in 6.6s; finish=stop, completion tokens=502. Validating...
+[KNOWLEDGE] Knowledge completeness review: validation passed.
+[KNOWLEDGE] Review completed: 34 draft rules, 37 reviewed rules.
+[KNOWLEDGE] Cache saved: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/knowledge_cache/e1dddae6590d29039522a60ac43acf8659c80b0b1c2f25a04a82be7adfa87598.json
+[CACHE] Knowledge compiled
+Compiled 37 rules. Identity: e1dddae6590d29039522a60ac43acf8659c80b0b1c2f25a04a82be7adfa87598
+Section coverage is not enforced in simple mode.
+Completeness review: completed
+[TIME] Startup-to-finish: 37.61s; model requests: 36.74s (2 calls). Slowest model stages: Domain=36.74s
+[TIMING] /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/.runtime/logs/prepare_1791295906399780932_299533.timing.json
+[INPUT] SQLITE_DB_PATH: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db
+[INPUT] TABLE_METADATA_DIR: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada
+[INPUT] DOMAIN_INTRO_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt
+[INPUT] BUSINESS_RULES_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md
+Validated 17 documents, 8 tables, 8 YAML table matches.
+[CACHE] Knowledge hit
+Compiled 37 rules. Identity: e1dddae6590d29039522a60ac43acf8659c80b0b1c2f25a04a82be7adfa87598
+Section coverage is not enforced in simple mode.
+Completeness review: completed
+[TIME] Startup-to-finish: 0.93s; model requests: 0.00s (0 calls).
+[TIMING] /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/.runtime/logs/prepare_1791303881566721325_22251.timing.json
+[INPUT] SQLITE_DB_PATH: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db
+[INPUT] TABLE_METADATA_DIR: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada
+[INPUT] DOMAIN_INTRO_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt
+[INPUT] BUSINESS_RULES_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md
+Validated 17 documents, 8 tables, 8 YAML table matches.
+[CACHE] Knowledge hit
+Compiled 37 rules. Identity: e1dddae6590d29039522a60ac43acf8659c80b0b1c2f25a04a82be7adfa87598
+Section coverage is not enforced in simple mode.
+Completeness review: completed
+[TIME] Startup-to-finish: 0.87s; model requests: 0.00s (0 calls).
+[TIMING] /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/.runtime/logs/prepare_1791303964451455316_23461.timing.json

@@ -1,0 +1,45 @@
+{
+  "run_id": "a1634d04d89a44d4bab774d6bb71d78d",
+  "started_at": "2026-10-08T04:00:04",
+  "status": "completed",
+  "wall_clock_seconds": 1.154057717998512,
+  "startup_seconds": null,
+  "current_run_query_seconds": 0,
+  "current_run_cycle_seconds": 0,
+  "llm_seconds": 0,
+  "metadata": {
+    "mode": "prepare",
+    "inputs": {
+      "SQLITE_DB_PATH": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db",
+      "TABLE_METADATA_DIR": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada",
+      "DOMAIN_INTRO_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt",
+      "BUSINESS_RULES_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md"
+    },
+    "knowledge_cache_hit": true,
+    "knowledge_identity": "0f352c19158bcd7f7d95109b8d17b19ebf297aed6baa2622253441672dcf90fa",
+    "knowledge_compilation_mode": "simple"
+  },
+  "questions": [],
+  "stages": [
+    {
+      "stage": "configuration_and_imports",
+      "query_id": null,
+      "seconds": 0.8662405150025734
+    },
+    {
+      "stage": "schema_and_documents",
+      "query_id": null,
+      "seconds": 0.2524173609999707
+    },
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "seconds": 0.006647007001447491
+    }
+  ],
+  "llm_calls": [],
+  "timing_scope": "CLI entry through result/log finalization; excludes interpreter bootstrap and this timing summary write",
+  "stage_accounting": "Stage durations may nest; do not add them to wall-clock time.",
+  "cached_tokens_note": "null means the endpoint did not report cache usage; it does not mean zero",
+  "usage_note": "SDK internal retry usage may be unavailable. Call duration includes SDK retries/backoff. Token usage is provider-reported, not a verified bill. Event and summary files describe the same calls; do not add both."
+}

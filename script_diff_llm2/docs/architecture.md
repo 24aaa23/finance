@@ -1,5 +1,8 @@
 # Architecture
 
+For a detailed paper-oriented description of the current implementation and its
+relationship to Improvement 6, see [current pipeline methodology](current_pipeline_methodology.md).
+
 `script_diff_llm` evaluates an agentic query-processing pipeline for a wealth-management dataset.
 
 The current validated architecture routes at subquery level, not whole-query level:
@@ -19,6 +22,13 @@ natural-language query
 Independent DAG nodes can run in parallel. Dependent nodes consume upstream outputs. `Set_Intersect`, `Set_Union`, and `Set_Difference` are deterministic operators, not LLM calls.
 
 ## Data Substrates
+
+The KG is derived from the SQL database. They provide relational and graph
+representations of shared enterprise records; graph metadata and relationship
+enrichment add structure beyond the copied SQL cells. Their physical names,
+datatypes, and identifier encodings still require explicit correspondence.
+The source coverage and identity audit is documented in
+[SQL-to-KG coverage audit](../analysis/sql_kg_coverage_20261005/REPORT.md).
 
 The SQL backend uses SQLite and the physical `ATOM_*` tables in `wealth_management_diverse.db`. SQL prompts and validators should refer to this as `sql_schema`.
 

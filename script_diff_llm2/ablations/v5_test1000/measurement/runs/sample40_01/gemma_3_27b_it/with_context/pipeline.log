@@ -1,0 +1,1039 @@
+[SYSTEM] SQLite DB: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[SYSTEM] SQLite DB exists: True
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: Apache Jena Fuseki
+[SYSTEM] Fuseki endpoint: http://127.0.0.1:3030/wealth/query
+[SYSTEM] Fuseki scan timeout: 60 seconds
+[SYSTEM] Experiment config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/experiments/gemma_3_27b_it_with_context.yaml
+[SYSTEM] Model config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/models/gemma_3_27b_it.yaml
+[SYSTEM] SQL asset: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/sql/wealth_management_diverse/asset.yaml
+[SYSTEM] Fuseki health check passed.
+[SYSTEM] Model provider: aws-bedrock-openai-compatible
+[SYSTEM] Model endpoint env: ABLATION_BASE_URL
+[SYSTEM] Primary model: google.gemma-3-27b-it
+[SYSTEM] RAG/Retrieve model: google.gemma-3-27b-it
+[SYSTEM] Planner model: google.gemma-3-27b-it
+[SYSTEM] Query_Spec model: google.gemma-3-27b-it
+[SYSTEM] Refine model: google.gemma-3-27b-it
+[SYSTEM] Generate model: google.gemma-3-27b-it
+[SYSTEM] Validate model: google.gemma-3-27b-it
+[SYSTEM] Explain model: google.gemma-3-27b-it
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: multi_candidate
+[SYSTEM] Benchmark query workers: 4
+[SYSTEM] Benchmark start delay: 0 seconds
+[SYSTEM] Report save interval: every 1 completed row(s)
+[SYSTEM] Report file: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/gemma_3_27b_it/with_context/raw_pipeline.csv
+[SYSTEM] Loading RDF Knowledge Graph metadata from schema + Fuseki...
+[SYSTEM] Successfully loaded 27 classes with Fuseki dynamic properties.
+[SYSTEM] Using Apache Jena Fuseki as the RDF instance graph. Skipping rdflib instance load.
+[SYSTEM] Loaded RDF ID alias map with 1658 normalized keys.
+[SQL SCHEMA] Loaded 8 tables from /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[DOMAIN CONTEXT] business_rules quarantined: Evaluation-scoped document excluded from preparation and inference
+[DOMAIN CONTEXT] 1 active / 12 candidates. Review: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/context_cache/gemma_3_27b_it/cdcdbde2593dc84ce26f9bd71e28223e485e4bb5b4dc8e4c876fbb9929a4210f.json
+[DEBUG] SQLITE_DB_PATH = /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[DEBUG] DB exists = True
+[DEBUG] DB absolute = /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+
+[SYSTEM] Loading /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/wealth_management_1000_test_set_questions.xlsx...
+[SYSTEM] Loading ground-truth overrides from /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/216_questions_full_results.json...
+[SYSTEM] Loaded 216 ground-truth override entries.
+[SYSTEM] Applied full ground-truth overrides to 216 benchmark row(s).
+[SYSTEM] Query window offset=0, limit=1000.
+[SYSTEM] Successfully loaded 40 benchmark queries from the new dataset.
+
+[SYSTEM] Running raw pipeline. Saving incrementally...
+[SYSTEM] Pending queries this run: 40
+--- Planning DAG using semantic_decompose ---
+--- Planning DAG using semantic_decompose ---
+--- Planning DAG using semantic_decompose ---
+--- Planning DAG using semantic_decompose ---
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the average risk score of investors in the Small Cap segment?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What category and sector focus is investor INV-096 associated with?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080421357120
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Which Conservative investors have a risk score above 75 and hold a Corporate Bond?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080412964416
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the name of investor INV-081?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130079929660992
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT AVG(T1.risk_score) AS avg_risk_score
+FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T0
+INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T1 ON T0.investor_id = T1.investor_id
+WHERE T0.segment = 'Small Cap'
+ [Q1] complete. status=success rows=1 elapsed=13.127s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 1/40 this run (1/40 total window): PIPELINE_SUCCESS in 20.641s
+ [Q1] complete. status=success rows=1 elapsed=18.742s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 2/40 this run (2/40 total window): PIPELINE_SUCCESS in 23.204s
+ [Q1] complete. status=success rows=1 elapsed=19.42s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---Processed 3/40 this run (3/40 total window): PIPELINE_SUCCESS in 23.487s
+
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Which Long-term investors have a risk score above 50, hold a position with investment type 'ETF', and have at least one rebalancing action?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT T1.investor_id FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1 INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T2 ON T1.investor_id = T2.investor_id INNER JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 AS T3 ON T1.investor_id = T3.investor_id WHERE T1.risk_tolerance = 'Conservative' AND T2.risk_score > 75 AND T3.investment_type LIKE '%Corporate Bond%'
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=List Moderate investors whose liquidity score is below 10.
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080421357120
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT DISTINCT T1.investor_id FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1 INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T2 ON T1.investor_id = T2.investor_id INNER JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 AS T3 ON T1.investor_id = T3.investor_id WHERE T1.risk_tolerance = 'Conservative' AND T2.risk_score > 75 AND T3.investment_type LIKE '%Corporate Bond%'
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Which Aggressive investors have a risk score above 75 and hold at least one loss-making position (negative returns, counting only holdings with a recorded cost and current value)?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130079929660992
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=success rows=63 elapsed=34.684s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 4/40 this run (4/40 total window): PIPELINE_SUCCESS in 39.271s
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Which Conservative investors have a diversification score below 25, a loss-making holding (counting only holdings with a recorded cost and current value), and an allocation above 0% in the Automobile sector?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080412964416
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT T1.investor_id FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1 INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T2 ON T1.investor_id = T2.investor_id WHERE T1.risk_tolerance = 'Moderate' AND T2.liquidity_score < 10
+ [Q1] complete. status=success rows=42 elapsed=22.649s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 5/40 this run (5/40 total window): PIPELINE_SUCCESS in 25.609s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Which Conservative investors have a liquidity score below 25, a loss-making holding (counting only holdings with a recorded cost and current value), an underfunded goal, and a 'Asset Reallocation' rebalancing action?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080421357120
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=error rows=0 elapsed=36.554s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 6/40 this run (6/40 total window): DAG_NODE_ERROR in 40.533s
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=How many investors belong to the Diversified segment cohort?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT T1.investor_id FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1 INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T2 ON T1.investor_id = T2.investor_id INNER JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 AS T3 ON T1.investor_id = T3.investor_id INNER JOIN ATOM_ENTITY_SECTOR_ALLOCATION_001 AS T4 ON T1.investor_id = T4.investor_id WHERE T1.risk_tolerance = 'Conservative' AND T2.diversification_score < 25 AND T3.cost IS NOT NULL AND T3.current_value IS NOT NULL AND T3.returns_pct < 0 AND T4.sector = 'Automobile' AND T4.allocation_pct > 0
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=14.027s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 7/40 this run (7/40 total window): PIPELINE_SUCCESS in 16.733s
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT DISTINCT T1.investor_id FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1 INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T2 ON T1.investor_id = T2.investor_id INNER JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 AS T3 ON T1.investor_id = T3.investor_id INNER JOIN ATOM_ENTITY_SECTOR_ALLOCATION_001 AS T4 ON T1.investor_id = T4.investor_id WHERE T1.risk_tolerance = 'Conservative' AND T2.diversification_score < 25 AND T3.cost IS NOT NULL AND T3.current_value IS NOT NULL AND T3.returns_pct < 0 AND T4.sector = 'Automobile' AND T4.allocation_pct > 0
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=error rows=0 elapsed=40.418s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 8/40 this run (8/40 total window): DAG_NODE_ERROR in 55.824s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=How many Child Education goals are on track with progress of at least 50 percent?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130079929660992
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=success rows=3 elapsed=38.13s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 9/40 this run (9/40 total window): PIPELINE_SUCCESS in 42.604s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the average risk score of investors in the Equity category cohort?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080412964416
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=How many investors in the Long-term time-horizon cohort with a goal-match percentage above 50 also hold a Corporate Bond position?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH InvestorProfiles AS (
+  SELECT
+    investor_id
+  FROM ATOM_ENTITY_INVESTOR_PROFILE_001
+  WHERE
+    risk_tolerance = 'Conservative'
+),
+PortfolioHealth AS (
+  SELECT
+    investor_id,
+    liquidity_score
+  FROM ATOM_ENTITY_PORTFOLIO_HEALTH_001
+),
+PortfolioHoldings AS (
+  SELECT
+    investor_id,
+    cost,
+    current_value
+  FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+  WHERE
+    cost IS NOT NULL AND current_value IS NOT NULL
+),
+LossMakingHoldings AS (
+  SELECT
+    investor_id
+  FROM PortfolioHoldings
+  WHERE
+    current_value < cost
+),
+InvestmentGoals AS (
+  SELECT
+    investor_id,
+    shortfall
+  FROM ATOM_ENTITY_INVESTMENT_GOAL_001
+),
+UnderfundedGoals AS (
+  SELECT
+    investor_id
+  FROM InvestmentGoals
+  WHERE
+    shortfall > 0
+),
+RebalancingActions AS (
+  SELECT
+    investor_id
+  FROM ATOM_EVENT_REBALANCING_ACTION_001
+  WHERE
+    action = 'Asset Reallocation'
+)
+SELECT
+  ip.investor_id
+FROM InvestorProfiles AS ip
+INNER JOIN PortfolioHealth AS ph ON ip.investor_id = ph.investor_id
+INNER JOIN LossMakingHoldings AS lmh ON ip.investor_id = lmh.investor_id
+INNER JOIN UnderfundedGoals AS ug ON ip.investor_id = ug.investor_id
+INNER JOIN RebalancingActions AS ra ON ip.investor_id = ra.investor_id
+WHERE
+  ph.liquidity_score < 25;
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_EVENT_CASH_FLOW_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=16.485s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---Processed 10/40 this run (10/40 total window): PIPELINE_SUCCESS in 20.144s
+
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT AVG(T1.risk_score) AS avg_risk_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T0 INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T1 ON T0.investor_id = T1.investor_id WHERE T0.category = 'Equity'
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=How many investors in the Moderate risk cohort with a diversification score below 25 carry at least one underfunded goal?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130079929660992
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=success rows=1 elapsed=22.443s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 11/40 this run (11/40 total window): PIPELINE_SUCCESS in 25.097s
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH investor_health AS (
+  SELECT
+    hp.investor_id,
+    hp.goal_match_pct
+  FROM ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS hp
+),
+portfolio_holdings AS (
+  SELECT
+    ph.investor_id
+  FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 AS ph
+  WHERE
+    ph.investment_type = 'Corporate Bond'
+)
+SELECT
+  COUNT(DISTINCT ip.investor_id)
+FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS ip
+INNER JOIN investor_health AS ih
+  ON ip.investor_id = ih.investor_id
+INNER JOIN portfolio_holdings AS ph
+  ON ip.investor_id = ph.investor_id
+WHERE
+  ip.time_horizon = 'Long-term'
+  AND ih.goal_match_pct > 50;
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Which investors in the Mid Cap segment cohort have a liquidity score below 50, a sector allocation above 0% in Automobile, and at least one underfunded goal?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080412964416
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH InvestorProfiles AS (
+  SELECT DISTINCT
+    investor_id
+  FROM ATOM_ENTITY_INVESTOR_PROFILE_001
+  WHERE
+    risk_tolerance = 'Conservative'
+),
+PortfolioHealth AS (
+  SELECT DISTINCT
+    investor_id,
+    liquidity_score
+  FROM ATOM_ENTITY_PORTFOLIO_HEALTH_001
+),
+PortfolioHoldings AS (
+  SELECT DISTINCT
+    investor_id,
+    cost,
+    current_value
+  FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+  WHERE
+    cost IS NOT NULL AND current_value IS NOT NULL
+),
+LossMakingHoldings AS (
+  SELECT DISTINCT
+    investor_id
+  FROM PortfolioHoldings
+  WHERE
+    current_value < cost
+),
+InvestmentGoals AS (
+  SELECT DISTINCT
+    investor_id,
+    shortfall
+  FROM ATOM_ENTITY_INVESTMENT_GOAL_001
+),
+UnderfundedGoals AS (
+  SELECT DISTINCT
+    investor_id
+  FROM InvestmentGoals
+  WHERE
+    shortfall > 0
+),
+RebalancingActions AS (
+  SELECT DISTINCT
+    investor_id
+  FROM ATOM_EVENT_REBALANCING_ACTION_001
+  WHERE
+    action = 'Asset Reallocation'
+)
+SELECT DISTINCT
+  ip.investor_id
+FROM InvestorProfiles AS ip
+INNER JOIN PortfolioHealth AS ph ON ip.investor_id = ph.investor_id
+INNER JOIN LossMakingHoldings AS lmh ON ip.investor_id = lmh.investor_id
+INNER JOIN UnderfundedGoals AS ug ON ip.investor_id = ug.investor_id
+INNER JOIN RebalancingActions AS ra ON ip.investor_id = ra.investor_id
+WHERE
+  ph.liquidity_score < 25;
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=2 elapsed=62.649s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 12/40 this run (12/40 total window): PIPELINE_SUCCESS in 65.287s
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT COUNT(DISTINCT ip.investor_id) AS investor_count FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS ip INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS ph ON ip.investor_id = ph.investor_id INNER JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 AS po ON ip.investor_id = po.investor_id WHERE ip.time_horizon = 'Long-term' AND ph.goal_match_pct > 50 AND po.investment_type = 'Corporate Bond'
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=For investor INV-005, what is their time horizon and total sector-allocation amount?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080421357120
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=success rows=1 elapsed=34.045s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 13/40 this run (13/40 total window): PIPELINE_SUCCESS in 38.466s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=For each segment and sector, how many distinct investors have a sector allocation above 0% in that sector?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=error rows=0 elapsed=33.08s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 14/40 this run (14/40 total window): DAG_NODE_ERROR in 36.711s
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT T1.investor_id FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1 INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T2 ON T1.investor_id = T2.investor_id INNER JOIN ATOM_ENTITY_SECTOR_ALLOCATION_001 AS T3 ON T1.investor_id = T3.investor_id INNER JOIN ATOM_ENTITY_INVESTMENT_GOAL_001 AS T4 ON T1.investor_id = T4.investor_id WHERE T1.segment = 'Mid Cap' AND T2.liquidity_score < 50 AND T3.sector = 'Automobile' AND T3.allocation_pct > 0 AND T4.shortfall > 0
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=For each risk tolerance, how many distinct investors both have an allocation above 0% in Banking and have a Buy rebalancing action?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130079929660992
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT DISTINCT T1.investor_id FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1 INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T2 ON T1.investor_id = T2.investor_id INNER JOIN ATOM_ENTITY_SECTOR_ALLOCATION_001 AS T3 ON T1.investor_id = T3.investor_id INNER JOIN ATOM_ENTITY_INVESTMENT_GOAL_001 AS T4 ON T1.investor_id = T4.investor_id WHERE T1.segment = 'Mid Cap' AND T2.liquidity_score < 50 AND T3.sector = 'Automobile' AND T3.allocation_pct > 0 AND T4.shortfall > 0
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT
+  T1.segment,
+  T1.sector,
+  COUNT(DISTINCT T2.investor_id) AS distinct_investors
+FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1
+INNER JOIN ATOM_ENTITY_SECTOR_ALLOCATION_001 AS T2
+  ON T1.investor_id = T2.investor_id
+WHERE
+  T2.allocation_pct > 0
+GROUP BY
+  T1.segment,
+  T1.sector
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=7 elapsed=39.729s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 15/40 this run (15/40 total window): PIPELINE_SUCCESS in 42.794s
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT
+  T1.segment,
+  T1.sector,
+  COUNT(DISTINCT T2.investor_id) AS distinct_investors
+FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 AS T1
+INNER JOIN ATOM_ENTITY_SECTOR_ALLOCATION_001 AS T2
+  ON T1.investor_id = T2.investor_id
+WHERE
+  T2.allocation_pct > 0
+GROUP BY
+  T1.segment,
+  T1.sector
+ [Q1] complete. status=error rows=0 elapsed=35.845s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---Processed 16/40 this run (16/40 total window): DAG_NODE_ERROR in 39.37s
+
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=For each category and cash-flow type, how many distinct investors with a risk score above 50 fall into that combination?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080421357120
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=success rows=65 elapsed=29.431s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 17/40 this run (17/40 total window): PIPELINE_SUCCESS in 34.323s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=For each category, what is the average total sector-allocation investment amount per investor, the average holding return per investor (counting only holdings with a recorded cost and current value), and the average risk score?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=For each time horizon, how many distinct investors with a risk score above 25 both hold a Corporate Bond position and have a Withdrawal transaction?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080412964416
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH BankingAllocation AS (SELECT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 WHERE sector = 'Banking' AND allocation_pct > 0), BuyRebalancing AS (SELECT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001 WHERE action = 'Buy') SELECT T1.risk_tolerance, COUNT(DISTINCT T1.investor_id) AS distinct_investors FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1 INNER JOIN BankingAllocation AS BA ON T1.investor_id = BA.investor_id INNER JOIN BuyRebalancing AS BR ON T1.investor_id = BR.investor_id GROUP BY T1.risk_tolerance
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH BankingAllocation AS (SELECT investor_id FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001 WHERE sector = 'Banking' AND current_value > 0), BuyRebalancing AS (SELECT investor_id FROM ATOM_EVENT_REBALANCING_ACTION_001 WHERE action = 'Buy') SELECT T1.risk_tolerance, COUNT(DISTINCT T1.investor_id) AS distinct_investors FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1 INNER JOIN BankingAllocation AS BA ON T1.investor_id = BA.investor_id INNER JOIN BuyRebalancing AS BR ON T1.investor_id = BR.investor_id GROUP BY T1.risk_tolerance
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT
+  T1.category,
+  T2.type AS cash_flow_type,
+  COUNT(DISTINCT T3.investor_id) AS distinct_investor_count
+FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1
+INNER JOIN ATOM_EVENT_CASH_FLOW_001 AS T2
+  ON T1.investor_id = T2.investor_id
+INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T3
+  ON T1.investor_id = T3.investor_id
+WHERE
+  T3.risk_score > 50
+GROUP BY
+  T1.category,
+  T2.type
+ [Q1] complete. status=success rows=4 elapsed=38.596s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---Processed 18/40 this run (18/40 total window): PIPELINE_SUCCESS in 44.845s
+
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=54 elapsed=27.044s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 19/40 this run (19/40 total window): PIPELINE_SUCCESS in 33.684s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Across time horizon, compare the average total holding value, average holding return and average holding gain (counting only holdings with a recorded cost and current value), and average dividends of investors.
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080421357120
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Across risk tolerance, compare the average total sector investment and average allocation percentage of investors.
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130079929660992
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=error rows=0 elapsed=36.557s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 20/40 this run (20/40 total window): DAG_NODE_ERROR in 42.581s
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH m1 AS (
+  SELECT ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id, SUM(ATOM_ENTITY_SECTOR_ALLOCATION_001.total_investment) AS total_investment_sum
+  FROM ATOM_ENTITY_INVESTOR_PROFILE_001
+  INNER JOIN ATOM_ENTITY_SECTOR_ALLOCATION_001 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = ATOM_ENTITY_SECTOR_ALLOCATION_001.investor_id
+  GROUP BY ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id
+), m2 AS (
+  SELECT ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id, AVG(ATOM_ENTITY_PORTFOLIO_HOLDING_001.returns_pct) AS holding_return_avg
+  FROM ATOM_ENTITY_INVESTOR_PROFILE_001
+  INNER JOIN ATOM_ENTITY_PORTFOLIO_HOLDING_001 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = ATOM_ENTITY_PORTFOLIO_HOLDING_001.investor_id
+  WHERE ATOM_ENTITY_PORTFOLIO_HOLDING_001.cost IS NOT NULL AND ATOM_ENTITY_PORTFOLIO_HOLDING_001.current_value IS NOT NULL
+  GROUP BY ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id
+), m3 AS (
+  SELECT ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id, AVG(ATOM_ENTITY_PORTFOLIO_HEALTH_001.risk_score) AS risk_score_avg
+  FROM ATOM_ENTITY_INVESTOR_PROFILE_001
+  INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = ATOM_ENTITY_PORTFOLIO_HEALTH_001.investor_id
+  GROUP BY ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id
+)
+SELECT ATOM_ENTITY_INVESTOR_PROFILE_001.category, AVG(m1.total_investment_sum) AS avg_total_sector_allocation, AVG(m2.holding_return_avg) AS avg_holding_return, AVG(m3.risk_score_avg) AS avg_risk_score
+FROM ATOM_ENTITY_INVESTOR_PROFILE_001
+INNER JOIN m1 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = m1.investor_id
+INNER JOIN m2 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = m2.investor_id
+INNER JOIN m3 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = m3.investor_id
+GROUP BY ATOM_ENTITY_INVESTOR_PROFILE_001.category
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Across risk tolerance, compare the average net cash flow, average signed cash-flow amount, and average risk score of investors.
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080412964416
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=success rows=6 elapsed=41.544s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 21/40 this run (21/40 total window): PIPELINE_SUCCESS in 45.671s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Among investors with every component recorded, list the top 10 ranked by a composite score defined as net cash flow plus total sector investment (all components in INR); break ties by investor_id.
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH m1 AS (
+  SELECT
+    investor_id,
+    AVG(total_investment) AS avg_total_investment
+  FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+  GROUP BY
+    investor_id
+),
+ m2 AS (
+  SELECT
+    investor_id,
+    AVG(allocation_pct) AS avg_allocation_percentage
+  FROM ATOM_ENTITY_SECTOR_ALLOCATION_001
+  GROUP BY
+    investor_id
+)
+SELECT
+  ip.risk_tolerance,
+  AVG(m1.avg_total_investment) AS avg_total_sector_investment,
+  AVG(m2.avg_allocation_percentage) AS avg_allocation_percentage
+FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS ip
+INNER JOIN m1 ON ip.investor_id = m1.investor_id
+INNER JOIN m2 ON ip.investor_id = m2.investor_id
+GROUP BY
+  ip.risk_tolerance;
+ [Q1] complete. status=success rows=4 elapsed=26.329s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 22/40 this run (22/40 total window): PIPELINE_SUCCESS in 31.771s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Among investors with every component recorded, list the top 10 ranked by a composite score defined as total holding gain (counting only holdings with a recorded cost and current value) plus total rebalance amount (all components in INR); break ties by investor_id.
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130079929660992
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH holding_stats AS (
+  SELECT
+    investor_id,
+    current_value,
+    returns_pct,
+    (current_value - cost) AS holding_gain,
+    dividends
+  FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+  WHERE
+    cost > 0 AND current_value > 0
+) 
+SELECT
+  investor_id,
+  AVG(current_value) AS avg_total_holding_value,
+  AVG(returns_pct) AS avg_holding_return,
+  AVG(holding_gain) AS avg_holding_gain,
+  AVG(dividends) AS avg_dividends
+FROM holding_stats
+GROUP BY
+  investor_id
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH holding_stats AS (
+  SELECT
+    investor_id,
+    current_value,
+    returns_pct,
+    (current_value - cost) AS holding_gain,
+    dividends
+  FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+  WHERE
+    cost > 0 AND current_value > 0
+), 
+
+investor_avg AS (
+    SELECT
+        investor_id,
+        AVG(current_value) AS avg_total_holding_value,
+        AVG(returns_pct) AS avg_holding_return,
+        AVG(holding_gain) AS avg_holding_gain,
+        AVG(dividends) AS avg_dividends
+    FROM holding_stats
+    GROUP BY investor_id
+)
+
+SELECT
+    investor_id,
+    avg_total_holding_value,
+    avg_holding_return,
+    avg_holding_gain,
+    avg_dividends
+FROM investor_avg
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH m1 AS (
+  SELECT ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id, SUM(ATOM_EVENT_CASH_FLOW_001.amount) AS avg_net_cash_flow
+  FROM ATOM_ENTITY_INVESTOR_PROFILE_001
+  INNER JOIN ATOM_EVENT_CASH_FLOW_001 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = ATOM_EVENT_CASH_FLOW_001.investor_id
+  GROUP BY ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id
+), m2 AS (
+  SELECT ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id, SUM(ATOM_EVENT_CASH_FLOW_001.amount) AS avg_signed_cash_flow_amount
+  FROM ATOM_ENTITY_INVESTOR_PROFILE_001
+  INNER JOIN ATOM_EVENT_CASH_FLOW_001 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = ATOM_EVENT_CASH_FLOW_001.investor_id
+  GROUP BY ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id
+), m3 AS (
+  SELECT ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id, AVG(ATOM_ENTITY_PORTFOLIO_HEALTH_001.risk_score) AS avg_risk_score
+  FROM ATOM_ENTITY_INVESTOR_PROFILE_001
+  INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = ATOM_ENTITY_PORTFOLIO_HEALTH_001.investor_id
+  GROUP BY ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id
+)
+SELECT ATOM_ENTITY_INVESTOR_PROFILE_001.risk_tolerance, AVG(m1.avg_net_cash_flow) AS avg_net_cash_flow, AVG(m2.avg_signed_cash_flow_amount) AS avg_signed_cash_flow_amount, AVG(m3.avg_risk_score) AS avg_risk_score
+FROM ATOM_ENTITY_INVESTOR_PROFILE_001
+INNER JOIN m1 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = m1.investor_id
+INNER JOIN m2 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = m2.investor_id
+INNER JOIN m3 ON ATOM_ENTITY_INVESTOR_PROFILE_001.investor_id = m3.investor_id
+GROUP BY ATOM_ENTITY_INVESTOR_PROFILE_001.risk_tolerance
+ [Q1] complete. status=success rows=4 elapsed=38.197s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 23/40 this run (23/40 total window): PIPELINE_SUCCESS in 41.838s
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH holding_stats AS (
+  SELECT
+    investor_id,
+    current_value,
+    returns_pct,
+    (current_value - cost) AS holding_gain,
+    dividends
+  FROM ATOM_ENTITY_PORTFOLIO_HOLDING_001
+  WHERE
+    cost > 0 AND current_value > 0
+), 
+
+calc_avg AS (
+    SELECT
+        investor_id,
+        AVG(current_value) AS avg_total_holding_value,
+        AVG(returns_pct) AS avg_holding_return,
+        AVG(holding_gain) AS avg_holding_gain,
+        AVG(dividends) AS avg_dividends
+    FROM holding_stats
+    GROUP BY investor_id
+)
+
+SELECT
+    investor_id,
+    avg_total_holding_value,
+    avg_holding_return,
+    avg_holding_gain,
+    avg_dividends
+FROM calc_avg
+   [SQL] Pre_Scan_Validate_SQL hard stop for node 'Q1'.
+ [Q1] complete. status=error rows=0 elapsed=56.373s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 24/40 this run (24/40 total window): PRE_SCAN_ERROR in 60.5s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Across risk tolerance, compare the average net cash flow, average cash-flow amount, average scenario allocation shift (new minus current allocation %), and average goal progress of investors.
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080421357120
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Using the allowed risk_tolerance values Aggressive, Conservative, Moderate, which investor profiles have a risk_tolerance value outside this set?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080412964416
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=0 elapsed=14.445s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 25/40 this run (25/40 total window): PIPELINE_SUCCESS in 17.978s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=How many investor profiles are missing a required sector_focus value (sector_focus IS NULL)?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080412964416
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=error rows=0 elapsed=62.02s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 26/40 this run (26/40 total window): DAG_NODE_ERROR in 65.008s
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=How many portfolio-health records are missing a required liquidity_score value (liquidity_score IS NULL)?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=error rows=0 elapsed=57.14s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---Processed 27/40 this run (27/40 total window): DAG_NODE_ERROR in 60.746s
+
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=List the cash-flow records that are missing a required source value (source IS NULL).
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130079929660992
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=15.253s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 28/40 this run (28/40 total window): PIPELINE_SUCCESS in 18.515s
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: WITH investor_net_cash_flow AS (
+  SELECT
+    investor_id,
+    SUM(amount) AS net_cash_flow
+  FROM ATOM_EVENT_CASH_FLOW_001
+  GROUP BY
+    investor_id
+),
+allocation_shift AS (
+  SELECT
+    investor_id,
+    AVG(CAST(target_allocation_pct - current_allocation_pct AS REAL)) AS avg_allocation_shift
+  FROM ATOM_EVENT_REBALANCING_ACTION_001
+  GROUP BY
+    investor_id
+),
+goal_progress AS (
+  SELECT
+    investor_id,
+    AVG(progress_pct) AS avg_goal_progress
+  FROM ATOM_ENTITY_INVESTMENT_GOAL_001
+  GROUP BY
+    investor_id
+),
+cash_flow_amount AS (
+  SELECT
+    investor_id,
+    AVG(amount) AS avg_cash_flow_amount
+  FROM ATOM_EVENT_CASH_FLOW_001
+  GROUP BY
+    investor_id
+)
+SELECT
+  T1.risk_tolerance,
+  AVG(investor_net_cash_flow.net_cash_flow) AS avg_net_cash_flow,
+  AVG(cash_flow_amount.avg_cash_flow_amount) AS avg_cash_flow_amount,
+  AVG(allocation_shift.avg_allocation_shift) AS avg_allocation_shift,
+  AVG(goal_progress.avg_goal_progress) AS avg_goal_progress
+FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1
+INNER JOIN investor_net_cash_flow ON T1.investor_id = investor_net_cash_flow.investor_id
+INNER JOIN allocation_shift ON T1.investor_id = allocation_shift.investor_id
+INNER JOIN goal_progress ON T1.investor_id = goal_progress.investor_id
+INNER JOIN cash_flow_amount ON T1.investor_id = cash_flow_amount.investor_id
+GROUP BY
+  T1.risk_tolerance
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_EVENT_CASH_FLOW_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Using the allowed profile segment values Diversified, Large Cap, Mid Cap, Small Cap, which portfolio holdings belong to an investor whose profile segment is outside this set?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080412964416
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=success rows=4 elapsed=39.609s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 29/40 this run (29/40 total window): PIPELINE_SUCCESS in 44.973s
+ [Q1] complete. status=success rows=1 elapsed=15.372s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 30/40 this run (30/40 total window): PIPELINE_SUCCESS in 18.229s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=List the investors whose liquidity score is below 25.
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the average diversification score by investor risk tolerance?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080421357120
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=0 elapsed=13.477s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 31/40 this run (31/40 total window): PIPELINE_SUCCESS in 16.822s
+ [Q1] complete. status=success rows=391 elapsed=20.075s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 32/40 this run (32/40 total window): PIPELINE_SUCCESS in 23.364s
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Which 10 Conservative investors have the highest risk score (ties broken by investor ID)?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130079929660992
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=success rows=335 elapsed=13.257s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 33/40 this run (33/40 total window): PIPELINE_SUCCESS in 15.847s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What was the net cash flow (sum of all transaction amounts) during calendar year 2025?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Which 10 investors have the highest total Tax Refund amount?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080412964416
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT
+  T1.risk_tolerance,
+  AVG(T2.diversification_score) AS avg_diversification_score
+FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1
+INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T2
+  ON T1.investor_id = T2.investor_id
+GROUP BY
+  T1.risk_tolerance
+ [Q1] complete. status=success rows=4 elapsed=20.525s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 34/40 this run (34/40 total window): PIPELINE_SUCCESS in 24.667s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What was the net cash flow of Moderate investors during calendar year 2024?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080421357120
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT T1.investor_id, T2.risk_score FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS T1 INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS T2 ON T1.investor_id = T2.investor_id WHERE T1.risk_tolerance = 'Conservative' ORDER BY T2.risk_score DESC, T1.investor_id ASC LIMIT 10;
+ [Q1] complete. status=success rows=10 elapsed=23.199s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 35/40 this run (35/40 total window): PIPELINE_SUCCESS in 27.106s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=List Short-term time-horizon investors whose net cash flow during calendar year 2024 was negative.
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130079929660992
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=error rows=0 elapsed=26.392s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 36/40 this run (36/40 total window): DAG_NODE_ERROR in 30.14s
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the total net cash flow of investors in the Hybrid category?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=130080429749824
+   [SQL] Running SQL pipeline for node 'Q1'...
+ [Q1] complete. status=error rows=0 elapsed=31.21s
+--- Subquery DAG Execution Complete ---
+Processed 37/40 this run (37/40 total window): DAG_NODE_ERROR in 35.202s
+ [Q1] complete. status=error rows=0 elapsed=28.059s
+--- Subquery DAG Execution Complete ---
+Processed 38/40 this run (38/40 total window): DAG_NODE_ERROR in 31.434s
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=error rows=0 elapsed=30.268s
+--- Subquery DAG Execution Complete ---
+Processed 39/40 this run (39/40 total window): DAG_NODE_ERROR in 33.491s
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT SUM(cf.amount) AS total_net_cash_flow FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS ip INNER JOIN ATOM_EVENT_CASH_FLOW_001 AS cf ON ip.investor_id = cf.investor_id WHERE ip.category = 'Hybrid'
+ [Q1] complete. status=success rows=1 elapsed=31.51s
+--- Subquery DAG Execution Complete ---
+Processed 40/40 this run (40/40 total window): PIPELINE_SUCCESS in 35.2s
+
+[SUCCESS] Final report successfully saved to /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/gemma_3_27b_it/with_context/raw_pipeline.csv.
+[TIME] Completed query rows in report: 40
+[TIME] Total per-query generation time: 1389.71 seconds (23.16 minutes)
+[TIME] Average per-query time: 34.74 seconds
+[TIME] Wall-clock time for this run: 365.48 seconds (6.09 minutes)

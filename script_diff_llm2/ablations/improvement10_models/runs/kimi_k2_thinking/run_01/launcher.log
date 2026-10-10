@@ -1,0 +1,64 @@
+[INPUT] SQLITE_DB_PATH: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db
+[INPUT] TABLE_METADATA_DIR: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada
+[INPUT] DOMAIN_INTRO_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt
+[INPUT] BUSINESS_RULES_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md
+Validated 17 documents, 8 tables, 8 YAML table matches.
+[TIME] Startup-to-finish: 0.17s; model requests: 0.00s (0 calls).
+[TIMING] /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/.runtime/logs/check_1791271456740922643_113286.timing.json
+[INPUT] SQLITE_DB_PATH: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db
+[INPUT] TABLE_METADATA_DIR: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada
+[INPUT] DOMAIN_INTRO_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt
+[INPUT] BUSINESS_RULES_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md
+[RUNNING] Report: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/raw_pipeline.csv
+[LOG] /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/.runtime/logs/pipeline_20261006_130849_119815.log
+[KNOWLEDGE] Cache miss. Mode: simple. Model: moonshotai.kimi-k2-thinking. Live log: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/logs/knowledge_1791272329936806861_119815.jsonl
+[KNOWLEDGE] Using simple process: all documents and schema in one request; up to 3 validation attempts.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: sending request.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 20.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 40.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 60.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 80.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 100.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 120.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 140.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 160.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation: response in 164.4s; finish=stop, completion tokens=17553. Validating...
+[KNOWLEDGE] Whole-document compilation: validation passed.
+[KNOWLEDGE] Reviewing 78 draft rules against all original sources for omissions and corrections.
+[KNOWLEDGE] Knowledge completeness review, attempt 1/3: sending request.
+[KNOWLEDGE] Knowledge completeness review, attempt 1/3: waiting for model, 20.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Knowledge completeness review, attempt 1/3: waiting for model, 40.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Knowledge completeness review: response in 42.8s; finish=stop, completion tokens=5673. Validating...
+[KNOWLEDGE] Knowledge completeness review: validation passed.
+[KNOWLEDGE] Review completed: 78 draft rules, 87 reviewed rules.
+[KNOWLEDGE] 85 optional metadata issues recorded in the cache; rule text retained.
+[KNOWLEDGE] Cache saved: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/knowledge_cache/9ca374a6e6a85a08dfd17c36114d7dcf04b6487d88a838109e37a3edf6230216.json
+[CACHE] Knowledge compiled in 207.270s
+[TIME] Startup ready: 208.335s; query delay: 0s
+Processed 1/1000 this run (1/1000 total window): PIPELINE_SUCCESS in 43.529s processing; model 43.502s/5 calls; 43.537s including wait/save; 251.872s since startup
+Processed 2/1000 this run (2/1000 total window): PIPELINE_SUCCESS in 50.551s processing; model 50.525s/5 calls; 50.560s including wait/save; 302.432s since startup
+Processed 3/1000 this run (3/1000 total window): PIPELINE_SUCCESS in 41.896s processing; model 41.873s/5 calls; 41.906s including wait/save; 344.338s since startup
+Processed 4/1000 this run (4/1000 total window): PIPELINE_SUCCESS in 52.732s processing; model 52.709s/5 calls; 52.742s including wait/save; 397.080s since startup
+Processed 5/1000 this run (5/1000 total window): PIPELINE_SUCCESS in 74.514s processing; model 74.492s/5 calls; 74.525s including wait/save; 471.605s since startup
+Processed 6/1000 this run (6/1000 total window): PIPELINE_SUCCESS in 56.33s processing; model 56.304s/5 calls; 56.343s including wait/save; 527.948s since startup
+Processed 7/1000 this run (7/1000 total window): PIPELINE_SUCCESS in 70.578s processing; model 70.556s/5 calls; 70.585s including wait/save; 598.533s since startup
+Processed 8/1000 this run (8/1000 total window): PIPELINE_SUCCESS in 46.141s processing; model 46.115s/5 calls; 46.152s including wait/save; 644.685s since startup
+Processed 9/1000 this run (9/1000 total window): PIPELINE_SUCCESS in 59.594s processing; model 59.571s/5 calls; 59.605s including wait/save; 704.290s since startup
+Processed 10/1000 this run (10/1000 total window): PIPELINE_SUCCESS in 73.709s processing; model 73.678s/5 calls; 73.725s including wait/save; 778.015s since startup
+Processed 11/1000 this run (11/1000 total window): PIPELINE_SUCCESS in 79.756s processing; model 79.729s/5 calls; 79.767s including wait/save; 857.783s since startup
+Processed 12/1000 this run (12/1000 total window): PIPELINE_SUCCESS in 92.557s processing; model 92.539s/5 calls; 92.569s including wait/save; 950.351s since startup
+Processed 13/1000 this run (13/1000 total window): PIPELINE_SUCCESS in 135.772s processing; model 135.750s/5 calls; 135.784s including wait/save; 1086.136s since startup
+Processed 14/1000 this run (14/1000 total window): PIPELINE_SUCCESS in 31.138s processing; model 31.116s/5 calls; 31.150s including wait/save; 1117.286s since startup
+Processed 15/1000 this run (15/1000 total window): PIPELINE_SUCCESS in 43.081s processing; model 43.059s/5 calls; 43.094s including wait/save; 1160.380s since startup
+Processed 16/1000 this run (16/1000 total window): FINAL_SPEC_ERROR in 50.982s processing; model 50.945s/8 calls; 50.997s including wait/save; 1211.378s since startup
+Processed 17/1000 this run (17/1000 total window): PIPELINE_SUCCESS in 66.649s processing; model 66.627s/5 calls; 66.664s including wait/save; 1278.041s since startup
+Processed 18/1000 this run (18/1000 total window): PIPELINE_SUCCESS in 69.803s processing; model 69.780s/5 calls; 69.818s including wait/save; 1347.859s since startup
+Processed 19/1000 this run (19/1000 total window): FINAL_SPEC_ERROR in 67.746s processing; model 67.715s/8 calls; 67.761s including wait/save; 1415.620s since startup
+Processed 20/1000 this run (20/1000 total window): PIPELINE_SUCCESS in 43.558s processing; model 43.536s/5 calls; 43.572s including wait/save; 1459.192s since startup
+Processed 21/1000 this run (21/1000 total window): PIPELINE_SUCCESS in 36.86s processing; model 36.827s/5 calls; 36.874s including wait/save; 1496.066s since startup
+Processed 22/1000 this run (22/1000 total window): PIPELINE_SUCCESS in 36.836s processing; model 36.812s/5 calls; 36.852s including wait/save; 1532.918s since startup
+Processed 23/1000 this run (23/1000 total window): PIPELINE_SUCCESS in 91.247s processing; model 91.221s/6 calls; 91.267s including wait/save; 1624.185s since startup
+Processed 24/1000 this run (24/1000 total window): PIPELINE_SUCCESS in 71.647s processing; model 71.622s/5 calls; 71.663s including wait/save; 1695.848s since startup
+Processed 25/1000 this run (25/1000 total window): FINAL_SPEC_ERROR in 67.363s processing; model 67.330s/8 calls; 67.384s including wait/save; 1763.232s since startup
+Processed 26/1000 this run (26/1000 total window): PIPELINE_SUCCESS in 46.115s processing; model 46.084s/5 calls; 46.132s including wait/save; 1809.364s since startup
+Processed 27/1000 this run (27/1000 total window): PIPELINE_SUCCESS in 83.138s processing; model 83.112s/6 calls; 83.155s including wait/save; 1892.519s since startup

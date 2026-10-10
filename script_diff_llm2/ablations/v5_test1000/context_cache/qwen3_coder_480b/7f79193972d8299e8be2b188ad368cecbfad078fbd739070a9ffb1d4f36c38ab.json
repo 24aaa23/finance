@@ -1,0 +1,414 @@
+{
+  "fingerprint": "7f79193972d8299e8be2b188ad368cecbfad078fbd739070a9ffb1d4f36c38ab",
+  "entries": [
+    {
+      "id": "term_investment_goal",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goal",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "What is the investor's financial objective?",
+        "What goal is the investor saving for?",
+        "Which investment purpose does the investor have?"
+      ],
+      "definition": "`investment_goal` refers to predefined financial objectives such as Child Education, Emergency Fund, Growth, Income Generation, Retirement Planning, or Wealth Preservation.",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": []
+    },
+    {
+      "id": "term_risk_tolerance",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "What is the investor’s willingness to accept risk?",
+        "Does the investor prefer lower risk or high potential returns?",
+        "Is the client categorized based on their risk appetite?"
+      ],
+      "definition": "`risk_tolerance` classifies investor profiles into Conservative (capital preservation), Moderate (balanced approach), or Aggressive (growth-focused with high risk acceptance).",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": "term_time_horizon",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Time Horizon",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "time_horizon"
+      ],
+      "terms": [
+        "How long will the investment be held?",
+        "What is the expected duration of the investment?",
+        "When is the money needed?"
+      ],
+      "definition": "`time_horizon` defines how soon the investor needs access to funds: Very Short Term (< 1 year), Short Term (1–3 years), Medium Term (3–7 years), Long Term (7–15 years), or Very Long Term (> 15 years).",
+      "quote": "- Very Short Term: < 1 year\n- Short Term: 1–3 years\n- Medium Term: 3–7 years\n- Long Term: 7–15 years\n- Very Long Term: > 15 years",
+      "conflicts": []
+    },
+    {
+      "id": "rule_xirr_threshold",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR Plausibility Threshold",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": [
+        "Is the calculated XIRR value too high?",
+        "Should we flag unusually large returns from a particular asset?"
+      ],
+      "definition": "If any XIRR exceeds 25%, it must be flagged for data quality investigation regardless of context.",
+      "quote": "> **Rule:** If XIRR exceeds 25%, always surface a data quality warning to the caller:\n> *\"XIRR of {value}% exceeds the 25% plausibility threshold. Verify purchase_date, cost, and cash_flow records for investor {investor_id} before using this figure.\"*",
+      "conflicts": []
+    },
+    {
+      "id": "def_xirr_kpi",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR Definition",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": [
+        "What is the extended internal rate of return used for measuring returns?",
+        "How are investment returns evaluated over periods involving multiple irregular transactions?"
+      ],
+      "definition": "XIRR computes annualized return considering irregular cash flows including SIPs, lump sums, withdrawals, and ending portfolio value.",
+      "quote": "**Definition:** XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow). It is the primary performance KPI for goal and portfolio return analysis.",
+      "conflicts": []
+    },
+    {
+      "id": "alloc_drift_trigger",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Allocation Drift Rebalancing Trigger",
+      "backend": "sql",
+      "source": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "fields": [
+        "current_allocation_pct",
+        "target_allocation_pct"
+      ],
+      "terms": [
+        "When should a portfolio be rebalanced automatically?",
+        "How much deviation between actual and desired allocation causes a rebalance signal?"
+      ],
+      "definition": "A drift greater than 10 percentage points between any sector's current and target allocation triggers a rebalancing recommendation.",
+      "quote": "- Drift = `|current_allocation_pct - target_allocation_pct|` in `rebalancing_action`.\n- If drift > **10 percentage points** for any sector → trigger rebalancing recommendation.",
+      "conflicts": []
+    },
+    {
+      "id": "term_goal_achievement_pct",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Goal Achievement %",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": [
+        "How close is the investor to reaching their financial target?",
+        "Has enough been saved towards the stated investment goal?"
+      ],
+      "definition": "`achievement_pct` represents the ratio of `current_value` to `target_amount` expressed as a percentage indicating progress toward achieving that investment goal.",
+      "quote": "- `achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": []
+    },
+    {
+      "id": "rule_cashflow_sign_convention",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Cash Flow Sign Convention",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "Are inflows and outflows correctly signed in computations?",
+        "Can you distinguish deposits from redemptions in financial reporting?"
+      ],
+      "definition": "For correct XIRR calculations, inflows such as SIPs or Deposits must use negative signs while positive values indicate redemptions or dividends received.",
+      "quote": "| B6 | Cash flow sign convention | `cash_flow.amount` | Inflows (SIP, Lump Sum, Deposit) → negative for XIRR; Redemption/Withdrawal → positive |",
+      "conflicts": []
+    },
+    {
+      "id": "term_investment_type",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Type",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type"
+      ],
+      "terms": [
+        "What kinds of assets exist in investor holdings?",
+        "What instrument categories can be included in portfolios?"
+      ],
+      "definition": "`investment_type` categorizes financial tools/instruments owned in a portfolio like Mutual Fund, Stock, Bond, ETF, ELSS, or PPF.",
+      "quote": "`Mutual Fund` | `Stock` | `Bond` | `ETF` | `ELSS` | `PPF`",
+      "conflicts": []
+    },
+    {
+      "id": "rule_stale_valuation",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Stale Valuation Check",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": [
+        "Is the current valuation fresh enough to represent true market status?",
+        "Have holdings not changed in price recently despite active trading conditions?"
+      ],
+      "definition": "Holdings whose latest value hasn’t been updated in over 30 days should not be considered reliable during return or health scoring assessments.",
+      "quote": "| H6 | **Stale valuation** | `current_value` not refreshed in > 30 days | Note caveat in any return or health analysis; do not treat as live market value |",
+      "conflicts": []
+    }
+  ],
+  "review": [
+    {
+      "id": "term_investment_goal",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goal",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "What is the investor's financial objective?",
+        "What goal is the investor saving for?",
+        "Which investment purpose does the investor have?"
+      ],
+      "definition": "`investment_goal` refers to predefined financial objectives such as Child Education, Emergency Fund, Growth, Income Generation, Retirement Planning, or Wealth Preservation.",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "502fe7d40e09dd5c8710ba9355a2584124548a8575371dc3c8142c22c9c82575",
+      "active": true
+    },
+    {
+      "id": "term_risk_tolerance",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "What is the investor’s willingness to accept risk?",
+        "Does the investor prefer lower risk or high potential returns?",
+        "Is the client categorized based on their risk appetite?"
+      ],
+      "definition": "`risk_tolerance` classifies investor profiles into Conservative (capital preservation), Moderate (balanced approach), or Aggressive (growth-focused with high risk acceptance).",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "eec19b8dfeb5f85e9065b8343e752abdbdfb0223d1375106a0ba0ced2afbe350",
+      "active": true
+    },
+    {
+      "id": "term_time_horizon",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Time Horizon",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "time_horizon"
+      ],
+      "terms": [
+        "How long will the investment be held?",
+        "What is the expected duration of the investment?",
+        "When is the money needed?"
+      ],
+      "definition": "`time_horizon` defines how soon the investor needs access to funds: Very Short Term (< 1 year), Short Term (1–3 years), Medium Term (3–7 years), Long Term (7–15 years), or Very Long Term (> 15 years).",
+      "quote": "- Very Short Term: < 1 year\n- Short Term: 1–3 years\n- Medium Term: 3–7 years\n- Long Term: 7–15 years\n- Very Long Term: > 15 years",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "52b85b6af6e7693e4cbd4f8d35097d1e66e81226da2c0de03dd8f54da8d64ff6",
+      "active": false
+    },
+    {
+      "id": "rule_xirr_threshold",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR Plausibility Threshold",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": [
+        "Is the calculated XIRR value too high?",
+        "Should we flag unusually large returns from a particular asset?"
+      ],
+      "definition": "If any XIRR exceeds 25%, it must be flagged for data quality investigation regardless of context.",
+      "quote": "> **Rule:** If XIRR exceeds 25%, always surface a data quality warning to the caller:\n> *\"XIRR of {value}% exceeds the 25% plausibility threshold. Verify purchase_date, cost, and cash_flow records for investor {investor_id} before using this figure.\"*",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "507966f139dfe7e940ade86520d8581e00b635075bce81006e09a73c074f0ad6",
+      "active": false
+    },
+    {
+      "id": "def_xirr_kpi",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR Definition",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": [
+        "What is the extended internal rate of return used for measuring returns?",
+        "How are investment returns evaluated over periods involving multiple irregular transactions?"
+      ],
+      "definition": "XIRR computes annualized return considering irregular cash flows including SIPs, lump sums, withdrawals, and ending portfolio value.",
+      "quote": "**Definition:** XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow). It is the primary performance KPI for goal and portfolio return analysis.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "b159b495301932bb4b67e350a6139564432353236e78d564b9b32e5514f4a185",
+      "active": false
+    },
+    {
+      "id": "alloc_drift_trigger",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Allocation Drift Rebalancing Trigger",
+      "backend": "sql",
+      "source": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "fields": [
+        "current_allocation_pct",
+        "target_allocation_pct"
+      ],
+      "terms": [
+        "When should a portfolio be rebalanced automatically?",
+        "How much deviation between actual and desired allocation causes a rebalance signal?"
+      ],
+      "definition": "A drift greater than 10 percentage points between any sector's current and target allocation triggers a rebalancing recommendation.",
+      "quote": "- Drift = `|current_allocation_pct - target_allocation_pct|` in `rebalancing_action`.\n- If drift > **10 percentage points** for any sector → trigger rebalancing recommendation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "6220e3fc791a5621e0571236d751afdde4478686923d0f9ae597f474eba86f58",
+      "active": false
+    },
+    {
+      "id": "term_goal_achievement_pct",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Goal Achievement %",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": [
+        "How close is the investor to reaching their financial target?",
+        "Has enough been saved towards the stated investment goal?"
+      ],
+      "definition": "`achievement_pct` represents the ratio of `current_value` to `target_amount` expressed as a percentage indicating progress toward achieving that investment goal.",
+      "quote": "- `achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "947a0b87bc973b427f4b3a30dd676e4b7712ce2ccee7595ca0743af8e7871379",
+      "active": false
+    },
+    {
+      "id": "rule_cashflow_sign_convention",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Cash Flow Sign Convention",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "Are inflows and outflows correctly signed in computations?",
+        "Can you distinguish deposits from redemptions in financial reporting?"
+      ],
+      "definition": "For correct XIRR calculations, inflows such as SIPs or Deposits must use negative signs while positive values indicate redemptions or dividends received.",
+      "quote": "| B6 | Cash flow sign convention | `cash_flow.amount` | Inflows (SIP, Lump Sum, Deposit) → negative for XIRR; Redemption/Withdrawal → positive |",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "eae82b83a763c761b1d27842217b9781999243dd9061282669a693848374a9b5",
+      "active": false
+    },
+    {
+      "id": "term_investment_type",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Type",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type"
+      ],
+      "terms": [
+        "What kinds of assets exist in investor holdings?",
+        "What instrument categories can be included in portfolios?"
+      ],
+      "definition": "`investment_type` categorizes financial tools/instruments owned in a portfolio like Mutual Fund, Stock, Bond, ETF, ELSS, or PPF.",
+      "quote": "`Mutual Fund` | `Stock` | `Bond` | `ETF` | `ELSS` | `PPF`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "43ae70de1b59b6aa501575d50303416c4324421768e3f4535fd5235fe5f6efad",
+      "active": true
+    },
+    {
+      "id": "rule_stale_valuation",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Stale Valuation Check",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": [
+        "Is the current valuation fresh enough to represent true market status?",
+        "Have holdings not changed in price recently despite active trading conditions?"
+      ],
+      "definition": "Holdings whose latest value hasn’t been updated in over 30 days should not be considered reliable during return or health scoring assessments.",
+      "quote": "| H6 | **Stale valuation** | `current_value` not refreshed in > 30 days | Note caveat in any return or health analysis; do not treat as live market value |",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "c626c567090a7e73d9bd2ffc1b913ca54b3694e62f95f028d19c7d020c47d635",
+      "active": false
+    }
+  ],
+  "quarantined_documents": [
+    {
+      "document": "business_rules",
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/phase0_business_rules.md",
+      "reason": "Evaluation-scoped document excluded from preparation and inference"
+    }
+  ]
+}

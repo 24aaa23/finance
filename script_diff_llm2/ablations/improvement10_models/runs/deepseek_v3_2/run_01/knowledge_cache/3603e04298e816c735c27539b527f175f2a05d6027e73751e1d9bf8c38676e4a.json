@@ -1,0 +1,577 @@
+{
+  "identity": "3603e04298e816c735c27539b527f175f2a05d6027e73751e1d9bf8c38676e4a",
+  "pack_hash": "9128c28101dd6c54f9ee3d13a29a0aae8f9637649a8384086ac3be2c35d95b22",
+  "pack": {
+    "rules": [
+      {
+        "id": "K1",
+        "text": "Cash flow amounts are stored signed: inflows (Deposit, SIP, Lump Sum, Interest Credit, Tax Refund, Dividend Reinvestment) are positive; outflows (Withdrawal, Redemption) are negative. Net cash flow = SUM(amount). For XIRR calculation only, apply the investor's-pocket transform (use -amount).",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K2",
+        "text": "When presenting total withdrawal amount (a magnitude), show as a positive number using -SUM(amount) or SUM(ABS(amount)) over that type.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K3",
+        "text": "XIRR is the annualised return computed from irregular cash flows. It is the primary performance KPI. For XIRR series, apply investor's-pocket transform (use -amount). Guardrails: XIRR > 25% must trigger data quality investigation; XIRR < -50% flagged as suspect; if XIRR cannot be computed (no cash flows, all same-signed) return null. Reasonable XIRR ranges by asset class: Equity (Long Term) 10\u201318% (cap 25%), Debt 5\u20139% (cap 15%), Hybrid 8\u201314% (cap 20%), ELSS/Tax-saving 10\u201318% (cap 25%).",
+        "fields": [],
+        "citations": [
+          {
+            "source": "domain",
+            "quote": "XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow). It is the primary performance KPI for goal and portfolio return analysis."
+          }
+        ],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K4",
+        "text": "Returns percentage (returns_pct) = (current_value - cost) / cost \u00d7 100 stored in portfolio_holding.returns_pct. Guardrails: returns_pct > 200% on a holding < 1 year old flagged; returns_pct negative while current_value > cost flagged; cost = 0 or NULL excluded.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "returns_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K5",
+        "text": "For \"average return\", use equal-weighted AVG(returns_pct) at per-investor-first grain. For \"portfolio / overall / value-weighted return\", weight by current_value or cost.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "returns_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K6",
+        "text": "Portfolio health scores (goal_match_pct, risk_score, liquidity_score, diversification_score) are on a 0-100 scale. Thresholds: goal_match_pct \u2265 80% On track, 60-79% Needs attention, <60% At risk; risk_score 0-40 Low risk, 41-70 Moderate risk, 71-100 High risk; liquidity_score \u2265 70 Adequate liquidity; diversification_score \u2265 70 Well diversified.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "goal_match_pct"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "risk_score"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "liquidity_score"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "diversification_score"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K7",
+        "text": "Goal progress achievement_pct = (current_value / target_amount) \u00d7 100 stored as progress_pct in ATOM_ENTITY_INVESTMENT_GOAL_001. If achievement_pct < 50% and goal target_date within 2 years \u2192 flag as high-priority advisory case.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "progress_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K8",
+        "text": "Allocation drift = |current_allocation_pct - target_allocation_pct| in rebalancing_action. If drift > 10 percentage points for any sector \u2192 trigger rebalancing recommendation. Drift within 2% is within normal market fluctuation and should not trigger an action.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "current_allocation_pct"
+          },
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "target_allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K9",
+        "text": "Conservative investors must not hold > 40% equity. Aggressive investors: single-sector cap at 40%; equity cap at 80%. Conservative investors: any single sector allocation > 30% flagged for compliance review. Moderate investors: single-sector cap > 40%. Aggressive investors: single-sector cap > 50%.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K10",
+        "text": "ELSS has 3-year lock-in; PPF has 15-year lock-in. Do not recommend redemption within lock-in period. ELSS and PPF are tax-saving instruments under Section 80C. Flag when recommending alternatives.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K11",
+        "text": "Allocation concentration for an investor = the largest single-sector share = MAX(allocation_pct) over that investor's rows in ATOM_ENTITY_SECTOR_ALLOCATION_001. A cohort's \"average allocation concentration\" = per-investor MAX, then AVG across investors.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+            "column": "allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K12",
+        "text": "Risk pressure score = RS + (100 \u2212 LS) + (100 \u2212 DS) where RS=risk_score, LS=liquidity_score, DS=diversification_score from ATOM_ENTITY_PORTFOLIO_HEALTH_001. Scale 0-300. NULL if any health score is NULL \u2192 investor excluded.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "risk_score"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "liquidity_score"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "diversification_score"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K13",
+        "text": "Quantitative burden index = normalized 0\u2013100 index of {SHORT, \u2212GAIN, \u2212NCF, C1} where SHORT = SUM(shortfall), GAIN = SUM(current_value \u2212 cost), NCF = SUM(amount) over period, C1 = risk_pressure_score. Formula: 100 \u00d7 mean( S\u0303HORT , (1\u2212G\u0303AIN) , (1\u2212\u00d1CF) , C\u03031 ) with min-max normalization per component over population. Threshold for critical burden cohort: index > 65 (\u2248 top ~3%).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K14",
+        "text": "Transaction rebalance index = normalized 0\u2013100 index of {NCF, REB, SCEN\u0394sum} where NCF = SUM(amount), REB = SUM(amount) from rebalancing_action, SCEN\u0394sum = SUM(new_allocation_pct \u2212 current_allocation_pct) from scenario_rebalancing. Formula: 100 \u00d7 mean( \u00d1CF , R\u0303EB , S\u0303CEN\u0394sum ).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K15",
+        "text": "Temporal pressure index = normalized 0\u2013100 index of {NCF(period), REB, \u2212AVGSHORT, SCEN\u0394sum} where NCF window = the year the question states, AVGSHORT = AVG(shortfall). Formula: 100 \u00d7 mean( \u00d1CF(period) , R\u0303EB , (1\u2212\u00c3VGSHORT) , S\u0303CEN\u0394sum ).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K16",
+        "text": "Combined gain and net cash flow = GAIN + NCF where GAIN = SUM(current_value \u2212 cost) from portfolio_holding, NCF = SUM(amount) from cash_flow. Units INR.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K17",
+        "text": "Combined net cash flow and rebalancing amount = NCF + REB where NCF = SUM(amount) from cash_flow, REB = SUM(amount) from rebalancing_action. Units INR.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K18",
+        "text": "Combined holding value and shortfall = HVAL + SHORT where HVAL = SUM(current_value) from portfolio_holding, SHORT = SUM(shortfall) from investment_goal. Units INR.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K19",
+        "text": "When grouping by investor attribute (risk_tolerance, time_horizon, segment, category, sector_focus), every averaged metric must be computed per-investor-first (aggregate to one row per investor in a CTE, then AVG across investors).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K20",
+        "text": "Do not join a table the question does not reference. When combining optional child metrics, use LEFT JOIN from INVESTOR_PROFILE (one row per investor) so no cohort member is dropped.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K21",
+        "text": "Any ORDER BY <score> LIMIT k where score can tie must add a deterministic secondary key (e.g., entity_id ASC) for stable results.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K22",
+        "text": "For \"highest/lowest\" rankings on scores that can be NULL, add WHERE X IS NOT NULL so missing rows are not returned as bottom.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K23",
+        "text": "For proportion / \"share of investors\" denominators, use the full cohort as denominator. A missing (NULL) metric counts as not meeting the threshold and is not removed from the denominator.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K24",
+        "text": "Fields that must never be aggregated: investor_id, holding_id, goal_id, cash_flow_id, rebalance_id, portfolio_health_id, purchase_date, risk_tolerance, segment, investment_goal, action, investment_type, sector, category, type. Use only for GROUP BY, COUNT(DISTINCT), or JOIN.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K25",
+        "text": "Aggregation rules: cost and current_value SUM per investor; returns_pct AVG (equal-weighted) or weighted AVG; dividends and taxes_paid SUM per investor; amount SUM per type; goal_match_pct AVG per investor (across goals); risk_score, liquidity_score, diversification_score AVG across investors for cohort; allocation_pct SUM only within a single investor (must = 100%); AVG across investors for sector exposure.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K26",
+        "text": "XIRR aggregation: Never pool all investors' cash flows into a single XIRR calculation. Compute XIRR per investor_id, then report as distribution (MIN, P25, MEDIAN, P75, MAX). For cohort XIRR, compute individual XIRRs, then present distribution.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K27",
+        "text": "Data quality check: purchase_date must not be in the future and must not predate 1990-01-01; cost must be > 0 and not NULL; current_value must be \u2265 0; investor_id referential integrity; duplicate cash flow transactions must be deduplicated before XIRR.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K28",
+        "text": "Market cap segments: Large Cap > \u20b920,000 Cr, Mid Cap \u20b95,000\u201320,000 Cr, Small Cap < \u20b95,000 Cr. Segment vs. investment type mismatch: market cap segments apply only to equity instruments; flag if category = 'Debt'.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K29",
+        "text": "Emergency Fund goal must be near-liquid (Debt/liquid funds). Flag if equity allocation > 10%.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K30",
+        "text": "Conservative investor equity overweight: risk_tolerance = 'Conservative' and total equity allocation > 40% \u2192 Flag as suitability breach.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K31",
+        "text": "High-risk product for Conservative investor: category = 'Equity' and segment = 'Small Cap' held by risk_tolerance = 'Conservative' investor \u2192 Flag as unsuitable.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K32",
+        "text": "Quantitative burden index threshold for critical burden cohort: index > 65 (\u2248 top ~3%).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K33",
+        "text": "Goal progress achievement_pct is stored as progress_pct in ATOM_ENTITY_INVESTMENT_GOAL_001.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "progress_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K34",
+        "text": "Allocation drift > 10 percentage points triggers a rebalancing recommendation. Drift within 2% is within normal market fluctuation and should not trigger an action.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K35",
+        "text": "For Conservative investors, any single sector allocation > 30% must be flagged for compliance review. For Moderate investors, single-sector cap is > 40%. For Aggressive investors, single-sector cap is > 50%.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K36",
+        "text": "ELSS and PPF are tax-saving instruments under Section 80C. Flag when recommending alternatives.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K37",
+        "text": "Goal-based allocation: Retirement/Wealth Creation goals \u2192 higher equity for long horizons; Emergency Fund \u2192 near 100% liquid/debt.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K38",
+        "text": "Reasonable XIRR ranges by asset class: Equity (Long Term) 10\u201318% (plausibility cap 25%), Debt 5\u20139% (cap 15%), Hybrid 8\u201314% (cap 20%), ELSS/Tax-saving 10\u201318% (cap 25%).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K39",
+        "text": "Data quality check: purchase_date must not be in the future and must not predate 1990-01-01; cost must be > 0 and not NULL; current_value must be \u2265 0; investor_id referential integrity; duplicate cash flow transactions must be deduplicated before XIRR.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K40",
+        "text": "Market cap segments: Large Cap > \u20b920,000 Cr, Mid Cap \u20b95,000\u201320,000 Cr, Small Cap < \u20b95,000 Cr. Segment vs. investment type mismatch: market cap segments apply only to equity instruments; flag if category = 'Debt'.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K41",
+        "text": "Emergency Fund goal must be near-liquid (Debt/liquid funds). Flag if equity allocation > 10%.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K42",
+        "text": "Conservative investor equity overweight: risk_tolerance = 'Conservative' and total equity allocation > 40% \u2192 Flag as suitability breach.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K43",
+        "text": "High-risk product for Conservative investor: category = 'Equity' and segment = 'Small Cap' held by risk_tolerance = 'Conservative' investor \u2192 Flag as unsuitable.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K44",
+        "text": "Quantitative burden index threshold for critical burden cohort: index > 65 (\u2248 top ~3%).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K45",
+        "text": "For proportion / \"share of investors\" denominators, use the full cohort as denominator. A missing (NULL) metric counts as not meeting the threshold and is not removed from the denominator.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K46",
+        "text": "Fields that must never be aggregated: investor_id, holding_id, goal_id, cash_flow_id, rebalance_id, portfolio_health_id, purchase_date, risk_tolerance, segment, investment_goal, action, investment_type, sector, category, type. Use only for GROUP BY, COUNT(DISTINCT), or JOIN.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K47",
+        "text": "Aggregation rules: cost and current_value SUM per investor; returns_pct AVG (equal-weighted) or weighted AVG; dividends and taxes_paid SUM per investor; amount SUM per type; goal_match_pct AVG per investor (across goals); risk_score, liquidity_score, diversification_score AVG across investors for cohort; allocation_pct SUM only within a single investor (must = 100%); AVG across investors for sector exposure.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K48",
+        "text": "XIRR aggregation: Never pool all investors' cash flows into a single XIRR calculation. Compute XIRR per investor_id, then report as distribution (MIN, P25, MEDIAN, P75, MAX). For cohort XIRR, compute individual XIRRs, then present distribution.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      }
+    ],
+    "conflicts": [],
+    "coverage": {},
+    "source_review": {
+      "domain": "supplied",
+      "rules": "supplied",
+      "yaml/TABLE_CONTEXT_ASSET_CLASS_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_INVESTMENT_GOAL_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_INVESTMENT_TYPE_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_RISK_TOLERANCE_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_SECTOR_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_SEGMENT_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_TIME_HORIZON_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_INVESTMENT_GOAL_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_PORTFOLIO_HEALTH_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_PORTFOLIO_HOLDING_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_SECTOR_ALLOCATION_001.yaml": "supplied",
+      "yaml/TABLE_EVENT_CASH_FLOW_001.yaml": "supplied",
+      "yaml/TABLE_EVENT_REBALANCING_ACTION_001.yaml": "supplied",
+      "yaml/TABLE_EVENT_SCENARIO_REBALANCING_001.yaml": "supplied"
+    },
+    "validation_notes": [
+      "K1: ignored optional citation that does not exactly match a supplied source.",
+      "K2: ignored optional citation that does not exactly match a supplied source.",
+      "K4: ignored optional citation that does not exactly match a supplied source.",
+      "K5: ignored optional citation that does not exactly match a supplied source.",
+      "K6: ignored optional citation that does not exactly match a supplied source.",
+      "K7: ignored optional citation that does not exactly match a supplied source.",
+      "K8: ignored optional citation that does not exactly match a supplied source.",
+      "K9: ignored optional citation that does not exactly match a supplied source.",
+      "K10: ignored optional citation that does not exactly match a supplied source.",
+      "K11: ignored optional citation that does not exactly match a supplied source.",
+      "K12: ignored optional citation that does not exactly match a supplied source.",
+      "K13: ignored optional citation that does not exactly match a supplied source.",
+      "K14: ignored optional citation that does not exactly match a supplied source.",
+      "K15: ignored optional citation that does not exactly match a supplied source.",
+      "K16: ignored optional citation that does not exactly match a supplied source.",
+      "K17: ignored optional citation that does not exactly match a supplied source.",
+      "K18: ignored optional citation that does not exactly match a supplied source.",
+      "K19: ignored optional citation that does not exactly match a supplied source.",
+      "K20: ignored optional citation that does not exactly match a supplied source.",
+      "K21: ignored optional citation that does not exactly match a supplied source.",
+      "K22: ignored optional citation that does not exactly match a supplied source.",
+      "K23: ignored optional citation that does not exactly match a supplied source.",
+      "K24: ignored optional citation that does not exactly match a supplied source.",
+      "K25: ignored optional citation that does not exactly match a supplied source.",
+      "K26: ignored optional citation that does not exactly match a supplied source.",
+      "K27: ignored optional citation that does not exactly match a supplied source.",
+      "K28: ignored optional citation that does not exactly match a supplied source.",
+      "K29: ignored optional citation that does not exactly match a supplied source.",
+      "K30: ignored optional citation that does not exactly match a supplied source.",
+      "K31: ignored optional citation that does not exactly match a supplied source.",
+      "K32: ignored optional citation that does not exactly match a supplied source."
+    ],
+    "review_status": "completed"
+  }
+}

@@ -1,0 +1,128 @@
+# TABLE_CLIENT_AUM_001 - grounded in NEOWEALTH_DDL.sql / Neowealth_schema.xlsx
+# Provenance tags preserved: [D] = declared in source, [I] = inferred,
+# [C] = observed in the 2026-08-28 CSV delivery (Wealth Management data/client_aum.csv).
+
+identity:
+  id: "TABLE_CLIENT_AUM_001"
+  type: "Table"
+  subtype: "Fact"
+  name: "client_aum"
+  display_name: "Client AUM"
+  description: >
+    [D] FACT, 10 columns. Assets Under Management snapshots - the headline AUM
+    reporting table. [I] Grain: client x LOB x month-end, natural key
+    (client_id, lob_id, as_on_date), proven by client 7001 appearing once for
+    each of six consecutive month-start dates. [D] KEY IDENTITY verified on all
+    10 samples: aum_value = aum_equity + aum_fixed_income + aum_alternatives,
+    exactly. NOTE: has NO product_id and NO product_type - AUM is held at
+    asset-class buckets, not instrument level; use client_holdings for
+    instrument-level exposure. HAZARD: joining lob_id to dim_lob_hierarchy fans
+    out.
+
+layer: "fact"
+grain: "client_id x lob_id x as_on_date (month)"          # [I]
+not_null_columns: ["id"]                                   # [D]
+attribute_type_provenance: "inferred_per_section_11"       # only client_holdings is declared in source
+
+semantics:
+  business_purpose: >
+    Month-start snapshots of total Assets Under Management per client per line of
+    business, split into equity / fixed income / alternatives buckets that
+    reconcile exactly to the total. The headline AUM reporting fact.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "[D] NOT NULL. One of only TWO NOT NULL columns in the entire 309-column schema, so the strongest PK candidate present. Sample range 140001+. [I] Per-table sequence - never join id across fact tables."
+    type: "integer"
+    sql_type: "integer"
+    nullable: false
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "client_id"
+    display_name: "Client ID"
+    description: "[I] -> dim_client_master.id. Confirmed by sample data (7001, 7002 fall inside the master's 7001-7010 range). Nullable: an inner join can silently drop rows."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_client_master.id"
+
+  - name: "lob_id"
+    display_name: "LOB ID"
+    description: "[I] -> dim_lob_hierarchy.lob_id. HAZARD: lob_id is NOT unique in that table (its grain is sub-LOB), so joining directly FANS OUT and multiplies aum_value. Join to (SELECT DISTINCT lob_id, ...) instead."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_lob_hierarchy.lob_id"
+    fan_out_hazard: true
+
+  - name: "lob_name"
+    display_name: "LOB Name"
+    description: "[D] Denormalised copy of dim_lob_hierarchy.lob_name, stored to avoid a join. [I] Can drift from the master if an LOB is renamed. [C] Observed values (180 rows): Neo Wealth Advisory (126), Broking Services (36), Asset Management (18) - all three present in dim_lob_hierarchy.lob_name."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Neo Wealth Advisory", "Broking Services", "Asset Management"]
+
+  - name: "as_on_date"
+    display_name: "As On Date"
+    description: "[D] MONTH-START dated monthly snapshot (2025-12-01, 2026-01-01, ... 2026-05-01). [I] HAZARD: client_holdings.as_on_date is a DAILY date - equi-joining the two on date returns nothing or wrong rows. Align with DATE_TRUNC('month', ...)."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "aum_value"
+    display_name: "AUM Value"
+    description: "[D] Total AUM. VERIFIED IDENTITY on all 10 sample rows: aum_value = aum_equity + aum_fixed_income + aum_alternatives, exactly. Usable as a production data-quality assertion with a tolerance."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+    verified_identity: "aum_equity + aum_fixed_income + aum_alternatives"
+
+  - name: "aum_equity"
+    display_name: "AUM Equity"
+    description: "[D] Equity component of aum_value. Part of the exhaustive 3-way split that reconciles to the total."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "aum_fixed_income"
+    display_name: "AUM Fixed Income"
+    description: "[D] Fixed-income component of aum_value."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "aum_alternatives"
+    display_name: "AUM Alternatives"
+    description: "[D] Alternatives component of aum_value."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "[D] Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

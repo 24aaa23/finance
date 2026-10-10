@@ -1,0 +1,117 @@
+{
+  "snapshot_commit": "9ba4be150a7c8497dc33fe8c751605bf93fece09",
+  "model": "openai.gpt-oss-120b-1:0",
+  "endpoint": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1",
+  "workers": 1,
+  "questions": 1000,
+  "command": [
+    "/usr/bin/python3",
+    "-u",
+    "-B",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/run.py",
+    "--ontology",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/kg_output_fixed/wealth_management_diverse_schema.ttl",
+    "--kg-data",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/kg_output_fixed/wealth_management_diverse_kg.ttl",
+    "--domain-intro",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/domain_intro_latest.prompt",
+    "--business-rules",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/business_rules_addendum.md",
+    "--sparql-endpoint",
+    "http://127.0.0.1:3041/improvemnt11kgfixed/query",
+    "--questions",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/input_questions.jsonl",
+    "--output",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/raw_pipeline.csv",
+    "--knowledge-mode",
+    "simple",
+    "--prepare-knowledge"
+  ],
+  "grader": "not launched"
+}
+[INPUT] ONTOLOGY_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/kg_output_fixed/wealth_management_diverse_schema.ttl
+[INPUT] INSTANCE_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/kg_output_fixed/wealth_management_diverse_kg.ttl
+[INPUT] DOMAIN_INTRO_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/domain_intro_latest.prompt
+[INPUT] BUSINESS_RULES_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/business_rules_addendum.md
+Validated 3 documents, 22 classes, 22 ontology class matches.
+[CACHE] Knowledge hit
+Compiled 30 rules. Identity: b28e46a71c352546fd412263ce719bfc06a6296e8b34e66617223cd2ac109c84
+Section coverage is not enforced in simple mode.
+Completeness review: unavailable
+[TIME] Startup-to-finish: 0.90s; model requests: 0.00s (0 calls).
+[TIMING] /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/.runtime/logs/prepare_1791365908920173947_182022.timing.json
+Knowledge review status: unavailable
+[INPUT] ONTOLOGY_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/kg_output_fixed/wealth_management_diverse_schema.ttl
+[INPUT] INSTANCE_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/kg_output_fixed/wealth_management_diverse_kg.ttl
+[INPUT] DOMAIN_INTRO_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/domain_intro_latest.prompt
+[INPUT] BUSINESS_RULES_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/business_rules_addendum.md
+Validated 3 documents, 22 classes, 22 ontology class matches.
+[CACHE] Selected saved knowledge: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/.runtime/knowledge_v3_kg/b28e46a71c352546fd412263ce719bfc06a6296e8b34e66617223cd2ac109c84.json (30 rules)
+[CACHE] Knowledge hit
+Compiled 30 rules. Identity: f93d6834b83328c3e4bcfecd2912faa3933a369f0cb24dd1d98395d247a8d253
+Section coverage is not enforced in simple mode.
+Completeness review: unavailable
+[TIME] Startup-to-finish: 0.88s; model requests: 0.00s (0 calls).
+[TIMING] /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/.runtime/logs/prepare_1791365910138482047_182035.timing.json
+Maximum active workers: 1; retaining 4 original shards
+Started worker 1: PID 182045
+112/1000 saved
+112/1000 saved
+112/1000 saved
+112/1000 saved
+112/1000 saved
+112/1000 saved
+112/1000 saved
+112/1000 saved
+104/1000 saved
+104/1000 saved
+104/1000 saved
+104/1000 saved
+104/1000 saved
+104/1000 saved
+104/1000 saved
+104/1000 saved
+104/1000 saved
+104/1000 saved
+105/1000 saved
+105/1000 saved
+105/1000 saved
+105/1000 saved
+105/1000 saved
+106/1000 saved
+106/1000 saved
+106/1000 saved
+106/1000 saved
+106/1000 saved
+106/1000 saved
+107/1000 saved
+107/1000 saved
+107/1000 saved
+107/1000 saved
+107/1000 saved
+107/1000 saved
+107/1000 saved
+107/1000 saved
+107/1000 saved
+107/1000 saved
+107/1000 saved
+107/1000 saved
+108/1000 saved
+108/1000 saved
+108/1000 saved
+108/1000 saved
+108/1000 saved
+108/1000 saved
+108/1000 saved
+108/1000 saved
+109/1000 saved
+109/1000 saved
+109/1000 saved
+109/1000 saved
+109/1000 saved; /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/raw_pipeline.csv
+Traceback (most recent call last):
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/run_parallel.py", line 224, in <module>
+    raise SystemExit(main())
+  File "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/run_parallel.py", line 205, in main
+    time.sleep(10)
+KeyboardInterrupt

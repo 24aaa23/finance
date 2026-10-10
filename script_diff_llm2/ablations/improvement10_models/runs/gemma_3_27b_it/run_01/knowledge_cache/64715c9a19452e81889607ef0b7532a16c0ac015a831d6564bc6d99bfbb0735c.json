@@ -1,0 +1,896 @@
+{
+  "identity": "64715c9a19452e81889607ef0b7532a16c0ac015a831d6564bc6d99bfbb0735c",
+  "pack_hash": "c9df9ee14088195915187139d400280d09c2093fca608120207fe47aaddcdd6a",
+  "pack": {
+    "rules": [
+      {
+        "id": "K1",
+        "text": "Cash flow amounts are stored signed: inflows (Deposit, SIP, Interest Credit, Tax Refund, Dividend Reinvestment) are positive; outflows (Withdrawal, Redemption) are negative. Net cash flow is the sum of amounts. For XIRR calculations, apply an investor's-pocket transform (negate inflows).",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K2",
+        "text": "When presenting withdrawal amounts, display them as positive numbers.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K3",
+        "text": "All rankings with a score must include a deterministic secondary key (entity ID) to ensure stable and reproducible results.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K4",
+        "text": "Missing health scores (NULL) should be excluded from lowest-value rankings, but not from proportion calculations.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "risk_score"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "liquidity_score"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "diversification_score"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "goal_match_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K5",
+        "text": "Aggregation must be performed per-investor-first before cohort-level aggregation.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K6",
+        "text": "Do not join tables unless the question explicitly references them, as this can change the population being analyzed.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K7",
+        "text": "Allocation concentration is the largest single-sector share for each investor, then averaged across investors.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+            "column": "allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K8",
+        "text": "For \"average return\", use equal-weighted averaging of `returns_pct`. For \"portfolio/overall/value-weighted return\", weight by `current_value` or `cost`.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "returns_pct"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "current_value"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "cost"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K9",
+        "text": "When calculating the share of investors meeting a condition, use the full cohort as the denominator, including those with missing values.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K10",
+        "text": "PPF investments have a 15-year lock-in period.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K11",
+        "text": "ELSS investments have a 3-year lock-in period.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K12",
+        "text": "The `investment_goal` table contains the following allowed values: Retirement Planning, Wealth Preservation, Child Education, Emergency Fund, Income Generation, Growth.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "investment_goal"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_INVESTMENT_GOAL_001.yaml"
+        ]
+      },
+      {
+        "id": "K13",
+        "text": "The `risk_tolerance` table contains the following allowed values: Conservative, Moderate, Aggressive.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "risk_tolerance"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml"
+        ]
+      },
+      {
+        "id": "K14",
+        "text": "The `time_horizon` table contains the following allowed values: Short-term, Medium-term, Long-term.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "time_horizon"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_CONTEXT_TIME_HORIZON_001.yaml"
+        ]
+      },
+      {
+        "id": "K15",
+        "text": "The `segment` table contains the following allowed values: Large Cap, Mid Cap, Small Cap, Diversified.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "segment"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml"
+        ]
+      },
+      {
+        "id": "K16",
+        "text": "The `investment_type` table contains the following allowed values: Corporate Bond, ETF, Equity, Global Equity, Gold, Government Bond, Hedge Fund, InVIT, Index Fund, Mutual Fund, Private Equity, REIT, Real Estate, Venture Capital.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "investment_type"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_CONTEXT_INVESTMENT_TYPE_001.yaml"
+        ]
+      },
+      {
+        "id": "K17",
+        "text": "The `sector` table contains the following allowed values: Automobile, Banking, Consumer Goods, Corporate, Financial Services, Government, Healthcare, Infrastructure, Pharma, Private Equity, Real Estate, Technology.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "sector"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_CONTEXT_SECTOR_001.yaml"
+        ]
+      },
+      {
+        "id": "K18",
+        "text": "The `category` table contains the following allowed values: Alternative, Bonds, Cash Equivalent, Commodities, Crypto, Debt, ETF, Equity, Fixed Income, Gold, Hybrid, International, MF, PPF, REIT, Real Estate, SGB.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "category"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_CONTEXT_ASSET_CLASS_001.yaml"
+        ]
+      },
+      {
+        "id": "K19",
+        "text": "The `goal_type` table contains the following allowed values: Retirement Planning, Wealth Preservation, Child Education, Emergency Fund, Income Generation, Growth.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "investment_goal"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_CONTEXT_INVESTMENT_GOAL_001.yaml"
+        ]
+      },
+      {
+        "id": "K20",
+        "text": "The `risk_tolerance` table contains the following allowed values: Conservative, Moderate, Aggressive.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "risk_tolerance"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_CONTEXT_RISK_TOLERANCE_001.yaml"
+        ]
+      },
+      {
+        "id": "K21",
+        "text": "The `time_horizon` table contains the following allowed values: Short-term, Medium-term, Long-term.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "time_horizon"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_CONTEXT_TIME_HORIZON_001.yaml"
+        ]
+      },
+      {
+        "id": "K22",
+        "text": "The `segment` table contains the following allowed values: Large Cap, Mid Cap, Small Cap, Diversified.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "segment"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_CONTEXT_SEGMENT_001.yaml"
+        ]
+      },
+      {
+        "id": "K23",
+        "text": "The `logic` field in the `rebalancing_action` table can have the following values: Manual Override, Valuation-based, Calendar-based, Momentum-driven, Mean-reversion, Threshold-based, Scenario-based, Tactical.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "logic"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_EVENT_REBALANCING_ACTION_001.yaml"
+        ]
+      },
+      {
+        "id": "K24",
+        "text": "The `action` field in the `rebalancing_action` table can have the following values: Buy, Sell, Hold, Goal Alignment Buy, Goal Alignment Sell, Profit Booking, Tactical Increase, Tactical Decrease, Rebalance Buy, Rebalance Sell, Sector Rotation Buy, Sector Rotation Sell, Switch In, Switch Out, Partial Exit, Stop Loss Exit, Defensive Shift, Aggressive Entry, Portfolio Trim, Cash Deployment, Asset Reallocation, Dividend Reinvestment, De-risking.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "action"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_EVENT_REBALANCING_ACTION_001.yaml"
+        ]
+      },
+      {
+        "id": "K25",
+        "text": "The `scenario` field in the `scenario_rebalancing` table can have the following values: Approaching Goal, Bear Market, Bull Market, Currency Depreciation, Economic Growth, Flash Crash, Geopolitical Tension, Inflation Surge, Interest Rate Cut, Interest Rate Hike, Market Volatility, Sector Rotation.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_SCENARIO_REBALANCING_001",
+            "column": "scenario"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_EVENT_SCENARIO_REBALANCING_001.yaml"
+        ]
+      },
+      {
+        "id": "K26",
+        "text": "The `affected_assets_sectors` field in the `scenario_rebalancing` table can have the following values: Equity, MF, Technology, Pharma, Real Estate, Banking, Healthcare, Consumer, Gold, Silver, Infrastructure, Corporate, Government Bonds, Commodities.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_SCENARIO_REBALANCING_001",
+            "column": "affected_assets_sectors"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_EVENT_SCENARIO_REBALANCING_001.yaml"
+        ]
+      },
+      {
+        "id": "K27",
+        "text": "The `type` field in the `cash_flow` table can have the following values: Deposit, Withdrawal, SIP, Lump Sum, Redemption, Interest Credit, Tax Refund, Dividend Reinvestment.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "type"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_EVENT_CASH_FLOW_001.yaml"
+        ]
+      },
+      {
+        "id": "K28",
+        "text": "The `source` field in the `cash_flow` table can have the following values: Systematic, Credit Card, Cash, Cheque, Wallet, Bank Transfer, Auto-debit, Net Banking, UPI, Internal Transfer.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "source"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_EVENT_CASH_FLOW_001.yaml"
+        ]
+      },
+      {
+        "id": "K29",
+        "text": "The `investment_type` field in the `portfolio_holding` table can have the following values: Corporate Bond, ETF, Equity, Global Equity, Gold, Government Bond, Hedge Fund, InVIT, Index Fund, Mutual Fund, Private Equity, REIT, Real Estate, Venture Capital.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "investment_type"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_PORTFOLIO_HOLDING_001.yaml"
+        ]
+      },
+      {
+        "id": "K30",
+        "text": "The `sector` field in the `portfolio_holding` table can have the following values: Automobile, Banking, Consumer Goods, Corporate, Financial Services, Government, Healthcare, Infrastructure, Pharma, Private Equity, Real Estate, Technology.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "sector"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_PORTFOLIO_HOLDING_001.yaml"
+        ]
+      },
+      {
+        "id": "K31",
+        "text": "The `category` field in the `portfolio_holding` table can have the following values: Alternative, Bonds, Cash Equivalent, Commodities, Crypto, Debt, ETF, Equity, Fixed Income, Gold, Hybrid, International, MF, PPF, REIT, Real Estate, SGB.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "category"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_PORTFOLIO_HOLDING_001.yaml"
+        ]
+      },
+      {
+        "id": "K32",
+        "text": "The `segment` field in the `portfolio_holding` table can have the following values: Large Cap, Mid Cap, Small Cap, Diversified.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "segment"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_PORTFOLIO_HOLDING_001.yaml"
+        ]
+      },
+      {
+        "id": "K33",
+        "text": "The `investment_goal` field in the `investor_profile` table can have the following values: Wealth Preservation, Growth, Income Generation, Retirement Planning, Child Education, Emergency Fund.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "investment_goal"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml"
+        ]
+      },
+      {
+        "id": "K34",
+        "text": "The `sector_focus` field in the `investor_profile` table can have the following values: Automobile, Banking, Consumer Goods, Corporate, Financial Services, Government, Healthcare, Infrastructure, Pharma, Private Equity, Real Estate, Technology.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "sector_focus"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml"
+        ]
+      },
+      {
+        "id": "K35",
+        "text": "The `category` field in the `investor_profile` table can have the following values: Gold, Debt, Hybrid, Equity, Real Estate.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "category"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml"
+        ]
+      },
+      {
+        "id": "K36",
+        "text": "The `time_horizon` field in the `investor_profile` table can have the following values: Short-term, Medium-term, Long-term.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "time_horizon"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml"
+        ]
+      },
+      {
+        "id": "K37",
+        "text": "The `risk_tolerance` field in the `investor_profile` table can have the following values: Conservative, Moderate, Aggressive.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "risk_tolerance"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml"
+        ]
+      },
+      {
+        "id": "K38",
+        "text": "The `segment` field in the `investor_profile` table can have the following values: Large Cap, Mid Cap, Small Cap, Diversified.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "segment"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml"
+        ]
+      },
+      {
+        "id": "K39",
+        "text": "The `goal_match_pct` field in the `portfolio_health` table is on a 0-100 scale.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "goal_match_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K40",
+        "text": "The `risk_score` field in the `portfolio_health` table is on a 0-100 scale.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "risk_score"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K41",
+        "text": "The `liquidity_score` field in the `portfolio_health` table is on a 0-100 scale.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "liquidity_score"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K42",
+        "text": "The `diversification_score` field in the `portfolio_health` table is on a 0-100 scale.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "diversification_score"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K43",
+        "text": "The `progress_pct` field in the `investment_goal` table is on a 0-100 scale.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "progress_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K44",
+        "text": "The `time_to_goal_months` field in the `investment_goal` table is an integer.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "time_to_goal_months"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K45",
+        "text": "The `avg_annual_return_pct` field in the `investment_goal` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "avg_annual_return_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K46",
+        "text": "The `avg_post_tax_return_pct` field in the `investment_goal` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "avg_post_tax_return_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K47",
+        "text": "The `avg_sharpe_ratio` field in the `investment_goal` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "avg_sharpe_ratio"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K48",
+        "text": "The `avg_volatility_pct` field in the `investment_goal` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "avg_volatility_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K49",
+        "text": "The `std_dev_annual_return_pct` field in the `investment_goal` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "std_dev_annual_return_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K50",
+        "text": "The `allocation_pct` field in the `sector_allocation` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+            "column": "allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K51",
+        "text": "The `total_investment` field in the `sector_allocation` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+            "column": "total_investment"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K52",
+        "text": "The `amount` field in the `cash_flow` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K53",
+        "text": "The `amount` field in the `rebalancing_action` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K54",
+        "text": "The `current_allocation_pct` field in the `rebalancing_action` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "current_allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K55",
+        "text": "The `target_allocation_pct` field in the `rebalancing_action` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "target_allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K56",
+        "text": "The `new_allocation_pct` field in the `scenario_rebalancing` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_SCENARIO_REBALANCING_001",
+            "column": "new_allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K57",
+        "text": "The `current_allocation_pct` field in the `scenario_rebalancing` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_SCENARIO_REBALANCING_001",
+            "column": "current_allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K58",
+        "text": "The `cost` field in the `portfolio_holding` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "cost"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K59",
+        "text": "The `current_value` field in the `portfolio_holding` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "current_value"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K60",
+        "text": "The `returns_pct` field in the `portfolio_holding` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "returns_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K61",
+        "text": "The `dividends` field in the `portfolio_holding` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "dividends"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K62",
+        "text": "The `taxes_paid` field in the `portfolio_holding` table is a decimal.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "taxes_paid"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      }
+    ],
+    "conflicts": [],
+    "coverage": {},
+    "source_review": {
+      "domain": "supplied",
+      "rules": "supplied",
+      "yaml/TABLE_CONTEXT_ASSET_CLASS_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_INVESTMENT_GOAL_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_INVESTMENT_TYPE_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_RISK_TOLERANCE_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_SECTOR_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_SEGMENT_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_TIME_HORIZON_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_INVESTMENT_GOAL_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_PORTFOLIO_HEALTH_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_PORTFOLIO_HOLDING_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_SECTOR_ALLOCATION_001.yaml": "supplied",
+      "yaml/TABLE_EVENT_CASH_FLOW_001.yaml": "supplied",
+      "yaml/TABLE_EVENT_REBALANCING_ACTION_001.yaml": "supplied",
+      "yaml/TABLE_EVENT_SCENARIO_REBALANCING_001.yaml": "supplied"
+    },
+    "validation_notes": [
+      "K1: ignored optional citation that does not exactly match a supplied source.",
+      "K2: ignored optional citation that does not exactly match a supplied source.",
+      "K3: ignored optional citation that does not exactly match a supplied source.",
+      "K4: ignored optional citation that does not exactly match a supplied source.",
+      "K5: ignored optional citation that does not exactly match a supplied source.",
+      "K6: ignored optional citation that does not exactly match a supplied source.",
+      "K7: ignored optional citation that does not exactly match a supplied source.",
+      "K8: ignored optional citation that does not exactly match a supplied source.",
+      "K9: ignored optional citation that does not exactly match a supplied source.",
+      "K10: ignored optional citation that does not exactly match a supplied source.",
+      "K11: ignored optional citation that does not exactly match a supplied source."
+    ],
+    "review_status": "completed"
+  }
+}

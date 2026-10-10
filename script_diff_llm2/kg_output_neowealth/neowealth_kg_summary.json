@@ -1,0 +1,2765 @@
+{
+  "source": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\neowealth.duckdb",
+  "tables": {
+    "main.client_aum": {
+      "rows": 180,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "client_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "lob_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "lob_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "as_on_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "aum_value",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "aum_equity",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "aum_fixed_income",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "aum_alternatives",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 1800,
+      "null_cells": 0,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.client_holdings": {
+      "rows": 505,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "client_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "client_pan",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "product_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "product_type",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "instrument_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "quantity",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "avg_cost_price",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "current_price",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "invested_value",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "current_value",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "unrealized_gain",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "unrealized_gain_pct",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "accrued_interest",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "is_held_away",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "wsw_account_code",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "as_on_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "benchmark_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "benchmark_return_1y",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "benchmark_return_3y",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 10765,
+      "null_cells": 345,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.client_net_new_money": {
+      "rows": 612,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "client_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "product_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "product_type",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "period_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "inflow",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "outflow",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "net_flow",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 5508,
+      "null_cells": 0,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.client_realized_gain": {
+      "rows": 65,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "client_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "client_pan",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "product_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "product_type",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "instrument_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "buy_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "sell_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "buy_price",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "sell_price",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "quantity",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "realized_gain",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "holding_period_days",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 975,
+      "null_cells": 0,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.client_revenue": {
+      "rows": 675,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "client_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "emp_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "emp_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "revenue_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "revenue_type",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "revenue_amount",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "product_type",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "lob_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 6750,
+      "null_cells": 0,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.client_transactions": {
+      "rows": 3004,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "client_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "client_pan",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "product_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "product_type",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "transaction_type",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "transaction_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "amount",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "units",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "nav_price",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 35922,
+      "null_cells": 126,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.client_valuations": {
+      "rows": 3030,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "client_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "product_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "valuation_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "market_value",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "cost_value",
+          "sql_type": "DOUBLE",
+          "nullable": true
+        },
+        {
+          "name": "unrealized_pnl",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 26760,
+      "null_cells": 510,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_client_account_map": {
+      "rows": 47,
+      "columns": [
+        {
+          "name": "client_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "account_details_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "account_number",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "account_type",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "wsw_account_code",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "folio",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "dp_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "bank_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "ifsc_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "is_active",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "wsw_account_code"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 587,
+      "null_cells": 24,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_client_master": {
+      "rows": 30,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "pan_number",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "client_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "gender",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "dob",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "tier",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "pep_status",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "occupation",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "marital_status",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "kyc_status",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "lob_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "lob_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "sub_lob_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "sub_lob_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "group_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "group_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "family_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "family_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "servicing_banker_1_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "servicing_banker_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "acquiring_banker_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "acquiring_banker_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "date_of_incorporation",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "is_active",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "is_deleted",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "current_city",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 840,
+      "null_cells": 30,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_cmot_company_mstr": {
+      "rows": 25,
+      "columns": [
+        {
+          "name": "co_code",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "company_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "company_short_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "nse_symbol",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "bse_code",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "bse_group",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "mcap_type",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "sector_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "sector_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "is_active",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "co_code"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 350,
+      "null_cells": 0,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_cmot_index_prices": {
+      "rows": 60,
+      "columns": [
+        {
+          "name": "co_code",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "index_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "nav_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "nav_close",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "nav_open",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "nav_high",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "nav_low",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "co_code",
+        "nav_date"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 600,
+      "null_cells": 0,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_employee_profile": {
+      "rows": 10,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "euin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "designation",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "role_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "department",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "lob_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "lob_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "sublob_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "sublob_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "email",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "mobile",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "reporting_manager_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "gender",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "is_active",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "is_deleted",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "doj",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "resignation_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 209,
+      "null_cells": 11,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_equity_price_latest": {
+      "rows": 25,
+      "columns": [
+        {
+          "name": "co_code",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "company_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "exchange",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "nav_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "nav_open",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "nav_high",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "nav_low",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "nav_close",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "nav_volume",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "co_code",
+        "exchange",
+        "nav_date"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 325,
+      "null_cells": 0,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_lob_hierarchy": {
+      "rows": 8,
+      "columns": [
+        {
+          "name": "lob_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "lob_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "lob_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "sub_lob_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "sub_lob_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "sub_lob_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "sbu_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "is_active",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "lob_id",
+        "sub_lob_id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 88,
+      "null_cells": 0,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_master_enums": {
+      "rows": 25,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "type_key",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "master_category_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "master_type_key",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "is_active",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "is_deleted",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [],
+      "identity_method": "row_content_hash_with_duplicate_occurrence",
+      "nonnull_cells": 100,
+      "null_cells": 150,
+      "empty_strings": 0,
+      "semantic_note": "Preserve the actual database rows as source records; these are not verified enum values. The supplied rulebook identifies this delivery as unusable enum data."
+    },
+    "main.dim_mf_fund_complete": {
+      "rows": 30,
+      "columns": [
+        {
+          "name": "fund_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "mstar_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "rta_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "fund_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "category",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "sub_category",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "amc_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "amc_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "amc_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "inception_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "expense_ratio",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "fund_manager_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "benchmark_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "asset_alloc_equity_net",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "asset_alloc_bond_net",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "asset_alloc_cash_net",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "is_obsolete",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "obsolete_into_mstar_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "is_active",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "mstar_id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 660,
+      "null_cells": 30,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_mf_nav_history": {
+      "rows": 7860,
+      "columns": [
+        {
+          "name": "mstar_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "fund_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "category",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "nav_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "nav_value",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "nav_currency",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "mstar_id",
+        "nav_date"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 70740,
+      "null_cells": 0,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_mf_returns_history": {
+      "rows": 360,
+      "columns": [
+        {
+          "name": "fund_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "mstar_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "fund_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "category",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "return_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "return_1m",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "return_3m",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "return_6m",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "return_1y",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "return_3y",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "return_5y",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "return_10y",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "mstar_id",
+        "return_date"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 5292,
+      "null_cells": 108,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_product_credit_rtng": {
+      "rows": 15,
+      "columns": [
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "scheme_master_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "instrument_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "credit_rating",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "credit_rating_agency",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "care_rating",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "icra_rating",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "crisil_rating",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "fitch_rating",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "brick_rating",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "interest_rate",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "maturity_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "face_value",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "scheme_master_id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 210,
+      "null_cells": 30,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_product_segment_map": {
+      "rows": 25,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "product_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "segment_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "segment_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "is_active",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 200,
+      "null_cells": 0,
+      "empty_strings": 0,
+      "semantic_note": null
+    },
+    "main.dim_product_unified_cat": {
+      "rows": 98,
+      "columns": [
+        {
+          "name": "scheme_master_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "product_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "product_type",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "product_short_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "isin",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "instrument_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "display_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "company_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "sector",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "category",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "amc_display_name",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "asset_class_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "asset_class",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "sub_asset_class_id",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "sub_asset_class",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "rta_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "amfi_code",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "mstar_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "co_code",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "bse_symbol",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "nse_symbol",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "benchmark",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "credit_rating",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "interest_rate",
+          "sql_type": "FLOAT",
+          "nullable": true
+        },
+        {
+          "name": "maturity_date",
+          "sql_type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "face_value",
+          "sql_type": "INTEGER",
+          "nullable": true
+        },
+        {
+          "name": "is_etf",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "is_listed",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "is_active",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "is_deleted",
+          "sql_type": "BOOLEAN",
+          "nullable": true
+        },
+        {
+          "name": "source_table",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_load_ts",
+          "sql_type": "TIMESTAMP",
+          "nullable": true
+        },
+        {
+          "name": "row_hash",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "identity_columns": [
+        "product_id"
+      ],
+      "identity_method": "configured_key",
+      "nonnull_cells": 2274,
+      "null_cells": 960,
+      "empty_strings": 0,
+      "semantic_note": null
+    }
+  },
+  "relationships": [
+    {
+      "name": "main.client_aum.client_id->dim_client_master.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_aum.client_id-%3Edim_client_master.id",
+      "source": "main.client_aum",
+      "target": "main.dim_client_master",
+      "source_columns": [
+        "client_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 180,
+      "matched_source_rows": 180,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_aum.lob_id->dim_lob_hierarchy.lob_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_aum.lob_id-%3Edim_lob_hierarchy.lob_id",
+      "source": "main.client_aum",
+      "target": "main.dim_lob_hierarchy",
+      "source_columns": [
+        "lob_id"
+      ],
+      "target_columns": [
+        "lob_id"
+      ],
+      "sql_matched_pairs": 504,
+      "matched_source_rows": 180,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 180
+    },
+    {
+      "name": "main.client_holdings.client_id->dim_client_master.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_holdings.client_id-%3Edim_client_master.id",
+      "source": "main.client_holdings",
+      "target": "main.dim_client_master",
+      "source_columns": [
+        "client_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 505,
+      "matched_source_rows": 505,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_holdings.product_id->dim_product_unified_cat.product_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_holdings.product_id-%3Edim_product_unified_cat.product_id",
+      "source": "main.client_holdings",
+      "target": "main.dim_product_unified_cat",
+      "source_columns": [
+        "product_id"
+      ],
+      "target_columns": [
+        "product_id"
+      ],
+      "sql_matched_pairs": 505,
+      "matched_source_rows": 505,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_holdings.wsw_account_code->dim_client_account_map.wsw_account_code",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_holdings.wsw_account_code-%3Edim_client_account_map.wsw_account_code",
+      "source": "main.client_holdings",
+      "target": "main.dim_client_account_map",
+      "source_columns": [
+        "wsw_account_code"
+      ],
+      "target_columns": [
+        "wsw_account_code"
+      ],
+      "sql_matched_pairs": 384,
+      "matched_source_rows": 384,
+      "unmatched_nonnull_source_rows": 121,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_net_new_money.client_id->dim_client_master.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_net_new_money.client_id-%3Edim_client_master.id",
+      "source": "main.client_net_new_money",
+      "target": "main.dim_client_master",
+      "source_columns": [
+        "client_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 612,
+      "matched_source_rows": 612,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_net_new_money.product_id->dim_product_unified_cat.product_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_net_new_money.product_id-%3Edim_product_unified_cat.product_id",
+      "source": "main.client_net_new_money",
+      "target": "main.dim_product_unified_cat",
+      "source_columns": [
+        "product_id"
+      ],
+      "target_columns": [
+        "product_id"
+      ],
+      "sql_matched_pairs": 0,
+      "matched_source_rows": 0,
+      "unmatched_nonnull_source_rows": 612,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_realized_gain.client_id->dim_client_master.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_realized_gain.client_id-%3Edim_client_master.id",
+      "source": "main.client_realized_gain",
+      "target": "main.dim_client_master",
+      "source_columns": [
+        "client_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 65,
+      "matched_source_rows": 65,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_realized_gain.product_id->dim_product_unified_cat.product_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_realized_gain.product_id-%3Edim_product_unified_cat.product_id",
+      "source": "main.client_realized_gain",
+      "target": "main.dim_product_unified_cat",
+      "source_columns": [
+        "product_id"
+      ],
+      "target_columns": [
+        "product_id"
+      ],
+      "sql_matched_pairs": 65,
+      "matched_source_rows": 65,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_revenue.client_id->dim_client_master.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_revenue.client_id-%3Edim_client_master.id",
+      "source": "main.client_revenue",
+      "target": "main.dim_client_master",
+      "source_columns": [
+        "client_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 675,
+      "matched_source_rows": 675,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_revenue.emp_id->dim_employee_profile.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_revenue.emp_id-%3Edim_employee_profile.id",
+      "source": "main.client_revenue",
+      "target": "main.dim_employee_profile",
+      "source_columns": [
+        "emp_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 675,
+      "matched_source_rows": 675,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_revenue.emp_code->dim_employee_profile.code",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_revenue.emp_code-%3Edim_employee_profile.code",
+      "source": "main.client_revenue",
+      "target": "main.dim_employee_profile",
+      "source_columns": [
+        "emp_code"
+      ],
+      "target_columns": [
+        "code"
+      ],
+      "sql_matched_pairs": 675,
+      "matched_source_rows": 675,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_revenue.lob_id->dim_lob_hierarchy.lob_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_revenue.lob_id-%3Edim_lob_hierarchy.lob_id",
+      "source": "main.client_revenue",
+      "target": "main.dim_lob_hierarchy",
+      "source_columns": [
+        "lob_id"
+      ],
+      "target_columns": [
+        "lob_id"
+      ],
+      "sql_matched_pairs": 1918,
+      "matched_source_rows": 675,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 675
+    },
+    {
+      "name": "main.client_transactions.client_id->dim_client_master.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_transactions.client_id-%3Edim_client_master.id",
+      "source": "main.client_transactions",
+      "target": "main.dim_client_master",
+      "source_columns": [
+        "client_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 3004,
+      "matched_source_rows": 3004,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_transactions.product_id->dim_product_unified_cat.product_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_transactions.product_id-%3Edim_product_unified_cat.product_id",
+      "source": "main.client_transactions",
+      "target": "main.dim_product_unified_cat",
+      "source_columns": [
+        "product_id"
+      ],
+      "target_columns": [
+        "product_id"
+      ],
+      "sql_matched_pairs": 3004,
+      "matched_source_rows": 3004,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_valuations.client_id->dim_client_master.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_valuations.client_id-%3Edim_client_master.id",
+      "source": "main.client_valuations",
+      "target": "main.dim_client_master",
+      "source_columns": [
+        "client_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 3030,
+      "matched_source_rows": 3030,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.client_valuations.product_id->dim_product_unified_cat.product_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.client_valuations.product_id-%3Edim_product_unified_cat.product_id",
+      "source": "main.client_valuations",
+      "target": "main.dim_product_unified_cat",
+      "source_columns": [
+        "product_id"
+      ],
+      "target_columns": [
+        "product_id"
+      ],
+      "sql_matched_pairs": 3030,
+      "matched_source_rows": 3030,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_client_account_map.client_id->dim_client_master.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_client_account_map.client_id-%3Edim_client_master.id",
+      "source": "main.dim_client_account_map",
+      "target": "main.dim_client_master",
+      "source_columns": [
+        "client_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 47,
+      "matched_source_rows": 47,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_client_account_map.wsw_account_code->client_holdings.wsw_account_code",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_client_account_map.wsw_account_code-%3Eclient_holdings.wsw_account_code",
+      "source": "main.dim_client_account_map",
+      "target": "main.client_holdings",
+      "source_columns": [
+        "wsw_account_code"
+      ],
+      "target_columns": [
+        "wsw_account_code"
+      ],
+      "sql_matched_pairs": 384,
+      "matched_source_rows": 24,
+      "unmatched_nonnull_source_rows": 23,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 24
+    },
+    {
+      "name": "main.dim_client_master.lob_id->dim_lob_hierarchy.lob_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_client_master.lob_id-%3Edim_lob_hierarchy.lob_id",
+      "source": "main.dim_client_master",
+      "target": "main.dim_lob_hierarchy",
+      "source_columns": [
+        "lob_id"
+      ],
+      "target_columns": [
+        "lob_id"
+      ],
+      "sql_matched_pairs": 84,
+      "matched_source_rows": 30,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 30
+    },
+    {
+      "name": "main.dim_client_master.sub_lob_id->dim_lob_hierarchy.sub_lob_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_client_master.sub_lob_id-%3Edim_lob_hierarchy.sub_lob_id",
+      "source": "main.dim_client_master",
+      "target": "main.dim_lob_hierarchy",
+      "source_columns": [
+        "sub_lob_id"
+      ],
+      "target_columns": [
+        "sub_lob_id"
+      ],
+      "sql_matched_pairs": 30,
+      "matched_source_rows": 30,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_client_master.servicing_banker_1_id->dim_employee_profile.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_client_master.servicing_banker_1_id-%3Edim_employee_profile.id",
+      "source": "main.dim_client_master",
+      "target": "main.dim_employee_profile",
+      "source_columns": [
+        "servicing_banker_1_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 30,
+      "matched_source_rows": 30,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_client_master.acquiring_banker_id->dim_employee_profile.id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_client_master.acquiring_banker_id-%3Edim_employee_profile.id",
+      "source": "main.dim_client_master",
+      "target": "main.dim_employee_profile",
+      "source_columns": [
+        "acquiring_banker_id"
+      ],
+      "target_columns": [
+        "id"
+      ],
+      "sql_matched_pairs": 30,
+      "matched_source_rows": 30,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_employee_profile.lob_id->dim_lob_hierarchy.lob_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_employee_profile.lob_id-%3Edim_lob_hierarchy.lob_id",
+      "source": "main.dim_employee_profile",
+      "target": "main.dim_lob_hierarchy",
+      "source_columns": [
+        "lob_id"
+      ],
+      "target_columns": [
+        "lob_id"
+      ],
+      "sql_matched_pairs": 28,
+      "matched_source_rows": 10,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 10
+    },
+    {
+      "name": "main.dim_employee_profile.sublob_id->dim_lob_hierarchy.sub_lob_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_employee_profile.sublob_id-%3Edim_lob_hierarchy.sub_lob_id",
+      "source": "main.dim_employee_profile",
+      "target": "main.dim_lob_hierarchy",
+      "source_columns": [
+        "sublob_id"
+      ],
+      "target_columns": [
+        "sub_lob_id"
+      ],
+      "sql_matched_pairs": 10,
+      "matched_source_rows": 10,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_employee_profile.reporting_manager_code->dim_employee_profile.code",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_employee_profile.reporting_manager_code-%3Edim_employee_profile.code",
+      "source": "main.dim_employee_profile",
+      "target": "main.dim_employee_profile",
+      "source_columns": [
+        "reporting_manager_code"
+      ],
+      "target_columns": [
+        "code"
+      ],
+      "sql_matched_pairs": 9,
+      "matched_source_rows": 9,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 1,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_equity_price_latest.co_code->dim_cmot_company_mstr.co_code",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_equity_price_latest.co_code-%3Edim_cmot_company_mstr.co_code",
+      "source": "main.dim_equity_price_latest",
+      "target": "main.dim_cmot_company_mstr",
+      "source_columns": [
+        "co_code"
+      ],
+      "target_columns": [
+        "co_code"
+      ],
+      "sql_matched_pairs": 25,
+      "matched_source_rows": 25,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_mf_fund_complete.benchmark_name->dim_cmot_index_prices.index_name",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_mf_fund_complete.benchmark_name-%3Edim_cmot_index_prices.index_name",
+      "source": "main.dim_mf_fund_complete",
+      "target": "main.dim_cmot_index_prices",
+      "source_columns": [
+        "benchmark_name"
+      ],
+      "target_columns": [
+        "index_name"
+      ],
+      "sql_matched_pairs": 0,
+      "matched_source_rows": 0,
+      "unmatched_nonnull_source_rows": 30,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_mf_nav_history.mstar_id->dim_mf_fund_complete.mstar_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_mf_nav_history.mstar_id-%3Edim_mf_fund_complete.mstar_id",
+      "source": "main.dim_mf_nav_history",
+      "target": "main.dim_mf_fund_complete",
+      "source_columns": [
+        "mstar_id"
+      ],
+      "target_columns": [
+        "mstar_id"
+      ],
+      "sql_matched_pairs": 7860,
+      "matched_source_rows": 7860,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_mf_returns_history.mstar_id->dim_mf_fund_complete.mstar_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_mf_returns_history.mstar_id-%3Edim_mf_fund_complete.mstar_id",
+      "source": "main.dim_mf_returns_history",
+      "target": "main.dim_mf_fund_complete",
+      "source_columns": [
+        "mstar_id"
+      ],
+      "target_columns": [
+        "mstar_id"
+      ],
+      "sql_matched_pairs": 360,
+      "matched_source_rows": 360,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_product_credit_rtng.scheme_master_id->dim_product_unified_cat.scheme_master_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_product_credit_rtng.scheme_master_id-%3Edim_product_unified_cat.scheme_master_id",
+      "source": "main.dim_product_credit_rtng",
+      "target": "main.dim_product_unified_cat",
+      "source_columns": [
+        "scheme_master_id"
+      ],
+      "target_columns": [
+        "scheme_master_id"
+      ],
+      "sql_matched_pairs": 15,
+      "matched_source_rows": 15,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_product_segment_map.product_id->dim_product_unified_cat.product_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_product_segment_map.product_id-%3Edim_product_unified_cat.product_id",
+      "source": "main.dim_product_segment_map",
+      "target": "main.dim_product_unified_cat",
+      "source_columns": [
+        "product_id"
+      ],
+      "target_columns": [
+        "product_id"
+      ],
+      "sql_matched_pairs": 25,
+      "matched_source_rows": 25,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_product_unified_cat.scheme_master_id->dim_product_credit_rtng.scheme_master_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_product_unified_cat.scheme_master_id-%3Edim_product_credit_rtng.scheme_master_id",
+      "source": "main.dim_product_unified_cat",
+      "target": "main.dim_product_credit_rtng",
+      "source_columns": [
+        "scheme_master_id"
+      ],
+      "target_columns": [
+        "scheme_master_id"
+      ],
+      "sql_matched_pairs": 15,
+      "matched_source_rows": 15,
+      "unmatched_nonnull_source_rows": 83,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_product_unified_cat.mstar_id->dim_mf_fund_complete.mstar_id",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_product_unified_cat.mstar_id-%3Edim_mf_fund_complete.mstar_id",
+      "source": "main.dim_product_unified_cat",
+      "target": "main.dim_mf_fund_complete",
+      "source_columns": [
+        "mstar_id"
+      ],
+      "target_columns": [
+        "mstar_id"
+      ],
+      "sql_matched_pairs": 30,
+      "matched_source_rows": 30,
+      "unmatched_nonnull_source_rows": 0,
+      "null_key_source_rows": 68,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_product_unified_cat.co_code->dim_cmot_company_mstr.co_code",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_product_unified_cat.co_code-%3Edim_cmot_company_mstr.co_code",
+      "source": "main.dim_product_unified_cat",
+      "target": "main.dim_cmot_company_mstr",
+      "source_columns": [
+        "co_code"
+      ],
+      "target_columns": [
+        "co_code"
+      ],
+      "sql_matched_pairs": 25,
+      "matched_source_rows": 25,
+      "unmatched_nonnull_source_rows": 5,
+      "null_key_source_rows": 68,
+      "source_rows_with_multiple_matches": 0
+    },
+    {
+      "name": "main.dim_product_unified_cat.benchmark->dim_cmot_index_prices.index_name",
+      "property": "https://wealth.example.org/neowealth/relationship/main.dim_product_unified_cat.benchmark-%3Edim_cmot_index_prices.index_name",
+      "source": "main.dim_product_unified_cat",
+      "target": "main.dim_cmot_index_prices",
+      "source_columns": [
+        "benchmark"
+      ],
+      "target_columns": [
+        "index_name"
+      ],
+      "sql_matched_pairs": 0,
+      "matched_source_rows": 0,
+      "unmatched_nonnull_source_rows": 98,
+      "null_key_source_rows": 0,
+      "source_rows_with_multiple_matches": 0
+    }
+  ],
+  "checks": [
+    {
+      "name": "account_client_disagreement",
+      "kind": "relationship_consistency",
+      "conflicting_pairs": 210,
+      "condition_present": true
+    },
+    {
+      "name": "unusable_enum_payload",
+      "kind": "all_null",
+      "rows": 25,
+      "total_rows": 25,
+      "condition_present": true
+    },
+    {
+      "name": "unavailable_replacement_fund",
+      "kind": "all_null",
+      "rows": 30,
+      "total_rows": 30,
+      "condition_present": true
+    },
+    {
+      "name": "unavailable_brick_rating",
+      "kind": "all_null",
+      "rows": 15,
+      "total_rows": 15,
+      "condition_present": true
+    },
+    {
+      "name": "category_identity_conflict",
+      "kind": "functional_dependency",
+      "conflicting_key_groups": 2,
+      "condition_present": true
+    }
+  ],
+  "issues": [
+    {
+      "code": "meaning_pending_confirmation",
+      "message": "Source meaning remains unconfirmed",
+      "table": "main.dim_client_account_map",
+      "column": "account_type"
+    },
+    {
+      "code": "documented_delivery_defect",
+      "message": "CSV is a byte-identical copy of dim_cmot_company_mstr.csv; intended enum table out of scope until a correct export is supplied",
+      "table": "main.dim_master_enums"
+    },
+    {
+      "code": "declared_type_differs",
+      "message": "Database type used; YAML declaration retained separately",
+      "table": "main.dim_mf_fund_complete",
+      "column": "obsolete_into_mstar_id",
+      "declared": "hllsketch",
+      "actual": "VARCHAR"
+    },
+    {
+      "code": "declared_type_differs",
+      "message": "Database type used; YAML declaration retained separately",
+      "table": "main.dim_product_credit_rtng",
+      "column": "brick_rating",
+      "declared": "hllsketch",
+      "actual": "VARCHAR"
+    },
+    {
+      "code": "meaning_pending_confirmation",
+      "message": "Source meaning remains unconfirmed",
+      "table": "main.dim_product_segment_map",
+      "column": "segment_name"
+    },
+    {
+      "code": "identity_fallback",
+      "message": "id is not a valid unique identity; preserving every row with a content hash",
+      "table": "main.dim_master_enums"
+    },
+    {
+      "code": "mapping_note",
+      "message": "Preserve the actual database rows as source records; these are not verified enum values. The supplied rulebook identifies this delivery as unusable enum data.",
+      "table": "main.dim_master_enums"
+    },
+    {
+      "code": "multiple_join_matches",
+      "message": "All SQL matches retained; aggregation must account for multiplicity",
+      "relationship": "main.client_aum.lob_id->dim_lob_hierarchy.lob_id",
+      "rows": 180
+    },
+    {
+      "code": "unmatched_references",
+      "message": "Original values retained; no missing targets invented",
+      "relationship": "main.client_holdings.wsw_account_code->dim_client_account_map.wsw_account_code",
+      "rows": 121
+    },
+    {
+      "code": "unmatched_references",
+      "message": "Original values retained; no missing targets invented",
+      "relationship": "main.client_net_new_money.product_id->dim_product_unified_cat.product_id",
+      "rows": 612
+    },
+    {
+      "code": "multiple_join_matches",
+      "message": "All SQL matches retained; aggregation must account for multiplicity",
+      "relationship": "main.client_revenue.lob_id->dim_lob_hierarchy.lob_id",
+      "rows": 675
+    },
+    {
+      "code": "unmatched_references",
+      "message": "Original values retained; no missing targets invented",
+      "relationship": "main.dim_client_account_map.wsw_account_code->client_holdings.wsw_account_code",
+      "rows": 23
+    },
+    {
+      "code": "multiple_join_matches",
+      "message": "All SQL matches retained; aggregation must account for multiplicity",
+      "relationship": "main.dim_client_account_map.wsw_account_code->client_holdings.wsw_account_code",
+      "rows": 24
+    },
+    {
+      "code": "multiple_join_matches",
+      "message": "All SQL matches retained; aggregation must account for multiplicity",
+      "relationship": "main.dim_client_master.lob_id->dim_lob_hierarchy.lob_id",
+      "rows": 30
+    },
+    {
+      "code": "multiple_join_matches",
+      "message": "All SQL matches retained; aggregation must account for multiplicity",
+      "relationship": "main.dim_employee_profile.lob_id->dim_lob_hierarchy.lob_id",
+      "rows": 10
+    },
+    {
+      "code": "unmatched_references",
+      "message": "Original values retained; no missing targets invented",
+      "relationship": "main.dim_mf_fund_complete.benchmark_name->dim_cmot_index_prices.index_name",
+      "rows": 30
+    },
+    {
+      "code": "unmatched_references",
+      "message": "Original values retained; no missing targets invented",
+      "relationship": "main.dim_product_unified_cat.scheme_master_id->dim_product_credit_rtng.scheme_master_id",
+      "rows": 83
+    },
+    {
+      "code": "unmatched_references",
+      "message": "Original values retained; no missing targets invented",
+      "relationship": "main.dim_product_unified_cat.co_code->dim_cmot_company_mstr.co_code",
+      "rows": 5
+    },
+    {
+      "code": "unmatched_references",
+      "message": "Original values retained; no missing targets invented",
+      "relationship": "main.dim_product_unified_cat.benchmark->dim_cmot_index_prices.index_name",
+      "rows": 98
+    },
+    {
+      "code": "source_check",
+      "message": "Account-code matches can disagree on client ownership. The graph records the source match, not verified ownership.",
+      "check": "account_client_disagreement"
+    },
+    {
+      "code": "source_check",
+      "message": "Every enum business field is NULL; do not interpret these source records as valid enum values.",
+      "check": "unusable_enum_payload"
+    },
+    {
+      "code": "source_check",
+      "message": "No replacement-fund identifiers are stored. Do not invent successor relationships.",
+      "check": "unavailable_replacement_fund"
+    },
+    {
+      "code": "source_check",
+      "message": "No Brickwork rating values are stored.",
+      "check": "unavailable_brick_rating"
+    },
+    {
+      "code": "source_check",
+      "message": "Category identifiers have multiple labels even within a parent. Keep the fields on individual product records.",
+      "check": "category_identity_conflict"
+    }
+  ],
+  "inputs": [
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\CLIENT_AUM_001.yaml",
+      "sha256": "dd4a33eb7830ed6c5a53e08cfe6fae645befb9e2648ce396c2accbc85af92bba"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\CLIENT_HOLDINGS_001.yaml",
+      "sha256": "30ae25ac25663d13cdea21f01fb16d2f8582b98ac1f6f4af01a16e6e684fe9ee"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\CLIENT_NET_NEW_MONEY_001.yaml",
+      "sha256": "2eeaf4ed5b9e79f09005d531e1b676436ff3202fe98e83d95c8602d1905227f2"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\CLIENT_REALIZED_GAIN_001.yaml",
+      "sha256": "b9a75af1a55e8a432d514162c86318f2ca077c29e1ee6b58ae4f4d1fc260f3c1"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\CLIENT_REVENUE_001.yaml",
+      "sha256": "b31de068ee42d302e367f858477da650fb55afb9cfe1695315b506f4ee97957a"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\CLIENT_TRANSACTIONS_001.yaml",
+      "sha256": "93da2d99b9abc54c039af8f3fa9599c798dd35ec4d44c0c075bb9c253b5e9084"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\CLIENT_VALUATIONS_001.yaml",
+      "sha256": "3d5919d9458e4d13b2a6acc9ae0f34234c49763d656830751effe23bb911787c"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_CLIENT_ACCOUNT_MAP_001.yaml",
+      "sha256": "5964646f3041f630c6a9128bf07c33308866e23e3cb93cb842e72003583b9938"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_CLIENT_MASTER_001.yaml",
+      "sha256": "20452b7d9e26677775292f77e6907d6f30704d07774d7c4140b2e72ef099074b"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_CMOT_COMPANY_MSTR_001.yaml",
+      "sha256": "c87c0be76cabc839242a655c9747584287740fc1b2e1c04f2188f056844b537a"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_CMOT_INDEX_PRICES_001.yaml",
+      "sha256": "c5b2f34b3ae05968c6505bd11ac91620b5493cb7d345de97440fbab47e37bdf9"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_EMPLOYEE_PROFILE_001.yaml",
+      "sha256": "0f615f8099f5f0333aa32721a84ded358da54c9b8d7b06b34cc56576bcb88153"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_EQUITY_PRICE_LATEST_001.yaml",
+      "sha256": "0461598a004e9f34b2a54583d9c5ebbee2f696823b0c33327d11dbd733a7cb4b"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_LOB_HIERARCHY_001.yaml",
+      "sha256": "2b5c41b6b48f9b3da7244f697429a881aa1e9255db89e4b04dcc8b0a257489ce"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_MASTER_ENUMS_001.yaml",
+      "sha256": "a4844193c225a47583a521cd94e0a380ee4fefd677bf33bd763178522df736ef"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_MF_FUND_COMPLETE_001.yaml",
+      "sha256": "430a3d9773f393f4e793763963e88c78754d4635cd34f80fca019516f7bd1dfe"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_MF_NAV_HISTORY_001.yaml",
+      "sha256": "e7a9c1d81a10023d6d506970a69fd2c7333b6cdbc35026c412202c2db91a41eb"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_MF_RETURNS_HISTORY_001.yaml",
+      "sha256": "84d3c2d2710d79acd38a1c569b6a86ada18ffa67b76ca2c6f2a07a3af04cc8b4"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_PRODUCT_CREDIT_RTNG_001.yaml",
+      "sha256": "a9a9868bff3baeb1258abe4ffa1e587002f975584ccbe5ba7e4c93df690fa7fb"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_PRODUCT_SEGMENT_MAP_001.yaml",
+      "sha256": "cfef5d75fb9485a21ad6d903a4bb821297b00b35f52d3acd62b96743c18fcf13"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\02_column_reference\\DIM_PRODUCT_UNIFIED_CAT_001.yaml",
+      "sha256": "c44bda1908bde8b54b2b7f3f0f69e9ec9c8a8d0222f1353ef550a9281c344c49"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\Wealth management Context data\\newdb\\ALL_RULES_COMPILED\\01_domain_and_business_rules.md",
+      "sha256": "e3fc6444501a9ca620b0e7dd0f2766da06a552dd5d6d8e7721b7af84789bde86"
+    },
+    {
+      "file": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\neowealth_kg_mapping.yaml",
+      "sha256": "053cdeeafeb133f0e1b273c04b03addc38af55c0c1eee0ff0fea0d7210f47b05"
+    }
+  ],
+  "business_rules_execution": "documentation_only",
+  "scope": "RDF representation of the database; not a general SQL-to-SPARQL translator",
+  "session": {
+    "timezone": "UTC",
+    "collation": "nocase",
+    "null_order": "nulls_last_on_asc_first_on_desc"
+  },
+  "validation": {
+    "status": "PASS",
+    "source_rows_verified": 16689,
+    "source_cells_verified": 173279,
+    "relationship_pair_counts_verified": 36,
+    "limits": "Verifies export fidelity and SQL equality-join pair counts, not every business question or source-data correctness",
+    "serialized_turtle_roundtrip": "PASS"
+  },
+  "source_sha256": "67e4c39a2637a4b0f895d554f36d480a70c7781447f60ac527073a58c003630b",
+  "generated_at_utc": "2026-10-07T10:04:26.409703+00:00",
+  "versions": {
+    "duckdb": "1.5.6",
+    "pyyaml": "6.0.3",
+    "rdflib": "7.6.0"
+  },
+  "issue_count": 24,
+  "triples": {
+    "schema": 3187,
+    "data": 234495,
+    "merged": 237682
+  },
+  "outputs": {
+    "schema": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\kg_output_neowealth\\neowealth_schema.ttl",
+    "data": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\kg_output_neowealth\\neowealth_data.ttl",
+    "kg": "C:\\Users\\AMAN KUMAR SINGH\\Desktop\\wealthmanagement\\kg_output_neowealth\\neowealth_kg.ttl"
+  }
+}

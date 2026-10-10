@@ -1,0 +1,30 @@
+{
+  "snapshot_commit": "9ba4be150a7c8497dc33fe8c751605bf93fece09",
+  "model": "openai.gpt-oss-120b-1:0",
+  "endpoint": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1",
+  "workers": 1,
+  "questions": 1000,
+  "command": [
+    "/usr/bin/python3",
+    "-u",
+    "-B",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/run.py",
+    "--ontology",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/kg_output_fixed/wealth_management_diverse_schema.ttl",
+    "--kg-data",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/kg_output_fixed/wealth_management_diverse_kg.ttl",
+    "--domain-intro",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/domain_intro_latest.prompt",
+    "--business-rules",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/business_rules_addendum.md",
+    "--sparql-endpoint",
+    "http://127.0.0.1:3041/improvemnt11kgfixed/query",
+    "--questions",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/input_questions.jsonl",
+    "--output",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/raw_pipeline.csv",
+    "--knowledge-mode",
+    "simple"
+  ],
+  "grader": "not launched"
+}

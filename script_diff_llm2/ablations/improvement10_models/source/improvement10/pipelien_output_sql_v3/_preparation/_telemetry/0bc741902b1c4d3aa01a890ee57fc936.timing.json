@@ -1,0 +1,58 @@
+{
+  "run_id": "0bc741902b1c4d3aa01a890ee57fc936",
+  "started_at": "2026-10-06T19:33:20",
+  "status": "failed",
+  "wall_clock_seconds": 2.6043273769973894,
+  "startup_seconds": null,
+  "current_run_query_seconds": 0,
+  "current_run_cycle_seconds": 0,
+  "llm_seconds": 2.1025364749948494,
+  "metadata": {
+    "mode": "prepare",
+    "inputs": {
+      "SQLITE_DB_PATH": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db",
+      "TABLE_METADATA_DIR": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada",
+      "DOMAIN_INTRO_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt",
+      "BUSINESS_RULES_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md"
+    }
+  },
+  "questions": [],
+  "stages": [
+    {
+      "stage": "configuration_and_imports",
+      "query_id": null,
+      "seconds": 0.29228624000097625
+    },
+    {
+      "stage": "schema_and_documents",
+      "query_id": null,
+      "seconds": 0.133961305997218
+    },
+    {
+      "stage": "client_setup",
+      "query_id": null,
+      "seconds": 0.06348418699781178
+    },
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "seconds": 2.1087509249991854
+    }
+  ],
+  "llm_calls": [
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "call_id": "3daed671541e4cd4874bf66516750d7c",
+      "model": "us.meta.llama3-1-405b-instruct-v1:0",
+      "prompt_characters": 104147,
+      "status": "error",
+      "error_type": "BadRequestError",
+      "seconds": 2.1025364749948494
+    }
+  ],
+  "timing_scope": "CLI entry through result/log finalization; excludes interpreter bootstrap and this timing summary write",
+  "stage_accounting": "Stage durations may nest; do not add them to wall-clock time.",
+  "cached_tokens_note": "null means the endpoint did not report cache usage; it does not mean zero",
+  "usage_note": "SDK internal retry usage may be unavailable. Call duration includes SDK retries/backoff. Token usage is provider-reported, not a verified bill. Event and summary files describe the same calls; do not add both."
+}

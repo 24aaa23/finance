@@ -1,0 +1,253 @@
+# TABLE_DIM_MF_FUND_COMPLETE_001 - grounded in NEOWEALTH_DDL.sql / Neowealth_schema.xlsx
+# Provenance tags preserved: [D] = declared in source, [I] = inferred,
+# [C] = observed in the 2026-08-28 CSV delivery (Wealth Management data/dim_mf_fund_complete.csv).
+
+identity:
+  id: "TABLE_DIM_MF_FUND_COMPLETE_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_mf_fund_complete"
+  display_name: "Mutual Fund Master"
+  description: >
+    [D] DIMENSION, 23 columns. Mutual fund master. [I] Grain: one row per
+    scheme-PLAN-OPTION combination, keyed by isin - in India a single fund has
+    separate ISINs for Regular vs Direct plan and Growth vs IDCW option, so one
+    'fund' in common speech is SEVERAL ROWS here. Four identifiers on one row
+    (fund_id, mstar_id, isin, rta_code); mstar_id is what ties this to the NAV and
+    returns history. THE FUND-MERGER LINEAGE IS BROKEN - obsolete_into_mstar_id is
+    typed hllsketch and cannot be traversed, so a fund that merged mid-period
+    simply disappears from the time series. [C] The CSV carries it as
+    obsolete_into_mstar_id_count, blank on all 30 rows; the intended field is
+    pending data-team confirmation. The three asset_alloc_*_net columns
+    enable true look-through allocation analysis.
+
+layer: "dimension"
+grain: "one row per scheme-plan-option (keyed by isin)"   # [I]
+not_null_columns: []                                       # [D]
+attribute_type_provenance: "inferred_per_section_11"
+
+semantics:
+  business_purpose: >
+    Mutual fund master, one row per scheme-plan-option keyed by ISIN. mstar_id ties
+    to NAV and returns history. Look-through allocation columns support true asset
+    allocation analysis. Fund-merger lineage is broken (hllsketch defect).
+
+attributes:
+  - name: "fund_id"
+    display_name: "Fund ID"
+    description: "[I] Internal integer fund key; also carried by dim_mf_returns_history but NOT by dim_mf_nav_history."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "mstar_id"
+    display_name: "Morningstar ID"
+    description: "[I] Morningstar identifier - THE key that ties this table to dim_mf_nav_history and dim_mf_returns_history."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "[I] The grain key. [D] MF ISINs begin INF while equity ISINs begin INE - the standard Indian convention (IN country code, then F for funds, E for equities), and a cheap way to route an ISIN when product_type is missing."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "rta_code"
+    display_name: "RTA Code"
+    description: "[I] Registrar's scheme code."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "fund_name"
+    display_name: "Fund Name"
+    description: "[D] Sample names carry plan and option explicitly, e.g. 'Kotak Flexi Cap Fund - Direct Growth'."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "category"
+    display_name: "Category"
+    description: "[D] SEBI's mandated scheme classification (Equity -> Flexi Cap / Large Cap / Mid Cap; Debt -> Liquid / Short Duration; Hybrid; Solution-Oriented). A primary axis for peer comparison."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "sub_category"
+    display_name: "Sub-Category"
+    description: "[D] Second level of the SEBI classification."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "amc_id"
+    display_name: "AMC ID"
+    description: "[D] Asset Management Company key. No dim_amc table exists."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    missing_dimension: "dim_amc"
+
+  - name: "amc_name"
+    display_name: "AMC Name"
+    description: "[D] Fund house name. NAMING TRAP: dim_product_unified_cat calls this 'amc_display_name'."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    naming_trap: "called amc_display_name in dim_product_unified_cat"
+
+  - name: "amc_code"
+    display_name: "AMC Code"
+    description: "[D] Fund house short code."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "inception_date"
+    display_name: "Inception Date"
+    description: "[D] Fund launch date."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "expense_ratio"
+    display_name: "Expense Ratio"
+    description: "[D] Annual cost. Essential for net-of-fee analysis and for the Regular-vs-Direct plan comparison that drives much advisory conversation."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "fund_manager_name"
+    display_name: "Fund Manager Name"
+    description: "[D] A single free-text column - it CANNOT represent co-managed funds cleanly, and there is no dim_fund_manager, so manager-level analysis relies on exact string matching."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "benchmark_name"
+    display_name: "Benchmark Name"
+    description: "[I] Intended link to dim_cmot_index_prices.index_name by FREE-TEXT MATCH - which, by exact match, finds nothing in this export (see [C] below). NAMING TRAP: dim_product_unified_cat calls this 'benchmark'. The differing names suggest the two were populated by different processes with different conventions, which makes the text join even more fragile. [C] Populated on all 30 rows with 16 distinct values (e.g. 'Nifty 500 TRI' 7, 'Nifty 50 TRI' 3, 'Nifty 100 TRI' 3, 'Nifty Midcap 150 TRI' 3). NONE equals an index_name exactly (0 of 30). It differs from dim_product_unified_cat.benchmark for 19 of the 30 funds (matched on isin). Preserve each label and its unmatched status in stored data and the KG - never strip ' TRI' or store an alias. The ' TRI' strip in NEOWEALTH_DOMAIN_KNOWLEDGE.md 3.8 / 01_domain_and_business_rules.md §3.8 is a QUERY-TIME house rule only, which an equivalent KG query must reproduce exactly as the SQL does (column alignment review 2026-10-05, relationship rule 4)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    join_target: "dim_cmot_index_prices.index_name (free-text match)"
+    naming_trap: "called benchmark in dim_product_unified_cat"
+
+  - name: "asset_alloc_equity_net"
+    display_name: "Asset Allocation Equity (Net)"
+    description: "[D] Look-through equity weight. The _net suffix implies NET of derivative and short positions, so a value can in principle exceed 100% or go negative. [I] Main analytical use: TRUE asset-allocation look-through - a client's equity exposure is their direct equity PLUS fund_value * asset_alloc_equity_net for every fund held. This is how you reconcile bottom-up allocation against client_aum's splits."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "asset_alloc_bond_net"
+    display_name: "Asset Allocation Bond (Net)"
+    description: "[D] Look-through bond weight, net."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "asset_alloc_cash_net"
+    display_name: "Asset Allocation Cash (Net)"
+    description: "[D] Look-through cash weight, net. These three cover equity, bond and cash ONLY - there is no other/alternatives bucket, so they need NOT sum to 100%."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "is_obsolete"
+    display_name: "Is Obsolete"
+    description: "[I] MARKET status - the scheme was wound up or merged away. Independent of is_active, which is the RECORD status; the workbook does not define their interaction."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "obsolete_into_mstar_id"
+    display_name: "Obsolete Into Morningstar ID"
+    description: "[D] TYPE DEFECT: declared hllsketch. Intended as a self-reference to mstar_id pointing at the surviving fund a merged scheme went into - every other mstar_id in the schema is varchar(256). [I] Near-certain cause: arrived 100% NULL, loader could not infer a type. THE FUND-MERGER CHAIN CANNOT BE TRAVERSED AT ALL. A fund that merged mid-period simply disappears from the time series, breaking long-run performance history and making it impossible to follow a client's holding through a scheme merger. This is the one genuinely missing edge in the join graph. [C] EXPORT MISMATCH: the CSV has no obsolete_into_mstar_id column; it carries obsolete_into_mstar_id_count instead, blank on all 30 rows, so the intended meaning cannot be read from the values. The loader keeps this DDL name, so the column loads 100% NULL. A count is not a replacement-fund identifier - never treat obsolete_into_mstar_id_count as one. Whether the identifier was transformed during export or the count is intentional is pending data-team confirmation (column alignment review 2026-10-05, point 3)."
+    type: "hllsketch"
+    sql_type: "hllsketch"
+    nullable: true
+    filterable: false
+    attribute_type: "identifier"
+    type_defect: "should be varchar(256) self-reference to mstar_id; landed on hllsketch (likely 100% NULL at load)"
+    export_mismatch: "CSV header is obsolete_into_mstar_id_count (all 30 values blank); intended field unconfirmed - review 2026-10-05 point 3"
+    unqueryable: true
+
+  - name: "is_active"
+    display_name: "Is Active"
+    description: "[I] RECORD status - the row is current in the warehouse. [D] Note there is NO is_deleted here, unlike the client, employee, enum and unified-product tables."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "[D] Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "source_load_ts"
+    display_name: "Source Load Timestamp"
+    description: "[D] ETL load timestamp, WITHOUT TIME ZONE - no timezone is recorded anywhere, so IST vs UTC is a convention held outside the DB. Present in 12 of 14 dim_* tables; absent from both MF history tables and from all 7 client_* facts."
+    type: "timestamp"
+    sql_type: "timestamp without time zone"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "[D] 64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

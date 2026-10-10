@@ -1,0 +1,33 @@
+[SYSTEM] SQLite DB: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[SYSTEM] SQLite DB exists: True
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: SQLite (SQL-only ablation)
+[SYSTEM] Fuseki endpoint: http://127.0.0.1:3030/wealth/query
+[SYSTEM] Fuseki scan timeout: 60 seconds
+[SYSTEM] Experiment config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/experiments/deepseek_v3_2_with_context.yaml
+[SYSTEM] Model config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/models/deepseek_v3_2.yaml
+[SYSTEM] SQL asset: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/sql/wealth_management_diverse/asset.yaml
+[SYSTEM] Model provider: aws-bedrock-openai-compatible
+[SYSTEM] Model endpoint env: ABLATION_BASE_URL
+[SYSTEM] Primary model: deepseek.v3.2
+[SYSTEM] RAG/Retrieve model: deepseek.v3.2
+[SYSTEM] Planner model: deepseek.v3.2
+[SYSTEM] Query_Spec model: deepseek.v3.2
+[SYSTEM] Refine model: deepseek.v3.2
+[SYSTEM] Generate model: deepseek.v3.2
+[SYSTEM] Validate model: deepseek.v3.2
+[SYSTEM] Explain model: deepseek.v3.2
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: multi_candidate
+[SYSTEM] Benchmark query workers: 1
+[SYSTEM] Benchmark start delay: 0 seconds
+[SYSTEM] Report save interval: every 1 completed row(s)
+[SYSTEM] Report file: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/deepseek_v3_2/with_context/run_01/preparation/raw_pipeline.csv
+[SYSTEM] KG loading and Fuseki checks disabled for SQL-only ablation
+[SQL SCHEMA] Loaded 8 tables from /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[DOMAIN CONTEXT] business_rules quarantined: Evaluation-scoped document excluded from preparation and inference
+[DOMAIN CONTEXT] 2 active / 30 candidates. Review: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/context_cache/deepseek_v3_2/1d07ff93dde9441c56d287337bf064d761088fa2fea9fcef93f8606ebb2a7312.json
+[DOMAIN CONTEXT] Preparation-only run complete; benchmark not started

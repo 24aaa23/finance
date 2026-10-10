@@ -5,6 +5,9 @@ grader, followed by the exact environment variables to replace when changing
 questions or backend data. All edits to a command happen before you execute it.
 `$PWD` resolves to the absolute `script_diff_llm2` directory after its `cd` line.
 
+For the paper-oriented architecture, decomposition methodology, and comparison
+with Improvement 6, see [current pipeline methodology](docs/current_pipeline_methodology.md).
+
 ## Reliability improvements and fresh reruns
 
 The current implementation includes the generic reliability v6 fixes. For new

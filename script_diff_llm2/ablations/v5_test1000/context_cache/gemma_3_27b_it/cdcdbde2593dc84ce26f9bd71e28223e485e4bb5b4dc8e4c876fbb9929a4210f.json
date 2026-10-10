@@ -1,0 +1,519 @@
+{
+  "fingerprint": "cdcdbde2593dc84ce26f9bd71e28223e485e4bb5b4dc8e4c876fbb9929a4210f",
+  "entries": [
+    {
+      "id": "1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Portfolio Construction",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "category",
+        "investment_type",
+        "sector"
+      ],
+      "terms": [
+        "portfolio construction",
+        "building investor portfolios"
+      ],
+      "definition": "The process of creating a portfolio of investments.",
+      "quote": "Portfolio Construction — building investor portfolios aligned to risk tolerance, investment goals, and time horizon.",
+      "conflicts": []
+    },
+    {
+      "id": "2",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "avg_annual_return_pct"
+      ],
+      "terms": [
+        "XIRR",
+        "extended internal rate of return"
+      ],
+      "definition": "Annualized return of an investment computed from irregular cash flows.",
+      "quote": "XIRR is the annualised return of an investment computed from irregular cash flows.",
+      "conflicts": []
+    },
+    {
+      "id": "3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "risk tolerance",
+        "conservative investor",
+        "aggressive investor",
+        "moderate investor"
+      ],
+      "definition": "An investor's ability and willingness to lose some or all of their original investment in exchange for potentially higher returns.",
+      "quote": "Risk Tolerance\n- Conservative — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- Moderate — Balanced growth and preservation; mixed allocation.\n- Aggressive — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": "4",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR Cash Flow",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "inflows",
+        "outflows",
+        "cash flows",
+        "XIRR computation",
+        "XIRR cash flows"
+      ],
+      "definition": "Inflows are represented as negative cash flows, and outflows as positive cash flows when computing XIRR.",
+      "quote": "Inflows (investments) are **negative** cash flows.\n- Current portfolio value or redemptions are **positive** cash flows.",
+      "conflicts": []
+    },
+    {
+      "id": "5",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR Plausibility",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "avg_annual_return_pct"
+      ],
+      "terms": [
+        "XIRR greater than 25%",
+        "high XIRR",
+        "XIRR plausibility"
+      ],
+      "definition": "An XIRR exceeding 25% requires investigation.",
+      "quote": "Computed XIRR > **25%** | **FLAG as suspect.**",
+      "conflicts": []
+    },
+    {
+      "id": "6",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR Negative",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "avg_annual_return_pct"
+      ],
+      "terms": [
+        "XIRR less than -50%",
+        "negative XIRR",
+        "stale valuation"
+      ],
+      "definition": "XIRR less than -50% Flags as suspect; indicates missing recent valuation.",
+      "quote": "Computed XIRR < **-50%** | Flag as suspect; likely missing recent valuation or stale `current_value`.",
+      "conflicts": []
+    },
+    {
+      "id": "7",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Returns Percentage",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": [
+        "returns_pct greater than 200%",
+        "abnormal return"
+      ],
+      "definition": "Returns percentage over 200% on holdings less than a year old must be checked.",
+      "quote": "`returns_pct` > **200%** on a holding < 1 year old | Flag; verify `purchase_date` and `cost`.",
+      "conflicts": []
+    },
+    {
+      "id": "8",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Portfolio Health Scores",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "terms": [
+        "portfolio health",
+        "goal alignment",
+        "risk score",
+        "liquidity score",
+        "diversification score"
+      ],
+      "definition": "Portfolio health is assessed using a scale of 0-100.",
+      "quote": "All scores are on a **0–100 scale**.",
+      "conflicts": []
+    },
+    {
+      "id": "9",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Allocation Drift",
+      "backend": "sql",
+      "source": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "fields": [
+        "current_allocation_pct",
+        "target_allocation_pct"
+      ],
+      "terms": [
+        "allocation drift",
+        "rebalancing trigger",
+        "drift greater than 10%"
+      ],
+      "definition": "Allocation drift exceeding 10 percentage points may trigger a rebalancing recommendation. ",
+      "quote": "If drift > **10 percentage points** for any sector → trigger rebalancing recommendation.",
+      "conflicts": []
+    },
+    {
+      "id": "10",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Conservative Investor Equity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "conservative investor",
+        "equity allocation"
+      ],
+      "definition": "Conservative investors should not have more than 40% equity allocation.",
+      "quote": "Conservative investors must NOT hold > 40% equity.",
+      "conflicts": []
+    },
+    {
+      "id": "11",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goals",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "Investment Goals"
+      ],
+      "definition": "The different types of investment goals that investors have.",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": []
+    },
+    {
+      "id": "12",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Purchase date",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "Purchase date must not be in the future"
+      ],
+      "definition": "Purchase dates cannot be in the future",
+      "quote": "`purchase_date` must not be in the future",
+      "conflicts": []
+    }
+  ],
+  "review": [
+    {
+      "id": "1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Portfolio Construction",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "category",
+        "investment_type",
+        "sector"
+      ],
+      "terms": [
+        "portfolio construction",
+        "building investor portfolios"
+      ],
+      "definition": "The process of creating a portfolio of investments.",
+      "quote": "Portfolio Construction — building investor portfolios aligned to risk tolerance, investment goals, and time horizon.",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence"
+      ],
+      "evidence_hash": "abe961e650080e00c60648c0daa7b4e94cac9518ce9f8ab2916b73f2f89c651e",
+      "active": false
+    },
+    {
+      "id": "2",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "avg_annual_return_pct"
+      ],
+      "terms": [
+        "XIRR",
+        "extended internal rate of return"
+      ],
+      "definition": "Annualized return of an investment computed from irregular cash flows.",
+      "quote": "XIRR is the annualised return of an investment computed from irregular cash flows.",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [
+        "Quote is not verbatim source evidence"
+      ],
+      "evidence_hash": "1f8c9d65021d5a639bcfe591fb3a26be5e9e88d5cae3204478c8acf2ccdd5288",
+      "active": false
+    },
+    {
+      "id": "3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "risk tolerance",
+        "conservative investor",
+        "aggressive investor",
+        "moderate investor"
+      ],
+      "definition": "An investor's ability and willingness to lose some or all of their original investment in exchange for potentially higher returns.",
+      "quote": "Risk Tolerance\n- Conservative — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- Moderate — Balanced growth and preservation; mixed allocation.\n- Aggressive — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence"
+      ],
+      "evidence_hash": "0b938980de0d72b7cfc2049834595de9bb551d92c6239050aff263db4d4d1252",
+      "active": false
+    },
+    {
+      "id": "4",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR Cash Flow",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "inflows",
+        "outflows",
+        "cash flows",
+        "XIRR computation",
+        "XIRR cash flows"
+      ],
+      "definition": "Inflows are represented as negative cash flows, and outflows as positive cash flows when computing XIRR.",
+      "quote": "Inflows (investments) are **negative** cash flows.\n- Current portfolio value or redemptions are **positive** cash flows.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "f696435ddca627e211450f46ab410bf1ec22bc225c002ab17c71ba0a0bc17913",
+      "active": false
+    },
+    {
+      "id": "5",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR Plausibility",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "avg_annual_return_pct"
+      ],
+      "terms": [
+        "XIRR greater than 25%",
+        "high XIRR",
+        "XIRR plausibility"
+      ],
+      "definition": "An XIRR exceeding 25% requires investigation.",
+      "quote": "Computed XIRR > **25%** | **FLAG as suspect.**",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "ed2542164f6b716e59b5c4ccaf02b3a24f1029689714610a39042a0f557739d3",
+      "active": false
+    },
+    {
+      "id": "6",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR Negative",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "avg_annual_return_pct"
+      ],
+      "terms": [
+        "XIRR less than -50%",
+        "negative XIRR",
+        "stale valuation"
+      ],
+      "definition": "XIRR less than -50% Flags as suspect; indicates missing recent valuation.",
+      "quote": "Computed XIRR < **-50%** | Flag as suspect; likely missing recent valuation or stale `current_value`.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "a7710903c5f41bda8ba30aec1c1e15c7135c417a2eef108c8f5f5897e2bd47b2",
+      "active": false
+    },
+    {
+      "id": "7",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Returns Percentage",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": [
+        "returns_pct greater than 200%",
+        "abnormal return"
+      ],
+      "definition": "Returns percentage over 200% on holdings less than a year old must be checked.",
+      "quote": "`returns_pct` > **200%** on a holding < 1 year old | Flag; verify `purchase_date` and `cost`.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "fe416eeed41e8bc943d0911a3e9b2d62a5568f5b35143092851a086d596c9b6f",
+      "active": false
+    },
+    {
+      "id": "8",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Portfolio Health Scores",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "terms": [
+        "portfolio health",
+        "goal alignment",
+        "risk score",
+        "liquidity score",
+        "diversification score"
+      ],
+      "definition": "Portfolio health is assessed using a scale of 0-100.",
+      "quote": "All scores are on a **0–100 scale**.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "5b2665264e953233ba1ac3db352dfc5632b5f8c617b998afb0497d755816fcc5",
+      "active": false
+    },
+    {
+      "id": "9",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Allocation Drift",
+      "backend": "sql",
+      "source": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "fields": [
+        "current_allocation_pct",
+        "target_allocation_pct"
+      ],
+      "terms": [
+        "allocation drift",
+        "rebalancing trigger",
+        "drift greater than 10%"
+      ],
+      "definition": "Allocation drift exceeding 10 percentage points may trigger a rebalancing recommendation. ",
+      "quote": "If drift > **10 percentage points** for any sector → trigger rebalancing recommendation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "3281e15c62820a50c96b54bbe44447698f56c237293fb0fd8d56362a22aff6c6",
+      "active": false
+    },
+    {
+      "id": "10",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Conservative Investor Equity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "conservative investor",
+        "equity allocation"
+      ],
+      "definition": "Conservative investors should not have more than 40% equity allocation.",
+      "quote": "Conservative investors must NOT hold > 40% equity.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "3f8c658575f6987d6a052cdb5c047e42f3b1c76d781eed2101d95aa121504f4d",
+      "active": false
+    },
+    {
+      "id": "11",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goals",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "Investment Goals"
+      ],
+      "definition": "The different types of investment goals that investors have.",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "0f208ee3dee66bb7dff4ecea6ad38fb7af24d12fb7617ba5dc2d2c86b4ff9e5f",
+      "active": true
+    },
+    {
+      "id": "12",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Purchase date",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "Purchase date must not be in the future"
+      ],
+      "definition": "Purchase dates cannot be in the future",
+      "quote": "`purchase_date` must not be in the future",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "dd496a5df8c671c84599b98056efbee7376c89256ed74dcf649ee483393101b0",
+      "active": false
+    }
+  ],
+  "quarantined_documents": [
+    {
+      "document": "business_rules",
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/phase0_business_rules.md",
+      "reason": "Evaluation-scoped document excluded from preparation and inference"
+    }
+  ]
+}

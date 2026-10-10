@@ -1,5 +1,6 @@
 import json
 import sqlite3
+from .sql_connection import connect_readonly, dialect, is_duckdb, json_value, assert_read_query, SQL_ERRORS, SQL_OPERATION_ERRORS
 from typing import Dict, Any, Tuple
 import os
 import re
@@ -649,12 +650,12 @@ def semantic_generate_sql(inputs: Dict[str, Any], client: Any, model: str) -> Di
     bound_inputs = inputs.get("bound_inputs", {})
     print(f"[SQL SCHEMA] Relevant tables: {relevant_tables}")
 
-    compiled_projection = _deterministic_projection_sql(inputs) if not logic_feedback else None
+    compiled_projection = _deterministic_projection_sql(inputs) if not logic_feedback and not is_duckdb(inputs.get("db_path", "")) else None
     if compiled_projection:
         return {'sql': compiled_projection, 'reasoning': 'Compiled explicit single-source projections and predicates from QuerySpec.',
                 'sql_schema_tables': _schema_table_names(sql_schema), 'relevant_tables': relevant_tables,
                 'raw_response_preview': '', 'generation_backend': 'deterministic_projection'}
-    compiled_aggregate = _deterministic_single_source_aggregate_sql(inputs) if not logic_feedback else None
+    compiled_aggregate = _deterministic_single_source_aggregate_sql(inputs) if not logic_feedback and not is_duckdb(inputs.get("db_path", "")) else None
     if compiled_aggregate:
         return {'sql': compiled_aggregate, 'reasoning': 'Compiled explicit single-source aggregation at the declared grain.',
                 'sql_schema_tables': _schema_table_names(sql_schema), 'relevant_tables': relevant_tables,
@@ -662,7 +663,7 @@ def semantic_generate_sql(inputs: Dict[str, Any], client: Any, model: str) -> Di
 
     # A failed compiled query must reach the repair model instead of being
     # reproduced unchanged by the deterministic fast path.
-    deterministic_entity_group = _deterministic_entity_group_sql(inputs) if not logic_feedback else None
+    deterministic_entity_group = _deterministic_entity_group_sql(inputs) if not logic_feedback and not is_duckdb(inputs.get("db_path", "")) else None
     if deterministic_entity_group:
         return {
             "sql": deterministic_entity_group,
@@ -672,7 +673,7 @@ def semantic_generate_sql(inputs: Dict[str, Any], client: Any, model: str) -> Di
             "raw_response_preview": "",
         }
 
-    deterministic_group_count = _deterministic_group_count_sql(inputs) if not logic_feedback else None
+    deterministic_group_count = _deterministic_group_count_sql(inputs) if not logic_feedback and not is_duckdb(inputs.get("db_path", "")) else None
     if deterministic_group_count:
         print("[SQL GENERATE] Deterministic grouped-count compiler selected.")
         return {
@@ -783,6 +784,10 @@ Return ONLY a JSON object with this exact structure:
 Do not include any other text.
 """
     
+    if is_duckdb(inputs.get('db_path', '')):
+        prompt = prompt.replace('SQLite', 'DuckDB')
+        prompt = prompt.replace('null-safe IS (or an equivalent explicit null-safe condition)', 'null-safe IS NOT DISTINCT FROM (or an equivalent explicit null-safe condition)')
+        prompt += '\nUse native DuckDB SQL, including DATE_TRUNC and INTERVAL syntax where needed.\n'
     request = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}]
@@ -826,10 +831,11 @@ def semantic_pre_scan_validate_sql(inputs: Dict[str, Any], client: Any, model: s
     if db_path and Path(db_path).is_file():
         connection = None
         try:
-            connection = sqlite3.connect(Path(db_path).resolve().as_uri() + "?mode=ro", uri=True)
+            connection = connect_readonly(db_path)
+            assert_read_query(connection, sql, db_path)
             connection.execute("EXPLAIN " + sql).fetchall()
-        except sqlite3.Error as error:
-            reason = f"SQLite query preparation failed: {error}"
+        except (*SQL_ERRORS, ValueError) as error:
+            reason = f"{dialect(db_path)} query preparation failed: {error}"
             return {"pre_scan_validation": {"is_valid": False, "severity": "hard_error", "reason": reason,
                     "rewrite_hint": reason + ". Regenerate valid SQL against the supplied physical schema."}}
         finally:
@@ -878,6 +884,10 @@ Return ONLY a JSON object:
   "rewrite_hint": "Instructions for the Generate operator on how to fix it (if invalid)"
 }}
 """
+    if is_duckdb(inputs.get('db_path', '')):
+        prompt = prompt.replace('SQLite', 'DuckDB')
+        prompt = prompt.replace('null-safe IS (or an equivalent explicit null-safe condition)', 'null-safe IS NOT DISTINCT FROM (or an equivalent explicit null-safe condition)')
+        prompt += '\nUse native DuckDB SQL, including DATE_TRUNC and INTERVAL syntax where needed.\n'
     request = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}]
@@ -921,23 +931,27 @@ def pre_programmed_scan_sql(inputs: Dict[str, Any], db_path: str) -> Dict[str, A
     conn = None
 
     try:
-        conn = sqlite3.connect(Path(db_path).resolve().as_uri() + "?mode=ro", uri=True)
-        conn.execute("PRAGMA query_only=ON")
-    except sqlite3.Error as e:
+        conn = connect_readonly(db_path)
+        if not is_duckdb(db_path):
+            conn.execute("PRAGMA query_only=ON")
+    except SQL_ERRORS as e:
         return {
             "status": "error",
             "error_type": "db_connection_error",
-            "error_message": f"SQLite DB connection error: {e}",
+            "error_message": f"{dialect(db_path)} DB connection error: {e}",
             "data": []
         }
 
     try:
-        conn.row_factory = sqlite3.Row
+        if not is_duckdb(db_path):
+            conn.row_factory = sqlite3.Row
+        assert_read_query(conn, sql, db_path)
         cursor = conn.cursor()
 
         cursor.execute(sql)
         rows = cursor.fetchall()
-        data = [dict(row) for row in rows]
+        data = ([{name: json_value(value) for name, value in zip([c[0] for c in cursor.description], row)} for row in rows]
+                if is_duckdb(db_path) else [dict(row) for row in rows])
 
         return {
             "status": "success",
@@ -947,7 +961,7 @@ def pre_programmed_scan_sql(inputs: Dict[str, Any], db_path: str) -> Dict[str, A
             "error_message": ""
         }
 
-    except sqlite3.OperationalError as e:
+    except SQL_OPERATION_ERRORS as e:
         message = str(e)
         if "no such table" in message.lower():
             error_type = "sql_no_such_table"
@@ -958,15 +972,15 @@ def pre_programmed_scan_sql(inputs: Dict[str, Any], db_path: str) -> Dict[str, A
         return {
             "status": "error",
             "error_type": error_type,
-            "error_message": f"SQLite SQL execution error: {e}",
+            "error_message": f"{dialect(db_path)} SQL execution error: {e}",
             "data": []
         }
 
-    except sqlite3.Error as e:
+    except SQL_ERRORS as e:
         return {
             "status": "error",
             "error_type": "sql_execution_error",
-            "error_message": f"SQLite SQL execution error: {e}",
+            "error_message": f"{dialect(db_path)} SQL execution error: {e}",
             "data": []
         }
 

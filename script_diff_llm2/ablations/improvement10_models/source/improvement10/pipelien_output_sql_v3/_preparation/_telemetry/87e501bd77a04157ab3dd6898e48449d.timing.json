@@ -1,0 +1,77 @@
+{
+  "run_id": "87e501bd77a04157ab3dd6898e48449d",
+  "started_at": "2026-10-06T19:41:46",
+  "status": "completed",
+  "wall_clock_seconds": 37.611470729003486,
+  "startup_seconds": null,
+  "current_run_query_seconds": 0,
+  "current_run_cycle_seconds": 0,
+  "llm_seconds": 36.73878567400243,
+  "metadata": {
+    "mode": "prepare",
+    "inputs": {
+      "SQLITE_DB_PATH": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db",
+      "TABLE_METADATA_DIR": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada",
+      "DOMAIN_INTRO_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt",
+      "BUSINESS_RULES_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md"
+    },
+    "knowledge_cache_hit": false,
+    "knowledge_identity": "e1dddae6590d29039522a60ac43acf8659c80b0b1c2f25a04a82be7adfa87598",
+    "knowledge_compilation_mode": "simple"
+  },
+  "questions": [],
+  "stages": [
+    {
+      "stage": "configuration_and_imports",
+      "query_id": null,
+      "seconds": 0.6856397219962673
+    },
+    {
+      "stage": "schema_and_documents",
+      "query_id": null,
+      "seconds": 0.13783201100159204
+    },
+    {
+      "stage": "client_setup",
+      "query_id": null,
+      "seconds": 0.012417349993484095
+    },
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "seconds": 36.75503267000022
+    }
+  ],
+  "llm_calls": [
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "call_id": "c1a2fc12e4b34c8db30bc4a8e40c240f",
+      "model": "qwen.qwen3-coder-480b-a35b-instruct",
+      "prompt_characters": 104147,
+      "status": "success",
+      "prompt_tokens": 28279,
+      "completion_tokens": 3694,
+      "total_tokens": 31973,
+      "cached_prompt_tokens": null,
+      "seconds": 30.18888175000029
+    },
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "call_id": "90145a4672cd4f189f02b9ccfa935a76",
+      "model": "qwen.qwen3-coder-480b-a35b-instruct",
+      "prompt_characters": 115413,
+      "status": "success",
+      "prompt_tokens": 31759,
+      "completion_tokens": 502,
+      "total_tokens": 32261,
+      "cached_prompt_tokens": null,
+      "seconds": 6.5499039240021375
+    }
+  ],
+  "timing_scope": "CLI entry through result/log finalization; excludes interpreter bootstrap and this timing summary write",
+  "stage_accounting": "Stage durations may nest; do not add them to wall-clock time.",
+  "cached_tokens_note": "null means the endpoint did not report cache usage; it does not mean zero",
+  "usage_note": "SDK internal retry usage may be unavailable. Call duration includes SDK retries/backoff. Token usage is provider-reported, not a verified bill. Event and summary files describe the same calls; do not add both."
+}

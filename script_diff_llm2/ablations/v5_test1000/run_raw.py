@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT / 'src'))
 from script_diff_llm.config.runtime import load_local_env_file
 
 MODELS = {
+    'qwen3_coder_480b': ('qwen.qwen3-coder-480b-a35b-instruct', 'BEDROCK_MANTLE_BASE_URL', 'mantle'),
     'deepseek_v3_2': ('deepseek.v3.2', 'BEDROCK_MANTLE_BASE_URL', 'mantle'),
     'gemma_3_27b_it': ('google.gemma-3-27b-it', 'BEDROCK_MANTLE_BASE_URL', 'mantle'),
     'kimi_k2_thinking': ('moonshotai.kimi-k2-thinking', 'BEDROCK_MANTLE_BASE_URL', 'mantle'),
@@ -73,6 +74,8 @@ def build_environment(args, parent):
         'DOMAIN_CONTEXT_CACHE_DIR': str(BASE / 'context_cache' / args.model),
         'GPT_OSS_LLM_GRADER_PIPELINE_VERSION': 'ablation-generic-reliability-v6',
     })
+    if args.model == 'qwen3_coder_480b':
+        env.update(DOMAIN_CONTEXT_MAX_TOKENS='16384', DOMAIN_CONTEXT_RETRY_MAX_TOKENS='16384')
     if args.condition == 'without_context':
         env.update(DOMAIN_INTRO_FILE='', BUSINESS_RULES_FILE='', DOMAIN_CONTEXT_APPROVAL_FILE='', DOMAIN_CONTEXT_REQUIRED='')
     else:

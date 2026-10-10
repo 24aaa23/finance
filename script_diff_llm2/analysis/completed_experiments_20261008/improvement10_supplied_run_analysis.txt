@@ -1,0 +1,233 @@
+Text-to-SQL pipeline evaluation · wealth-management dataset
+
+# SQL Pipeline v3 Evaluation
+
+Analysis of the pipelien_output_sql_v3 run: 1,000 questions across 8 benchmark suites, answered by the pipeline and graded by an LLM judge against SQL ground truth. Every number here was recomputed from the raw CSV, debug, and telemetry files in the archive.
+
+Pipeline
+
+aop-improvement8-v3 · spec v9
+
+Answer model
+
+openai.gpt-oss-120b
+
+Grader
+
+gpt-5-mini (semantic)
+
+Backend
+
+SQLite · 1 worker/suite
+
+Run window
+
+2026-10-06 15:04 → 18:07
+
+Questions
+
+8 suites × 125 = 1,000
+
+**83.9%**strict accuracy (MATCH)\
+95% CI 81.5–86.0
+
+**89.3%**lenient score\
+(PARTIAL = 0.5)
+
+**10.7%**PARTIAL\
+107 questions
+
+**5.4%**MISMATCH\
+54 questions (10 hard errors)
+
+**41.8 s**median latency / question\
+p95 ≈ 115 s
+
+**98.3 k**tokens / question\
+117 k per correct answer
+
+## 01Key findings
+
+1. **The pipeline is reliable but not yet accurate on analytical questions.** All 6,954 model calls succeeded and 990 of 1,000 questions executed end to end. Accuracy, though, ranges from 96% on lookup-style suites (Benchmark, Batch Status) to 61.6% on Multi-Step Comparative.
+2. **Most errors are semantic, not crashes.** Only 10 of 161 non-matches are pipeline errors. The other 151 are confident wrong answers: wrong aggregation grain, dropped filters, NULL-group handling, or the wrong source column.
+3. **One inconsistent NULL policy causes 28 failures on its own.** The pipeline drops NULL groups in GROUP BY answers, where the ground truth keeps them, and it adds NULL rows to reference-value lists, where the ground truth excludes them. It gets both cases backwards. Query Understanding leaves `null_policy` “unspecified” in 450 of 1,000 questions.
+4. **A contract-check repair silently drops filters.** When the checker says a predicate “moves downstream” and forces regeneration, the filter is sometimes never re-applied. Six different temporal questions returned the identical unfiltered table total (2,110,617,425), and two date-count questions both returned the full row count (7,828). That accounts for 8 of the 11 Temporal-suite mismatches.
+5. **Accuracy falls with join depth and nested aggregation.** Accuracy is 93.4% with 2 tables, 78.9% with 3 and 72.0% with 4. Questions that need a per-investor aggregate before a group average (Multi-step Comparative, Composite Reasoning) are the weakest query types at 56–78%.
+6. **Retries and repairs predict failure.** Questions that used all three Final_Spec attempts score 38.9%, and questions with 4+ repairs score 42.9%, against 85.5% with no repairs. The slowest latency quintile (over 68 s) scores 69.5%, against 84–92% for the rest.
+7. **The grader is useful but inconsistent at the margins.** The same defect (duplicate rows, an extra NULL row, a superset of IDs) is graded MATCH in some questions and PARTIAL or MISMATCH in others. Strict accuracy probably carries a few points of grader noise in both directions.
+8. **Fixing four mechanical issues could lift strict accuracy to about 89%.** The four are the NULL policy, dropped filters, Final_Spec grain errors and duplicate rows from joins. Together they cover 54 of the 161 non-matches. Deeper gains need better handling of nested aggregation grain.
+
+## 02Accuracy by suite
+
+MATCHPARTIALMISMATCH
+
+Each suite has 125 questions, so a 95% interval is about ±6–8 points. Differences under about 8 points (for example 84.0% vs 87.2%) are not statistically meaningful.
+
+| Suite | Match | 95% CI | Lenient | Med s |
+| --- | --- | --- | --- | --- |
+| Benchmark | 96.0% | 91–98 | 96.8% | 37.3 |
+| Batch Status | 96.0% | 91–98 | 97.6% | 40.5 |
+| Scoring Quantitative | 87.2% | 80–92 | 91.2% | 36.5 |
+| Temporal Transaction | 87.2% | 80–92 | 89.2% | 37.6 |
+| At-Risk Critical | 84.0% | 77–89 | 90.4% | 47.3 |
+| Reference Compliance | 82.4% | 75–88 | 90.8% | 29.8 |
+| Enrichment Context | 76.8% | 69–83 | 81.2% | 49.9 |
+| Multi-Step Comparative | 61.6% | 53–70 | 76.8% | 74.4 |
+
+The suites fall into three tiers. **Lookup and cohort** suites (Benchmark, Batch Status) are close to solved. **Middle** suites lose points to specific, fixable defects: Reference Compliance's 21 partials are almost all the extra NULL row, and Temporal's mismatches are mostly the dropped-filter bug. **Analytical** suites (Enrichment, Multi-Step) fail on aggregation semantics, which is the hardest class to fix.
+
+## 03Trends
+
+### Complexity: tables joined
+
+Bars: strict accuracy. Line: median seconds per question. Number of tables correlates with model calls (ρ = 0.84), input tokens (0.78) and latency (0.69).
+
+Cost rises steadily with each extra table. Accuracy does not fall steadily: it peaks at 2 tables (93.4%), drops at 3–4, and recovers at 5 (84.4%).
+
+The single-table dip (84.4%) is not about joins. Those questions are mostly large filtered lists and reference-value counts, where row completeness and NULL handling are judged strictly. The 5-table recovery comes from formulaic "five-signal" detection questions (20/20 correct) that are easier than their table count suggests.
+
+Answer size matters too. Single-row answers are 94.6% correct, but answers with 2–5 rows (typically small GROUP BY results) drop to 71.4%. That is where missing NULL groups and wrong group averages show up.
+
+### Query type
+
+Sorted by strict accuracy. The gap between the two bars is PARTIAL credit. Reference Compliance and Multi-step Comparative have the largest gaps: their answers are mostly right with one systematic defect.
+
+### Difficulty labels
+
+| Difficulty | n | Match | Med s | Calls |
+| --- | --- | --- | --- | --- |
+| Easy | 82 | 93.9% | 25.6 | 5.3 |
+| Medium | 361 | 87.8% | 33.4 | 6.0 |
+| Hard | 306 | 83.0% | 43.4 | 6.8 |
+| Advanced | 124 | 82.3% | 62.1 | 8.4 |
+| Expert | 127 | 70.1% | 94.3 | 9.5 |
+
+Across all suites the labels order accuracy as expected. Within suites they do not: in At-Risk Critical, "Easy" questions score 69% and "Expert" 100%, and in Scoring Quantitative "Hard" scores 100% and "Medium" 85%. Each suite's author calibrated difficulty differently, so the labels describe query shape better than they predict pipeline difficulty.
+
+### Position within each run
+
+| Suite | Q1–25 | 26–50 | 51–75 | 76–100 | 101–125 |
+| --- | --- | --- | --- | --- | --- |
+| Enrichment Context | 96% | 80% | 84% | 60% | 64% |
+| Multi-Step Comparative | 84% | 56% | 56% | 48% | 64% |
+| At-Risk Critical | 76% | 100% | 76% | 80% | 88% |
+| Reference Compliance | 80% | 68% | 84% | 92% | 88% |
+
+Each suite is ordered from 1-table to 4–5-table questions, so later questions are harder. Median latency climbs from 31 s in the first half hour to over 100 s after two hours. Generation speed stayed flat at about 150 output tokens/s throughout, so the slowdown comes from question difficulty, not from load or throttling.
+
+### Effort as a failure signal
+
+Strict accuracy by latency quintile (seconds per question).
+
+| Signal | n | Match |
+| --- | --- | --- |
+| No repairs logged | 865 | 85.5% |
+| 1 repair | 85 | 77.6% |
+| 4+ repairs | 21 | 42.9% |
+| Final_Spec: 1 attempt | 919 | 84.5% |
+| Final_Spec: 3 attempts | 18 | 38.9% |
+| Query Understanding retried | 277 | 78.0% |
+| Model calls > 10 | 33 | 60.6% |
+| "Predicate moved downstream" repair | 37 | 67.6% |
+
+Repair loops recover some questions: 2 Final_Spec attempts still score 87.3%. But once a question needs a third attempt or several repairs, it usually fails. These are cheap runtime signals that could mark an answer as low-confidence, or send it to a stronger model or a human, before it is returned.
+
+## 04Failure analysis
+
+Each of the 161 non-matching answers was assigned one primary root cause. The assignment used the grader's rationale, a programmatic comparison of results against ground truth, and the pipeline's debug traces.
+
+PARTIALMISMATCH
+
+| Root cause | n | Where |
+| --- | --- | --- |
+| Wrong aggregation grain / formula | 40 | Multi-step 16, Enrichment 13 |
+| NULL-group policy (only defect) | 28 | Ref. Compliance 16, Enrichment 6 |
+| Wrong row set (extra / missing) | 26 | At-Risk 13, Ref. Compliance 5 |
+| Composite ranking drift | 14 | Multi-step 14 |
+| Wrong values + missing NULL group | 11 | Multi-step 10 |
+| Filter silently dropped | 10 | Temporal 9, Batch 1 |
+| Pipeline spec error (no answer) | 10 | Multi-step 5, At-Risk 2 |
+| Wrong source column ("category") | 10 | Enrichment 10 |
+| Duplicate rows (join fan-out) | 7 | At-Risk 3, Benchmark 2 |
+| Wrong entity / projection | 5 | At-Risk 2, Scoring 2 |
+
+### What each failure looks like
+
+| Cause | Example | Mechanism |
+| --- | --- | --- |
+| Aggregation grain | MC125-040 | "Average rebalance amount" by risk tolerance. Ground truth averages each investor's *total* (about 405k). The pipeline averages individual rows (about 89k). The same pattern drives the "average signed cash-flow amount" and "average total holding value" errors across Multi-step. |
+| NULL policy | RC125-011 · EC125-2T-003 | Reference-value listings add a `null → 77` row that the ground truth excludes with `IS NOT NULL`. GROUP BY answers drop the `risk_tolerance = null` group that plain SQL keeps. |
+| Dropped filter | TT125-025 · TT125-041 | The Query_Spec contract check rejects a predicate placed at retrieval ("moves downstream predicate into raw retrieval"). After regeneration, Final_Spec never applies it, and the result is the whole-table sum or count. |
+| Wrong source column | EC125-2T-043 | "Category" is bound to `PORTFOLIO_HOLDING.category` (15 asset categories) instead of `INVESTOR_PROFILE.category` (5 investor categories), because two tables share a column name. |
+| Spec error | MC125-091 · SQA125-3T-001 | 8 of 10 hard failures hit the guard "final aggregate grouping differs from interpreted output grain", 3 of them together with join-arity or dataset-name errors (`left_on/right_on requires exactly two datasets`). The other two are an invalid expression and a lost outer COUNT. |
+| Ranking drift | MC125-110 · MC125-084 | Top-10 composite rankings get 8–9 of 10 right. One component (often the holding gain filter or the min-max normalisation population) differs slightly, which swaps the 10th investor. |
+| Fan-out duplicates | WM125-3T-020 | Joining to sector allocations without DISTINCT repeats investors (INV-665, INV-759) who appear in more than one qualifying row. |
+
+## 05Cost and latency
+
+Share of LLM timeShare of input tokens
+
+| Stage | Calls | Calls/q | Med input tok |
+| --- | --- | --- | --- |
+| Query_Understanding | 1,396 | 1.40 | 22.4 k |
+| Query_Spec | 2,442 | 2.44 | 11.4 k |
+| Final_Spec | 1,112 | 1.11 | 14.6 k |
+| Decompose | 1,004 | 1.00 | 13.9 k |
+| Retrieve | 1,000 | 1.00 | 1.0 k |
+| **Total** | **6,954** | **6.95** | 92.0 M in · 6.3 M out |
+
+- **Query Understanding is the most expensive stage**, at 39% of LLM time and 34% of tokens. Its prompt is about 86k characters, mostly static schema and business-rule context, and 28% of questions call it more than once.
+- **Prompt caching is barely used.** Cached-token usage was reported for only 308 of 1,000 questions, covering 7.7 M of 92 M input tokens (8.4%). The static Query Understanding prefix is an obvious caching candidate.
+- **Wall-clock time:** the eight suites ran in parallel, one worker each. The full run took 3 h 05 m, bounded by Multi-Step Comparative (11,109 s). Serial time would have been 14.0 h.
+- **Failures cost more.** MATCH answers median 40.6 s and 86 k input tokens. PARTIAL answers median 57.4 s and 103 k. Multi-step needs 220 k tokens per correct answer, against 96–98 k for the easier suites.
+
+## 06Grader reliability
+
+Every question was graded once by gpt-5-mini in "direct semantic judgment" mode, with no deterministic check. Cross-checking its verdicts against a programmatic comparison of the result sets found these inconsistencies:
+
+| Same defect | Graded MATCH | Graded lower |
+| --- | --- | --- |
+| Extra NULL row in a value listing | 2 (RC125-047, -050) | 14 PARTIAL |
+| Exact duplicate rows in output | 5 | 8 PARTIAL 1 MISMATCH |
+| Superset of required IDs | ARC125-4T-005 (53% precision) | ARC125-3T-004 (1 extra ID) → PARTIAL |
+| Wrong ID column (portfolio_health_id instead of investor_id) | ARC125-1T-010, -011 | ARC125-1T-009 → MISMATCH |
+
+On entity-ID answers (449 questions), MATCH verdicts average 98% ID recall and 98% ID precision, so the grader is right in the large majority of cases. The inconsistencies sit in the boundary cases, and each could move a question between MATCH and PARTIAL. The 19 questions with an empty ground truth were all answered correctly, but an empty answer passes those by default, so they add little signal.
+
+## 07Limitations
+
+### Of the pipeline
+
+- No explicit NULL-group policy. GROUP BY and distinct-value questions are handled in opposite ways.
+- Nested aggregation ("per investor, then across investors") is the weakest capability. It drives most Multi-step and Enrichment errors.
+- Column binding is ambiguous when tables share names (`category`, `segment`, `sector`).
+- Repair loops can delete constraints. A repair that drops a filter returns a plausible but wrong number with no warning.
+- The `agent_consultation` feature is enabled but recorded 0 consultations. The QU `ambiguities` field was empty for all 1,000 questions, so neither safeguard ever fired.
+- Heavy token use: about 98 k tokens and 7 LLM calls per question, even for single-row lookups (about 64 k).
+
+### Of this evaluation
+
+- There is no baseline. "Old Status" is `NEW_BENCHMARK` for all rows, so this run cannot show improvement over a previous version.
+- Grading uses one LLM judge in a single pass, with the inconsistencies shown above. There is no execution-equivalence or exact-match metric alongside it.
+- The suites have 125 questions each, so differences between suites under about 8 points are within noise.
+- Difficulty labels are not comparable across suites, and query type, table count and suite are confounded with each other.
+- Ground-truth conventions vary: some include NULL groups and others exclude them by design. The pipeline cannot infer which convention a question expects from its wording.
+- The data is one synthetic wealth-management SQLite database, with one model and one seed, so results may not transfer to other schemas.
+
+## 08Recommendations, in priority order
+
+| Fix | Questions affected | Effort |
+| --- | --- | --- |
+| **Explicit NULL policy.** Keep NULL groups in GROUP BY output by default. Exclude NULL from "values in use" and distinct-value listings unless the question asks for them. | 28 (+11 partial) | low |
+| **Predicate-preservation check.** After any repair, assert that every predicate from Query Understanding is applied somewhere in the final plan. Fail loudly if one is missing. | 10 | low |
+| **Grain guard repair.** When "aggregate grouping differs from output grain" fires, regenerate with the expected grain stated in the prompt instead of failing. Also fix join-arity validation. | 10 | medium |
+| **De-duplicate entity lists.** Apply DISTINCT on the entity key when the requested output is a list of entities. | 7 | low |
+| **Disambiguate shared column names** in the knowledge pack. For example, "investor category" and "holding category" become separate concepts with distinct descriptions. | 10 | medium |
+| **Nested-aggregation templates.** Add an explicit "aggregate per entity, then across entities" operator pattern, with tests on Multi-step questions. | 40–55 | high |
+| **Confidence routing.** Flag answers with 3 Final_Spec attempts, 4+ repairs, or more than 10 calls. This catches 12 of the 54 mismatches. | 46 flagged (65% match) | low |
+| **Cache the static QU prefix** and cut repeated QU calls. | cost only | low |
+| **Make grading deterministic first.** Run an order-insensitive result-set comparison with numeric tolerance, and use the LLM judge only for questions where the comparison disagrees or cannot decide. | eval quality | medium |
+
+If the first four fixes each converted their affected questions to MATCH, strict accuracy would rise from 83.9% to about 89%. That is an upper bound. Each fix will likely recover most, not all, of its cases.
+
+Method: graded CSVs, debug CSVs, input question files and per-call telemetry from all eight suite folders were merged on question ID. Root causes were assigned from grader rationale, programmatic result-set comparison (entity-ID recall and precision, numeric matching within 0.5% tolerance, NULL-row and duplicate detection) and debug traces (repair logs, final specs, scan summaries). Confidence intervals are Wilson 95%.

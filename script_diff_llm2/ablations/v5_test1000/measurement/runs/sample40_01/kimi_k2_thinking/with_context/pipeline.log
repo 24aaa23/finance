@@ -1,0 +1,116 @@
+[SYSTEM] SQLite DB: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[SYSTEM] SQLite DB exists: True
+
+==================================================
+INITIALIZING AOP PIPELINE
+==================================================
+[SYSTEM] Scan backend: Apache Jena Fuseki
+[SYSTEM] Fuseki endpoint: http://127.0.0.1:3030/wealth/query
+[SYSTEM] Fuseki scan timeout: 60 seconds
+[SYSTEM] Experiment config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/experiments/kimi_k2_thinking_with_context.yaml
+[SYSTEM] Model config: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/configs/models/kimi_k2_thinking.yaml
+[SYSTEM] SQL asset: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/sql/wealth_management_diverse/asset.yaml
+[SYSTEM] Fuseki health check passed.
+[SYSTEM] Model provider: aws-bedrock-openai-compatible
+[SYSTEM] Model endpoint env: ABLATION_BASE_URL
+[SYSTEM] Primary model: moonshotai.kimi-k2-thinking
+[SYSTEM] RAG/Retrieve model: moonshotai.kimi-k2-thinking
+[SYSTEM] Planner model: moonshotai.kimi-k2-thinking
+[SYSTEM] Query_Spec model: moonshotai.kimi-k2-thinking
+[SYSTEM] Refine model: moonshotai.kimi-k2-thinking
+[SYSTEM] Generate model: moonshotai.kimi-k2-thinking
+[SYSTEM] Validate model: moonshotai.kimi-k2-thinking
+[SYSTEM] Explain model: moonshotai.kimi-k2-thinking
+[SYSTEM] Grading: disabled in pipeline runner; use separate grade_*.py
+[SYSTEM] DAG planner mode: multi_candidate
+[SYSTEM] Benchmark query workers: 4
+[SYSTEM] Benchmark start delay: 0 seconds
+[SYSTEM] Report save interval: every 1 completed row(s)
+[SYSTEM] Report file: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/kimi_k2_thinking/with_context/raw_pipeline.csv
+[SYSTEM] Loading RDF Knowledge Graph metadata from schema + Fuseki...
+[SYSTEM] Successfully loaded 27 classes with Fuseki dynamic properties.
+[SYSTEM] Using Apache Jena Fuseki as the RDF instance graph. Skipping rdflib instance load.
+[SYSTEM] Loaded RDF ID alias map with 1658 normalized keys.
+[SQL SCHEMA] Loaded 8 tables from /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[DOMAIN CONTEXT] business_rules quarantined: Evaluation-scoped document excluded from preparation and inference
+[DOMAIN CONTEXT] 7 active / 27 candidates. Review: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/context_cache/kimi_k2_thinking/17431387871b488d8ce132ac8b0fe19f6f5a82b41806145ebcec8814c193f17e.json
+[DEBUG] SQLITE_DB_PATH = /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+[DEBUG] DB exists = True
+[DEBUG] DB absolute = /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db
+
+[SYSTEM] Loading /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/wealth_management_1000_test_set_questions.xlsx...
+[SYSTEM] Loading ground-truth overrides from /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/216_questions_full_results.json...
+[SYSTEM] Loaded 216 ground-truth override entries.
+[SYSTEM] Applied full ground-truth overrides to 216 benchmark row(s).
+[SYSTEM] Query window offset=0, limit=1000.
+[SYSTEM] Successfully loaded 40 benchmark queries from the new dataset.
+
+[SYSTEM] Running raw pipeline. Saving incrementally...
+[SYSTEM] Pending queries this run: 40
+--- Planning DAG using semantic_decompose ---
+--- Planning DAG using semantic_decompose ---
+--- Planning DAG using semantic_decompose ---
+--- Planning DAG using semantic_decompose ---
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What category and sector focus is investor INV-096 associated with?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=126343475656256
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the name of investor INV-081?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=126343467263552
+   [SQL] Running SQL pipeline for node 'Q1'...
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=Which Conservative investors have a risk score above 75 and hold a Corporate Bond?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=126343458870848
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=What is the average risk score of investors in the Small Cap segment?
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=126342972569152
+   [SQL] Running SQL pipeline for node 'Q1'...
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=45.642s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 1/40 this run (1/40 total window): PIPELINE_SUCCESS in 67.029s
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+ [Q1] complete. status=success rows=1 elapsed=52.814s
+--- Subquery DAG Execution Complete ---
+--- Planning DAG using semantic_decompose ---
+Processed 2/40 this run (2/40 total window): PIPELINE_SUCCESS in 75.633s
+[SQL GENERATE] Using physical tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+[SQL GENERATE] Generated SQL: SELECT AVG(ph.risk_score) AS avg_risk_score
+FROM ATOM_ENTITY_INVESTOR_PROFILE_001 AS ip
+INNER JOIN ATOM_ENTITY_PORTFOLIO_HEALTH_001 AS ph
+  ON ip.investor_id = ph.investor_id
+WHERE ip.segment = 'Small Cap'
+[SQL SCHEMA] Relevant tables: ['ATOM_ENTITY_INVESTMENT_GOAL_001', 'ATOM_ENTITY_INVESTOR_PROFILE_001', 'ATOM_ENTITY_PORTFOLIO_HEALTH_001', 'ATOM_ENTITY_PORTFOLIO_HOLDING_001', 'ATOM_ENTITY_SECTOR_ALLOCATION_001', 'ATOM_EVENT_CASH_FLOW_001', 'ATOM_EVENT_REBALANCING_ACTION_001', 'ATOM_EVENT_SCENARIO_REBALANCING_001']
+
+--- Starting Subquery DAG Execution ---
+[DAG] Generated subqueries and dependencies:
+[DAG] Level 1: ['Q1']
+   [DAG] Q1: op=Subquery backend=SQL deps=[] inputs=[] outputs=[] subquery=List Moderate investors whose liquidity score is below 10.
+[DAG] Executing level 1 with 1 node(s): ['Q1']
+
+[Node 'Q1'] op=Subquery backend=SQL thread=126343467263552
+   [SQL] Running SQL pipeline for node 'Q1'...

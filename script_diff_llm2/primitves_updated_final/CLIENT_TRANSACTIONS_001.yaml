@@ -1,0 +1,145 @@
+# TABLE_CLIENT_TRANSACTIONS_001 - grounded in NEOWEALTH_DDL.sql / Neowealth_schema.xlsx
+# Provenance tags preserved: [D] = declared in source, [I] = inferred,
+# [C] = observed in the 2026-08-28 CSV delivery (Wealth Management data/client_transactions.csv).
+
+identity:
+  id: "TABLE_CLIENT_TRANSACTIONS_001"
+  type: "Table"
+  subtype: "Fact"
+  name: "client_transactions"
+  display_name: "Client Transactions"
+  description: >
+    [D] FACT, 12 columns. Buy/sell activity ledger. [I] Grain: one row per
+    executed transaction - THE ONLY TRUE EVENT/LEDGER TABLE in the schema;
+    everything else is a snapshot or a period aggregate. The workbook provides NO
+    sample rows for this table. [C] The CSV delivery (3,004 rows, 2014-10-22 to
+    2026-04-21) confirms amount ~= units * nav_price on every row, and shows that
+    amount and units are positive on every row: a redemption is distinguished ONLY
+    by transaction_type, which holds Purchase (2,972) and Redemption (32).
+
+layer: "fact"
+grain: "one row per executed transaction"          # [I]
+not_null_columns: []                                # [D]
+attribute_type_provenance: "inferred_per_section_11"
+warning: "amount and units are positive on every row; only transaction_type (Purchase / Redemption) separates redemptions from purchases - a net figure must subtract Redemption rows explicitly."
+
+semantics:
+  business_purpose: >
+    Buy/sell activity ledger - the schema's only true event/ledger table. One row
+    per executed transaction. [C] amount ~= units * nav_price holds on every row;
+    amount and units are always positive and transaction_type gives the direction.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "[D] Nullable - not a valid PK as declared."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "client_id"
+    display_name: "Client ID"
+    description: "[I] -> dim_client_master.id."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_client_master.id"
+
+  - name: "client_pan"
+    display_name: "Client PAN"
+    description: "[D] Denormalised PAN. Do not join on it. PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    pii: true
+    do_not_join: true
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "[I] Instrument identity."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "product_id"
+    display_name: "Product ID"
+    description: "[I] -> dim_product_unified_cat.product_id."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_product_unified_cat.product_id"
+
+  - name: "product_type"
+    display_name: "Product Type"
+    description: "[D] Denormalised routing discriminator."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "transaction_type"
+    display_name: "Transaction Type"
+    description: "[D] Uncontrolled varchar(256) with no declared enumeration. [C] Observed values (3,004 rows, no blanks): Purchase (2,972) and Redemption (32) - no Buy/Sell/SIP/Switch/Dividend labels occur in this export. This is the ONLY field that tells a redemption from a purchase: amount and units are positive on every row. Filter on the labels exactly as supplied; do not assume other values exist."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Purchase", "Redemption"]
+
+  - name: "transaction_date"
+    display_name: "Transaction Date"
+    description: "[I] Event date. This is the schema's only true event/ledger table - everything else is a snapshot or a period aggregate."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "amount"
+    display_name: "Amount"
+    description: "[I] Expected identity amount ~= units * nav_price. [C] Holds on all 3,004 rows to within rounding (max relative difference < 0.001%). SIGN CONVENTION: amount is positive on every row, Redemption rows included - a redemption is distinguished ONLY by transaction_type. Summing amount without a transaction_type filter therefore adds redemptions to purchases; a net figure must subtract the Redemption rows explicitly, and a query must reproduce whichever treatment the SQL uses."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "units"
+    display_name: "Units"
+    description: "[D] Typed double precision while client_holdings.quantity is real - same concept, two precisions."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "nav_price"
+    display_name: "NAV Price"
+    description: "[I] Per-unit execution price. Named for mutual funds but serves as the generic execution price for equity too."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "[D] Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

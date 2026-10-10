@@ -1,10 +1,13 @@
 from typing import Any, Callable
 import copy
+import os
 
 import networkx as nx
 
 
 def fallback_backend_for_query(query: str) -> str:
+    if os.getenv("PIPELINE_BACKEND_MODE", "hybrid") == "sql_only":
+        return "SQL"
     q = f" {str(query or '').lower()} "
     sql_markers = [
         " count ", " how many ", " average ", " avg ", " sum ", " total ",
@@ -47,7 +50,7 @@ def canonicalize_set_operator(operator_name: str) -> str:
     return SET_OPERATOR_CANONICAL_NAMES.get(key, operator_name)
 
 
-def build_subquery_dag(query: str, nodes: list[dict[str, Any]]) -> nx.DiGraph:
+def build_subquery_dag(query: str, nodes: list[dict[str, Any]], *, strict: bool = False) -> nx.DiGraph:
     nodes = copy.deepcopy(nodes)
     fallback_backend = fallback_backend_for_query(query)
     if not isinstance(nodes, list) or any(
@@ -57,11 +60,21 @@ def build_subquery_dag(query: str, nodes: list[dict[str, Any]]) -> nx.DiGraph:
         or any(not isinstance(item, dict) for item in node.get("inputs", []) + node.get("outputs", []))
         for node in nodes
     ):
+        if strict:
+            raise ValueError('Malformed node IDs, inputs or outputs')
         nodes = []
     # Validate executable operators and complete field bindings before any
     # model/scan work. A SQL verb is not an executor operator. Reject the plan
     # as a whole rather than silently skipping one of the user's conditions.
     if nodes:
+        if os.getenv('PIPELINE_BACKEND_MODE', 'hybrid') == 'sql_only' and any(
+                node.get('backend') not in (None, 'SQL') or (
+                    node.get('operator', 'Subquery') == 'Subquery' and node.get('backend') != 'SQL')
+                for node in nodes):
+            if strict:
+                raise ValueError('SQL-only mode requires SQL subqueries')
+            print('[WARN] Non-SQL plan rejected for SQL-only ablation.')
+            nodes = []
         backends = {node.get('backend') for node in nodes if node.get('backend') in ('SQL', 'KG')}
         if len(backends) == 1:
             fallback_backend = next(iter(backends))
@@ -89,9 +102,13 @@ def build_subquery_dag(query: str, nodes: list[dict[str, Any]]) -> nx.DiGraph:
                 valid &= bool(inp.get('name')) and predecessor != node['id'] and any(
                     output.get('name') == field for output in outputs)
         if not valid:
+            if strict:
+                raise ValueError('Duplicate/empty node IDs, unsupported operators or invalid output bindings')
             print('[WARN] Decomposition has unsupported operators or invalid bindings; preserving the full question in one backend node.')
             nodes = []
     if not nodes:
+        if strict:
+            raise ValueError('Empty or rejected decomposition')
         print(f"[WARN] Decomposition returned empty. Falling back to single {fallback_backend} node.")
         nodes = [{
             "id": "Q1",
@@ -136,6 +153,8 @@ def build_subquery_dag(query: str, nodes: list[dict[str, Any]]) -> nx.DiGraph:
                 )
 
     if not nx.is_directed_acyclic_graph(dag) or (len(dag) > 1 and sum(dag.out_degree(n) == 0 for n in dag) != 1):
+        if strict:
+            raise ValueError('DAG has cycles or does not have exactly one final result')
         print("[WARN] Generated DAG has cycles or no single final result. Falling back to simple DAG.")
         dag = nx.DiGraph()
         dag.add_node("Q1", id="Q1", description=query, operator="Subquery", backend=fallback_backend, inputs=[], outputs=[])
@@ -166,6 +185,27 @@ class AdvancedAOPPlanner:
     ) -> nx.DiGraph:
         del num_candidates, planning_round
         print("--- Planning DAG using semantic_decompose ---")
-        decompose_result = self.decompose_fn({"query": query}, self.client, self.model)
-        nodes = decompose_result.get("nodes", []) if isinstance(decompose_result, dict) else []
-        return build_subquery_dag(query, nodes)
+        inputs = {"query": query}
+        nodes = []
+        failures = []
+        for attempt in range(4):  # Initial proposal plus three repair attempts.
+            decompose_result = self.decompose_fn(inputs, self.client, self.model)
+            nodes = decompose_result.get("nodes", []) if isinstance(decompose_result, dict) else []
+            try:
+                dag = build_subquery_dag(query, nodes, strict=True)
+            except ValueError as error:
+                reason = (decompose_result.get('decomposition_error')
+                          if isinstance(decompose_result, dict) else None) or str(error)
+                failures.append(str(reason))
+                print(f'[DAG RETRY] Proposal {attempt + 1}/4 rejected: {reason}', flush=True)
+                inputs = {"query": query, "decomposition_feedback": str(reason),
+                          "previous_decomposition": decompose_result}
+            else:
+                dag.graph.update(decomposition_attempts=attempt + 1,
+                                 decomposition_failures=failures, decomposition_fallback=False)
+                return dag
+        print('[DAG RETRY] Three retries exhausted; using single-query fallback.', flush=True)
+        dag = build_subquery_dag(query, nodes)
+        dag.graph.update(decomposition_attempts=4, decomposition_failures=failures,
+                         decomposition_fallback=True)
+        return dag

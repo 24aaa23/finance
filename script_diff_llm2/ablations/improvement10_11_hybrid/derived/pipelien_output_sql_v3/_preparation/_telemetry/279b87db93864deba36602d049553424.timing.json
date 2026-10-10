@@ -1,0 +1,77 @@
+{
+  "run_id": "279b87db93864deba36602d049553424",
+  "started_at": "2026-10-08T03:51:56",
+  "status": "completed",
+  "wall_clock_seconds": 487.78938505899714,
+  "startup_seconds": null,
+  "current_run_query_seconds": 0,
+  "current_run_cycle_seconds": 0,
+  "llm_seconds": 486.19840804600244,
+  "metadata": {
+    "mode": "prepare",
+    "inputs": {
+      "SQLITE_DB_PATH": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db",
+      "TABLE_METADATA_DIR": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada",
+      "DOMAIN_INTRO_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt",
+      "BUSINESS_RULES_FILE": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md"
+    },
+    "knowledge_cache_hit": false,
+    "knowledge_identity": "cfda2cfff3d4dea2d52fa55bb8e3d77bba6e1434de80e67b1fbbadea7221c2e6",
+    "knowledge_compilation_mode": "simple"
+  },
+  "questions": [],
+  "stages": [
+    {
+      "stage": "configuration_and_imports",
+      "query_id": null,
+      "seconds": 1.2444155779958237
+    },
+    {
+      "stage": "schema_and_documents",
+      "query_id": null,
+      "seconds": 0.26620855900546303
+    },
+    {
+      "stage": "client_setup",
+      "query_id": null,
+      "seconds": 0.02682496199849993
+    },
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "seconds": 486.22014276899426
+    }
+  ],
+  "llm_calls": [
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "call_id": "af8a7e83199c468b95158b4a099e9768",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 252270,
+      "status": "success",
+      "prompt_tokens": 67810,
+      "completion_tokens": 7921,
+      "total_tokens": 75731,
+      "cached_prompt_tokens": null,
+      "seconds": 290.6782765349999
+    },
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "call_id": "3173be9d06224c2cbd61ed20f8f4dcea",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 276257,
+      "status": "success",
+      "prompt_tokens": 75116,
+      "completion_tokens": 5484,
+      "total_tokens": 80600,
+      "cached_prompt_tokens": null,
+      "seconds": 195.52013151100255
+    }
+  ],
+  "timing_scope": "CLI entry through result/log finalization; excludes interpreter bootstrap and this timing summary write",
+  "stage_accounting": "Stage durations may nest; do not add them to wall-clock time.",
+  "cached_tokens_note": "null means the endpoint did not report cache usage; it does not mean zero",
+  "usage_note": "SDK internal retry usage may be unavailable. Call duration includes SDK retries/backoff. Token usage is provider-reported, not a verified bill. Event and summary files describe the same calls; do not add both."
+}

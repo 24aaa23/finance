@@ -1,0 +1,255 @@
+# TABLE_CLIENT_HOLDINGS_001 - grounded in NEOWEALTH_DDL.sql / Neowealth_schema.xlsx
+# Provenance tags preserved: [D] = declared in source, [I] = inferred,
+# [C] = observed in the 2026-08-28 CSV delivery (Wealth Management data/client_holdings.csv).
+# benchmark_name, benchmark_return_1y and benchmark_return_3y are [C]: present in the CSV, NOT in
+# NEOWEALTH_DDL.sql or the workbook, so they sit outside the declared semantic block below.
+# NOTE: this is the ONLY table with a DECLARED semantic/BI annotation block in the
+# workbook (6 identifier / 6 dimension / 6 fact / 1 time_dimension). attribute_type
+# values below are therefore DECLARED, not inferred.
+
+identity:
+  id: "TABLE_CLIENT_HOLDINGS_001"
+  type: "Table"
+  subtype: "Fact"
+  name: "client_holdings"
+  display_name: "Client Holdings"
+  description: >
+    [D] FACT, 19 columns declared; [C] the CSV delivery adds benchmark_name,
+    benchmark_return_1y and benchmark_return_3y, 22 in all. Current portfolio positions - the widest fact table and
+    the operational core of the portfolio view. [I] Grain: client x instrument x
+    as_on_date; all 10 samples share as_on_date 2026-05-19, a DAILY snapshot
+    (contrast client_aum's month-start dating). The ONLY fact table carrying an
+    account reference (wsw_account_code), so account-level reporting is possible
+    here and nowhere else. TWO STRING-TYPED NUMERIC COLUMNS - compute them instead
+    of parsing. This is also the ONLY table in the workbook with a semantic/BI
+    annotation block (6 identifier / 6 dimension / 6 fact / 1 time_dimension).
+
+layer: "fact"
+grain: "client_id x isin x as_on_date (daily)"       # [I]
+not_null_columns: ["id"]                              # [D]
+attribute_type_provenance: "declared"                 # [D] workbook Sheet3 Block B
+
+semantics:
+  business_purpose: >
+    Instrument-level current positions for portfolio reporting: quantity, cost,
+    market value and unrealized P&L per client per instrument per snapshot date.
+    The operational core of the portfolio view.
+
+attributes:
+  - name: "id"
+    display_name: "ID"
+    description: "[D] NOT NULL. The second and last NOT NULL column in the schema. Sample range 80001+. [I] Per-table sequence - never join across tables."
+    type: "integer"
+    sql_type: "integer"
+    nullable: false
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "client_id"
+    display_name: "Client ID"
+    description: "[I] -> dim_client_master.id. CONFIRMED: holdings for client_id 7001 all carry client_pan 'ABCPK1001A', which is exactly dim_client_master.pan_number for id 7001."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_client_master.id"
+
+  - name: "client_pan"
+    display_name: "Client PAN"
+    description: "[D] Denormalised copy of dim_client_master.pan_number. [I] DO NOT JOIN ON THIS - PAN is user-entered, correctable, can be shared across joint holdings, is nullable, and is sensitive. Present for display and upstream reconciliation only. PII."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    pii: true
+    do_not_join: true
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "[I] Instrument identity. Samples: INE-prefixed = equity, INF-prefixed = mutual fund. [I] Prefer joining to the catalogue on product_id, then taking ISIN from the catalogue row."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "product_id"
+    display_name: "Product ID"
+    description: "[I] -> dim_product_unified_cat.product_id. THE PREFERRED product join key. [D] Sample format is type-prefixed: PROD_EQ_025, PROD_MF_010."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_product_unified_cat.product_id"
+
+  - name: "product_type"
+    display_name: "Product Type"
+    description: "[D] Denormalised from the catalogue. [C] Observed values (505 rows): Mutual Funds (176), Direct Equity (154), Bonds (66), Fixed Deposits (51), AIF (19), REITs (17), PMS (15), InvITs (7). Acts as the routing discriminator for onward market-data joins."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    observed_values: ["Mutual Funds", "Direct Equity", "Bonds", "Fixed Deposits", "AIF", "REITs", "PMS", "InvITs"]
+
+  - name: "instrument_name"
+    display_name: "Instrument Name"
+    description: "[D] Denormalised instrument label. Samples include 'Bharat Electronics Ltd', 'Kotak Flexi Cap Fund - Direct Growth' (note MF names carry plan and option)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "quantity"
+    display_name: "Quantity"
+    description: "[D] Units/shares held. Fractional for funds (49130.91) and whole for equity (985) - so it can NEVER be typed integer. Typed real here but client_transactions.units is double precision: same concept, two precisions, expect reconciliation residuals."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "avg_cost_price"
+    display_name: "Avg Cost Price"
+    description: "[D] Weighted average per-unit purchase price. Typed real while current_price is double precision - the two are directly subtracted, so arithmetic is promoted to double precision while silently inheriting real's lower accuracy."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "current_price"
+    display_name: "Current Price"
+    description: "[D] Per-unit mark price. [I] For equity it should reconcile to dim_equity_price_latest.nav_close; for funds to dim_mf_nav_history.nav_value on the same date. Compare with a tolerance - the two sides differ in precision."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "invested_value"
+    display_name: "Invested Value"
+    description: "[D] VERIFIED: = quantity * avg_cost_price (row 80001: 985 * 224.84 = 221467.40, exact). Nullable and can be zero - guard with NULLIF when dividing."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+    verified_identity: "quantity * avg_cost_price"
+
+  - name: "current_value"
+    display_name: "Current Value"
+    description: "[D] VERIFIED: = quantity * current_price (row 80001: 985 * 295.80 = 291363.00, exact)."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+    verified_identity: "quantity * current_price"
+
+  - name: "unrealized_gain"
+    display_name: "Unrealized Gain"
+    description: "[D] TYPE DEFECT: declared character varying(256) but holds numbers (samples 69895.6, 240301, 702792.2). SUM() fails; ORDER BY sorts lexicographically so '9' ranks after '240301'. VERIFIED derivable: = current_value - invested_value. DO NOT parse it - COMPUTE it. Also mis-classified as a BI 'dimension' in the workbook's semantic layer, so tools will not offer it as a measure."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"                # [D] as declared in workbook
+    attribute_type_corrected: "fact"           # it is a measure; the schema itself flags this misclassification
+    type_defect: "numeric stored as varchar; compute current_value - invested_value"
+    verified_identity: "current_value - invested_value"
+
+  - name: "unrealized_gain_pct"
+    display_name: "Unrealized Gain %"
+    description: "[D] TYPE DEFECT: character varying(256) holding a number (samples 31.56, 17.54). VERIFIED derivable: = 100.0 * (current_value - invested_value) / NULLIF(invested_value, 0). Expressed as whole percent (31.56 means 31.56%)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"                # [D] as declared in workbook
+    attribute_type_corrected: "fact"
+    type_defect: "numeric stored as varchar; compute from invested/current value"
+    verified_identity: "100.0 * (current_value - invested_value) / NULLIF(invested_value, 0)"
+
+  - name: "accrued_interest"
+    display_name: "Accrued Interest"
+    description: "[D] Zero across every sample row - all samples are equity and MF. [I] Meaningful only for bonds and fixed deposits."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "is_held_away"
+    display_name: "Is Held Away"
+    description: "[D] Flags externally-custodied assets the firm advises on but does not hold. One sample row TRUE (Infosys, id 80005). [I] Held-away assets are typically EXCLUDED from fee-billable AUM and revenue attribution but INCLUDED in a total-wealth view. Nullable, so always COALESCE(is_held_away, FALSE)."
+    type: "boolean"
+    sql_type: "boolean"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    three_valued: true
+
+  - name: "wsw_account_code"
+    display_name: "Account Code"
+    description: "[I] -> dim_client_account_map.wsw_account_code. THE ONLY account-level join in the schema: no other fact table records an account, so account-level reporting is possible for holdings and nothing else. [D] Sample 70001. [I] 'wsw' is a source-system prefix. [C] Populated on all 505 rows (30 distinct codes). Of the 505 holdings, 174 match an account-map row on code AND client_id, 210 match on code but the account-map row names a DIFFERENT client_id (e.g. holding 80175: client 7009, account 70017 mapped to client 7010), and 121 carry a code absent from dim_client_account_map. A code match is a source-record match, NOT validated client ownership. Reproduce a query's own join condition exactly - joining on code alone gives 384 matched rows; adding client_id changes the result. Keep both source client_ids and report the conflict; never invent a matching account. Whether the intended key is the code alone or code + client_id is pending data-team confirmation (column alignment review 2026-10-05, relationship rules 1-2)."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_client_account_map.wsw_account_code"
+
+  - name: "as_on_date"
+    display_name: "As On Date"
+    description: "[D] DAILY position snapshot date; all 10 samples are 2026-05-19. [I] Contrast client_aum.as_on_date, which is month-start."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "[D] Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"      # [D] declared as dimension in workbook (flagged as arguably wrong; should be hidden)
+    hidden: true
+
+  - name: "benchmark_name"
+    display_name: "Benchmark Name"
+    description: "[C] NOT in the DDL - present in the CSV delivery. Name of the benchmark used for comparison, carried on the position row. Populated on all 505 rows and equal on every row to dim_product_unified_cat.benchmark for the same product_id (the coarse product-level benchmark, not the fund master's benchmark_name). Observed values: 'Nifty 50 TRI' (239 rows), 'Nifty 10 yr Benchmark G-Sec Index' (130), 'Nifty 500 TRI' (128), 'Nasdaq 100 TRI' (8). NO value equals any dim_cmot_index_prices.index_name exactly (0 of 505). Preserve the label as supplied and keep it unmatched in stored data and the KG - never strip ' TRI' or store an alias. The ' TRI' strip in NEOWEALTH_DOMAIN_KNOWLEDGE.md 3.8 / 01_domain_and_business_rules.md §3.8 is a QUERY-TIME house rule only, which an equivalent KG query must reproduce exactly as the SQL does."
+    type: "string"
+    sql_type: "character varying(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"        # [I] outside the workbook's declared semantic block
+    provenance: "present in the 2026-08-28 CSV delivery; NOT in NEOWEALTH_DDL.sql"
+    observed_values: ["Nifty 50 TRI", "Nifty 10 yr Benchmark G-Sec Index", "Nifty 500 TRI", "Nasdaq 100 TRI"]
+
+  - name: "benchmark_return_1y"
+    display_name: "Benchmark Return 1Y"
+    description: "[C] NOT in the DDL - present in the CSV delivery. Stored one-year return of the row's benchmark_name, supplied pre-computed: one value per benchmark (Nifty 50 TRI 13.2, Nifty 500 TRI 15.05, Nasdaq 100 TRI 18.4). Blank on the 130 rows benchmarked to 'Nifty 10 yr Benchmark G-Sec Index' (all 66 Bonds, all 51 Fixed Deposits and 13 Mutual Funds rows), populated on the other 375. Preserve as supplied - do not recalculate it or change its unit. [I] The values read as whole percent (13.2 = 13.2%), like unrealized_gain_pct; the source does not declare the unit."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"             # [I] outside the workbook's declared semantic block
+    provenance: "present in the 2026-08-28 CSV delivery; NOT in NEOWEALTH_DDL.sql"
+
+  - name: "benchmark_return_3y"
+    display_name: "Benchmark Return 3Y"
+    description: "[C] NOT in the DDL - present in the CSV delivery. Stored three-year return of the row's benchmark_name, supplied pre-computed: one value per benchmark (Nifty 50 TRI 12.9, Nifty 500 TRI 16.1, Nasdaq 100 TRI 20.1). Blank on exactly the same 130 G-Sec-benchmarked rows as benchmark_return_1y, populated on the other 375. Preserve as supplied - do not recalculate it or change its unit. [I] Whole percent, as for benchmark_return_1y; the source does not declare the unit or whether it is annualised."
+    type: "float"
+    sql_type: "double precision"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"             # [I] outside the workbook's declared semantic block
+    provenance: "present in the 2026-08-28 CSV delivery; NOT in NEOWEALTH_DDL.sql"

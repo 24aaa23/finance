@@ -1,0 +1,333 @@
+{
+  "run_id": "00bea09cf9f84e29b5978b3203118bd0",
+  "started_at": "2026-10-08T07:30:09",
+  "status": "interrupted",
+  "wall_clock_seconds": 328.17431983900315,
+  "startup_seconds": 1.4571252140012803,
+  "current_run_query_seconds": 203.665,
+  "current_run_cycle_seconds": 326.7099773180016,
+  "llm_seconds": 326.55998346499837,
+  "metadata": {
+    "report_file": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_05/raw_pipeline.csv",
+    "mode": "pipeline",
+    "model": "openai--gpt-oss-120b",
+    "knowledge_cache_hit": true,
+    "knowledge_identity": "888525cf3e1054ca0e72688ed537b09b1875b463c1778bf4bb38bb7d8a0064d1",
+    "query_delay_seconds": 0.0,
+    "resumed_rows": 0,
+    "pending_rows": 123
+  },
+  "questions": [
+    {
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "attempt_id": "62639d7d956b40d9a9dc4d62854fc721",
+      "processing_seconds": 203.665,
+      "status": "PIPELINE_SUCCESS",
+      "cycle_seconds": 203.66990322300262,
+      "llm_seconds": 203.58638287000213,
+      "llm_calls": 5
+    },
+    {
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "attempt_id": "b5db5be2d02e486fac0af157970629f0",
+      "cycle_seconds": 123.040074094999,
+      "llm_seconds": 122.97360059499624,
+      "llm_calls": 5
+    }
+  ],
+  "stages": [
+    {
+      "stage": "startup_memory_wait",
+      "query_id": null,
+      "seconds": 1.30099942907691e-05
+    },
+    {
+      "stage": "configuration_and_imports",
+      "query_id": null,
+      "seconds": 0.9116437179982313
+    },
+    {
+      "stage": "pipeline_imports",
+      "query_id": null,
+      "seconds": 0.1974049330019625
+    },
+    {
+      "stage": "kg_metadata",
+      "query_id": null,
+      "seconds": 0.10396641300030751
+    },
+    {
+      "stage": "kg_health",
+      "query_id": null,
+      "seconds": 0.10664973800157895
+    },
+    {
+      "stage": "client_setup",
+      "query_id": null,
+      "seconds": 0.019876755999575835
+    },
+    {
+      "stage": "schema_and_documents",
+      "query_id": null,
+      "seconds": 0.0004140550008742139
+    },
+    {
+      "stage": "Domain",
+      "query_id": null,
+      "seconds": 0.006869812001241371
+    },
+    {
+      "stage": "memory_wait",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 6.62399543216452e-06
+    },
+    {
+      "stage": "Query_Understanding",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 29.23741286299628
+    },
+    {
+      "stage": "Retrieve",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 11.414354018001177
+    },
+    {
+      "stage": "Decompose",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 123.88860039000429
+    },
+    {
+      "stage": "Query_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 18.181931062004878
+    },
+    {
+      "stage": "Generate",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 0.0001301849988522008
+    },
+    {
+      "stage": "Pre_Scan_Validate",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 0.009942021002643742
+    },
+    {
+      "stage": "Scan",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 0.014444954998907633
+    },
+    {
+      "stage": "Processing_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 6.854700041003525e-05
+    },
+    {
+      "stage": "Final_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 20.909226877003675
+    },
+    {
+      "stage": "Math_Compute",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 0.0033320689981337637
+    },
+    {
+      "stage": "Validate",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 2.7506001060828567e-05
+    },
+    {
+      "stage": "Explain",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 2.8941001801285893e-05
+    },
+    {
+      "stage": "report_writes",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "seconds": 0.004476722999243066
+    },
+    {
+      "stage": "memory_wait",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "seconds": 3.440996806602925e-06
+    },
+    {
+      "stage": "Query_Understanding",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "seconds": 34.6379865179988
+    },
+    {
+      "stage": "Retrieve",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "seconds": 13.3244606570006
+    },
+    {
+      "stage": "Decompose",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "seconds": 42.32044387100177
+    },
+    {
+      "stage": "Query_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "seconds": 24.040140081000573
+    },
+    {
+      "stage": "Generate",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "seconds": 5.840599624207243e-05
+    },
+    {
+      "stage": "Pre_Scan_Validate",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "seconds": 0.011305071006063372
+    },
+    {
+      "stage": "Scan",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "seconds": 0.015842152999539394
+    },
+    {
+      "stage": "Processing_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "seconds": 6.785500590922311e-05
+    },
+    {
+      "stage": "Final_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "seconds": 8.68833443600306
+    }
+  ],
+  "llm_calls": [
+    {
+      "stage": "Query_Understanding",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "call_id": "7ec0256cbf5d40359d52f2a2ea7fd901",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 378335,
+      "status": "success",
+      "prompt_tokens": 98487,
+      "completion_tokens": 759,
+      "total_tokens": 99246,
+      "cached_prompt_tokens": null,
+      "seconds": 29.22515008100163
+    },
+    {
+      "stage": "Retrieve",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "call_id": "074acc6c7e9640e091edbee8e312635f",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 50715,
+      "status": "success",
+      "prompt_tokens": 13037,
+      "completion_tokens": 245,
+      "total_tokens": 13282,
+      "cached_prompt_tokens": null,
+      "seconds": 11.412086056996486
+    },
+    {
+      "stage": "Decompose",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "call_id": "88d5074008ce4582b50029a8d0b30b13",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 60884,
+      "status": "success",
+      "prompt_tokens": 15526,
+      "completion_tokens": 989,
+      "total_tokens": 16515,
+      "cached_prompt_tokens": null,
+      "seconds": 123.87869354000577
+    },
+    {
+      "stage": "Query_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "call_id": "727df40a066a41588d3214c8da4b80e6",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 48468,
+      "status": "success",
+      "prompt_tokens": 12438,
+      "completion_tokens": 484,
+      "total_tokens": 12922,
+      "cached_prompt_tokens": null,
+      "seconds": 18.168535105993215
+    },
+    {
+      "stage": "Final_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-018",
+      "call_id": "93c8e37e77e346d2a68828b310140f9e",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 55616,
+      "status": "success",
+      "prompt_tokens": 13828,
+      "completion_tokens": 522,
+      "total_tokens": 14350,
+      "cached_prompt_tokens": null,
+      "seconds": 20.901918086005026
+    },
+    {
+      "stage": "Query_Understanding",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "call_id": "7cc8bd3943f94f77bd2d864dbedbb1bc",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 378347,
+      "status": "success",
+      "prompt_tokens": 98490,
+      "completion_tokens": 859,
+      "total_tokens": 99349,
+      "cached_prompt_tokens": null,
+      "seconds": 34.630692559003364
+    },
+    {
+      "stage": "Retrieve",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "call_id": "ff8f13d84ec0498f8a4ff1e39531a038",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 50444,
+      "status": "success",
+      "prompt_tokens": 12969,
+      "completion_tokens": 323,
+      "total_tokens": 13292,
+      "cached_prompt_tokens": null,
+      "seconds": 13.320097124000313
+    },
+    {
+      "stage": "Decompose",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "call_id": "0f597052d2ef4dbeb309e58ce86b7f89",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 77359,
+      "status": "success",
+      "prompt_tokens": 19411,
+      "completion_tokens": 1110,
+      "total_tokens": 20521,
+      "cached_prompt_tokens": null,
+      "seconds": 42.30848663499637
+    },
+    {
+      "stage": "Query_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "call_id": "113f933355684eb1b290352c93ed233c",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 66209,
+      "status": "success",
+      "prompt_tokens": 16648,
+      "completion_tokens": 618,
+      "total_tokens": 17266,
+      "cached_prompt_tokens": null,
+      "seconds": 24.03093963399442
+    },
+    {
+      "stage": "Final_Spec",
+      "query_id": "wealth_management_125_question_benchmark:WM125-1T-026",
+      "call_id": "a7c499bf39cd49e795d1fb22922ad70c",
+      "model": "openai--gpt-oss-120b",
+      "prompt_characters": 68324,
+      "status": "error",
+      "error_type": "KeyboardInterrupt",
+      "seconds": 8.683384643001773
+    }
+  ],
+  "timing_scope": "CLI entry through result/log finalization; excludes interpreter bootstrap and this timing summary write",
+  "stage_accounting": "Stage durations may nest; do not add them to wall-clock time.",
+  "cached_tokens_note": "null means the endpoint did not report cache usage; it does not mean zero",
+  "usage_note": "SDK internal retry usage may be unavailable. Call duration includes SDK retries/backoff. Token usage is provider-reported, not a verified bill. Event and summary files describe the same calls; do not add both."
+}

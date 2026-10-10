@@ -1,0 +1,77 @@
+# ATOM_ENTITY_SECTOR_ALLOCATION_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_ENTITY_SECTOR_ALLOCATION_001"
+  type: "Atom"
+  subtype: "Entity"
+  name: "sector_allocation"
+  display_name: "Sector Allocation"
+
+  
+  description: >
+    Pre-computed sector allocation percentages and total investments per sector
+    for each investor. This is stored data (not computed at runtime) providing
+    fast access to allocation analysis without recalculating from holdings.
+
+semantics:
+  business_purpose: >
+    Provides pre-computed sector allocation breakdown for portfolio analysis
+    and compliance checking. Enables fast queries for allocation percentages,
+    concentration analysis, and diversification assessment.
+  
+  use_cases:
+    - "allocation_analysis"
+    - "concentration_risk"
+    - "diversification_check"
+    - "compliance_validation"
+    - "rebalancing_input"
+  
+
+attributes:
+  - name: "sector_id"
+    display_name: "Sector ID"
+    description: "Unique identifier for allocation record"
+    type: "string"
+    filterable: true
+
+  - name: "investor_id"
+    display_name: "Investor ID"
+    synonyms: ["client ID"]
+    description: "Foreign key to investor_profile"
+    type: "string"
+    filterable: true
+
+  - name: "sector"
+    display_name: "Sector"
+    synonyms: ["industry"]
+    description: "Sector name"
+    type: "string"
+    filterable: true
+
+  - name: "allocation_pct"
+    display_name: "Allocation Percentage"
+    synonyms: ["allocation", "weight", "percentage"]
+    description: "Percentage of portfolio in this sector"
+    type: "decimal"
+    filterable: true
+    aggregatable: true
+    allowed_values:
+      - "Automobile"
+      - "Banking"
+      - "Consumer Goods"
+      - "Corporate"
+      - "Financial Services"
+      - "Government"
+      - "Healthcare"
+      - "Infrastructure"
+      - "Pharma"
+      - "Private Equity"
+      - "Real Estate"
+      - "Technology"
+
+  - name: "total_investment"
+    display_name: "Total Investment"
+    synonyms: ["sector value", "invested amount"]
+    description: "Total value invested in this sector"
+    type: "decimal"
+    aggregatable: true

@@ -1,0 +1,997 @@
+{
+  "fingerprint": "016d8b4c7b436211bbbad7d73ecbcc90fd311969bb74a636d3ba124076409ca0",
+  "entries": [
+    {
+      "id": "tier_terminology",
+      "document": "business_rules",
+      "kind": "terminology",
+      "topic": "client_tier",
+      "backend": "sql",
+      "source": "dim_client_master",
+      "fields": [
+        "tier"
+      ],
+      "terms": [
+        "tier",
+        "client tier",
+        "UHNI",
+        "Ultra HNI"
+      ],
+      "definition": "Client classification tier with values Retail, Affluent, HNI, and Ultra HNI (where UHNI denotes Ultra HNI).",
+      "quote": "`Retail` | `Affluent` | `HNI` | `Ultra HNI` — free text, not a foreign key. \"UHNI\" means `Ultra HNI`.",
+      "conflicts": []
+    },
+    {
+      "id": "held_away_terminology",
+      "document": "business_rules",
+      "kind": "terminology",
+      "topic": "held_away_assets",
+      "backend": "sql",
+      "source": "client_holdings",
+      "fields": [
+        "is_held_away"
+      ],
+      "terms": [
+        "held away",
+        "held away assets",
+        "is held away"
+      ],
+      "definition": "Assets advised on by the firm but not held in custody, flagged by is_held_away.",
+      "quote": "Assets the firm advises on but does not custody, flagged by `client_holdings.is_held_away`.",
+      "conflicts": []
+    },
+    {
+      "id": "accrued_interest_terminology",
+      "document": "business_rules",
+      "kind": "terminology",
+      "topic": "accrued_interest",
+      "backend": "sql",
+      "source": "client_holdings",
+      "fields": [
+        "accrued_interest"
+      ],
+      "terms": [
+        "accrued interest",
+        "interest accrued"
+      ],
+      "definition": "Income earned on coupon-paying instruments but not yet paid.",
+      "quote": "Income earned but not yet paid, on `client_holdings.accrued_interest`. It accrues only on coupon-paying instruments",
+      "conflicts": []
+    },
+    {
+      "id": "euin_terminology",
+      "document": "business_rules",
+      "kind": "terminology",
+      "topic": "euin_identifier",
+      "backend": "sql",
+      "source": "dim_employee_profile",
+      "fields": [
+        "euin"
+      ],
+      "terms": [
+        "EUIN",
+        "Employee Unique Identification Number"
+      ],
+      "definition": "Employee Unique Identification Number required by SEBI/AMFI for advising on or distributing mutual funds.",
+      "quote": "Employee Unique Identification Number — SEBI/AMFI require it of anyone advising on or distributing mutual funds.",
+      "conflicts": []
+    },
+    {
+      "id": "account_identifiers_terminology",
+      "document": "business_rules",
+      "kind": "terminology",
+      "topic": "account_identifiers",
+      "backend": "sql",
+      "source": "dim_client_account_map",
+      "fields": [
+        "account_type",
+        "dp_id",
+        "folio",
+        "account_number"
+      ],
+      "terms": [
+        "account type",
+        "folio",
+        "DP id",
+        "demat account",
+        "folio number"
+      ],
+      "definition": "Account holder type indicating which identifier column is populated: dp_id for demat, folio for mutual fund folio, account_number for bank.",
+      "quote": "An account's kind is read from whichever identifier is actually\nnon-null on the row: `dp_id` → demat, `folio` → mutual-fund folio, `account_number`/`ifsc_code` → bank.",
+      "conflicts": []
+    },
+    {
+      "id": "net_traded_flow_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "net_traded_flow",
+      "backend": "sql",
+      "source": "client_transactions",
+      "fields": [
+        "amount",
+        "transaction_type"
+      ],
+      "terms": [
+        "net traded flow",
+        "traded flow",
+        "net flow"
+      ],
+      "definition": "Sum of transaction amounts signed positively for Purchases and negatively for Redemptions.",
+      "quote": "**Net traded flow** = `SUM(CASE WHEN transaction_type='Redemption' THEN -amount ELSE amount END)`.",
+      "conflicts": []
+    },
+    {
+      "id": "turnover_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "transaction_turnover",
+      "backend": "sql",
+      "source": "client_transactions",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "turnover",
+        "total turnover",
+        "trading turnover"
+      ],
+      "definition": "Unnetted sum of transaction amounts across both purchase and redemption directions.",
+      "quote": "**Turnover** = `SUM(amount)` over both directions, not netted.",
+      "conflicts": []
+    },
+    {
+      "id": "unrealized_gain_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "unrealized_gain_derivation",
+      "backend": "sql",
+      "source": "client_holdings",
+      "fields": [
+        "unrealized_gain",
+        "unrealized_gain_pct",
+        "current_value",
+        "invested_value"
+      ],
+      "terms": [
+        "unrealised gain",
+        "unrealized gain",
+        "unrealized gain pct"
+      ],
+      "definition": "Stored unrealized gain columns are VARCHAR and must not be summed; unrealized gain must be derived as current_value - invested_value.",
+      "quote": "`client_holdings.unrealized_gain` and `unrealized_gain_pct` are typed **VARCHAR** and must never be summed.",
+      "conflicts": []
+    },
+    {
+      "id": "net_new_money_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "net_new_money_derivation",
+      "backend": "sql",
+      "source": "client_net_new_money",
+      "fields": [
+        "net_flow",
+        "inflow",
+        "outflow"
+      ],
+      "terms": [
+        "net new money",
+        "net flow"
+      ],
+      "definition": "Stored net_flow is VARCHAR and must not be summed; net flow must be derived as inflow - outflow.",
+      "quote": "**Derive**: `inflow − outflow`. `client_net_new_money.net_flow` is typed **VARCHAR** and must not be summed.",
+      "conflicts": []
+    },
+    {
+      "id": "aum_decomposition_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "aum_decomposition",
+      "backend": "sql",
+      "source": "client_aum",
+      "fields": [
+        "aum_value",
+        "aum_equity",
+        "aum_fixed_income",
+        "aum_alternatives"
+      ],
+      "terms": [
+        "AUM",
+        "assets under management",
+        "aum components"
+      ],
+      "definition": "aum_equity, aum_fixed_income, and aum_alternatives decompose aum_value and must not be added to it.",
+      "quote": "`client_aum.aum_value` is the client-month total. **`aum_equity`, `aum_fixed_income` and\n  `aum_alternatives` decompose that same total — they do not add to it.**",
+      "conflicts": []
+    },
+    {
+      "id": "aum_date_grain_advisory",
+      "document": "business_rules",
+      "kind": "advisory",
+      "topic": "aum_date_grain",
+      "backend": "sql",
+      "source": "client_aum",
+      "fields": [
+        "as_on_date"
+      ],
+      "terms": [
+        "AUM date",
+        "as on date",
+        "monthly AUM"
+      ],
+      "definition": "AUM snapshots are stamped on the first day of the month they describe, functioning as month keys.",
+      "quote": "Snapshots are stamped on the **first day of the month** they describe, so `as_on_date` is already a\n  month key and needs no truncation.",
+      "conflicts": []
+    },
+    {
+      "id": "capital_gains_holding_period_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "capital_gains_holding_period",
+      "backend": "sql",
+      "source": "client_realized_gain",
+      "fields": [
+        "holding_period_days",
+        "realized_gain",
+        "sell_date"
+      ],
+      "terms": [
+        "long term capital gains",
+        "LTCG",
+        "short term capital gains",
+        "STCG",
+        "holding period"
+      ],
+      "definition": "For listed equity, holding period greater than 365 days is long-term (taxed at 12.5% with annual per-client exemption); 365 days or fewer is short-term (taxed at 20%).",
+      "quote": "**Long-term** for listed equity is **more than 365 days**; 365 or fewer is short-term.",
+      "conflicts": []
+    },
+    {
+      "id": "credit_rating_join_key_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "credit_rating_join_key",
+      "backend": "sql",
+      "source": "dim_product_credit_rtng",
+      "fields": [
+        "scheme_master_id",
+        "isin"
+      ],
+      "terms": [
+        "credit rating join",
+        "scheme master id",
+        "credit rating"
+      ],
+      "definition": "Join to dim_product_credit_rtng using scheme_master_id rather than isin because some instruments carry 'N/A' for isin.",
+      "quote": "3 rated instruments carry the literal text `'N/A'` for `isin`, so an `isin` join misses them; `scheme_master_id` matches every row",
+      "conflicts": []
+    },
+    {
+      "id": "equity_oriented_fund_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "equity_oriented_fund",
+      "backend": "sql",
+      "source": "dim_mf_fund_complete",
+      "fields": [
+        "asset_alloc_equity_net"
+      ],
+      "terms": [
+        "equity oriented fund",
+        "equity fund classification"
+      ],
+      "definition": "A mutual fund qualifies as equity-oriented if net asset allocation in equity is at least 65%.",
+      "quote": "a fund whose\n  `dim_mf_fund_complete.asset_alloc_equity_net` is at least **65**",
+      "conflicts": []
+    },
+    {
+      "id": "benchmark_returns_advisory",
+      "document": "business_rules",
+      "kind": "advisory",
+      "topic": "benchmark_returns",
+      "backend": "sql",
+      "source": "client_holdings",
+      "fields": [
+        "benchmark_return_1y",
+        "benchmark_return_3y"
+      ],
+      "terms": [
+        "benchmark return",
+        "benchmark return 1y",
+        "benchmark return 3y"
+      ],
+      "definition": "Position rows carry pre-joined 1-year and 3-year benchmark returns covering most product types except Bonds and Fixed Deposits.",
+      "quote": "`client_holdings.benchmark_return_1y` and\n  `benchmark_return_3y` carry a pre-joined benchmark return on the position row itself",
+      "conflicts": []
+    },
+    {
+      "id": "benchmark_index_name_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "benchmark_index_name_matching",
+      "backend": "sql",
+      "source": "dim_cmot_index_prices",
+      "fields": [
+        "index_name"
+      ],
+      "terms": [
+        "benchmark join",
+        "index name",
+        "TRI suffix"
+      ],
+      "definition": "When joining benchmark names from products or funds to index prices, strip the trailing ' TRI' suffix.",
+      "quote": "Strip `' TRI'` before matching an index name.",
+      "conflicts": []
+    },
+    {
+      "id": "top_clients_default",
+      "document": "business_rules",
+      "kind": "default",
+      "topic": "top_clients_default_ranking",
+      "backend": "sql",
+      "source": "client_aum",
+      "fields": [
+        "aum_value"
+      ],
+      "terms": [
+        "top clients",
+        "largest clients",
+        "best clients"
+      ],
+      "definition": "When unstated, top clients ranks by sum of AUM across lines of business pinned to the latest as_on_date, defaulting to 10 clients.",
+      "quote": "`SUM(client_aum.aum_value)` per client, summed across the client's LOBs, pinned to the latest `as_on_date`. This is the default whenever no measure is named.",
+      "conflicts": []
+    },
+    {
+      "id": "top_employees_default",
+      "document": "business_rules",
+      "kind": "default",
+      "topic": "top_employees_default_ranking",
+      "backend": "sql",
+      "source": "client_revenue",
+      "fields": [
+        "revenue_amount",
+        "emp_id"
+      ],
+      "terms": [
+        "top employees",
+        "top RMs",
+        "top bankers",
+        "top staff"
+      ],
+      "definition": "Top employees defaults to ranking by total revenue booked attributed through emp_id over the period.",
+      "quote": "`SUM(client_revenue.revenue_amount)` attributed through `emp_id`, over the stated period (FY2026 if none is stated).",
+      "conflicts": []
+    },
+    {
+      "id": "top_products_default",
+      "document": "business_rules",
+      "kind": "default",
+      "topic": "top_products_default_ranking",
+      "backend": "sql",
+      "source": "client_transactions",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "top AMCs",
+        "top products",
+        "top funds"
+      ],
+      "definition": "Top AMCs, products, or funds defaults to ranking by transaction turnover (sum of client_transactions amount).",
+      "quote": "`SUM(client_transactions.amount)` over the stated period.",
+      "conflicts": []
+    },
+    {
+      "id": "billable_book_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "billable_book",
+      "backend": "sql",
+      "source": "client_holdings",
+      "fields": [
+        "current_value",
+        "is_held_away"
+      ],
+      "terms": [
+        "fee-billable",
+        "billable book",
+        "billable assets"
+      ],
+      "definition": "Market value excluding held-away positions: sum of current_value where is_held_away is not true.",
+      "quote": "Market value **excluding** held-away positions: `SUM(current_value)` on the pinned date where `COALESCE(is_held_away, FALSE) = FALSE`.",
+      "conflicts": []
+    },
+    {
+      "id": "employee_tenure_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "employee_tenure",
+      "backend": "sql",
+      "source": "dim_employee_profile",
+      "fields": [
+        "doj"
+      ],
+      "terms": [
+        "tenure",
+        "employee tenure"
+      ],
+      "definition": "Completed years from date of joining (doj) to the reference date.",
+      "quote": "Measured from `dim_employee_profile.doj` to the reference date in completed years.",
+      "conflicts": []
+    },
+    {
+      "id": "mf_returns_snapshots_advisory",
+      "document": "business_rules",
+      "kind": "advisory",
+      "topic": "mf_returns_snapshots",
+      "backend": "sql",
+      "source": "dim_mf_returns_history",
+      "fields": [
+        "return_1y",
+        "return_3y",
+        "return_date"
+      ],
+      "terms": [
+        "fund returns",
+        "returns history",
+        "return 1y",
+        "return 3y"
+      ],
+      "definition": "dim_mf_returns_history contains monthly snapshots; current return should be pinned to the latest return_date.",
+      "quote": "A fund's *current* return is the row on the latest `return_date`; average across snapshots only where the question asks for the history",
+      "conflicts": []
+    },
+    {
+      "id": "co_code_overload_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "co_code_overload",
+      "backend": "sql",
+      "source": "dim_cmot_company_mstr",
+      "fields": [
+        "co_code",
+        "sector_name"
+      ],
+      "terms": [
+        "co_code",
+        "company master join",
+        "index join"
+      ],
+      "definition": "co_code identifies a company in company master but an index in index prices; do not join index prices to company master on co_code.",
+      "quote": "It means a **company** in three tables and an **index** in the index table. The join compiles, returns rows, and is meaningless — join on `index_name`",
+      "conflicts": []
+    }
+  ],
+  "review": [
+    {
+      "id": "tier_terminology",
+      "document": "business_rules",
+      "kind": "terminology",
+      "topic": "client_tier",
+      "backend": "sql",
+      "source": "dim_client_master",
+      "fields": [
+        "tier"
+      ],
+      "terms": [
+        "tier",
+        "client tier",
+        "UHNI",
+        "Ultra HNI"
+      ],
+      "definition": "Client classification tier with values Retail, Affluent, HNI, and Ultra HNI (where UHNI denotes Ultra HNI).",
+      "quote": "`Retail` | `Affluent` | `HNI` | `Ultra HNI` — free text, not a foreign key. \"UHNI\" means `Ultra HNI`.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "2bf363687abbd25cb60b90bf16b12d76e7ecbef03f5be24dc12f675ffb0bc519",
+      "active": true
+    },
+    {
+      "id": "held_away_terminology",
+      "document": "business_rules",
+      "kind": "terminology",
+      "topic": "held_away_assets",
+      "backend": "sql",
+      "source": "client_holdings",
+      "fields": [
+        "is_held_away"
+      ],
+      "terms": [
+        "held away",
+        "held away assets",
+        "is held away"
+      ],
+      "definition": "Assets advised on by the firm but not held in custody, flagged by is_held_away.",
+      "quote": "Assets the firm advises on but does not custody, flagged by `client_holdings.is_held_away`.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "5c7cb24b59e0470235f9ed09ce01c72d82a46e55734cc9b69c7fe7477d7782d9",
+      "active": true
+    },
+    {
+      "id": "accrued_interest_terminology",
+      "document": "business_rules",
+      "kind": "terminology",
+      "topic": "accrued_interest",
+      "backend": "sql",
+      "source": "client_holdings",
+      "fields": [
+        "accrued_interest"
+      ],
+      "terms": [
+        "accrued interest",
+        "interest accrued"
+      ],
+      "definition": "Income earned on coupon-paying instruments but not yet paid.",
+      "quote": "Income earned but not yet paid, on `client_holdings.accrued_interest`. It accrues only on coupon-paying instruments",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "ffc3676980d62288e47737ff441ded5588e1c4f03f3ada1dab4163f6059f5210",
+      "active": true
+    },
+    {
+      "id": "euin_terminology",
+      "document": "business_rules",
+      "kind": "terminology",
+      "topic": "euin_identifier",
+      "backend": "sql",
+      "source": "dim_employee_profile",
+      "fields": [
+        "euin"
+      ],
+      "terms": [
+        "EUIN",
+        "Employee Unique Identification Number"
+      ],
+      "definition": "Employee Unique Identification Number required by SEBI/AMFI for advising on or distributing mutual funds.",
+      "quote": "Employee Unique Identification Number — SEBI/AMFI require it of anyone advising on or distributing mutual funds.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "47c31edef79f108557a7b29523614c3ad935a44bdfe864d7831fbd2efdaa1cd2",
+      "active": true
+    },
+    {
+      "id": "account_identifiers_terminology",
+      "document": "business_rules",
+      "kind": "terminology",
+      "topic": "account_identifiers",
+      "backend": "sql",
+      "source": "dim_client_account_map",
+      "fields": [
+        "account_type",
+        "dp_id",
+        "folio",
+        "account_number"
+      ],
+      "terms": [
+        "account type",
+        "folio",
+        "DP id",
+        "demat account",
+        "folio number"
+      ],
+      "definition": "Account holder type indicating which identifier column is populated: dp_id for demat, folio for mutual fund folio, account_number for bank.",
+      "quote": "An account's kind is read from whichever identifier is actually\nnon-null on the row: `dp_id` → demat, `folio` → mutual-fund folio, `account_number`/`ifsc_code` → bank.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "fb171926dee7faec1710a3492b61ac7c7c4a8fe6b64d1caa09e415f2d87e7bf5",
+      "active": true
+    },
+    {
+      "id": "net_traded_flow_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "net_traded_flow",
+      "backend": "sql",
+      "source": "client_transactions",
+      "fields": [
+        "amount",
+        "transaction_type"
+      ],
+      "terms": [
+        "net traded flow",
+        "traded flow",
+        "net flow"
+      ],
+      "definition": "Sum of transaction amounts signed positively for Purchases and negatively for Redemptions.",
+      "quote": "**Net traded flow** = `SUM(CASE WHEN transaction_type='Redemption' THEN -amount ELSE amount END)`.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "98183c3b1134bf75d0e30e24b32022510556e4804243a909d8931d56470f2e37",
+      "active": true
+    },
+    {
+      "id": "turnover_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "transaction_turnover",
+      "backend": "sql",
+      "source": "client_transactions",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "turnover",
+        "total turnover",
+        "trading turnover"
+      ],
+      "definition": "Unnetted sum of transaction amounts across both purchase and redemption directions.",
+      "quote": "**Turnover** = `SUM(amount)` over both directions, not netted.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "5d90a098288549b799cbb842bc981cf13509ea8a138cc0dfee3cff17cc5ae5b8",
+      "active": true
+    },
+    {
+      "id": "unrealized_gain_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "unrealized_gain_derivation",
+      "backend": "sql",
+      "source": "client_holdings",
+      "fields": [
+        "unrealized_gain",
+        "unrealized_gain_pct",
+        "current_value",
+        "invested_value"
+      ],
+      "terms": [
+        "unrealised gain",
+        "unrealized gain",
+        "unrealized gain pct"
+      ],
+      "definition": "Stored unrealized gain columns are VARCHAR and must not be summed; unrealized gain must be derived as current_value - invested_value.",
+      "quote": "`client_holdings.unrealized_gain` and `unrealized_gain_pct` are typed **VARCHAR** and must never be summed.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "0073b83c2bc4de7ee8c53726597b1b6d9b6aa6b04c82fb30955272be09048bc0",
+      "active": true
+    },
+    {
+      "id": "net_new_money_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "net_new_money_derivation",
+      "backend": "sql",
+      "source": "client_net_new_money",
+      "fields": [
+        "net_flow",
+        "inflow",
+        "outflow"
+      ],
+      "terms": [
+        "net new money",
+        "net flow"
+      ],
+      "definition": "Stored net_flow is VARCHAR and must not be summed; net flow must be derived as inflow - outflow.",
+      "quote": "**Derive**: `inflow − outflow`. `client_net_new_money.net_flow` is typed **VARCHAR** and must not be summed.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "14d8ce90b633ca136e9e67f3a003b587749cebf50590b4dd2ac22e8bfacb6e44",
+      "active": true
+    },
+    {
+      "id": "aum_decomposition_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "aum_decomposition",
+      "backend": "sql",
+      "source": "client_aum",
+      "fields": [
+        "aum_value",
+        "aum_equity",
+        "aum_fixed_income",
+        "aum_alternatives"
+      ],
+      "terms": [
+        "AUM",
+        "assets under management",
+        "aum components"
+      ],
+      "definition": "aum_equity, aum_fixed_income, and aum_alternatives decompose aum_value and must not be added to it.",
+      "quote": "`client_aum.aum_value` is the client-month total. **`aum_equity`, `aum_fixed_income` and\n  `aum_alternatives` decompose that same total — they do not add to it.**",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "13f33958285dcace939e135d1e19dc73a3492c528da4786a3335c77faf87c4f9",
+      "active": true
+    },
+    {
+      "id": "aum_date_grain_advisory",
+      "document": "business_rules",
+      "kind": "advisory",
+      "topic": "aum_date_grain",
+      "backend": "sql",
+      "source": "client_aum",
+      "fields": [
+        "as_on_date"
+      ],
+      "terms": [
+        "AUM date",
+        "as on date",
+        "monthly AUM"
+      ],
+      "definition": "AUM snapshots are stamped on the first day of the month they describe, functioning as month keys.",
+      "quote": "Snapshots are stamped on the **first day of the month** they describe, so `as_on_date` is already a\n  month key and needs no truncation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "077b4d636c5e4b7bcc561d9f8326b61405add05cde5bc68c6288b5d4c655675a",
+      "active": true
+    },
+    {
+      "id": "capital_gains_holding_period_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "capital_gains_holding_period",
+      "backend": "sql",
+      "source": "client_realized_gain",
+      "fields": [
+        "holding_period_days",
+        "realized_gain",
+        "sell_date"
+      ],
+      "terms": [
+        "long term capital gains",
+        "LTCG",
+        "short term capital gains",
+        "STCG",
+        "holding period"
+      ],
+      "definition": "For listed equity, holding period greater than 365 days is long-term (taxed at 12.5% with annual per-client exemption); 365 days or fewer is short-term (taxed at 20%).",
+      "quote": "**Long-term** for listed equity is **more than 365 days**; 365 or fewer is short-term.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "4d92654e1e7aaedd607d656aaf7d31e419a6da04b1adf48bd0cdd5d7263b730b",
+      "active": true
+    },
+    {
+      "id": "credit_rating_join_key_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "credit_rating_join_key",
+      "backend": "sql",
+      "source": "dim_product_credit_rtng",
+      "fields": [
+        "scheme_master_id",
+        "isin"
+      ],
+      "terms": [
+        "credit rating join",
+        "scheme master id",
+        "credit rating"
+      ],
+      "definition": "Join to dim_product_credit_rtng using scheme_master_id rather than isin because some instruments carry 'N/A' for isin.",
+      "quote": "3 rated instruments carry the literal text `'N/A'` for `isin`, so an `isin` join misses them; `scheme_master_id` matches every row",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "4b073a13ab5a3d8e02db51d84b89fd18dce74f34d310f7025a832d9403759fe1",
+      "active": true
+    },
+    {
+      "id": "equity_oriented_fund_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "equity_oriented_fund",
+      "backend": "sql",
+      "source": "dim_mf_fund_complete",
+      "fields": [
+        "asset_alloc_equity_net"
+      ],
+      "terms": [
+        "equity oriented fund",
+        "equity fund classification"
+      ],
+      "definition": "A mutual fund qualifies as equity-oriented if net asset allocation in equity is at least 65%.",
+      "quote": "a fund whose\n  `dim_mf_fund_complete.asset_alloc_equity_net` is at least **65**",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "a7ed6ac490761c5cc275a6d265b8bc22a2f7630f9dc97ed240085d415a30da5c",
+      "active": true
+    },
+    {
+      "id": "benchmark_returns_advisory",
+      "document": "business_rules",
+      "kind": "advisory",
+      "topic": "benchmark_returns",
+      "backend": "sql",
+      "source": "client_holdings",
+      "fields": [
+        "benchmark_return_1y",
+        "benchmark_return_3y"
+      ],
+      "terms": [
+        "benchmark return",
+        "benchmark return 1y",
+        "benchmark return 3y"
+      ],
+      "definition": "Position rows carry pre-joined 1-year and 3-year benchmark returns covering most product types except Bonds and Fixed Deposits.",
+      "quote": "`client_holdings.benchmark_return_1y` and\n  `benchmark_return_3y` carry a pre-joined benchmark return on the position row itself",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "42a4c67fdd5a6ad824ad40d5a03bdf24fc864a60fccd689c0fc15a37b4010d63",
+      "active": true
+    },
+    {
+      "id": "benchmark_index_name_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "benchmark_index_name_matching",
+      "backend": "sql",
+      "source": "dim_cmot_index_prices",
+      "fields": [
+        "index_name"
+      ],
+      "terms": [
+        "benchmark join",
+        "index name",
+        "TRI suffix"
+      ],
+      "definition": "When joining benchmark names from products or funds to index prices, strip the trailing ' TRI' suffix.",
+      "quote": "Strip `' TRI'` before matching an index name.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "604a40b6acd857e22dd9187bf719d5034837e18382557fbcfc6edc27d5417b11",
+      "active": true
+    },
+    {
+      "id": "top_clients_default",
+      "document": "business_rules",
+      "kind": "default",
+      "topic": "top_clients_default_ranking",
+      "backend": "sql",
+      "source": "client_aum",
+      "fields": [
+        "aum_value"
+      ],
+      "terms": [
+        "top clients",
+        "largest clients",
+        "best clients"
+      ],
+      "definition": "When unstated, top clients ranks by sum of AUM across lines of business pinned to the latest as_on_date, defaulting to 10 clients.",
+      "quote": "`SUM(client_aum.aum_value)` per client, summed across the client's LOBs, pinned to the latest `as_on_date`. This is the default whenever no measure is named.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "afae9d29f8edbd8e11c549948cb5819a2700a2830744855a10bb707553fe2881",
+      "active": true
+    },
+    {
+      "id": "top_employees_default",
+      "document": "business_rules",
+      "kind": "default",
+      "topic": "top_employees_default_ranking",
+      "backend": "sql",
+      "source": "client_revenue",
+      "fields": [
+        "revenue_amount",
+        "emp_id"
+      ],
+      "terms": [
+        "top employees",
+        "top RMs",
+        "top bankers",
+        "top staff"
+      ],
+      "definition": "Top employees defaults to ranking by total revenue booked attributed through emp_id over the period.",
+      "quote": "`SUM(client_revenue.revenue_amount)` attributed through `emp_id`, over the stated period (FY2026 if none is stated).",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "5a9c11d66f8d7057925590f3fbbbba680ab7bdad4d789df5921869a4f0f0309c",
+      "active": true
+    },
+    {
+      "id": "top_products_default",
+      "document": "business_rules",
+      "kind": "default",
+      "topic": "top_products_default_ranking",
+      "backend": "sql",
+      "source": "client_transactions",
+      "fields": [
+        "amount"
+      ],
+      "terms": [
+        "top AMCs",
+        "top products",
+        "top funds"
+      ],
+      "definition": "Top AMCs, products, or funds defaults to ranking by transaction turnover (sum of client_transactions amount).",
+      "quote": "`SUM(client_transactions.amount)` over the stated period.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "fe8763d0a6f199ce5dc5e5bb63688406c9ed196f33b46337bbc72c7a0580d89f",
+      "active": true
+    },
+    {
+      "id": "billable_book_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "billable_book",
+      "backend": "sql",
+      "source": "client_holdings",
+      "fields": [
+        "current_value",
+        "is_held_away"
+      ],
+      "terms": [
+        "fee-billable",
+        "billable book",
+        "billable assets"
+      ],
+      "definition": "Market value excluding held-away positions: sum of current_value where is_held_away is not true.",
+      "quote": "Market value **excluding** held-away positions: `SUM(current_value)` on the pinned date where `COALESCE(is_held_away, FALSE) = FALSE`.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "10cbf1c76cfd28ad17a17e1580dd6dea3a304a887be1e686408836f822631776",
+      "active": true
+    },
+    {
+      "id": "employee_tenure_definition",
+      "document": "business_rules",
+      "kind": "definition",
+      "topic": "employee_tenure",
+      "backend": "sql",
+      "source": "dim_employee_profile",
+      "fields": [
+        "doj"
+      ],
+      "terms": [
+        "tenure",
+        "employee tenure"
+      ],
+      "definition": "Completed years from date of joining (doj) to the reference date.",
+      "quote": "Measured from `dim_employee_profile.doj` to the reference date in completed years.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "42a6efe8e05c073e68b8dd638b91634897f9bd0e5cbf653128d82055f68968d5",
+      "active": true
+    },
+    {
+      "id": "mf_returns_snapshots_advisory",
+      "document": "business_rules",
+      "kind": "advisory",
+      "topic": "mf_returns_snapshots",
+      "backend": "sql",
+      "source": "dim_mf_returns_history",
+      "fields": [
+        "return_1y",
+        "return_3y",
+        "return_date"
+      ],
+      "terms": [
+        "fund returns",
+        "returns history",
+        "return 1y",
+        "return 3y"
+      ],
+      "definition": "dim_mf_returns_history contains monthly snapshots; current return should be pinned to the latest return_date.",
+      "quote": "A fund's *current* return is the row on the latest `return_date`; average across snapshots only where the question asks for the history",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "d89f6504cf0e5fba6265f092135c9001e94f99cf76bb78698de303f84a31ef5e",
+      "active": true
+    },
+    {
+      "id": "co_code_overload_constraint",
+      "document": "business_rules",
+      "kind": "constraint",
+      "topic": "co_code_overload",
+      "backend": "sql",
+      "source": "dim_cmot_company_mstr",
+      "fields": [
+        "co_code",
+        "sector_name"
+      ],
+      "terms": [
+        "co_code",
+        "company master join",
+        "index join"
+      ],
+      "definition": "co_code identifies a company in company master but an index in index prices; do not join index prices to company master on co_code.",
+      "quote": "It means a **company** in three tables and an **index** in the index table. The join compiles, returns rows, and is meaningless — join on `index_name`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "94f3ff81164269b0be95623a7ca30a2d2daa9b9bfed9534bee012be7f7514aaf",
+      "active": true
+    }
+  ],
+  "quarantined_documents": []
+}

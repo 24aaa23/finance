@@ -1,0 +1,118 @@
+[INPUT] SQLITE_DB_PATH: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db
+[INPUT] TABLE_METADATA_DIR: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada
+[INPUT] DOMAIN_INTRO_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt
+[INPUT] BUSINESS_RULES_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md
+Validated 17 documents, 8 tables, 8 YAML table matches.
+[TIME] Startup-to-finish: 0.18s; model requests: 0.00s (0 calls).
+[TIMING] /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/.runtime/logs/check_1791269923418659640_100950.timing.json
+[INPUT] SQLITE_DB_PATH: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/wealth_management_diverse.db
+[INPUT] TABLE_METADATA_DIR: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/table_medatada
+[INPUT] DOMAIN_INTRO_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/domain_intro_latest.prompt
+[INPUT] BUSINESS_RULES_FILE: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/business_rules_addendum.md
+[RUNNING] Report: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/raw_pipeline.csv
+[LOG] /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/source/improvement10/.runtime/logs/pipeline_20261006_123722_104925.log
+[KNOWLEDGE] Cache miss. Mode: simple. Model: openai.gpt-oss-120b-1:0. Live log: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/logs/knowledge_1791270442859118848_104925.jsonl
+[KNOWLEDGE] Using simple process: all documents and schema in one request; up to 3 validation attempts.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: sending request.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 20.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation, attempt 1/3: waiting for model, 40.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Whole-document compilation: response in 51.5s; finish=stop, completion tokens=9667. Validating...
+[KNOWLEDGE] Whole-document compilation: validation passed.
+[KNOWLEDGE] Reviewing 47 draft rules against all original sources for omissions and corrections.
+[KNOWLEDGE] Knowledge completeness review, attempt 1/3: sending request.
+[KNOWLEDGE] Knowledge completeness review, attempt 1/3: waiting for model, 20.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Knowledge completeness review, attempt 1/3: waiting for model, 40.0s elapsed. SDK retries may be included; server progress is unknown.
+[KNOWLEDGE] Knowledge completeness review: response in 44.2s; finish=stop, completion tokens=7461. Validating...
+[KNOWLEDGE] Knowledge completeness review: validation passed.
+[KNOWLEDGE] Review completed: 47 draft rules, 64 reviewed rules.
+[KNOWLEDGE] 47 optional metadata issues recorded in the cache; rule text retained.
+[KNOWLEDGE] Cache saved: /home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/knowledge_cache/cb1b4a372f00e8723c9becdaea51ec0ea7e6169f8864a2eb5d4f85a1d211400a.json
+[CACHE] Knowledge compiled in 95.745s
+[TIME] Startup ready: 97.086s; query delay: 0s
+Processed 1/1000 this run (1/1000 total window): PIPELINE_SUCCESS in 17.307s processing; model 17.276s/5 calls; 17.324s including wait/save; 114.410s since startup
+Processed 2/1000 this run (2/1000 total window): PIPELINE_SUCCESS in 15.678s processing; model 15.657s/5 calls; 15.693s including wait/save; 130.104s since startup
+Processed 3/1000 this run (3/1000 total window): PIPELINE_SUCCESS in 19.444s processing; model 19.423s/5 calls; 19.453s including wait/save; 149.557s since startup
+Processed 4/1000 this run (4/1000 total window): PIPELINE_SUCCESS in 31.07s processing; model 31.047s/5 calls; 31.081s including wait/save; 180.638s since startup
+Processed 5/1000 this run (5/1000 total window): PIPELINE_SUCCESS in 41.589s processing; model 41.556s/5 calls; 41.598s including wait/save; 222.236s since startup
+Processed 6/1000 this run (6/1000 total window): PIPELINE_SUCCESS in 21.32s processing; model 21.300s/5 calls; 21.332s including wait/save; 243.568s since startup
+Processed 7/1000 this run (7/1000 total window): PIPELINE_SUCCESS in 26.238s processing; model 26.214s/5 calls; 26.249s including wait/save; 269.818s since startup
+Processed 8/1000 this run (8/1000 total window): PIPELINE_SUCCESS in 16.744s processing; model 16.727s/5 calls; 16.759s including wait/save; 286.577s since startup
+Processed 9/1000 this run (9/1000 total window): PIPELINE_SUCCESS in 18.723s processing; model 18.699s/5 calls; 18.735s including wait/save; 305.311s since startup
+Processed 10/1000 this run (10/1000 total window): PIPELINE_SUCCESS in 36.344s processing; model 36.321s/5 calls; 36.360s including wait/save; 341.671s since startup
+Processed 11/1000 this run (11/1000 total window): PIPELINE_SUCCESS in 25.386s processing; model 25.363s/5 calls; 25.399s including wait/save; 367.070s since startup
+Processed 12/1000 this run (12/1000 total window): PIPELINE_SUCCESS in 16.671s processing; model 16.647s/5 calls; 16.684s including wait/save; 383.755s since startup
+Processed 13/1000 this run (13/1000 total window): PIPELINE_SUCCESS in 20.072s processing; model 20.050s/5 calls; 20.085s including wait/save; 403.840s since startup
+Processed 14/1000 this run (14/1000 total window): PIPELINE_SUCCESS in 24.035s processing; model 24.008s/5 calls; 24.057s including wait/save; 427.897s since startup
+Processed 15/1000 this run (15/1000 total window): PIPELINE_SUCCESS in 22.61s processing; model 22.587s/5 calls; 22.624s including wait/save; 450.520s since startup
+Processed 16/1000 this run (16/1000 total window): PIPELINE_SUCCESS in 21.228s processing; model 21.207s/5 calls; 21.243s including wait/save; 471.763s since startup
+Processed 17/1000 this run (17/1000 total window): PIPELINE_SUCCESS in 37.407s processing; model 37.382s/5 calls; 37.424s including wait/save; 509.188s since startup
+Processed 18/1000 this run (18/1000 total window): PIPELINE_SUCCESS in 30.582s processing; model 30.541s/5 calls; 30.590s including wait/save; 539.778s since startup
+Processed 19/1000 this run (19/1000 total window): PIPELINE_SUCCESS in 17.541s processing; model 17.518s/5 calls; 17.559s including wait/save; 557.337s since startup
+Processed 20/1000 this run (20/1000 total window): PIPELINE_SUCCESS in 22.44s processing; model 22.420s/5 calls; 22.456s including wait/save; 579.793s since startup
+Processed 21/1000 this run (21/1000 total window): PIPELINE_SUCCESS in 14.588s processing; model 14.565s/5 calls; 14.603s including wait/save; 594.396s since startup
+Processed 22/1000 this run (22/1000 total window): PIPELINE_SUCCESS in 18.723s processing; model 18.701s/5 calls; 18.741s including wait/save; 613.137s since startup
+Processed 23/1000 this run (23/1000 total window): PIPELINE_SUCCESS in 33.483s processing; model 33.431s/5 calls; 33.494s including wait/save; 646.631s since startup
+Processed 24/1000 this run (24/1000 total window): PIPELINE_SUCCESS in 27.159s processing; model 27.137s/5 calls; 27.177s including wait/save; 673.808s since startup
+Processed 25/1000 this run (25/1000 total window): PIPELINE_SUCCESS in 24.613s processing; model 24.591s/5 calls; 24.634s including wait/save; 698.443s since startup
+Processed 26/1000 this run (26/1000 total window): PIPELINE_SUCCESS in 27.676s processing; model 27.654s/5 calls; 27.696s including wait/save; 726.138s since startup
+Processed 27/1000 this run (27/1000 total window): PIPELINE_SUCCESS in 27.477s processing; model 27.456s/5 calls; 27.498s including wait/save; 753.636s since startup
+Processed 28/1000 this run (28/1000 total window): PIPELINE_SUCCESS in 26.345s processing; model 26.324s/5 calls; 26.365s including wait/save; 780.001s since startup
+Processed 29/1000 this run (29/1000 total window): PIPELINE_SUCCESS in 36.066s processing; model 36.041s/5 calls; 36.084s including wait/save; 816.086s since startup
+Processed 30/1000 this run (30/1000 total window): PIPELINE_SUCCESS in 33.593s processing; model 33.561s/5 calls; 33.611s including wait/save; 849.696s since startup
+Processed 31/1000 this run (31/1000 total window): PIPELINE_SUCCESS in 20.657s processing; model 20.634s/5 calls; 20.676s including wait/save; 870.372s since startup
+Processed 32/1000 this run (32/1000 total window): PIPELINE_SUCCESS in 19.336s processing; model 19.315s/5 calls; 19.357s including wait/save; 889.729s since startup
+Processed 33/1000 this run (33/1000 total window): PIPELINE_SUCCESS in 25.179s processing; model 25.159s/5 calls; 25.214s including wait/save; 914.943s since startup
+Processed 34/1000 this run (34/1000 total window): PIPELINE_SUCCESS in 28.014s processing; model 27.993s/5 calls; 28.034s including wait/save; 942.978s since startup
+Processed 35/1000 this run (35/1000 total window): PIPELINE_SUCCESS in 45.439s processing; model 45.377s/7 calls; 45.460s including wait/save; 988.438s since startup
+Processed 36/1000 this run (36/1000 total window): PIPELINE_SUCCESS in 142.42s processing; model 142.377s/6 calls; 142.438s including wait/save; 1130.876s since startup
+Processed 37/1000 this run (37/1000 total window): PIPELINE_SUCCESS in 31.833s processing; model 31.794s/6 calls; 31.850s including wait/save; 1162.726s since startup
+Processed 38/1000 this run (38/1000 total window): PIPELINE_SUCCESS in 42.21s processing; model 42.169s/6 calls; 42.228s including wait/save; 1204.954s since startup
+Processed 39/1000 this run (39/1000 total window): PIPELINE_SUCCESS in 58.018s processing; model 57.977s/6 calls; 58.037s including wait/save; 1262.991s since startup
+Processed 40/1000 this run (40/1000 total window): PIPELINE_SUCCESS in 45.449s processing; model 45.395s/6 calls; 45.474s including wait/save; 1308.465s since startup
+Processed 41/1000 this run (41/1000 total window): PIPELINE_SUCCESS in 47.388s processing; model 47.338s/6 calls; 47.408s including wait/save; 1355.873s since startup
+Processed 42/1000 this run (42/1000 total window): PIPELINE_SUCCESS in 50.154s processing; model 50.106s/7 calls; 50.177s including wait/save; 1406.050s since startup
+Processed 43/1000 this run (43/1000 total window): PIPELINE_SUCCESS in 47.907s processing; model 47.859s/7 calls; 47.932s including wait/save; 1453.982s since startup
+Processed 44/1000 this run (44/1000 total window): PIPELINE_SUCCESS in 81.691s processing; model 81.629s/7 calls; 81.711s including wait/save; 1535.693s since startup
+Processed 45/1000 this run (45/1000 total window): PIPELINE_SUCCESS in 55.151s processing; model 55.012s/7 calls; 55.169s including wait/save; 1590.862s since startup
+Processed 46/1000 this run (46/1000 total window): PIPELINE_SUCCESS in 58.781s processing; model 58.722s/8 calls; 58.800s including wait/save; 1649.661s since startup
+Processed 47/1000 this run (47/1000 total window): PIPELINE_SUCCESS in 38.746s processing; model 38.686s/7 calls; 38.765s including wait/save; 1688.427s since startup
+Processed 48/1000 this run (48/1000 total window): PIPELINE_SUCCESS in 53.604s processing; model 53.524s/6 calls; 53.624s including wait/save; 1742.051s since startup
+Processed 49/1000 this run (49/1000 total window): PIPELINE_SUCCESS in 23.813s processing; model 23.764s/6 calls; 23.835s including wait/save; 1765.886s since startup
+Processed 50/1000 this run (50/1000 total window): PIPELINE_SUCCESS in 29.374s processing; model 29.321s/6 calls; 29.395s including wait/save; 1795.281s since startup
+Processed 51/1000 this run (51/1000 total window): PIPELINE_SUCCESS in 51.668s processing; model 51.333s/7 calls; 51.691s including wait/save; 1846.972s since startup
+Processed 52/1000 this run (52/1000 total window): PIPELINE_SUCCESS in 33.994s processing; model 33.933s/6 calls; 34.015s including wait/save; 1880.987s since startup
+Processed 53/1000 this run (53/1000 total window): PIPELINE_SUCCESS in 45.828s processing; model 45.776s/6 calls; 45.851s including wait/save; 1926.837s since startup
+Processed 54/1000 this run (54/1000 total window): PIPELINE_SUCCESS in 33.889s processing; model 33.833s/6 calls; 33.943s including wait/save; 1960.781s since startup
+Processed 55/1000 this run (55/1000 total window): PIPELINE_SUCCESS in 48.08s processing; model 48.013s/6 calls; 48.104s including wait/save; 2008.885s since startup
+Processed 56/1000 this run (56/1000 total window): PIPELINE_SUCCESS in 47.592s processing; model 47.493s/6 calls; 47.615s including wait/save; 2056.500s since startup
+Processed 57/1000 this run (57/1000 total window): PIPELINE_SUCCESS in 45.162s processing; model 44.961s/5 calls; 45.188s including wait/save; 2101.687s since startup
+Processed 58/1000 this run (58/1000 total window): PIPELINE_SUCCESS in 42.227s processing; model 41.861s/6 calls; 42.251s including wait/save; 2143.939s since startup
+Processed 59/1000 this run (59/1000 total window): PIPELINE_SUCCESS in 80.533s processing; model 80.387s/7 calls; 80.590s including wait/save; 2224.529s since startup
+Processed 60/1000 this run (60/1000 total window): PIPELINE_SUCCESS in 61.864s processing; model 61.680s/7 calls; 61.890s including wait/save; 2286.419s since startup
+Processed 61/1000 this run (61/1000 total window): PIPELINE_SUCCESS in 38.956s processing; model 38.595s/6 calls; 38.982s including wait/save; 2325.401s since startup
+Processed 62/1000 this run (62/1000 total window): PIPELINE_SUCCESS in 19.941s processing; model 19.892s/5 calls; 19.972s including wait/save; 2345.374s since startup
+Processed 63/1000 this run (63/1000 total window): PIPELINE_SUCCESS in 28.055s processing; model 27.990s/6 calls; 28.081s including wait/save; 2373.455s since startup
+Processed 64/1000 this run (64/1000 total window): PIPELINE_SUCCESS in 53.311s processing; model 53.264s/6 calls; 53.343s including wait/save; 2426.798s since startup
+Processed 65/1000 this run (65/1000 total window): PIPELINE_SUCCESS in 59.983s processing; model 59.917s/7 calls; 60.012s including wait/save; 2486.810s since startup
+Processed 66/1000 this run (66/1000 total window): PIPELINE_SUCCESS in 57.506s processing; model 57.443s/7 calls; 57.536s including wait/save; 2544.347s since startup
+Processed 67/1000 this run (67/1000 total window): PIPELINE_SUCCESS in 78.305s processing; model 78.223s/8 calls; 78.339s including wait/save; 2622.686s since startup
+Processed 68/1000 this run (68/1000 total window): PIPELINE_SUCCESS in 55.485s processing; model 55.432s/7 calls; 55.515s including wait/save; 2678.202s since startup
+Processed 69/1000 this run (69/1000 total window): PIPELINE_SUCCESS in 44.389s processing; model 44.317s/7 calls; 44.420s including wait/save; 2722.621s since startup
+Processed 70/1000 this run (70/1000 total window): PIPELINE_SUCCESS in 48.641s processing; model 48.574s/7 calls; 48.675s including wait/save; 2771.297s since startup
+Processed 71/1000 this run (71/1000 total window): PIPELINE_SUCCESS in 41.502s processing; model 41.439s/7 calls; 41.536s including wait/save; 2812.833s since startup
+Processed 72/1000 this run (72/1000 total window): PIPELINE_SUCCESS in 159.005s processing; model 158.940s/7 calls; 159.040s including wait/save; 2971.873s since startup
+Processed 73/1000 this run (73/1000 total window): PIPELINE_SUCCESS in 48.505s processing; model 48.437s/7 calls; 48.538s including wait/save; 3020.412s since startup
+Processed 74/1000 this run (74/1000 total window): PIPELINE_SUCCESS in 45.023s processing; model 44.959s/7 calls; 45.061s including wait/save; 3065.473s since startup
+Processed 75/1000 this run (75/1000 total window): PIPELINE_SUCCESS in 66.979s processing; model 66.904s/8 calls; 67.016s including wait/save; 3132.489s since startup
+Processed 76/1000 this run (76/1000 total window): PIPELINE_SUCCESS in 54.601s processing; model 54.528s/7 calls; 54.641s including wait/save; 3187.130s since startup
+Processed 77/1000 this run (77/1000 total window): PIPELINE_SUCCESS in 40.864s processing; model 40.794s/8 calls; 40.902s including wait/save; 3228.032s since startup
+Processed 78/1000 this run (78/1000 total window): PIPELINE_SUCCESS in 45.458s processing; model 45.396s/7 calls; 45.495s including wait/save; 3273.527s since startup
+Processed 79/1000 this run (79/1000 total window): PIPELINE_SUCCESS in 48.934s processing; model 48.877s/7 calls; 48.976s including wait/save; 3322.503s since startup
+Processed 80/1000 this run (80/1000 total window): PIPELINE_SUCCESS in 60.269s processing; model 60.212s/7 calls; 60.311s including wait/save; 3382.815s since startup
+Processed 81/1000 this run (81/1000 total window): PIPELINE_SUCCESS in 100.212s processing; model 100.087s/9 calls; 100.257s including wait/save; 3483.072s since startup
+Processed 82/1000 this run (82/1000 total window): PIPELINE_SUCCESS in 40.23s processing; model 40.169s/7 calls; 40.291s including wait/save; 3523.363s since startup
+Processed 83/1000 this run (83/1000 total window): PIPELINE_SUCCESS in 57.753s processing; model 57.700s/7 calls; 57.793s including wait/save; 3581.156s since startup
+Processed 84/1000 this run (84/1000 total window): PIPELINE_SUCCESS in 56.884s processing; model 56.826s/7 calls; 56.927s including wait/save; 3638.084s since startup
+Processed 85/1000 this run (85/1000 total window): PIPELINE_SUCCESS in 56.806s processing; model 56.736s/8 calls; 56.853s including wait/save; 3694.937s since startup
+Processed 86/1000 this run (86/1000 total window): PIPELINE_SUCCESS in 48.669s processing; model 48.613s/7 calls; 48.713s including wait/save; 3743.650s since startup
+Processed 87/1000 this run (87/1000 total window): PIPELINE_SUCCESS in 46.035s processing; model 45.975s/7 calls; 46.084s including wait/save; 3789.734s since startup

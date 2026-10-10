@@ -1,0 +1,196 @@
+{
+  "time_ist": "2026-10-05T18:31:20.729249+05:30",
+  "run_tag": "reliability_v6_01",
+  "runs": [
+    {
+      "model": "gpt_oss_120b",
+      "condition": "with_context",
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gpt_oss_120b/with_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+      "sha256_at_snapshot": "a2cea29a1596c46421a65adf7bfccba4ad738fe434c58de46a13241460cc941c",
+      "rows": 165,
+      "complete_row_coverage": false,
+      "grades": {
+        "MATCH": 150,
+        "MISMATCH": 9,
+        "PARTIAL": 6
+      }
+    },
+    {
+      "model": "gpt_oss_120b",
+      "condition": "without_context",
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gpt_oss_120b/without_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+      "sha256_at_snapshot": "3fd2a651d2dece92d58b7405d51ab2f330078221b78f5d96704c5862a59b913a",
+      "rows": 1000,
+      "complete_row_coverage": true,
+      "grades": {
+        "MATCH": 784,
+        "MISMATCH": 101,
+        "PARTIAL": 108,
+        "PRE_SCAN_ERROR": 1,
+        "GRADER_API_ERROR": 6
+      },
+      "execution": {
+        "success": 933,
+        "error": 67
+      },
+      "failure_stages": {
+        "Q2:Query_Spec_Contract": 1,
+        "Q3:Query_Spec_Contract": 1,
+        "Q1:Query_Spec_Contract": 64,
+        "Q1:Pre_Scan_Validate_SQL": 1
+      },
+      "grade_by_execution": {
+        "error": {
+          "MISMATCH": 66,
+          "PRE_SCAN_ERROR": 1
+        },
+        "success": {
+          "MATCH": 784,
+          "MISMATCH": 35,
+          "PARTIAL": 108,
+          "GRADER_API_ERROR": 6
+        }
+      },
+      "groups": {
+        "Difficulty": {
+          "Easy": {
+            "MATCH": 72,
+            "PARTIAL": 5,
+            "MISMATCH": 4,
+            "GRADER_API_ERROR": 1
+          },
+          "Medium": {
+            "MATCH": 307,
+            "MISMATCH": 27,
+            "PARTIAL": 24,
+            "PRE_SCAN_ERROR": 1,
+            "GRADER_API_ERROR": 2
+          },
+          "Hard": {
+            "MATCH": 245,
+            "PARTIAL": 34,
+            "MISMATCH": 26,
+            "GRADER_API_ERROR": 1
+          },
+          "Advanced": {
+            "MISMATCH": 12,
+            "MATCH": 101,
+            "PARTIAL": 9,
+            "GRADER_API_ERROR": 2
+          },
+          "Expert": {
+            "MATCH": 59,
+            "PARTIAL": 36,
+            "MISMATCH": 32
+          }
+        },
+        "Query Type": {
+          "Direct Retrieval": {
+            "MATCH": 34
+          },
+          "Multi-Relational": {
+            "MATCH": 197,
+            "PARTIAL": 7,
+            "MISMATCH": 8
+          },
+          "Categorical Aggregation": {
+            "MATCH": 181,
+            "MISMATCH": 23,
+            "PARTIAL": 8
+          },
+          "Composite Reasoning": {
+            "MISMATCH": 21,
+            "MATCH": 93,
+            "PARTIAL": 28,
+            "GRADER_API_ERROR": 1
+          },
+          "Filtered List": {
+            "MATCH": 79,
+            "PARTIAL": 17,
+            "GRADER_API_ERROR": 3,
+            "MISMATCH": 4
+          },
+          "Rule-Based Detection": {
+            "MATCH": 17,
+            "MISMATCH": 11,
+            "GRADER_API_ERROR": 1
+          },
+          "Exception Detection": {
+            "MATCH": 48,
+            "PARTIAL": 4,
+            "PRE_SCAN_ERROR": 1
+          },
+          "Comparative": {
+            "MISMATCH": 4,
+            "PARTIAL": 6,
+            "MATCH": 5
+          },
+          "Ranking": {
+            "MATCH": 58,
+            "MISMATCH": 6,
+            "GRADER_API_ERROR": 1
+          },
+          "Multi-step Comparative": {
+            "MISMATCH": 20,
+            "MATCH": 13,
+            "PARTIAL": 22
+          },
+          "Reference Compliance": {
+            "MATCH": 22,
+            "PARTIAL": 16,
+            "MISMATCH": 1
+          },
+          "Temporal": {
+            "MATCH": 37,
+            "MISMATCH": 3
+          }
+        },
+        "sheet": {
+          "wealth_management_125_question_benchmark": {
+            "MATCH": 115,
+            "MISMATCH": 6,
+            "PARTIAL": 4
+          },
+          "wealth_management_at_risk_critical_125_questions": {
+            "MATCH": 101,
+            "PARTIAL": 10,
+            "MISMATCH": 13,
+            "PRE_SCAN_ERROR": 1
+          },
+          "wealth_management_batch_status_125_questions": {
+            "MATCH": 113,
+            "MISMATCH": 9,
+            "GRADER_API_ERROR": 3
+          },
+          "wealth_management_enrichment_context_125_questions": {
+            "MATCH": 102,
+            "PARTIAL": 10,
+            "MISMATCH": 13
+          },
+          "wealth_management_multi_step_comparative_125_questions": {
+            "MISMATCH": 32,
+            "PARTIAL": 44,
+            "MATCH": 49
+          },
+          "wealth_management_reference_compliance_125_questions": {
+            "MATCH": 96,
+            "PARTIAL": 27,
+            "MISMATCH": 1,
+            "GRADER_API_ERROR": 1
+          },
+          "wealth_management_scoring_quantitative_125_questions": {
+            "MATCH": 102,
+            "PARTIAL": 10,
+            "MISMATCH": 11,
+            "GRADER_API_ERROR": 2
+          },
+          "wealth_management_temporal_transaction_125_questions": {
+            "MATCH": 106,
+            "MISMATCH": 16,
+            "PARTIAL": 3
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+# ATOM_ENTITY_INVESTOR_PROFILE_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_ENTITY_INVESTOR_PROFILE_001"
+  type: "Atom"
+  subtype: "Entity"
+  name: "investor_profile"
+  display_name: "Investor Profile"
+  
+  description: >
+    Core investor identity and investment preferences. This is the primary entity
+    for all investor-centric queries including risk profiling, goal setting, and
+    suitability analysis. Contains demographic information, risk tolerance, 
+    investment horizon, and sector preferences.
+
+semantics:
+  business_purpose: >
+    Provides the foundational investor identity and preferences required for 
+    portfolio management, suitability analysis, and personalized advisory services.
+    This entity is the anchor for all investor-centric operations.
+  
+  use_cases:
+    - "investor_lookup"
+    - "suitability_analysis"
+    - "risk_profiling"
+    - "portfolio_construction"
+    - "client_segmentation"
+    - "regulatory_reporting"
+
+
+attributes:
+  - name: "investor_id"
+    display_name: "Investor ID"
+    synonyms: ["client ID", "account ID", "customer number"]
+    description: "Unique identifier for each investor"
+    type: "string"
+    filterable: true
+
+  - name: "investor_name"
+    display_name: "Investor Name"
+    synonyms: ["name", "client name"]
+    description: "Full name of the investor"
+    type: "string"
+    searchable: true
+
+  - name: "risk_tolerance"
+    display_name: "Risk Tolerance"
+    synonyms: ["risk profile", "risk appetite", "risk preference"]
+    description: "Investor's risk tolerance classification"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Conservative"
+      - "Moderate"
+      - "Aggressive"
+
+  - name: "time_horizon"
+    display_name: "Time Horizon"
+    synonyms: ["investment horizon", "holding period", "investment duration"]
+    description: "Investment time horizon in years"
+    type: "string"
+    filterable: true
+    aggregatable: true
+    allowed_values:
+      - "Short-term"
+      - "Medium-term"
+      - "Long-term"
+
+  - name: "segment"
+    display_name: "Segment"
+    synonyms: ["market segment", "cap segment", "market cap category"]
+    description: "Investor's preferred market capitalization or diversification segment"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Large Cap"
+      - "Mid Cap"
+      - "Small Cap"
+      - "Diversified"
+
+  - name: "investment_goal"
+    display_name: "Investment Goal"
+    synonyms: ["financial goal", "objective", "investment objective"]
+    description: "Primary investment objective of the investor"
+    type: "string"
+    filterable: true
+    searchable: true
+    allowed_values:
+      - "Wealth Preservation"
+      - "Growth"
+      - "Income Generation"
+      - "Retirement Planning"
+      - "Child Education"
+      - "Emergency Fund"
+
+  - name: "sector_focus"
+    display_name: "Sector Focus"
+    synonyms: ["preferred sector", "sector preference", "industry focus"]
+    description: "Investor's preferred sector for investment allocation"
+    type: "string"
+    filterable: true
+    searchable: true
+    allowed_values:
+      - "Automobile"
+      - "Banking"
+      - "Consumer Goods"
+      - "Corporate"
+      - "Financial Services"
+      - "Government"
+      - "Healthcare"
+      - "Infrastructure"
+      - "Pharma"
+      - "Private Equity"
+      - "Real Estate"
+      - "Technology"
+
+  - name: "category"
+    display_name: "Category"
+    synonyms: ["asset category", "asset class", "investment category"]
+    description: "Preferred asset category"
+    type: "string"
+    filterable: true
+    searchable: true
+    allowed_values:
+      - "Gold"
+      - "Debt"
+      - "Hybrid"
+      - "Equity"
+      - "Real Estate"
+
+  - name: "notes"
+    display_name: "Notes"
+    synonyms: ["comments", "remarks", "additional info"]
+    description: "Free-form notes about the investor"
+    type: "string"

@@ -1,0 +1,65 @@
+# ATOM_CONTEXT_SEGMENT_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_CONTEXT_SEGMENT_001"
+  type: "Atom"
+  subtype: "Context"
+  name: "segment_context"
+  display_name: "Segment Context"
+  
+  description: >
+    Business intelligence for market capitalization segments including risk
+    characteristics, allocation guidelines, liquidity profiles, and suitability
+    rules. Enables segment-based compliance and recommendation.
+
+semantics:
+  business_purpose: >
+    Provides business intelligence for market cap segment-based portfolio analysis
+    including risk characteristics, allocation guidelines, and suitability rules.
+    Enables compliance checking for segment-based allocation limits.
+  
+  use_cases:
+    - "segment_allocation_compliance"
+    - "risk_assessment"
+    - "liquidity_analysis"
+    - "portfolio_construction"
+  
+
+attributes:
+  - name: "segment_id"
+    display_name: "Segment ID"
+    description: "Unique identifier for segment"
+    type: "string"
+    filterable: true
+
+  - name: "segment"
+    display_name: "Segment"
+    synonyms: ["market cap", "cap category"]
+    description: "Market capitalization segment name"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Large Cap"
+      - "Mid Cap"
+      - "Small Cap"
+      - "Diversified"
+
+context_values:
+  - value: "Large Cap"
+    description: "Companies with market cap above ₹20,000 crores"
+  
+  - value: "Mid Cap"
+    description: "Companies with market cap between ₹5,000-20,000 crores"
+  
+  - value: "Small Cap"
+    description: "Companies with market cap below ₹5,000 crores"
+  
+  - value: "Diversified"
+    description: "Diversified exposure across multiple market segments"
+
+derived_context:
+  - name: "is_suitable_for_risk_tolerance"
+    description: "Whether segment is suitable for given risk tolerance"
+
+  - name: "allocation_limit_for_risk"
+    description: "Maximum allocation for given risk tolerance"

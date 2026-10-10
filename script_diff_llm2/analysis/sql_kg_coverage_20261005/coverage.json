@@ -1,0 +1,1579 @@
+{
+  "inputs": {
+    "database": {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db",
+      "sha256": "f96a4bcb184cf7c5b8dc0da007c18058f83775b0b0b4db3f901c8d0945c026c2"
+    },
+    "kg": {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/kg/wealth_management_diverse_kg.ttl",
+      "sha256": "2496802ef967eec865e64443cd3c38b350815581f58e701b519ba28c77e33265"
+    },
+    "schema": {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/kg/wealth_management_diverse_schema.ttl",
+      "sha256": "f1cbe4fbfcd4a0317a41997e1311bf3cefbb1b2e672ac8a23d8fe51e03f6517b"
+    },
+    "export_summary": {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/kg/wealth_management_diverse_kg_summary.json",
+      "sha256": "b0c9b4da5a03fed9879990c764bc67bd882836c735cda99971d220700ca89c7f"
+    },
+    "alias_map": {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/data/kg/rdf_id_alias_map.json",
+      "sha256": "94edaacba30cfb3b1d735b803a36f6a272999d5a58cfdb37a79a8da7d682ef46"
+    }
+  },
+  "graph_triples": 742996,
+  "export_reported_triples": 742996,
+  "export_original_database_path": "wealthmanagement_tables-main\\raw_data_sample\\wealth_management_diverse.db",
+  "tables": [
+    {
+      "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "class": "InvestmentGoal",
+      "key_column": "goal_id",
+      "sql_rows": 4865,
+      "rdf_source_subjects": 4865,
+      "rdf_class_subjects": 4865,
+      "sql_declared_primary_keys": [],
+      "sql_declared_foreign_keys": 0,
+      "sql_null_keys": 0,
+      "sql_duplicate_keys": {},
+      "rdf_duplicate_keys": {},
+      "rdf_missing_or_multivalued_key": [],
+      "missing_sql_keys_in_rdf": [],
+      "extra_rdf_keys": [],
+      "uri_namespaces": {
+        "https://wealth.example.org/kg/investment-goal/": 4865
+      },
+      "uri_suffix_equals_sql_key": 4865,
+      "missing_class_type": 0,
+      "fields": [
+        {
+          "column": "goal_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/goalId"
+          ],
+          "nonnull_cells": 4865,
+          "null_cells": 0,
+          "matched_cells": 4865,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 4865
+          }
+        },
+        {
+          "column": "investor_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investorId"
+          ],
+          "nonnull_cells": 4865,
+          "null_cells": 0,
+          "matched_cells": 4865,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 4865
+          }
+        },
+        {
+          "column": "investment_goal",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investmentGoal"
+          ],
+          "nonnull_cells": 4600,
+          "null_cells": 265,
+          "matched_cells": 4600,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 4600
+          }
+        },
+        {
+          "column": "description",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/description"
+          ],
+          "nonnull_cells": 4672,
+          "null_cells": 193,
+          "matched_cells": 4672,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 4672
+          }
+        },
+        {
+          "column": "target_amount",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/targetAmount"
+          ],
+          "nonnull_cells": 4672,
+          "null_cells": 193,
+          "matched_cells": 4672,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 4672
+          }
+        },
+        {
+          "column": "current_value",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/currentValue"
+          ],
+          "nonnull_cells": 4672,
+          "null_cells": 193,
+          "matched_cells": 4672,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 4672
+          }
+        },
+        {
+          "column": "progress_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/progressPct"
+          ],
+          "nonnull_cells": 4850,
+          "null_cells": 15,
+          "matched_cells": 4850,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 4839,
+            "http://www.w3.org/2001/XMLSchema#double": 11
+          }
+        },
+        {
+          "column": "shortfall",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/shortfall"
+          ],
+          "nonnull_cells": 4489,
+          "null_cells": 376,
+          "matched_cells": 4489,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 4489
+          }
+        },
+        {
+          "column": "time_to_goal_months",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/timeToGoalMonths"
+          ],
+          "nonnull_cells": 4672,
+          "null_cells": 193,
+          "matched_cells": 4672,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#integer": 4672
+          }
+        },
+        {
+          "column": "avg_annual_return_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/avgAnnualReturnPct"
+          ],
+          "nonnull_cells": 4672,
+          "null_cells": 193,
+          "matched_cells": 4672,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 4672
+          }
+        },
+        {
+          "column": "avg_post_tax_return_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/avgPostTaxReturnPct"
+          ],
+          "nonnull_cells": 4672,
+          "null_cells": 193,
+          "matched_cells": 4672,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 4672
+          }
+        },
+        {
+          "column": "avg_sharpe_ratio",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/avgSharpeRatio"
+          ],
+          "nonnull_cells": 4672,
+          "null_cells": 193,
+          "matched_cells": 4672,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 4672
+          }
+        },
+        {
+          "column": "avg_volatility_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/avgVolatilityPct"
+          ],
+          "nonnull_cells": 4672,
+          "null_cells": 193,
+          "matched_cells": 4672,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 4672
+          }
+        },
+        {
+          "column": "std_dev_annual_return_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/stdDevAnnualReturnPct"
+          ],
+          "nonnull_cells": 4672,
+          "null_cells": 193,
+          "matched_cells": 4672,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 4672
+          }
+        }
+      ],
+      "row_link_predicates": {
+        "https://wealth.example.org/ontology/belongsToInvestor": 4865
+      },
+      "investor_reference_checked_rows": 4865,
+      "investor_reference_missing_or_wrong_rows": 0,
+      "inverse_investor_edge": "https://wealth.example.org/ontology/hasInvestmentGoal",
+      "inverse_investor_edge_missing_rows": 0,
+      "sql_keys_with_resolved_alias_entry": 0,
+      "examples": [],
+      "fully_checked_sql_rows": 4865
+    },
+    {
+      "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "class": "Investor",
+      "key_column": "investor_id",
+      "sql_rows": 1550,
+      "rdf_source_subjects": 1550,
+      "rdf_class_subjects": 1550,
+      "sql_declared_primary_keys": [],
+      "sql_declared_foreign_keys": 0,
+      "sql_null_keys": 0,
+      "sql_duplicate_keys": {},
+      "rdf_duplicate_keys": {},
+      "rdf_missing_or_multivalued_key": [],
+      "missing_sql_keys_in_rdf": [],
+      "extra_rdf_keys": [],
+      "uri_namespaces": {
+        "https://wealth.example.org/kg/investor/": 1550
+      },
+      "uri_suffix_equals_sql_key": 1550,
+      "missing_class_type": 0,
+      "fields": [
+        {
+          "column": "investor_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investorId"
+          ],
+          "nonnull_cells": 1550,
+          "null_cells": 0,
+          "matched_cells": 1550,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1550
+          }
+        },
+        {
+          "column": "investor_name",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investorName"
+          ],
+          "nonnull_cells": 1550,
+          "null_cells": 0,
+          "matched_cells": 1550,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1550
+          }
+        },
+        {
+          "column": "investment_goal",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investmentGoal"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1473
+          }
+        },
+        {
+          "column": "risk_tolerance",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/riskTolerance"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1473
+          }
+        },
+        {
+          "column": "time_horizon",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/timeHorizon"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1473
+          }
+        },
+        {
+          "column": "sector_focus",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/sectorFocus"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1473
+          }
+        },
+        {
+          "column": "segment",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/segment"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1473
+          }
+        },
+        {
+          "column": "category",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/category"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1473
+          }
+        },
+        {
+          "column": "notes",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/notes"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1473
+          }
+        }
+      ],
+      "row_link_predicates": {},
+      "investor_reference_checked_rows": 0,
+      "investor_reference_missing_or_wrong_rows": 0,
+      "inverse_investor_edge": "",
+      "inverse_investor_edge_missing_rows": 0,
+      "sql_keys_with_resolved_alias_entry": 1550,
+      "examples": [],
+      "fully_checked_sql_rows": 1550
+    },
+    {
+      "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "class": "PortfolioHealth",
+      "key_column": "portfolio_health_id",
+      "sql_rows": 1550,
+      "rdf_source_subjects": 1550,
+      "rdf_class_subjects": 1550,
+      "sql_declared_primary_keys": [],
+      "sql_declared_foreign_keys": 0,
+      "sql_null_keys": 0,
+      "sql_duplicate_keys": {},
+      "rdf_duplicate_keys": {},
+      "rdf_missing_or_multivalued_key": [],
+      "missing_sql_keys_in_rdf": [],
+      "extra_rdf_keys": [],
+      "uri_namespaces": {
+        "https://wealth.example.org/kg/portfolio-health/": 1550
+      },
+      "uri_suffix_equals_sql_key": 1550,
+      "missing_class_type": 0,
+      "fields": [
+        {
+          "column": "portfolio_health_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/portfolioHealthId"
+          ],
+          "nonnull_cells": 1550,
+          "null_cells": 0,
+          "matched_cells": 1550,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1550
+          }
+        },
+        {
+          "column": "investor_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investorId"
+          ],
+          "nonnull_cells": 1550,
+          "null_cells": 0,
+          "matched_cells": 1550,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1550
+          }
+        },
+        {
+          "column": "goal_match_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/goalMatchPct"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 1473
+          }
+        },
+        {
+          "column": "risk_score",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/riskScore"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 1473
+          }
+        },
+        {
+          "column": "liquidity_score",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/liquidityScore"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 1473
+          }
+        },
+        {
+          "column": "diversification_score",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/diversificationScore"
+          ],
+          "nonnull_cells": 1473,
+          "null_cells": 77,
+          "matched_cells": 1473,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 1473
+          }
+        }
+      ],
+      "row_link_predicates": {
+        "https://wealth.example.org/ontology/healthOfInvestor": 1550
+      },
+      "investor_reference_checked_rows": 1550,
+      "investor_reference_missing_or_wrong_rows": 0,
+      "inverse_investor_edge": "https://wealth.example.org/ontology/hasPortfolioHealth",
+      "inverse_investor_edge_missing_rows": 0,
+      "sql_keys_with_resolved_alias_entry": 0,
+      "examples": [],
+      "fully_checked_sql_rows": 1550
+    },
+    {
+      "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "class": "PortfolioHolding",
+      "key_column": "holding_id",
+      "sql_rows": 15102,
+      "rdf_source_subjects": 15102,
+      "rdf_class_subjects": 15102,
+      "sql_declared_primary_keys": [],
+      "sql_declared_foreign_keys": 0,
+      "sql_null_keys": 0,
+      "sql_duplicate_keys": {},
+      "rdf_duplicate_keys": {},
+      "rdf_missing_or_multivalued_key": [],
+      "missing_sql_keys_in_rdf": [],
+      "extra_rdf_keys": [],
+      "uri_namespaces": {
+        "https://wealth.example.org/kg/holding/": 15102
+      },
+      "uri_suffix_equals_sql_key": 15102,
+      "missing_class_type": 0,
+      "fields": [
+        {
+          "column": "holding_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/holdingId"
+          ],
+          "nonnull_cells": 15102,
+          "null_cells": 0,
+          "matched_cells": 15102,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 15102
+          }
+        },
+        {
+          "column": "investor_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investorId"
+          ],
+          "nonnull_cells": 15102,
+          "null_cells": 0,
+          "matched_cells": 15102,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 15102
+          }
+        },
+        {
+          "column": "investment_type",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investmentType"
+          ],
+          "nonnull_cells": 14347,
+          "null_cells": 755,
+          "matched_cells": 14347,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 14347
+          }
+        },
+        {
+          "column": "investment_name",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investmentName"
+          ],
+          "nonnull_cells": 15102,
+          "null_cells": 0,
+          "matched_cells": 15102,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 15102
+          }
+        },
+        {
+          "column": "sector",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/sector"
+          ],
+          "nonnull_cells": 14347,
+          "null_cells": 755,
+          "matched_cells": 14347,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 14347
+          }
+        },
+        {
+          "column": "segment",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/segment"
+          ],
+          "nonnull_cells": 14347,
+          "null_cells": 755,
+          "matched_cells": 14347,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 14347
+          }
+        },
+        {
+          "column": "category",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/category"
+          ],
+          "nonnull_cells": 14347,
+          "null_cells": 755,
+          "matched_cells": 14347,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 14347
+          }
+        },
+        {
+          "column": "purchase_date",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/purchaseDate"
+          ],
+          "nonnull_cells": 14347,
+          "null_cells": 755,
+          "matched_cells": 14347,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#date": 14347
+          }
+        },
+        {
+          "column": "cost",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/cost"
+          ],
+          "nonnull_cells": 14347,
+          "null_cells": 755,
+          "matched_cells": 14347,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 14347
+          }
+        },
+        {
+          "column": "current_value",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/currentValue"
+          ],
+          "nonnull_cells": 14347,
+          "null_cells": 755,
+          "matched_cells": 14347,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 14347
+          }
+        },
+        {
+          "column": "returns_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/returnsPct"
+          ],
+          "nonnull_cells": 15031,
+          "null_cells": 71,
+          "matched_cells": 15031,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 15031
+          }
+        },
+        {
+          "column": "dividends",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/dividends"
+          ],
+          "nonnull_cells": 14347,
+          "null_cells": 755,
+          "matched_cells": 14347,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 14347
+          }
+        },
+        {
+          "column": "taxes_paid",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/taxesPaid"
+          ],
+          "nonnull_cells": 14347,
+          "null_cells": 755,
+          "matched_cells": 14347,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 14347
+          }
+        }
+      ],
+      "row_link_predicates": {
+        "https://wealth.example.org/ontology/heldByInvestor": 15102
+      },
+      "investor_reference_checked_rows": 15102,
+      "investor_reference_missing_or_wrong_rows": 0,
+      "inverse_investor_edge": "https://wealth.example.org/ontology/hasHolding",
+      "inverse_investor_edge_missing_rows": 0,
+      "sql_keys_with_resolved_alias_entry": 0,
+      "examples": [],
+      "fully_checked_sql_rows": 15102
+    },
+    {
+      "table": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+      "class": "SectorAllocation",
+      "key_column": "sector_id",
+      "sql_rows": 3038,
+      "rdf_source_subjects": 3038,
+      "rdf_class_subjects": 3038,
+      "sql_declared_primary_keys": [],
+      "sql_declared_foreign_keys": 0,
+      "sql_null_keys": 0,
+      "sql_duplicate_keys": {},
+      "rdf_duplicate_keys": {},
+      "rdf_missing_or_multivalued_key": [],
+      "missing_sql_keys_in_rdf": [],
+      "extra_rdf_keys": [],
+      "uri_namespaces": {
+        "https://wealth.example.org/kg/sector-allocation/": 3038
+      },
+      "uri_suffix_equals_sql_key": 3038,
+      "missing_class_type": 0,
+      "fields": [
+        {
+          "column": "sector_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/sectorAllocationId"
+          ],
+          "nonnull_cells": 3038,
+          "null_cells": 0,
+          "matched_cells": 3038,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 3038
+          }
+        },
+        {
+          "column": "investor_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investorId"
+          ],
+          "nonnull_cells": 3038,
+          "null_cells": 0,
+          "matched_cells": 3038,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 3038
+          }
+        },
+        {
+          "column": "sector",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/sector"
+          ],
+          "nonnull_cells": 2887,
+          "null_cells": 151,
+          "matched_cells": 2887,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 2887
+          }
+        },
+        {
+          "column": "total_investment",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/totalInvestment"
+          ],
+          "nonnull_cells": 1579,
+          "null_cells": 1459,
+          "matched_cells": 1579,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 1579
+          }
+        },
+        {
+          "column": "allocation_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/allocationPct"
+          ],
+          "nonnull_cells": 1579,
+          "null_cells": 1459,
+          "matched_cells": 1579,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 1579
+          }
+        }
+      ],
+      "row_link_predicates": {
+        "https://wealth.example.org/ontology/allocationOfInvestor": 3038
+      },
+      "investor_reference_checked_rows": 3038,
+      "investor_reference_missing_or_wrong_rows": 0,
+      "inverse_investor_edge": "https://wealth.example.org/ontology/hasSectorAllocation",
+      "inverse_investor_edge_missing_rows": 0,
+      "sql_keys_with_resolved_alias_entry": 0,
+      "examples": [],
+      "fully_checked_sql_rows": 3038
+    },
+    {
+      "table": "ATOM_EVENT_CASH_FLOW_001",
+      "class": "CashFlow",
+      "key_column": "cash_flow_id",
+      "sql_rows": 7828,
+      "rdf_source_subjects": 7828,
+      "rdf_class_subjects": 7828,
+      "sql_declared_primary_keys": [],
+      "sql_declared_foreign_keys": 0,
+      "sql_null_keys": 0,
+      "sql_duplicate_keys": {},
+      "rdf_duplicate_keys": {},
+      "rdf_missing_or_multivalued_key": [],
+      "missing_sql_keys_in_rdf": [],
+      "extra_rdf_keys": [],
+      "uri_namespaces": {
+        "https://wealth.example.org/kg/cash-flow/": 7828
+      },
+      "uri_suffix_equals_sql_key": 7828,
+      "missing_class_type": 0,
+      "fields": [
+        {
+          "column": "cash_flow_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/cashFlowId"
+          ],
+          "nonnull_cells": 7828,
+          "null_cells": 0,
+          "matched_cells": 7828,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 7828
+          }
+        },
+        {
+          "column": "investor_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investorId"
+          ],
+          "nonnull_cells": 7828,
+          "null_cells": 0,
+          "matched_cells": 7828,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 7828
+          }
+        },
+        {
+          "column": "date",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/date"
+          ],
+          "nonnull_cells": 7437,
+          "null_cells": 391,
+          "matched_cells": 7437,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#date": 7437
+          }
+        },
+        {
+          "column": "type",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/type"
+          ],
+          "nonnull_cells": 7437,
+          "null_cells": 391,
+          "matched_cells": 7437,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 7437
+          }
+        },
+        {
+          "column": "amount",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/amount"
+          ],
+          "nonnull_cells": 7437,
+          "null_cells": 391,
+          "matched_cells": 7437,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 7437
+          }
+        },
+        {
+          "column": "source",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/source"
+          ],
+          "nonnull_cells": 7437,
+          "null_cells": 391,
+          "matched_cells": 7437,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 7437
+          }
+        },
+        {
+          "column": "notes",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/notes"
+          ],
+          "nonnull_cells": 7437,
+          "null_cells": 391,
+          "matched_cells": 7437,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 7437
+          }
+        }
+      ],
+      "row_link_predicates": {
+        "https://wealth.example.org/ontology/cashFlowOfInvestor": 7828
+      },
+      "investor_reference_checked_rows": 7828,
+      "investor_reference_missing_or_wrong_rows": 0,
+      "inverse_investor_edge": "https://wealth.example.org/ontology/hasCashFlow",
+      "inverse_investor_edge_missing_rows": 0,
+      "sql_keys_with_resolved_alias_entry": 0,
+      "examples": [],
+      "fully_checked_sql_rows": 7828
+    },
+    {
+      "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "class": "RebalancingAction",
+      "key_column": "rebalance_id",
+      "sql_rows": 6192,
+      "rdf_source_subjects": 6192,
+      "rdf_class_subjects": 6192,
+      "sql_declared_primary_keys": [],
+      "sql_declared_foreign_keys": 0,
+      "sql_null_keys": 0,
+      "sql_duplicate_keys": {},
+      "rdf_duplicate_keys": {},
+      "rdf_missing_or_multivalued_key": [],
+      "missing_sql_keys_in_rdf": [],
+      "extra_rdf_keys": [],
+      "uri_namespaces": {
+        "https://wealth.example.org/kg/rebalancing-action/": 6192
+      },
+      "uri_suffix_equals_sql_key": 6192,
+      "missing_class_type": 0,
+      "fields": [
+        {
+          "column": "rebalance_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/rebalanceId"
+          ],
+          "nonnull_cells": 6192,
+          "null_cells": 0,
+          "matched_cells": 6192,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 6192
+          }
+        },
+        {
+          "column": "investor_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investorId"
+          ],
+          "nonnull_cells": 6192,
+          "null_cells": 0,
+          "matched_cells": 6192,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 6192
+          }
+        },
+        {
+          "column": "logic",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/logic"
+          ],
+          "nonnull_cells": 5883,
+          "null_cells": 309,
+          "matched_cells": 5883,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 5883
+          }
+        },
+        {
+          "column": "action",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/action"
+          ],
+          "nonnull_cells": 5883,
+          "null_cells": 309,
+          "matched_cells": 5883,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 5883
+          }
+        },
+        {
+          "column": "current_allocation_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/currentAllocationPct"
+          ],
+          "nonnull_cells": 5883,
+          "null_cells": 309,
+          "matched_cells": 5883,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 5883
+          }
+        },
+        {
+          "column": "target_allocation_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/targetAllocationPct"
+          ],
+          "nonnull_cells": 5883,
+          "null_cells": 309,
+          "matched_cells": 5883,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 5883
+          }
+        },
+        {
+          "column": "amount",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/amount"
+          ],
+          "nonnull_cells": 5883,
+          "null_cells": 309,
+          "matched_cells": 5883,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 5883
+          }
+        },
+        {
+          "column": "notes",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/notes"
+          ],
+          "nonnull_cells": 5883,
+          "null_cells": 309,
+          "matched_cells": 5883,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 5883
+          }
+        }
+      ],
+      "row_link_predicates": {
+        "https://wealth.example.org/ontology/rebalancingActionOfInvestor": 6192
+      },
+      "investor_reference_checked_rows": 6192,
+      "investor_reference_missing_or_wrong_rows": 0,
+      "inverse_investor_edge": "https://wealth.example.org/ontology/hasRebalancingAction",
+      "inverse_investor_edge_missing_rows": 0,
+      "sql_keys_with_resolved_alias_entry": 0,
+      "examples": [],
+      "fully_checked_sql_rows": 6192
+    },
+    {
+      "table": "ATOM_EVENT_SCENARIO_REBALANCING_001",
+      "class": "ScenarioRebalancing",
+      "key_column": "scenario_rebalance_id",
+      "sql_rows": 1549,
+      "rdf_source_subjects": 1549,
+      "rdf_class_subjects": 1549,
+      "sql_declared_primary_keys": [],
+      "sql_declared_foreign_keys": 0,
+      "sql_null_keys": 0,
+      "sql_duplicate_keys": {},
+      "rdf_duplicate_keys": {},
+      "rdf_missing_or_multivalued_key": [],
+      "missing_sql_keys_in_rdf": [],
+      "extra_rdf_keys": [],
+      "uri_namespaces": {
+        "https://wealth.example.org/kg/scenario-rebalancing/": 1549
+      },
+      "uri_suffix_equals_sql_key": 1549,
+      "missing_class_type": 0,
+      "fields": [
+        {
+          "column": "scenario_rebalance_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/scenarioRebalanceId"
+          ],
+          "nonnull_cells": 1549,
+          "null_cells": 0,
+          "matched_cells": 1549,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1549
+          }
+        },
+        {
+          "column": "investor_id",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/investorId"
+          ],
+          "nonnull_cells": 1549,
+          "null_cells": 0,
+          "matched_cells": 1549,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1549
+          }
+        },
+        {
+          "column": "scenario",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/scenario"
+          ],
+          "nonnull_cells": 1472,
+          "null_cells": 77,
+          "matched_cells": 1472,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1472
+          }
+        },
+        {
+          "column": "triggered_action",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/triggeredAction"
+          ],
+          "nonnull_cells": 1472,
+          "null_cells": 77,
+          "matched_cells": 1472,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1472
+          }
+        },
+        {
+          "column": "affected_assets_sectors",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/affectedAssetsSectors"
+          ],
+          "nonnull_cells": 1472,
+          "null_cells": 77,
+          "matched_cells": 1472,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1472
+          }
+        },
+        {
+          "column": "rationale",
+          "sql_type": "TEXT",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/rationale"
+          ],
+          "nonnull_cells": 1472,
+          "null_cells": 77,
+          "matched_cells": 1472,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "plain": 1472
+          }
+        },
+        {
+          "column": "current_allocation_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/currentAllocationPct"
+          ],
+          "nonnull_cells": 1472,
+          "null_cells": 77,
+          "matched_cells": 1472,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 1472
+          }
+        },
+        {
+          "column": "new_allocation_pct",
+          "sql_type": "REAL",
+          "rdf_predicates": [
+            "https://wealth.example.org/ontology/newAllocationPct"
+          ],
+          "nonnull_cells": 1472,
+          "null_cells": 77,
+          "matched_cells": 1472,
+          "missing_values": 0,
+          "unequal_values": 0,
+          "unexpected_values_for_null": 0,
+          "multivalued_cells": 0,
+          "rdf_datatypes": {
+            "http://www.w3.org/2001/XMLSchema#decimal": 1472
+          }
+        }
+      ],
+      "row_link_predicates": {
+        "https://wealth.example.org/ontology/scenarioRebalancingOfInvestor": 1549
+      },
+      "investor_reference_checked_rows": 1549,
+      "investor_reference_missing_or_wrong_rows": 0,
+      "inverse_investor_edge": "https://wealth.example.org/ontology/hasScenarioRebalancing",
+      "inverse_investor_edge_missing_rows": 0,
+      "sql_keys_with_resolved_alias_entry": 0,
+      "examples": [],
+      "fully_checked_sql_rows": 1549
+    }
+  ],
+  "live_fuseki": {
+    "endpoint": "http://127.0.0.1:3030/wealth/query",
+    "class_counts": {
+      "https://wealth.example.org/ontology/CashFlowSource": 10,
+      "https://wealth.example.org/ontology/RebalancingDecision": 34,
+      "https://wealth.example.org/ontology/CashFlowType": 8,
+      "http://www.w3.org/2002/07/owl#DatatypeProperty": 56,
+      "https://wealth.example.org/ontology/ScenarioRebalancing": 1549,
+      "https://wealth.example.org/ontology/PrimitiveAttribute": 85,
+      "https://wealth.example.org/ontology/CashFlow": 7828,
+      "http://www.w3.org/2002/07/owl#Class": 27,
+      "https://wealth.example.org/ontology/RiskTolerance": 3,
+      "https://wealth.example.org/ontology/DerivedAttribute": 14,
+      "https://wealth.example.org/ontology/InvestmentGoal": 4865,
+      "https://wealth.example.org/ontology/RebalancingAction": 6192,
+      "http://www.w3.org/2002/07/owl#ObjectProperty": 34,
+      "https://wealth.example.org/ontology/MarketScenario": 12,
+      "https://wealth.example.org/ontology/Primitive": 15,
+      "https://wealth.example.org/ontology/SectorAllocation": 3038,
+      "https://wealth.example.org/ontology/InvestmentGoalType": 6,
+      "https://wealth.example.org/ontology/Category": 17,
+      "https://wealth.example.org/ontology/PortfolioHolding": 15102,
+      "https://wealth.example.org/ontology/Segment": 4,
+      "https://wealth.example.org/ontology/RebalancingLogic": 10,
+      "https://wealth.example.org/ontology/Asset": 5752,
+      "https://wealth.example.org/ontology/Sector": 12,
+      "https://wealth.example.org/ontology/TimeHorizon": 3,
+      "https://wealth.example.org/ontology/Investor": 1550,
+      "https://wealth.example.org/ontology/DerivedContext": 26,
+      "https://wealth.example.org/ontology/ContextValue": 68,
+      "https://wealth.example.org/ontology/PortfolioHealth": 1550,
+      "https://wealth.example.org/ontology/InvestmentType": 14,
+      "https://wealth.example.org/ontology/AffectedAssetSector": 14
+    },
+    "all_class_counts_equal_local_export": true,
+    "qualification": "Class-count equality is not a full live-data equality proof. Cell audit uses the local TTL export."
+  },
+  "method": "Complete keyed row and cell comparison; exact text and Decimal(str(value)) numeric comparison. NULL is expected to be absent in RDF. Mappings use export provenance and sourceColumn annotations.",
+  "alias_map": {
+    "normalized_keys": 1658,
+    "ambiguous_entries": 0,
+    "distinct_resolved_ids": 1550
+  },
+  "audit_complete": true,
+  "rdf_type_counts": {
+    "https://wealth.example.org/ontology/Primitive": 15,
+    "http://www.w3.org/2002/07/owl#ObjectProperty": 34,
+    "http://www.w3.org/2002/07/owl#DatatypeProperty": 56,
+    "https://wealth.example.org/ontology/Asset": 5752,
+    "https://wealth.example.org/ontology/CashFlow": 7828,
+    "https://wealth.example.org/ontology/PortfolioHolding": 15102,
+    "https://wealth.example.org/ontology/InvestmentGoal": 4865,
+    "https://wealth.example.org/ontology/PortfolioHealth": 1550,
+    "https://wealth.example.org/ontology/RebalancingAction": 6192,
+    "https://wealth.example.org/ontology/ScenarioRebalancing": 1549,
+    "https://wealth.example.org/ontology/SectorAllocation": 3038,
+    "https://wealth.example.org/ontology/PrimitiveAttribute": 85,
+    "https://wealth.example.org/ontology/ContextValue": 68,
+    "https://wealth.example.org/ontology/DerivedContext": 26,
+    "https://wealth.example.org/ontology/DerivedAttribute": 14,
+    "http://www.w3.org/2002/07/owl#Class": 27,
+    "https://wealth.example.org/ontology/Investor": 1550,
+    "https://wealth.example.org/ontology/MarketScenario": 12,
+    "https://wealth.example.org/ontology/RebalancingDecision": 34,
+    "https://wealth.example.org/ontology/AffectedAssetSector": 14,
+    "https://wealth.example.org/ontology/Category": 17,
+    "https://wealth.example.org/ontology/RiskTolerance": 3,
+    "https://wealth.example.org/ontology/TimeHorizon": 3,
+    "https://wealth.example.org/ontology/RebalancingLogic": 10,
+    "https://wealth.example.org/ontology/CashFlowSource": 10,
+    "https://wealth.example.org/ontology/CashFlowType": 8,
+    "https://wealth.example.org/ontology/InvestmentType": 14,
+    "https://wealth.example.org/ontology/InvestmentGoalType": 6,
+    "https://wealth.example.org/ontology/Sector": 12,
+    "https://wealth.example.org/ontology/Segment": 4
+  },
+  "extra_instance_classes": {
+    "https://wealth.example.org/ontology/Primitive": 15,
+    "https://wealth.example.org/ontology/Asset": 5752,
+    "https://wealth.example.org/ontology/PrimitiveAttribute": 85,
+    "https://wealth.example.org/ontology/ContextValue": 68,
+    "https://wealth.example.org/ontology/DerivedContext": 26,
+    "https://wealth.example.org/ontology/DerivedAttribute": 14,
+    "https://wealth.example.org/ontology/MarketScenario": 12,
+    "https://wealth.example.org/ontology/RebalancingDecision": 34,
+    "https://wealth.example.org/ontology/AffectedAssetSector": 14,
+    "https://wealth.example.org/ontology/Category": 17,
+    "https://wealth.example.org/ontology/RiskTolerance": 3,
+    "https://wealth.example.org/ontology/TimeHorizon": 3,
+    "https://wealth.example.org/ontology/RebalancingLogic": 10,
+    "https://wealth.example.org/ontology/CashFlowSource": 10,
+    "https://wealth.example.org/ontology/CashFlowType": 8,
+    "https://wealth.example.org/ontology/InvestmentType": 14,
+    "https://wealth.example.org/ontology/InvestmentGoalType": 6,
+    "https://wealth.example.org/ontology/Sector": 12,
+    "https://wealth.example.org/ontology/Segment": 4
+  }
+}

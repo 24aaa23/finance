@@ -474,14 +474,17 @@ def main():
     print("INITIALIZING AOP PIPELINE")
     print("="*50)
 
+    # Backend availability is an opt-in ablation; the default hybrid path is unchanged.
+    sql_only = os.getenv("PIPELINE_BACKEND_MODE", "hybrid") == "sql_only"
     #CONFIGURATION & API SETUP
-    print("[SYSTEM] Scan backend: Apache Jena Fuseki")
+    print("[SYSTEM] Scan backend: SQLite (SQL-only ablation)" if sql_only else "[SYSTEM] Scan backend: Apache Jena Fuseki")
     print(f"[SYSTEM] Fuseki endpoint: {FUSEKI_ENDPOINT}")
     print(f"[SYSTEM] Fuseki scan timeout: {FUSEKI_SCAN_TIMEOUT_SECONDS:g} seconds")
     print(f"[SYSTEM] Experiment config: {CONFIG.experiment_config_path}")
     print(f"[SYSTEM] Model config: {CONFIG.model_config_path}")
     print(f"[SYSTEM] SQL asset: {CONFIG.sql_asset_file}")
-    check_fuseki_health()
+    if not sql_only:
+        check_fuseki_health(FUSEKI_ENDPOINT, FUSEKI_SCAN_TIMEOUT_SECONDS)
 
     primary_client = build_model_client(
         provider=CONFIG.model_provider,
@@ -520,17 +523,22 @@ def main():
     schema_file = SCHEMA_FILE
     instance_file = INSTANCE_FILE
 
-    kg_metadata = load_rdf_knowledge_graph(
-        schema_file,
-        FUSEKI_ENDPOINT,
-        FUSEKI_METADATA_TIMEOUT_SECONDS,
-    )
-    rdf_prefix_map = load_rdf_prefix_map(schema_file)
-    rdf_graph = setup_rdf_graph(instance_file)
+    if sql_only:
+        kg_metadata, rdf_prefix_map = {}, {}
+        rdf_graph = rdflib.Graph()
+        print("[SYSTEM] KG loading and Fuseki checks disabled for SQL-only ablation")
+    else:
+        kg_metadata = load_rdf_knowledge_graph(
+            schema_file,
+            FUSEKI_ENDPOINT,
+            FUSEKI_METADATA_TIMEOUT_SECONDS,
+        )
+        rdf_prefix_map = load_rdf_prefix_map(schema_file)
+        rdf_graph = setup_rdf_graph(instance_file)
 
-    if not kg_metadata:
-        print("[!] ERROR: Could not load Knowledge Graph. Please check RDF files.")
-        return
+        if not kg_metadata:
+            print("[!] ERROR: Could not load Knowledge Graph. Please check RDF files.")
+            return
 
     sql_schema = load_sqlite_schema(SQLITE_DB_PATH)
     catalog_file = os.getenv("SEMANTIC_CATALOG_FILE", "").strip()
@@ -635,7 +643,7 @@ def main():
         decompose_fn=lambda inputs, client, model: semantic_decompose_operator(
             {**inputs, **({"domain_context": domain_context} if domain_context else {}), "schema_context": {
                 "SQL": {table: details.get("column_names", []) for table, details in sql_schema.items()},
-                "KG": lightweight_index,
+                **({"KG": lightweight_index} if not sql_only else {}),
             }},
             client,
             model,

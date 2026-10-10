@@ -1,0 +1,866 @@
+{
+  "sql_source": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _",
+  "kg_source": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg",
+  "files": {
+    "derived/run_pipeline_v3_sql/clients.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/clients.py",
+      "sha256": "e780d43ed8d54a3c463b484f388adf64f349bdf125553d78f07804f19b6b0b7e"
+    },
+    "derived/run_pipeline_v3_sql/consultation.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/consultation.py",
+      "sha256": "57de5f312ace87033d97ae7fd4eb5a49ced49de2b6808232549fc8f96a282919"
+    },
+    "derived/run_pipeline_v3_sql/spec_runtime.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/spec_runtime.py",
+      "sha256": "2db5e654ad9a679d59af57c96fb4cea8fd4fe91f9ddc3069558bdde4c799e430"
+    },
+    "derived/run_pipeline_v3_sql/query_understanding.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/query_understanding.py",
+      "sha256": "34dfd41e114620f8e5f44bd01642970f17cc52c952b78869c0dc757402a5b003"
+    },
+    "derived/run_pipeline_v3_sql/knowledge.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/knowledge.py",
+      "sha256": "872bc2d2c474435d8950bfc262204108a111b7dfab6ff8b96f8e5b8f9202c6c2"
+    },
+    "derived/run_pipeline_v3_sql/business_context.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/business_context.py",
+      "sha256": "b30d9eed15a22015dcc33b866482960631475a968221540f278f7b525d0935ad"
+    },
+    "derived/run_pipeline_v3_sql/knowledge_single.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/knowledge_single.py",
+      "sha256": "be96bbe378be5a4037aff3ea78f9952b7c5d194b71e0dab4690975bef686c093"
+    },
+    "derived/run_pipeline_v3_sql/input_paths.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/input_paths.py",
+      "sha256": "7848eabb8a8290468f81e89f83513fdde898f1036cb3ea357dcf71acc4e2d7a1"
+    },
+    "derived/run_pipeline_v3_sql/planner.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/planner.py",
+      "sha256": "1e1752934549383c17afd1d2ca7950d69f7e0342c59668fa03d47f736bac51d2"
+    },
+    "derived/run_pipeline_v3_sql/YAML_SCHEMA.md": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/YAML_SCHEMA.md",
+      "sha256": "bf635d2afaa593d763037b4fd96174dfe8ab946dda3e4c5ad4ab1cfeb65dfe31"
+    },
+    "derived/run_pipeline_v3_sql/performance.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/performance.py",
+      "sha256": "4e032a117657de7236f6c26a732590398af7b86f0bb631460c257f6db207cdde"
+    },
+    "derived/run_pipeline_v3_sql/knowledge_progress.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/knowledge_progress.py",
+      "sha256": "4201d71ad5623365f06b583d86f2351bc8841c0894df159531deac18f162be46"
+    },
+    "derived/run_pipeline_v3_sql/RUN.md": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/RUN.md",
+      "sha256": "1c4b2990fd97758c761704a427eefaa91f855915364a9266af847816c32223a0"
+    },
+    "derived/run_pipeline_v3_sql/knowledge_chunks.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/knowledge_chunks.py",
+      "sha256": "51bc21befa51db6425aff5732cb44e4a1fa0b9c58e60e165d323e552df974e79"
+    },
+    "derived/run_pipeline_v3_sql/knowledge_coverage.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/knowledge_coverage.py",
+      "sha256": "8bf8af4e65f373181b78846d65089a964af542fbcb8b34dd090915274d8384a0"
+    },
+    "derived/run_pipeline_v3_sql/spec_contracts.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/spec_contracts.py",
+      "sha256": "d1d83284805b9eea92895c7143c69b380f02e9c630d07d459b6dc5d805041e2d"
+    },
+    "derived/run_pipeline_v3_sql/__main__.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/__main__.py",
+      "sha256": "4e131f2cc7dda0bf64ce473c727aca0f5812e8d01b05f6d37641f088a7abd48c"
+    },
+    "derived/run_pipeline_v3_sql/run_identity.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/run_identity.py",
+      "sha256": "4916b876a11a0faaae8a67eef43002ea5676764963072a59647609bfe7925310"
+    },
+    "derived/run_pipeline_v3_sql/relational.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/relational.py",
+      "sha256": "fd35b948bfd8ebe677cc0d57963d8a84696ba4b08c36b4b20cf900e2462df160"
+    },
+    "derived/run_pipeline_v3_sql/raw_sql.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/raw_sql.py",
+      "sha256": "1ccba8724c066e52913475558dfd4f81486bae38f3649dbdfecc07cd4be3d3a9"
+    },
+    "derived/run_pipeline_v3_sql/data_profile.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/data_profile.py",
+      "sha256": "90e343160b2e2d5c70c74c0dff9dc145ed6d06810aa6f4f24597daf4bef6fbc8"
+    },
+    "derived/run_pipeline_v3_sql/runtime_guard.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/runtime_guard.py",
+      "sha256": "720eb398b4c2f11a93f18734feea2fcdbaf575f755d2e01f567b85f787cb788f"
+    },
+    "derived/run_pipeline_v3_sql/reporting.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/reporting.py",
+      "sha256": "6ae3acf06776d1098356543f9e3f0bba0318c76f65eab8cdfb48a9f72f8580b7"
+    },
+    "derived/run_pipeline_v3_sql/utils.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/utils.py",
+      "sha256": "7de2fc9d4d2a9fedefab059475155fe45ce40d09a19faa1557692c456f738d5a"
+    },
+    "derived/run_pipeline_v3_sql/knowledge_units.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/knowledge_units.py",
+      "sha256": "19c51839ca64c8e10315bbfbc4a6d42a773347af34fc335f4a1c8f44c7a6e0b5"
+    },
+    "derived/run_pipeline_v3_sql/connections.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/connections.py",
+      "sha256": "51854e470007763a44a77fadc211068262498ae81ab24ffa04cbfb86a3e7ad4e"
+    },
+    "derived/run_pipeline_v3_sql/sqlite_backend.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/sqlite_backend.py",
+      "sha256": "6a697d41d3eefe54a0e60e098e129ea07d8677e5e7a6644b9b6d9890229b0ea6"
+    },
+    "derived/run_pipeline_v3_sql/__init__.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/__init__.py",
+      "sha256": "6e5e33a00b00394bc74e5fbe2a0acf36a0ac90fe00e5e9a48629e1eef66aaf48"
+    },
+    "derived/run_pipeline_v3_sql/raw_query.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/raw_query.py",
+      "sha256": "5ad561fd23d6bbcbf3188994bd1a61bfc67c328c9f190d39096f5e7c9aced5e2"
+    },
+    "derived/run_pipeline_v3_sql/executor.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/executor.py",
+      "sha256": "b997f9c9f8731c90cb46474c500bc688724aff3b627668998f5f57b0aac6593e"
+    },
+    "derived/run_pipeline_v3_sql/dataset_batch.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/dataset_batch.py",
+      "sha256": "af5215ff3639aa6bf1b0d05edee6c1516766c18abd00bd5a159f45e8a85bfe3b"
+    },
+    "derived/run_pipeline_v3_sql/prepare_knowledge.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/prepare_knowledge.py",
+      "sha256": "6f9c9bf8f1860918cf0dfa088c409f0457a1f42149bb94791f19cd7e7f5777d3"
+    },
+    "derived/run_pipeline_v3_sql/sql_metadata.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/sql_metadata.py",
+      "sha256": "ad145901df0ec0c9a1c9a20c8bdbd90aedbac46d51b12d8cb0552f7b96b551f1"
+    },
+    "derived/run_pipeline_v3_sql/sql_conditions.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/sql_conditions.py",
+      "sha256": "c67afdcb4529ba73671b1aa623558abc3f786e1f57c1e20f7ce4698cedfdcf93"
+    },
+    "derived/run_pipeline_v3_sql/common.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/common.py",
+      "sha256": "476bfa8d42224430cc92e520ae31e3a44780c62d5dc45d752c03a6d21199dd32"
+    },
+    "derived/run_pipeline_v3_sql/requirements.txt": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/requirements.txt",
+      "sha256": "c8119dcd7e269f0479218cf0605504f5b975404dae6762c944a18a19c402d876"
+    },
+    "derived/run_pipeline_v3_sql/run.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/run.py",
+      "sha256": "0486621e08caaacd023b70fceed0c305c1a62c56fb443822e2a6eb05939d2f71"
+    },
+    "derived/run_pipeline_v3_sql/_bootstrap.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/_bootstrap.py",
+      "sha256": "61123f1ff377cecd85729b256e31c8359e5d15c824b1cb8e02461d6c956bfa1d"
+    },
+    "derived/run_pipeline_v3_sql/main.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/main.py",
+      "sha256": "b618cc550739992aec4475ca92d4d1597a34a9f33b09dca0dac11520b1a5d223"
+    },
+    "derived/run_pipeline_v3_sql/execution.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/execution.py",
+      "sha256": "3bb76772d8e8a9098fa3d2efe9a51ad0ce3ebbdbd92fad24536c28623ee17fdb"
+    },
+    "derived/run_pipeline_v3_sql/retry_batch.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/retry_batch.py",
+      "sha256": "f4c33758a3e00aca113eaa60730d3b69835519b2bcaedef83da6a4f398df5794"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_knowledge_and_understanding.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_knowledge_and_understanding.py",
+      "sha256": "3e9eca0b61a81468f935e808d55f7163f5a7df30f472f806391ae1b093e416aa"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_dataset_batch.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_dataset_batch.py",
+      "sha256": "aa92eebb658dd6cd2423b4f9a0d7f9e71a54e80b8465216f23d1054890965b77"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_connection_keys.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_connection_keys.py",
+      "sha256": "573565ec1d0aa70e5c2643d7bbd1880211ca7ebfb45204c3166ed462bb60a0a9"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_query_spec_retry.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_query_spec_retry.py",
+      "sha256": "629a2e890c3da0b380297852b74c2adb68749aac13e87d83760b5fb20875664a"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_input_paths.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_input_paths.py",
+      "sha256": "f837e7dd7878047f6c3ce968fee0148ae5caff8dbf245780d3825084ce76ea84"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_raw_sql.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_raw_sql.py",
+      "sha256": "260fc203126ccd109dfa89f2aad4eec2ea2f347c1dcdde8047425e1f747793cf"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_knowledge_cli.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_knowledge_cli.py",
+      "sha256": "743226d62c9eadb24d153671d4ae942e864bfee3f49a625ddd294528c26b54bd"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_result_comparison.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_result_comparison.py",
+      "sha256": "21c214dba603bd7657142ff9ebd5daf2d83e5f1cef9afea269655598dce63669"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_rerun_spec_shapes.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_rerun_spec_shapes.py",
+      "sha256": "8549eddb9d3cd10b4e62acca1a5799af6c2bc79abd84f54826dba922bdd06c8b"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_comparative_steps.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_comparative_steps.py",
+      "sha256": "9811ef6bf06e6f4dac24cb144afeb50afc084177e80169ec8bb87d4bafbc5da5"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_runtime_guard.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_runtime_guard.py",
+      "sha256": "e643bc0b701a5bd6679fd44931b32740a4bc15177260af8bf7184d7f30365448"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_saved_v3_failures.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_saved_v3_failures.py",
+      "sha256": "6b6dfb84cf8da00d336563545f8693ead7bd9757290bffbc32e412a1f15c72dd"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_knowledge_single.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_knowledge_single.py",
+      "sha256": "3e65cc2172ebf444eec53ad1070780b92539a5eb20f634409afa3a0d3e682eb7"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_improvement7_flow.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_improvement7_flow.py",
+      "sha256": "c16e915cccbfa977bf1fc3c822c1c4369202f7ecd926a15386ae7eec80341071"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_yaml_metadata.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_yaml_metadata.py",
+      "sha256": "936b87f82f98b1868af2eb0e41fda34195d3e600bee1559a3d6f793504d7e0a6"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_simplified_flow.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_simplified_flow.py",
+      "sha256": "a21589662ea38ce1cf7d7be6ea5ad2de671fbcdb0e013e1c0e920a87ec621f2a"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_knowledge_progress.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_knowledge_progress.py",
+      "sha256": "bb46e74a2ae4e832637f146924db67745a093f37bc65eb331a0f183d9b549274"
+    },
+    "derived/run_pipeline_v3_sql/tests/support.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/support.py",
+      "sha256": "02150f5c84ee7facf5120b4fce1c90ba82c67418e67251d281993f35edca7edf"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_repair_feedback.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_repair_feedback.py",
+      "sha256": "0cb808c71f8da78fb1a515550be198befede44b053e3ffb52c04f901055fd823"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_sql_condition_compatibility.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_sql_condition_compatibility.py",
+      "sha256": "1224e15bec8236aa8629c12802deb6c547c42cd3897678231f79968ea5cafc7e"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_rerun_query_spec.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_rerun_query_spec.py",
+      "sha256": "e24c0d3ac6fa9e3d63258b7995434990effa9a8ff1a0e996347eab912742cc04"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_final_review.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_final_review.py",
+      "sha256": "bb871f9e3166cfb4c0c9ee033f78b2e0c7323ccc981ff836ec649e561f7a26bf"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_correctness.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_correctness.py",
+      "sha256": "6a67474008b6c3eeaf647ad48dcec33488c507de41933e6dea7daf29dcfba060"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_knowledge_chunks.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_knowledge_chunks.py",
+      "sha256": "122728baf4f7b711da633a367a356e222b7aa8e51e9c5df41fd1bfee951d4e24"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_selected_knowledge.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_selected_knowledge.py",
+      "sha256": "0383633f2d5f27f43f2fdf93187f246623c09e7e3130e13e94cd161c5999ce5e"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_knowledge_units.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_knowledge_units.py",
+      "sha256": "70bc01cdd1c39dde2d6552aade00c4de733c5159afe690560c0f06d10ea571c4"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_prompt_boundaries.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_prompt_boundaries.py",
+      "sha256": "a6c7305a0b6ca2c6a44c494152ce4512191dfaf80a1ff22fe35f071050faaca6"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_sqlite_backend.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_sqlite_backend.py",
+      "sha256": "390bf63845395889342532833052dd9ae318fc8b2923826ff2e7f610fc9437c3"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_v4_runtime.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_v4_runtime.py",
+      "sha256": "ca31e0c5306c4bc15c361f2cd47564d5cf6ff132bdda9e2b8041d45e89508621"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_sql_predicate_stages.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_sql_predicate_stages.py",
+      "sha256": "e9c03b181eedc195d277eedccc4e8b66d942501274efe612b6f637eb251e2ba7"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_knowledge_simple.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_knowledge_simple.py",
+      "sha256": "ef0566bb2d65b1ee6de9202a1395bd5a8c0a9925451248e3adef0058969ea603"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_consultation.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_consultation.py",
+      "sha256": "dd36bc1bed5672c2e583b300ac091b76b62c1659ce79a9b84a6daae940e5fae8"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_performance.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_performance.py",
+      "sha256": "dc341ebfc4103f05dcaa59d2baa433e25f042e11011d0fceba7d7e84bd70ec5f"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_v4_planning.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_v4_planning.py",
+      "sha256": "716c82daed90f13049099254b76b35f82cbaf8df1c3b14fb55c8f72e665f8927"
+    },
+    "derived/run_pipeline_v3_sql/tests/test_v4_retrieval.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/tests/test_v4_retrieval.py",
+      "sha256": "dfdfb679559d5db0d189291d9cc661fe3e683f3314e4687bf58006d2c4c2afae"
+    },
+    "derived/run_pipeline_v3_sql/non_llm_operators/bucket.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/non_llm_operators/bucket.py",
+      "sha256": "844dfbd424a44f0431a885223553c0d41b3d769e9af9e4ae3df706fce5c41a2d"
+    },
+    "derived/run_pipeline_v3_sql/non_llm_operators/set_intersect.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/non_llm_operators/set_intersect.py",
+      "sha256": "25fea99c80b987f0067fd3d437fc8a478be5374755c77cf04e3e1c9fc23dfd8f"
+    },
+    "derived/run_pipeline_v3_sql/non_llm_operators/union.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/non_llm_operators/union.py",
+      "sha256": "b312ca366e4ff0d4a678b24adb214beac30b61b3c8e887a9b7414c1061d4ddb7"
+    },
+    "derived/run_pipeline_v3_sql/non_llm_operators/__init__.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/non_llm_operators/__init__.py",
+      "sha256": "7f6d2c92838a959b584796df16fc0123666aa73db3f2b5a7ff3debaf0e983893"
+    },
+    "derived/run_pipeline_v3_sql/non_llm_operators/scan.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/non_llm_operators/scan.py",
+      "sha256": "8e852b55b9ddc9fc34a18030a4afada670b2c97958310f23d082808d107ec3f2"
+    },
+    "derived/run_pipeline_v3_sql/non_llm_operators/difference.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/non_llm_operators/difference.py",
+      "sha256": "cf84578f09f40c01192894562ba747b37ec66f9cbf79676433fd8cda550e14e8"
+    },
+    "derived/run_pipeline_v3_sql/non_llm_operators/date_extract.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/non_llm_operators/date_extract.py",
+      "sha256": "614ef1d66ef42871fecb3acb76b1911933b5ac376dad980a0a37ce89f7986702"
+    },
+    "derived/run_pipeline_v3_sql/non_llm_operators/math_compute.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/non_llm_operators/math_compute.py",
+      "sha256": "66c2fc0d99aa3be161e9c4ac6bb714ec4025f170c1c0ce029a38be14aa6532e6"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/pre_scan_validate.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/pre_scan_validate.py",
+      "sha256": "c81acead62a5d7d04eab4e1cbf85ea15e52b55572c43c3e0ae3736cdc32b4508"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/validate.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/validate.py",
+      "sha256": "39209826b94f2e53f524be342c2a7a98b34dea829b628d687d09ee65f7e97535"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/decompose.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/decompose.py",
+      "sha256": "432cc20cd2d4cc0b64fb9eaf26f89fe5354dee9ec4108f333295ef1dd992ece2"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/final_spec.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/final_spec.py",
+      "sha256": "3af348efe443ebd8d16f2fae0871d19574a68c6bfd3a49dec2af569ab0f70971"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/__init__.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/__init__.py",
+      "sha256": "407e38f143b9ada7f1de2a5c3e4611d0b189244584efb25ab00d4e73e09e2a3e"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/retrieve.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/retrieve.py",
+      "sha256": "5559b6969fc11bcab95ab0a33ae2ad3f6bbee9035013858407947b6d4d055447"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/generate.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/generate.py",
+      "sha256": "d8b60f4f9ad6cc4c9a24c6b014a2ed3b0b54164e85077c9b1d30c02718e6e6f8"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/order_by.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/order_by.py",
+      "sha256": "d7894c4fa3d232353da19f8c732c85210998116eb784f5dad83f2421c981401f"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/refine.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/refine.py",
+      "sha256": "d9ab407d40fd8c152c09912e0a3e974830d67f7091379651dd8898657025e23c"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/integrate.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/integrate.py",
+      "sha256": "3dfb879d47eaf5496c1b7aa1ed3b9d0a7a7533b940613e50512067637e136e3b"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/query_spec.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/query_spec.py",
+      "sha256": "377f8f08ebebf7d2c307653d384cd7c333b25534fddd814a717f1e72f9f81e8b"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/processing_spec.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/processing_spec.py",
+      "sha256": "28abfcbd82c250509fe6d9b966a1acb20f89a1adadac78563adab76001380290"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/explain.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/explain.py",
+      "sha256": "77955f8b8e60b30157d06c05930531b00bff9fc4b38764eb6ddf22a6929a5572"
+    },
+    "derived/run_pipeline_v3_sql/llm_operators/filter_aggregate.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/llm_operators/filter_aggregate.py",
+      "sha256": "7c3e6e9f151899cad20a33ce6c69e013e3183620f427915007298ae22241e2f5"
+    },
+    "derived/run_pipeline_v3_sql/scripts/run_question_types_v2.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/scripts/run_question_types_v2.py",
+      "sha256": "a5e8848e5624ef637cf1d8b2b4c5d5f3140f777667cb44091b6a497dc45d90ae"
+    },
+    "derived/run_pipeline_v3_sql/scripts/retry_failed_in_place.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/scripts/retry_failed_in_place.py",
+      "sha256": "4c0716a0deedea44bdfe8fdd1e715c74519b3b48cfd63322a0b94cdab2e95dbc"
+    },
+    "derived/run_pipeline_v3_sql/scripts/compare_results.py": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/scripts/compare_results.py",
+      "sha256": "7c0f133da37c56aa41dca74122c47bf7183d7cf24c43f435bd61ef2176fff343"
+    },
+    "derived/run_pipeline_v3_sql/knowledge_inputs/business_rules_addendum.md": {
+      "original": "script_diff_llm2/ablations/improvement10_models/source/improvement10/run_pipeline_v3_sql _/knowledge_inputs/business_rules_addendum.md",
+      "sha256": "f6187107f94eff651efc0e84f7c08dcccff9b337039bafc22cf6ea29f53cfb25"
+    },
+    "derived/run_pipeline_v2_kg/clients.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/clients.py",
+      "sha256": "e780d43ed8d54a3c463b484f388adf64f349bdf125553d78f07804f19b6b0b7e"
+    },
+    "derived/run_pipeline_v2_kg/consultation.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/consultation.py",
+      "sha256": "69b1492253d7d88941216bc8ea0341c50bac520f42d85bc9a9a02a08dd3199aa"
+    },
+    "derived/run_pipeline_v2_kg/spec_runtime.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/spec_runtime.py",
+      "sha256": "2351141643b568075a651e05c102719ccc71de48438d957b391773cd1c678985"
+    },
+    "derived/run_pipeline_v2_kg/query_understanding.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/query_understanding.py",
+      "sha256": "2d98f66bb15d8c0ca5399f49bd3ba607d36b389861ae02f6c65391fd4493d8dc"
+    },
+    "derived/run_pipeline_v2_kg/knowledge.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/knowledge.py",
+      "sha256": "90222b956b7f0ef7714061737316b9a3bd4480a9857d4c018e74c5b493ced3fe"
+    },
+    "derived/run_pipeline_v2_kg/plan_lineage.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/plan_lineage.py",
+      "sha256": "3aaf4b10fcb9ca48c13cefa9e2fa069ff320516b92b04aaafefc75ade7e539d0"
+    },
+    "derived/run_pipeline_v2_kg/business_context.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/business_context.py",
+      "sha256": "b30d9eed15a22015dcc33b866482960631475a968221540f278f7b525d0935ad"
+    },
+    "derived/run_pipeline_v2_kg/knowledge_single.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/knowledge_single.py",
+      "sha256": "2b02d578b1b926319cd44e1b81b60013ba21f8146dbd92d1bcbd832d8459e7f7"
+    },
+    "derived/run_pipeline_v2_kg/input_paths.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/input_paths.py",
+      "sha256": "066f2a3dc617c926ca87a56ce45471f09d56201ad68e8a516ecb807a91d9459c"
+    },
+    "derived/run_pipeline_v2_kg/planner.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/planner.py",
+      "sha256": "1e1752934549383c17afd1d2ca7950d69f7e0342c59668fa03d47f736bac51d2"
+    },
+    "derived/run_pipeline_v2_kg/performance.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/performance.py",
+      "sha256": "4e032a117657de7236f6c26a732590398af7b86f0bb631460c257f6db207cdde"
+    },
+    "derived/run_pipeline_v2_kg/knowledge_progress.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/knowledge_progress.py",
+      "sha256": "4201d71ad5623365f06b583d86f2351bc8841c0894df159531deac18f162be46"
+    },
+    "derived/run_pipeline_v2_kg/RUN.md": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/RUN.md",
+      "sha256": "ede5a3ec5ea68f1d1bc72dde38efe9f4acd04591bdaddd2436732f7774ed3ff7"
+    },
+    "derived/run_pipeline_v2_kg/kg_metadata.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/kg_metadata.py",
+      "sha256": "97d0f6100b9f0a44cc50e10f6e5ac5aef366c183bfb3d87c5f8e04b46926e1cb"
+    },
+    "derived/run_pipeline_v2_kg/knowledge_chunks.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/knowledge_chunks.py",
+      "sha256": "01fcf6a0decfe571985569c00b0eb43c88c5717baed47f003fed39dc42909d59"
+    },
+    "derived/run_pipeline_v2_kg/knowledge_coverage.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/knowledge_coverage.py",
+      "sha256": "8bf8af4e65f373181b78846d65089a964af542fbcb8b34dd090915274d8384a0"
+    },
+    "derived/run_pipeline_v2_kg/spec_contracts.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/spec_contracts.py",
+      "sha256": "d1d83284805b9eea92895c7143c69b380f02e9c630d07d459b6dc5d805041e2d"
+    },
+    "derived/run_pipeline_v2_kg/__main__.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/__main__.py",
+      "sha256": "4e131f2cc7dda0bf64ce473c727aca0f5812e8d01b05f6d37641f088a7abd48c"
+    },
+    "derived/run_pipeline_v2_kg/run_identity.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/run_identity.py",
+      "sha256": "4916b876a11a0faaae8a67eef43002ea5676764963072a59647609bfe7925310"
+    },
+    "derived/run_pipeline_v2_kg/relational.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/relational.py",
+      "sha256": "fd35b948bfd8ebe677cc0d57963d8a84696ba4b08c36b4b20cf900e2462df160"
+    },
+    "derived/run_pipeline_v2_kg/data_profile.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/data_profile.py",
+      "sha256": "90e343160b2e2d5c70c74c0dff9dc145ed6d06810aa6f4f24597daf4bef6fbc8"
+    },
+    "derived/run_pipeline_v2_kg/runtime_guard.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/runtime_guard.py",
+      "sha256": "720eb398b4c2f11a93f18734feea2fcdbaf575f755d2e01f567b85f787cb788f"
+    },
+    "derived/run_pipeline_v2_kg/reporting.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/reporting.py",
+      "sha256": "6ae3acf06776d1098356543f9e3f0bba0318c76f65eab8cdfb48a9f72f8580b7"
+    },
+    "derived/run_pipeline_v2_kg/utils.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/utils.py",
+      "sha256": "ebb53828f62f08ac71a4003fce59a5d12afadb375bce76ca8f24db82b30e559f"
+    },
+    "derived/run_pipeline_v2_kg/knowledge_units.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/knowledge_units.py",
+      "sha256": "a48d97820c07326654bebab423b9e99a6f2e4aa72bfc86b799596dfa5783749b"
+    },
+    "derived/run_pipeline_v2_kg/connections.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/connections.py",
+      "sha256": "51854e470007763a44a77fadc211068262498ae81ab24ffa04cbfb86a3e7ad4e"
+    },
+    "derived/run_pipeline_v2_kg/__init__.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/__init__.py",
+      "sha256": "6e5e33a00b00394bc74e5fbe2a0acf36a0ac90fe00e5e9a48629e1eef66aaf48"
+    },
+    "derived/run_pipeline_v2_kg/raw_query.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/raw_query.py",
+      "sha256": "aba932c1b81a78e309189b06778145790b79b1edba1e9761da6c58f1e1a01912"
+    },
+    "derived/run_pipeline_v2_kg/executor.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/executor.py",
+      "sha256": "d891c64f3b15bfef11b8050021d116db250bc5f252d75e8c7cd0fb87a8a651ec"
+    },
+    "derived/run_pipeline_v2_kg/kg_backend.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/kg_backend.py",
+      "sha256": "c72dbfd8525ebaa22544e3d86cb2cb0138a55718d1173153ecc287b895a3888b"
+    },
+    "derived/run_pipeline_v2_kg/dataset_batch.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/dataset_batch.py",
+      "sha256": "af5215ff3639aa6bf1b0d05edee6c1516766c18abd00bd5a159f45e8a85bfe3b"
+    },
+    "derived/run_pipeline_v2_kg/prepare_knowledge.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/prepare_knowledge.py",
+      "sha256": "f0ebdef5b236db6b189ebe5f6e5346925575b6337e7c8e979356cad6e405057c"
+    },
+    "derived/run_pipeline_v2_kg/prepare_dataset.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/prepare_dataset.py",
+      "sha256": "1feeda6aeae3f8f66361ea2c0d4f0f056985e88ed9fb5d5bec9b76b78dc97ac6"
+    },
+    "derived/run_pipeline_v2_kg/common.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/common.py",
+      "sha256": "aa38cbe170b9e77da34f678e9c45ede460f32627d4492ad3206187cc6554be89"
+    },
+    "derived/run_pipeline_v2_kg/requirements.txt": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/requirements.txt",
+      "sha256": "03cc98a7b2209ba5c4a98a2d1f4e65a111f4f909e1d37332aabcb56ebdb68b5d"
+    },
+    "derived/run_pipeline_v2_kg/run.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/run.py",
+      "sha256": "e76e7ab978589edfdbcd5e6a2cf499183354126d9a1ef2c56249c5e03821adc9"
+    },
+    "derived/run_pipeline_v2_kg/transport_errors.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/transport_errors.py",
+      "sha256": "227939ec6c65eb7a547c3b661e252a5d4c240d4326cfc5c8d31186658131777c"
+    },
+    "derived/run_pipeline_v2_kg/rdf_contracts.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/rdf_contracts.py",
+      "sha256": "2af58f10a31717ad42761c8e50fa6e744ed4e5b7aa6f547b41920c4027520c4f"
+    },
+    "derived/run_pipeline_v2_kg/main.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/main.py",
+      "sha256": "192f554b94f9cef5367503a493b7eca3f188cc49cf004105c79ca8eadf5b1b18"
+    },
+    "derived/run_pipeline_v2_kg/conditions.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/conditions.py",
+      "sha256": "3a82023698889bc59eb32851981bd697157faec4e57f41df5c10f5fc0bc1bf74"
+    },
+    "derived/run_pipeline_v2_kg/expression_syntax.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/expression_syntax.py",
+      "sha256": "185b94ec24fa208a3c61321893f567cd22b97ce90c7c42918556467439bfe122"
+    },
+    "derived/run_pipeline_v2_kg/execution.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/execution.py",
+      "sha256": "3bb76772d8e8a9098fa3d2efe9a51ad0ce3ebbdbd92fad24536c28623ee17fdb"
+    },
+    "derived/run_pipeline_v2_kg/prompt_boundary.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/prompt_boundary.py",
+      "sha256": "78affeec76930e97fde7654685806fa848f1245544cf50dd47eea2aaf598a9af"
+    },
+    "derived/run_pipeline_v2_kg/RDF_SCHEMA.md": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/RDF_SCHEMA.md",
+      "sha256": "61e8ebdbac8c3af64b2efbd28e96c3228721c850a3d0dcc8648cfcf236d0720f"
+    },
+    "derived/run_pipeline_v2_kg/retry_batch.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/retry_batch.py",
+      "sha256": "04ee252726d8f0ce7dabe175da545a2c96499fc8b2c459cb481adf8b958c28ef"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_prompt_boundary.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_prompt_boundary.py",
+      "sha256": "2865c9573c0804d829a20fcd542477a846520df7f17a583436f6be05b7f8e6e6"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_knowledge_and_understanding.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_knowledge_and_understanding.py",
+      "sha256": "6bc4a5c4674c08ddc9028dd6ade3cf4e8f4b46dc869387b0b530e3b4921dfc45"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_kg_backend.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_kg_backend.py",
+      "sha256": "a6f9cae896d1c2cd50a7d8752bc7cfde19cf87a734e9e748e46b58c42e000615"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_dataset_batch.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_dataset_batch.py",
+      "sha256": "856ac5b4faa9fcc4bb2a7908f1aa377c5d5d6efdbb8cac9ec237e5061325e05c"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_connection_keys.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_connection_keys.py",
+      "sha256": "573565ec1d0aa70e5c2643d7bbd1880211ca7ebfb45204c3166ed462bb60a0a9"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_final_plan_repairs.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_final_plan_repairs.py",
+      "sha256": "3a79884fe8afb4fd29f81e41c80fc598c0afa1e272fcfe4cbcb8ea9d29788ec8"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_kg_flow.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_kg_flow.py",
+      "sha256": "c89b8268e5fc3504218d3314073812854bd99223427bc407a948e808cf0a7c23"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_query_spec_retry.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_query_spec_retry.py",
+      "sha256": "ced1164476997167e665c4594e78b828f053aec9a86d258b53f60cb864d3c008"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_input_paths.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_input_paths.py",
+      "sha256": "9f46328814c3f0bfff6a77e9a192e10ed3d4cc0494104eae1a15b659c805843b"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_case_expressions.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_case_expressions.py",
+      "sha256": "50d2bc762f278996ab09ae2424a0cd117000a2a8f248d3db10acb272449f3b11"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_knowledge_cli.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_knowledge_cli.py",
+      "sha256": "0128cd3f16eee3a6fec24a579408ac7865523e78562f82cdfcfb2433a59ac92b"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_result_comparison.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_result_comparison.py",
+      "sha256": "21c214dba603bd7657142ff9ebd5daf2d83e5f1cef9afea269655598dce63669"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_kg_condition_compatibility.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_kg_condition_compatibility.py",
+      "sha256": "2fd729cd781736d4cc36a537473423e0246759d998e1dcf92f9f01b13ab828d4"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_rerun_spec_shapes.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_rerun_spec_shapes.py",
+      "sha256": "8549eddb9d3cd10b4e62acca1a5799af6c2bc79abd84f54826dba922bdd06c8b"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_comparative_steps.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_comparative_steps.py",
+      "sha256": "9811ef6bf06e6f4dac24cb144afeb50afc084177e80169ec8bb87d4bafbc5da5"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_runtime_guard.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_runtime_guard.py",
+      "sha256": "d8c87497e8b8186dbd8bc0f2b8a4761087bb5a1b063cd58725866d41e9977934"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_saved_v3_failures.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_saved_v3_failures.py",
+      "sha256": "8ad6d5012fb219f7cd18853dff495ebb1139cdd0dc3baaba980c66da515efc2b"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_knowledge_single.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_knowledge_single.py",
+      "sha256": "e3c554b5d8364580fdf04737050225d7a832f1883beaa13c97624d4d48b98d30"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_raw_kg.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_raw_kg.py",
+      "sha256": "0d404f89343fdf032b0ac18bc7dc4711a5d607e57e99502a91528de9d041456e"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_v3_kg_context.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_v3_kg_context.py",
+      "sha256": "63bba1ac462819a1d5baf4e09756ff9f9f04f77b5d601383967fe612afe5f79b"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_live_kg.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_live_kg.py",
+      "sha256": "92bfd3e5b9190543bb9fa26591aedff928e4e032404e0ba4cba7d83b98f9d0a9"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_kg_predicate_stages.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_kg_predicate_stages.py",
+      "sha256": "36f4b742214bb9c4e1713f6c3928ec77b5a661957b9e3f4b89f8a27475c9891e"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_simplified_flow.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_simplified_flow.py",
+      "sha256": "0a512ee16f9bd9580135d8fee20fdc69391c13e5c572ef97877f8bd0dcbb06c5"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_knowledge_progress.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_knowledge_progress.py",
+      "sha256": "bb46e74a2ae4e832637f146924db67745a093f37bc65eb331a0f183d9b549274"
+    },
+    "derived/run_pipeline_v2_kg/tests/support.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/support.py",
+      "sha256": "29299331ab9dea40896044f9368bb8c5b3051124627ef1567402252304a3bacb"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_repair_feedback.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_repair_feedback.py",
+      "sha256": "74a28ed1b234eff9644c7650af42b58e67eebe88d3ef65533b782f803fcd1698"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_round3_failures.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_round3_failures.py",
+      "sha256": "98f5ba6385f62beebfbfa047cfa1c057e63a61e0d2db3e3937f43a39fb413117"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_single_dataset.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_single_dataset.py",
+      "sha256": "916ad61807698af47ff1903c82e8d0ab1f05170d31abba7e33f6787568c2950f"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_rerun_query_spec.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_rerun_query_spec.py",
+      "sha256": "e24c0d3ac6fa9e3d63258b7995434990effa9a8ff1a0e996347eab912742cc04"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_final_review.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_final_review.py",
+      "sha256": "bb871f9e3166cfb4c0c9ee033f78b2e0c7323ccc981ff836ec649e561f7a26bf"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_correctness.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_correctness.py",
+      "sha256": "a3843a0f18bf03a778329850b4d950dd448c8c0c76a2e6c800f91360ffc34ed3"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_knowledge_chunks.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_knowledge_chunks.py",
+      "sha256": "f7d400800b273dc92d384e1518155137479602ab93c88ca5b6d64160960263b8"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_selected_knowledge.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_selected_knowledge.py",
+      "sha256": "0383633f2d5f27f43f2fdf93187f246623c09e7e3130e13e94cd161c5999ce5e"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_knowledge_units.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_knowledge_units.py",
+      "sha256": "7558d614c632e33c7ae766cc9bf68465dac40aa2734a7c273a94c0b080b99fa0"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_ontology_metadata.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_ontology_metadata.py",
+      "sha256": "12df54686399026372c73886120c8e9c887a6fa8705a839e02117d0f85f0ea81"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_v4_runtime.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_v4_runtime.py",
+      "sha256": "ca31e0c5306c4bc15c361f2cd47564d5cf6ff132bdda9e2b8041d45e89508621"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_knowledge_simple.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_knowledge_simple.py",
+      "sha256": "fa22f53d4e6ce1eb333731e8433ec675adabee7eede9fa1d0d44a10514fd220c"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_consultation.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_consultation.py",
+      "sha256": "98adb48b1efc151137bb2cc259ab315bfcb22e4ec218b4913235d242bb94a5cf"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_rdf_contract_names.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_rdf_contract_names.py",
+      "sha256": "7a8d0b69e32da9666bd43dd289ed447a9a64335359d460cef317e0f4364e2e67"
+    },
+    "derived/run_pipeline_v2_kg/tests/kg_fixture.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/kg_fixture.py",
+      "sha256": "1fef2bd1a47de42febcdb31f035731047c6856563f6852d195845c1bf827b47c"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_performance.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_performance.py",
+      "sha256": "dc341ebfc4103f05dcaa59d2baa433e25f042e11011d0fceba7d7e84bd70ec5f"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_v4_planning.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_v4_planning.py",
+      "sha256": "85bda13a17cb3e05d1975b1062403d3643385a59913ebbe0e63aac1cd7f4fbac"
+    },
+    "derived/run_pipeline_v2_kg/tests/test_v4_retrieval.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/tests/test_v4_retrieval.py",
+      "sha256": "975fe560f5eeaf086f3127e21fb6a7547e9870c1941dc1e96d752cd93ba8e93e"
+    },
+    "derived/run_pipeline_v2_kg/non_llm_operators/bucket.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/non_llm_operators/bucket.py",
+      "sha256": "844dfbd424a44f0431a885223553c0d41b3d769e9af9e4ae3df706fce5c41a2d"
+    },
+    "derived/run_pipeline_v2_kg/non_llm_operators/set_intersect.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/non_llm_operators/set_intersect.py",
+      "sha256": "25fea99c80b987f0067fd3d437fc8a478be5374755c77cf04e3e1c9fc23dfd8f"
+    },
+    "derived/run_pipeline_v2_kg/non_llm_operators/union.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/non_llm_operators/union.py",
+      "sha256": "b312ca366e4ff0d4a678b24adb214beac30b61b3c8e887a9b7414c1061d4ddb7"
+    },
+    "derived/run_pipeline_v2_kg/non_llm_operators/__init__.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/non_llm_operators/__init__.py",
+      "sha256": "7f6d2c92838a959b584796df16fc0123666aa73db3f2b5a7ff3debaf0e983893"
+    },
+    "derived/run_pipeline_v2_kg/non_llm_operators/scan.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/non_llm_operators/scan.py",
+      "sha256": "105c068273c523c991baf47da51260812ffb2c9adcd965a6fc8522c725d78c67"
+    },
+    "derived/run_pipeline_v2_kg/non_llm_operators/difference.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/non_llm_operators/difference.py",
+      "sha256": "cf84578f09f40c01192894562ba747b37ec66f9cbf79676433fd8cda550e14e8"
+    },
+    "derived/run_pipeline_v2_kg/non_llm_operators/date_extract.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/non_llm_operators/date_extract.py",
+      "sha256": "614ef1d66ef42871fecb3acb76b1911933b5ac376dad980a0a37ce89f7986702"
+    },
+    "derived/run_pipeline_v2_kg/non_llm_operators/math_compute.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/non_llm_operators/math_compute.py",
+      "sha256": "a5de2480f8883e35151fbb82b6e3f87d0dc1dbcc429b146b93740c8e220a951e"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/pre_scan_validate.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/pre_scan_validate.py",
+      "sha256": "d58f2e6985c4ed6dd846eb6099dce385976288daf90b0ecead27a66b771d563e"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/validate.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/validate.py",
+      "sha256": "fe0e74ffd1f5304ed5f7aafbb219d867ffdf825f441c07106c034fa246e7223a"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/decompose.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/decompose.py",
+      "sha256": "605002b99c2cf9a9a46454b323ee61bb2a236468b26bafeb7401912f4bb9bfb5"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/final_spec.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/final_spec.py",
+      "sha256": "b70939c35d3865fd9c4ce3cad84234a3c0abc26b5dca4c66b9fc5cc344d1d7d2"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/__init__.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/__init__.py",
+      "sha256": "407e38f143b9ada7f1de2a5c3e4611d0b189244584efb25ab00d4e73e09e2a3e"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/retrieve.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/retrieve.py",
+      "sha256": "4eb4bb9b77e55fba897b66eb24e332b6e2a498ed285c3456b7875584b598b77e"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/generate.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/generate.py",
+      "sha256": "17f2df9911c099c987719d140c55c00b3e7e197ab7cc055903f4cdeb4e099387"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/order_by.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/order_by.py",
+      "sha256": "e06893a69a097fcb85a2ee70d58da805bdbd2f27643f6841dbb8b5da10fb0878"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/refine.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/refine.py",
+      "sha256": "61d1be66ad723c04f19ecb19d385fe97f2aaeef0da3b26558efbeec2762edacd"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/integrate.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/integrate.py",
+      "sha256": "9112121b784d80c62dc1ff59c5edf3f5087da4269b9e9668c8058f2d9eb12421"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/query_spec.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/query_spec.py",
+      "sha256": "5cad2928024448b2e12c918fd03efc52ea5ef8512300b78f6f7ab402398af160"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/processing_spec.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/processing_spec.py",
+      "sha256": "28abfcbd82c250509fe6d9b966a1acb20f89a1adadac78563adab76001380290"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/explain.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/explain.py",
+      "sha256": "d7388682f58713188e8a658998cb8fa715b23d2bcb3fd2b05d432538374b3700"
+    },
+    "derived/run_pipeline_v2_kg/llm_operators/filter_aggregate.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/llm_operators/filter_aggregate.py",
+      "sha256": "ecf9c239b7ad399e120c83625953972f6ccbde18599afe7456b90d2eee7e95d0"
+    },
+    "derived/run_pipeline_v2_kg/scripts/run_question_types_v2.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/scripts/run_question_types_v2.py",
+      "sha256": "058a17f9d66fd0ee98d7f849db3c19006fc66330006548f5a031a78a795bba7a"
+    },
+    "derived/run_pipeline_v2_kg/scripts/retry_failed_in_place.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/scripts/retry_failed_in_place.py",
+      "sha256": "d44b03305a24a5e334960415322dd2e57ef0c53c673051e8658f940c941e31c4"
+    },
+    "derived/run_pipeline_v2_kg/scripts/compare_results.py": {
+      "original": "script_diff_llm2/ablations/improvement11_gpt_oss_120b/source/improvemnt11kgfixed/run_pipeline_v2_kg/scripts/compare_results.py",
+      "sha256": "7c0f133da37c56aa41dca74122c47bf7183d7cf24c43f435bd61ef2176fff343"
+    }
+  }
+}

@@ -1,0 +1,781 @@
+{
+  "fingerprint": "8dd052ab086c4a2ef00b0cd2ee762b37084e98456d15a16061ff8b9d35cded8a",
+  "entries": [
+    {
+      "id": "ENT001",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "date",
+        "amount"
+      ],
+      "terms": [
+        "What is XIRR?"
+      ],
+      "definition": "Annualised return computed from irregular cash‑flow events (deposits, SIPs, withdrawals, and the current portfolio value) where inflows are negative and outflows positive, using cash_flow.date and portfolio_holding.purchase_date.",
+      "quote": "**Definition:** XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": []
+    },
+    {
+      "id": "ENT002",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR plausibility cap",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost",
+        "purchase_date"
+      ],
+      "terms": [
+        "When should XIRR be flagged as suspect?"
+      ],
+      "definition": "If a computed XIRR exceeds 25 % a data‑quality warning must be raised and purchase_date, cost and cash‑flow records should be cross‑checked.",
+      "quote": "| Computed XIRR > **25%** | **FLAG as suspect.** Do NOT present as a valid result without investigation.",
+      "conflicts": []
+    },
+    {
+      "id": "ENT003",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "returns_pct",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct",
+        "current_value",
+        "cost"
+      ],
+      "terms": [
+        "How is returns_pct calculated?"
+      ],
+      "definition": "Simple percentage return = (current_value – cost) / cost × 100, stored in portfolio_holding.returns_pct.",
+      "quote": "**Definition:** Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": []
+    },
+    {
+      "id": "ENT004",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "returns_pct implausibility",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct",
+        "purchase_date"
+      ],
+      "terms": [
+        "When should a high returns_pct be flagged?"
+      ],
+      "definition": "If returns_pct > 200 % on a holding younger than 1 year, flag the record and verify purchase_date and cost.",
+      "quote": "| `returns_pct` > **200%** on a holding < 1 year old | Flag; verify `purchase_date` and `cost`. |",
+      "conflicts": []
+    },
+    {
+      "id": "ENT005",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "risk_tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "What are the risk tolerance categories?"
+      ],
+      "definition": "Three investor risk‑tolerance levels – Conservative (capital preservation, debt‑heavy), Moderate (balanced), Aggressive (growth‑focused, equity‑heavy).",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt‑heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth‑focused; high volatility tolerance; equity‑heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": "ENT006",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "segment",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": [
+        "What market‑cap segments are used?"
+      ],
+      "definition": "Equity market‑cap segments used in the platform: Large Cap (> ₹20,000 Cr), Mid Cap (₹5,000 – 20,000 Cr), Small Cap (< ₹5,000 Cr).",
+      "quote": "Market cap segments use Indian conventions (Large Cap > ₹20,000 Cr, Mid Cap ₹5,000–20,000 Cr, Small Cap < ₹5,000 Cr).",
+      "conflicts": []
+    },
+    {
+      "id": "ENT007",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "investment_goal",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "What investment goals are supported?"
+      ],
+      "definition": "Standard goal labels: Wealth Preservation, Growth, Income Generation, Retirement Planning, Child Education, Emergency Fund.",
+      "quote": "### Investment Goals\n`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": []
+    },
+    {
+      "id": "ENT008",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "purchase_date integrity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "What validity rules apply to purchase_date?"
+      ],
+      "definition": "purchase_date must not be in the future and must be on or after 1990‑01‑01; otherwise the holding is flagged and excluded from XIRR.",
+      "quote": "B1 | `purchase_date` must not be in the future and must not predate 1990-01-01 | `portfolio_holding.purchase_date` | Flag holding; exclude from XIRR",
+      "conflicts": []
+    },
+    {
+      "id": "ENT009",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "cost integrity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": [
+        "What validity rules apply to cost?"
+      ],
+      "definition": "cost must be greater than zero and not NULL; records violating this are excluded from return calculations and flagged.",
+      "quote": "B2 | `cost` must be > 0 and not NULL | `portfolio_holding.cost` | Exclude from return calculations; flag as incomplete",
+      "conflicts": []
+    },
+    {
+      "id": "ENT010",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "current_value non‑negative",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": [
+        "What rule applies to current_value?"
+      ],
+      "definition": "current_value must be greater than or equal to zero; negative values are flagged and excluded from aggregations.",
+      "quote": "B3 | `current_value` must be ≥ 0 | `portfolio_holding.current_value` | Flag and exclude from aggregations",
+      "conflicts": []
+    },
+    {
+      "id": "ENT011",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "cash_flow sign convention",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "type"
+      ],
+      "terms": [
+        "How should cash‑flow amounts be signed for XIRR?"
+      ],
+      "definition": "Inflows (SIP, Lump Sum, Deposit) must be recorded as negative amounts; Redemptions and Withdrawals must be positive for XIRR calculation.",
+      "quote": "B6 | Cash flow sign convention | `cash_flow.amount` | Inflows (SIP, Lump Sum, Deposit) → negative for XIRR; Redemption/Withdrawal → positive",
+      "conflicts": []
+    },
+    {
+      "id": "ENT012",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "ELSS lock‑in compliance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": [
+        "What lock‑in rule applies to ELSS?"
+      ],
+      "definition": "ELSS holdings cannot be redeemed before three years from purchase; attempts to recommend early redemption must be replaced with a hold recommendation and a lock‑in warning.",
+      "quote": "H3 | **Lock-in violation — ELSS** | `investment_type = 'ELSS'` and `(today - purchase_date) < 3 years` | Do not recommend redemption; surface lock-in warning",
+      "conflicts": []
+    },
+    {
+      "id": "ENT013",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "PPF lock‑in compliance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": [
+        "What lock‑in rule applies to PPF?"
+      ],
+      "definition": "PPF holdings cannot be redeemed before fifteen years from purchase; early redemption suggestions must be suppressed with a lock‑in warning.",
+      "quote": "H4 | **Lock-in violation — PPF** | `investment_type = 'PPF'` and `(today - purchase_date) < 15 years` | Do not recommend redemption; surface lock-in warning",
+      "conflicts": []
+    },
+    {
+      "id": "ENT014",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "allocation drift trigger",
+      "backend": "sql",
+      "source": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "fields": [
+        "current_allocation_pct",
+        "target_allocation_pct"
+      ],
+      "terms": [
+        "When is a rebalancing recommendation triggered?"
+      ],
+      "definition": "If the absolute difference between current_allocation_pct and target_allocation_pct exceeds 10 percentage points for any sector, a rebalancing recommendation is generated.",
+      "quote": "- Drift = `|current_allocation_pct - target_allocation_pct|` in `rebalancing_action`.\n- If drift > **10 percentage points** for any sector → trigger rebalancing recommendation.",
+      "conflicts": []
+    },
+    {
+      "id": "ENT015",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Conservative equity cap",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "What equity allocation limit applies to Conservative investors?"
+      ],
+      "definition": "Conservative investors must not hold more than 40 % of their portfolio in equity instruments.",
+      "quote": "R1 | **Conservative investor equity overweight** | `risk_tolerance = 'Conservative'` and total equity allocation > 40% | Flag as suitability breach; require advisory review",
+      "conflicts": []
+    },
+    {
+      "id": "ENT016",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Aggressive debt cap",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "What debt allocation limit applies to Aggressive investors?"
+      ],
+      "definition": "Aggressive investors should not have less than 20 % equity allocation; equivalently, they should not be near‑100 % debt.",
+      "quote": "R2 | **Aggressive investor in near-100% debt** | `risk_tolerance = 'Aggressive'` and equity allocation < 20% | Flag as misalignment between stated profile and portfolio",
+      "conflicts": []
+    },
+    {
+      "id": "ENT017",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "sector allocation sum",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+      "fields": [
+        "allocation_pct"
+      ],
+      "terms": [
+        "What must the sum of sector allocations equal?"
+      ],
+      "definition": "For each investor, the sum of all sector allocation_pct values must be 100 % (tolerance ±1 %). Deviations larger than 1 % are flagged as data‑integrity errors.",
+      "quote": "R5 | **Sector allocations sum ≠ 100%** | Sum of all `sector_allocation.allocation_pct` per `investor_id` differs from 100% by > 1% | Flag as data integrity error; do not use for allocation analysis",
+      "conflicts": []
+    },
+    {
+      "id": "ENT018",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "high diversification_score with few sectors",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "diversification_score"
+      ],
+      "terms": [
+        "What inconsistency is flagged when diversification_score is high but sector count is low?"
+      ],
+      "definition": "If diversification_score ≥ 70 but the investor holds only one or two sector values, the score is considered stale and should be recomputed.",
+      "quote": "P1 | **Health score vs. portfolio composition mismatch** | `diversification_score` ≥ 70 but investor holds only 1–2 `sector` values in `portfolio_holding` | Flag as stale pre‑computed score; recommend recomputing",
+      "conflicts": []
+    },
+    {
+      "id": "ENT019",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "risk_score low for aggressive profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "risk_score"
+      ],
+      "terms": [
+        "What warning is issued when risk_score is low for an aggressive investor?"
+      ],
+      "definition": "If risk_score < 30 (low) while the investor is aggressive with > 70 % equity, the risk_score is likely stale or miscalculated and should be reviewed.",
+      "quote": "P2 | **Risk score vs. profile mismatch** | `risk_score` < 30 (Low) for an Aggressive investor with > 70% equity | Flag as stale or miscalculated health score",
+      "conflicts": []
+    },
+    {
+      "id": "ENT020",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "XIRR aggregation best practice",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "date"
+      ],
+      "terms": [
+        "How should XIRR be aggregated across investors?"
+      ],
+      "definition": "Never pool cash‑flows from multiple investors into a single XIRR calculation; compute XIRR per investor, then present a distribution (min, median, max) or a portfolio‑size weighted view if explicitly requested.",
+      "quote": "### 6.1 XIRR Aggregation Rules\n- **Never pool** all investors' cash flows into a single XIRR calculation. XIRR is non-linear and pooling distorts results.\n- **Correct approach:** Compute XIRR per `investor_id`, then report as a distribution: `MIN`, `P25`, `MEDIAN`, `P75`, `MAX`.",
+      "conflicts": []
+    }
+  ],
+  "review": [
+    {
+      "id": "ENT001",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "date",
+        "amount"
+      ],
+      "terms": [
+        "What is XIRR?"
+      ],
+      "definition": "Annualised return computed from irregular cash‑flow events (deposits, SIPs, withdrawals, and the current portfolio value) where inflows are negative and outflows positive, using cash_flow.date and portfolio_holding.purchase_date.",
+      "quote": "**Definition:** XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "381934ab045af9310c200062649ce238d9cfbd414019965a56c2c52c8a87d8b7",
+      "active": false
+    },
+    {
+      "id": "ENT002",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "XIRR plausibility cap",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost",
+        "purchase_date"
+      ],
+      "terms": [
+        "When should XIRR be flagged as suspect?"
+      ],
+      "definition": "If a computed XIRR exceeds 25 % a data‑quality warning must be raised and purchase_date, cost and cash‑flow records should be cross‑checked.",
+      "quote": "| Computed XIRR > **25%** | **FLAG as suspect.** Do NOT present as a valid result without investigation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "73db98179e08f8531163a59a9890bf712a2b6229b6dfed4985182941a3c227f2",
+      "active": false
+    },
+    {
+      "id": "ENT003",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "returns_pct",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct",
+        "current_value",
+        "cost"
+      ],
+      "terms": [
+        "How is returns_pct calculated?"
+      ],
+      "definition": "Simple percentage return = (current_value – cost) / cost × 100, stored in portfolio_holding.returns_pct.",
+      "quote": "**Definition:** Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "89ab5ceba63fc2de1341a286e61d7cbc449c9c22639ce6ef3f90ab74add0bd92",
+      "active": false
+    },
+    {
+      "id": "ENT004",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "returns_pct implausibility",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct",
+        "purchase_date"
+      ],
+      "terms": [
+        "When should a high returns_pct be flagged?"
+      ],
+      "definition": "If returns_pct > 200 % on a holding younger than 1 year, flag the record and verify purchase_date and cost.",
+      "quote": "| `returns_pct` > **200%** on a holding < 1 year old | Flag; verify `purchase_date` and `cost`. |",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "0355bc3102da80b97e87ed473e158686492f6a5125d813ee1822a0c1a638d32e",
+      "active": false
+    },
+    {
+      "id": "ENT005",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "risk_tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "What are the risk tolerance categories?"
+      ],
+      "definition": "Three investor risk‑tolerance levels – Conservative (capital preservation, debt‑heavy), Moderate (balanced), Aggressive (growth‑focused, equity‑heavy).",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt‑heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth‑focused; high volatility tolerance; equity‑heavy allocation.",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence"
+      ],
+      "evidence_hash": "6274f972f17c42f78763f04c59ebcc56cc410e4a70206fddcc67672341453730",
+      "active": false
+    },
+    {
+      "id": "ENT006",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "segment",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": [
+        "What market‑cap segments are used?"
+      ],
+      "definition": "Equity market‑cap segments used in the platform: Large Cap (> ₹20,000 Cr), Mid Cap (₹5,000 – 20,000 Cr), Small Cap (< ₹5,000 Cr).",
+      "quote": "Market cap segments use Indian conventions (Large Cap > ₹20,000 Cr, Mid Cap ₹5,000–20,000 Cr, Small Cap < ₹5,000 Cr).",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "f7c88fb6eacf9e2675078939c368bd747141990c8f2bd396a8e429b0c517525e",
+      "active": false
+    },
+    {
+      "id": "ENT007",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "investment_goal",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "What investment goals are supported?"
+      ],
+      "definition": "Standard goal labels: Wealth Preservation, Growth, Income Generation, Retirement Planning, Child Education, Emergency Fund.",
+      "quote": "### Investment Goals\n`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "7cb3ef9ee3f73736fec762c519abcdecf1c8d6c1ae18b43a0ff1ffa59d251386",
+      "active": true
+    },
+    {
+      "id": "ENT008",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "purchase_date integrity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "What validity rules apply to purchase_date?"
+      ],
+      "definition": "purchase_date must not be in the future and must be on or after 1990‑01‑01; otherwise the holding is flagged and excluded from XIRR.",
+      "quote": "B1 | `purchase_date` must not be in the future and must not predate 1990-01-01 | `portfolio_holding.purchase_date` | Flag holding; exclude from XIRR",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "eaa853c14f415855c4ecf4418b303eec194f2418c233134a5f41394e1e306330",
+      "active": false
+    },
+    {
+      "id": "ENT009",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "cost integrity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": [
+        "What validity rules apply to cost?"
+      ],
+      "definition": "cost must be greater than zero and not NULL; records violating this are excluded from return calculations and flagged.",
+      "quote": "B2 | `cost` must be > 0 and not NULL | `portfolio_holding.cost` | Exclude from return calculations; flag as incomplete",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "bc468123f0bab0dbc7a957a8b1d6327fb9a76bb5077c9f300d2a05807c1af745",
+      "active": false
+    },
+    {
+      "id": "ENT010",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "current_value non‑negative",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": [
+        "What rule applies to current_value?"
+      ],
+      "definition": "current_value must be greater than or equal to zero; negative values are flagged and excluded from aggregations.",
+      "quote": "B3 | `current_value` must be ≥ 0 | `portfolio_holding.current_value` | Flag and exclude from aggregations",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "0f36acc94634ab231a0d380f37129cc976d3e07b41c62a511f938c0a922cec0f",
+      "active": false
+    },
+    {
+      "id": "ENT011",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "cash_flow sign convention",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "type"
+      ],
+      "terms": [
+        "How should cash‑flow amounts be signed for XIRR?"
+      ],
+      "definition": "Inflows (SIP, Lump Sum, Deposit) must be recorded as negative amounts; Redemptions and Withdrawals must be positive for XIRR calculation.",
+      "quote": "B6 | Cash flow sign convention | `cash_flow.amount` | Inflows (SIP, Lump Sum, Deposit) → negative for XIRR; Redemption/Withdrawal → positive",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "8acb3e9282e50d1c74d1b36d9114fe6d0f4faaf4e31c13a804a8e7ad5668baab",
+      "active": false
+    },
+    {
+      "id": "ENT012",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "ELSS lock‑in compliance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": [
+        "What lock‑in rule applies to ELSS?"
+      ],
+      "definition": "ELSS holdings cannot be redeemed before three years from purchase; attempts to recommend early redemption must be replaced with a hold recommendation and a lock‑in warning.",
+      "quote": "H3 | **Lock-in violation — ELSS** | `investment_type = 'ELSS'` and `(today - purchase_date) < 3 years` | Do not recommend redemption; surface lock-in warning",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "c77f370485abedd870c00b3405e748df181018c95cf8fb88ef0e94f625eb3627",
+      "active": false
+    },
+    {
+      "id": "ENT013",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "PPF lock‑in compliance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": [
+        "What lock‑in rule applies to PPF?"
+      ],
+      "definition": "PPF holdings cannot be redeemed before fifteen years from purchase; early redemption suggestions must be suppressed with a lock‑in warning.",
+      "quote": "H4 | **Lock-in violation — PPF** | `investment_type = 'PPF'` and `(today - purchase_date) < 15 years` | Do not recommend redemption; surface lock-in warning",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "433ae7bb72c8843c5168bb51d509311af3d053c3007ce48da300e5e385f1caa0",
+      "active": false
+    },
+    {
+      "id": "ENT014",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "allocation drift trigger",
+      "backend": "sql",
+      "source": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "fields": [
+        "current_allocation_pct",
+        "target_allocation_pct"
+      ],
+      "terms": [
+        "When is a rebalancing recommendation triggered?"
+      ],
+      "definition": "If the absolute difference between current_allocation_pct and target_allocation_pct exceeds 10 percentage points for any sector, a rebalancing recommendation is generated.",
+      "quote": "- Drift = `|current_allocation_pct - target_allocation_pct|` in `rebalancing_action`.\n- If drift > **10 percentage points** for any sector → trigger rebalancing recommendation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "2bde7aa83d65864a7aff2a3ef7f770a97b795bb52566099c535c246fb4d74a14",
+      "active": false
+    },
+    {
+      "id": "ENT015",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Conservative equity cap",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "What equity allocation limit applies to Conservative investors?"
+      ],
+      "definition": "Conservative investors must not hold more than 40 % of their portfolio in equity instruments.",
+      "quote": "R1 | **Conservative investor equity overweight** | `risk_tolerance = 'Conservative'` and total equity allocation > 40% | Flag as suitability breach; require advisory review",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "93acb6debc3f5fec361edb00157cdf54ef5d176654122b4c4b7bcfe2e320caa7",
+      "active": false
+    },
+    {
+      "id": "ENT016",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Aggressive debt cap",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "What debt allocation limit applies to Aggressive investors?"
+      ],
+      "definition": "Aggressive investors should not have less than 20 % equity allocation; equivalently, they should not be near‑100 % debt.",
+      "quote": "R2 | **Aggressive investor in near-100% debt** | `risk_tolerance = 'Aggressive'` and equity allocation < 20% | Flag as misalignment between stated profile and portfolio",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "3cf8e5505c5459d70b1255d5dde206f50b9c11bb0f0e4b31348826566e122bc4",
+      "active": false
+    },
+    {
+      "id": "ENT017",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "sector allocation sum",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+      "fields": [
+        "allocation_pct"
+      ],
+      "terms": [
+        "What must the sum of sector allocations equal?"
+      ],
+      "definition": "For each investor, the sum of all sector allocation_pct values must be 100 % (tolerance ±1 %). Deviations larger than 1 % are flagged as data‑integrity errors.",
+      "quote": "R5 | **Sector allocations sum ≠ 100%** | Sum of all `sector_allocation.allocation_pct` per `investor_id` differs from 100% by > 1% | Flag as data integrity error; do not use for allocation analysis",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "f386e643a2e16c8d14c99d2faa3197998700a9524f56bfddb86ec5ed8403cbac",
+      "active": false
+    },
+    {
+      "id": "ENT018",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "high diversification_score with few sectors",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "diversification_score"
+      ],
+      "terms": [
+        "What inconsistency is flagged when diversification_score is high but sector count is low?"
+      ],
+      "definition": "If diversification_score ≥ 70 but the investor holds only one or two sector values, the score is considered stale and should be recomputed.",
+      "quote": "P1 | **Health score vs. portfolio composition mismatch** | `diversification_score` ≥ 70 but investor holds only 1–2 `sector` values in `portfolio_holding` | Flag as stale pre‑computed score; recommend recomputing",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence"
+      ],
+      "evidence_hash": "b2f0633a8764596ca77c37e7fdacc51597128aa4523e4ed009ce69574f9c8f3d",
+      "active": false
+    },
+    {
+      "id": "ENT019",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "risk_score low for aggressive profile",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "risk_score"
+      ],
+      "terms": [
+        "What warning is issued when risk_score is low for an aggressive investor?"
+      ],
+      "definition": "If risk_score < 30 (low) while the investor is aggressive with > 70 % equity, the risk_score is likely stale or miscalculated and should be reviewed.",
+      "quote": "P2 | **Risk score vs. profile mismatch** | `risk_score` < 30 (Low) for an Aggressive investor with > 70% equity | Flag as stale or miscalculated health score",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "dce776c7095c3ac12301e451e13ab4a4093c91690032228aafa190c9f9fc40c0",
+      "active": false
+    },
+    {
+      "id": "ENT020",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "XIRR aggregation best practice",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "date"
+      ],
+      "terms": [
+        "How should XIRR be aggregated across investors?"
+      ],
+      "definition": "Never pool cash‑flows from multiple investors into a single XIRR calculation; compute XIRR per investor, then present a distribution (min, median, max) or a portfolio‑size weighted view if explicitly requested.",
+      "quote": "### 6.1 XIRR Aggregation Rules\n- **Never pool** all investors' cash flows into a single XIRR calculation. XIRR is non-linear and pooling distorts results.\n- **Correct approach:** Compute XIRR per `investor_id`, then report as a distribution: `MIN`, `P25`, `MEDIAN`, `P75`, `MAX`.",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence"
+      ],
+      "evidence_hash": "e43ea9c4b087563e2c7e24e9aeaefa2f0330e25665d6da1f9356e91cc4a7c967",
+      "active": false
+    }
+  ],
+  "quarantined_documents": [
+    {
+      "document": "business_rules",
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/phase0_business_rules.md",
+      "reason": "Evaluation-scoped document excluded from preparation and inference"
+    }
+  ]
+}

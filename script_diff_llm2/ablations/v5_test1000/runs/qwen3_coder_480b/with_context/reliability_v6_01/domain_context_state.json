@@ -1,0 +1,75 @@
+{
+  "active": true,
+  "preparation_model": "qwen.qwen3-coder-480b-a35b-instruct",
+  "fingerprint": "7f79193972d8299e8be2b188ad368cecbfad078fbd739070a9ffb1d4f36c38ab",
+  "review_path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/context_cache/qwen3_coder_480b/7f79193972d8299e8be2b188ad368cecbfad078fbd739070a9ffb1d4f36c38ab.json",
+  "active_count": 3,
+  "active_entries_sha256": "e4e7d5c9a7b7bdfb8b749e61f8fc354c996bbf9bbc1a206b4a6fe2072ed4684e",
+  "active_entries": [
+    {
+      "id": "term_investment_goal",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goal",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "What is the investor's financial objective?",
+        "What goal is the investor saving for?",
+        "Which investment purpose does the investor have?"
+      ],
+      "definition": "`investment_goal` refers to predefined financial objectives such as Child Education, Emergency Fund, Growth, Income Generation, Retirement Planning, or Wealth Preservation.",
+      "quote": "`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "502fe7d40e09dd5c8710ba9355a2584124548a8575371dc3c8142c22c9c82575",
+      "active": true
+    },
+    {
+      "id": "term_risk_tolerance",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "What is the investor’s willingness to accept risk?",
+        "Does the investor prefer lower risk or high potential returns?",
+        "Is the client categorized based on their risk appetite?"
+      ],
+      "definition": "`risk_tolerance` classifies investor profiles into Conservative (capital preservation), Moderate (balanced approach), or Aggressive (growth-focused with high risk acceptance).",
+      "quote": "- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "eec19b8dfeb5f85e9065b8343e752abdbdfb0223d1375106a0ba0ced2afbe350",
+      "active": true
+    },
+    {
+      "id": "term_investment_type",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Type",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type"
+      ],
+      "terms": [
+        "What kinds of assets exist in investor holdings?",
+        "What instrument categories can be included in portfolios?"
+      ],
+      "definition": "`investment_type` categorizes financial tools/instruments owned in a portfolio like Mutual Fund, Stock, Bond, ETF, ELSS, or PPF.",
+      "quote": "`Mutual Fund` | `Stock` | `Bond` | `ETF` | `ELSS` | `PPF`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "43ae70de1b59b6aa501575d50303416c4324421768e3f4535fd5235fe5f6efad",
+      "active": true
+    }
+  ]
+}

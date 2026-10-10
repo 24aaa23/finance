@@ -1,0 +1,639 @@
+{
+  "identity": "e1dddae6590d29039522a60ac43acf8659c80b0b1c2f25a04a82be7adfa87598",
+  "pack_hash": "afce8eb04d90e8cf45f3e31c6a7473b1d30d06ed5d640fe5b7a43840b512577b",
+  "pack": {
+    "rules": [
+      {
+        "id": "K1",
+        "text": "Cash flow amounts are stored with signed values: inflows (Deposit, SIP, Interest Credit, Tax Refund, Dividend Reinvestment, Lump Sum) are positive; outflows (Withdrawal, Redemption) are negative. Net cash flow is calculated as SUM(amount).",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K2",
+        "text": "For XIRR computation, apply the investor's-pocket transform: use -amount so that investment inflows become negative cash flows and current portfolio value/redemptions become positive. This is an explicit transformation for XIRR only; storage convention remains inflows positive, outflows negative.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K3",
+        "text": "If computed XIRR exceeds 25%, flag as suspect and investigate data quality. Verify purchase_date, cost, and cash_flow records before using the figure.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K4",
+        "text": "If computed XIRR is less than -50%, flag as suspect; likely due to missing recent valuation or stale current_value.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K5",
+        "text": "If XIRR cannot be computed (e.g., no cash flows or all cash flows same-signed), return null; do not return an error-inflated number.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K6",
+        "text": "Simple percentage return (returns_pct) is calculated as ((current_value - cost) / cost) * 100 and stored in portfolio_holding.returns_pct.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "returns_pct"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "current_value"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "cost"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K7",
+        "text": "Exclude holdings with returns_pct > 200% on holdings less than 1 year old from aggregations; flag for verification of purchase_date and cost.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "returns_pct"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "purchase_date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K8",
+        "text": "Exclude holdings where returns_pct is negative but current_value > cost from aggregations; flag as data inconsistency.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "returns_pct"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "current_value"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "cost"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K9",
+        "text": "Exclude holdings where cost is 0 or NULL from return calculations; flag as incomplete data.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "cost"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K10",
+        "text": "Goal achievement percentage (achievement_pct) is calculated as (current_value / target_amount) * 100 on the investment_goal table.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "current_value"
+          },
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "target_amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K11",
+        "text": "If achievement_pct < 50% and goal target_date is within 2 years, flag as high-priority advisory case.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "progress_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K12",
+        "text": "Allocation drift is calculated as absolute difference between current_allocation_pct and target_allocation_pct. If drift > 10 percentage points, trigger rebalancing recommendation.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "current_allocation_pct"
+          },
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "target_allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K13",
+        "text": "For Conservative investors, flag any single sector allocation exceeding 30% for compliance review.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "risk_tolerance"
+          },
+          {
+            "table": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+            "column": "allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K14",
+        "text": "For Aggressive investors, flag any single sector allocation exceeding 40% or equity allocation exceeding 80%.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "risk_tolerance"
+          },
+          {
+            "table": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+            "column": "allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K15",
+        "text": "PPF investments have a 15-year lock-in period. Do not recommend redemption if (today - purchase_date) < 15 years.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "investment_type"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "purchase_date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K16",
+        "text": "ELSS investments have a 3-year lock-in period. Do not recommend redemption if (today - purchase_date) < 3 years.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "investment_type"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "purchase_date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K17",
+        "text": "When presenting withdrawal amounts (magnitudes), present them as positive numbers (-SUM(amount)) for comparability with deposits.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K18",
+        "text": "Rankings with potential ties (e.g., returns_pct, risk_score) must include a deterministic secondary key (e.g., ORDER BY score DESC, investor_id ASC) to ensure stable and reproducible results.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K19",
+        "text": "When selecting investors with the lowest scores, explicitly filter out NULL values (e.g., WHERE score IS NOT NULL) to prevent missing data from being treated as the lowest value.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K20",
+        "text": "When grouping by investor attributes (e.g., risk_tolerance), compute all averaged metrics per-investor first, then average across investors to maintain uniform grain.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K21",
+        "text": "Do not join tables not referenced in the question to avoid inadvertently filtering out investors without child records.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K22",
+        "text": "When combining optional child metrics, use LEFT JOIN from INVESTOR_PROFILE to ensure no cohort members are dropped.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K23",
+        "text": "Allocation concentration for an investor is defined as the largest single-sector share (MAX(allocation_pct)). For cohorts, compute per-investor MAX, then average across investors.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+            "column": "allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K24",
+        "text": "risk_pressure_score = RS + (100 - LS) + (100 - DS), where RS=risk_score, LS=liquidity_score, DS=diversification_score. Investors with any NULL health score are excluded.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "risk_score"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "liquidity_score"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "diversification_score"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K25",
+        "text": "quantitative_burden_index is a normalized 0\u2013100 index of {SHORT, \u2212GAIN, \u2212NCF, C1}, where components are min-max scaled to [0,1] and then averaged. C1 = risk_pressure_score.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "shortfall"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "current_value"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "cost"
+          },
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K26",
+        "text": "combined_gain_and_ncf = GAIN + NCF, where GAIN = SUM(current_value \u2212 cost) and NCF = SUM(amount) over the specified period.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "current_value"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "cost"
+          },
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K27",
+        "text": "combined_ncf_and_reb = NCF + REB, where NCF = SUM(amount) from cash flows and REB = SUM(amount) from rebalancing actions.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          },
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K28",
+        "text": "combined_holding_value_and_shortfall = HVAL + SHORT, where HVAL = SUM(current_value) and SHORT = SUM(shortfall).",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "current_value"
+          },
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "shortfall"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K29",
+        "text": "transaction_rebalance_index is a normalized 0\u2013100 index of {NCF, REB, SCEN\u0394sum}, where components are min-max scaled to [0,1] and then averaged.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          },
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "amount"
+          },
+          {
+            "table": "ATOM_EVENT_SCENARIO_REBALANCING_001",
+            "column": "new_allocation_pct"
+          },
+          {
+            "table": "ATOM_EVENT_SCENARIO_REBALANCING_001",
+            "column": "current_allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K30",
+        "text": "temporal_pressure_index is a normalized 0\u2013100 index of {NCF(period), REB, \u2212AVGSHORT, SCEN\u0394sum}, where components are min-max scaled to [0,1] and then averaged. NCF period must be explicitly stated in the question.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          },
+          {
+            "table": "ATOM_EVENT_REBALANCING_ACTION_001",
+            "column": "amount"
+          },
+          {
+            "table": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+            "column": "shortfall"
+          },
+          {
+            "table": "ATOM_EVENT_SCENARIO_REBALANCING_001",
+            "column": "new_allocation_pct"
+          },
+          {
+            "table": "ATOM_EVENT_SCENARIO_REBALANCING_001",
+            "column": "current_allocation_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K31",
+        "text": "\"Average return\" refers to equal-weighted AVG(returns_pct) at the per-investor-first grain. \"Portfolio / overall / value-weighted return\" requires weighting by current_value or cost.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "returns_pct"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "current_value"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "cost"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K32",
+        "text": "Proportion/share calculations use the full cohort as the denominator. Missing (NULL) metrics count as not meeting the threshold and are not removed from the denominator.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K33",
+        "text": "Never aggregate identifiers, dates, or enums. Count investors using COUNT(DISTINCT investor_id). goal_match_pct and other 0\u2013100 scores are averaged per investor, never summed.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "investor_id"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+            "column": "goal_match_pct"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K34",
+        "text": "XIRR must be computed per investor_id, then reported as a distribution (MIN, P25, MEDIAN, P75, MAX). Never pool all investors' cash flows into a single XIRR calculation.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          },
+          {
+            "table": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+            "column": "investor_id"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K35",
+        "text": "Cash flow sign convention: for XIRR only, negate to the investor's-pocket convention (use -amount). Storage convention remains inflows positive, outflows negative.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K36",
+        "text": "PPF lock-in period is 15 years. Do not recommend redemption if (today - purchase_date) < 15 years.",
+        "fields": [
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "investment_type"
+          },
+          {
+            "table": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+            "column": "purchase_date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K37",
+        "text": "When a question asks for a \"total Withdrawal amount\" / \"amount withdrawn\" (a magnitude), present it as a positive number (-SUM(amount)), alongside positive Deposit totals.",
+        "fields": [
+          {
+            "table": "ATOM_EVENT_CASH_FLOW_001",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      }
+    ],
+    "conflicts": [],
+    "coverage": {},
+    "source_review": {
+      "domain": "supplied",
+      "rules": "supplied",
+      "yaml/TABLE_CONTEXT_ASSET_CLASS_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_INVESTMENT_GOAL_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_INVESTMENT_TYPE_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_RISK_TOLERANCE_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_SECTOR_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_SEGMENT_001.yaml": "supplied",
+      "yaml/TABLE_CONTEXT_TIME_HORIZON_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_INVESTMENT_GOAL_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_INVESTOR_PROFILE_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_PORTFOLIO_HEALTH_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_PORTFOLIO_HOLDING_001.yaml": "supplied",
+      "yaml/TABLE_ENTITY_SECTOR_ALLOCATION_001.yaml": "supplied",
+      "yaml/TABLE_EVENT_CASH_FLOW_001.yaml": "supplied",
+      "yaml/TABLE_EVENT_REBALANCING_ACTION_001.yaml": "supplied",
+      "yaml/TABLE_EVENT_SCENARIO_REBALANCING_001.yaml": "supplied"
+    },
+    "validation_notes": [],
+    "review_status": "completed"
+  }
+}

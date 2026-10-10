@@ -1,0 +1,511 @@
+{
+  "identity": "b28e46a71c352546fd412263ce719bfc06a6296e8b34e66617223cd2ac109c84",
+  "pack_hash": "9ef24690fca9e3cd40676333bbb852fbb0f400ff6e45ddab8086a15dccd8da15",
+  "pack": {
+    "rules": [
+      {
+        "id": "K1",
+        "text": "Cash\u2011flow amounts are stored signed: inflows (Deposit, SIP, Lump\u202fSum, Interest\u202fCredit, Tax\u202fRefund, Dividend\u202fReinvestment) are positive, outflows (Withdrawal, Redemption) are negative. Net cash flow = SUM(amount). For XIRR calculations the investor\u2011pocket convention is applied by negating the stored amount (use -amount) so that cash\u2011outflows become negative in the XIRR series.",
+        "fields": [
+          {
+            "table": "CashFlow",
+            "column": "amount"
+          },
+          {
+            "table": "CashFlow",
+            "column": "type"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K2",
+        "text": "When a question asks for total withdrawal amount, present it as a positive magnitude: `-SUM(amount)` filtered to type = 'Withdrawal' or 'Redemption'. This does not affect net\u2011flow calculations which keep the signed convention.",
+        "fields": [
+          {
+            "table": "CashFlow",
+            "column": "amount"
+          },
+          {
+            "table": "CashFlow",
+            "column": "type"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K3",
+        "text": "XIRR is computed per investor using the signed cash\u2011flow series after applying the investor\u2011pocket transform (\u2011amount). Use transaction dates from `cash_flow.date` (or `portfolio_holding.purchase_date` for the terminal cash flow). If XIRR > 25% flag as suspect and surface a data\u2011quality warning; if XIRR < -50% also flag. If XIRR cannot be computed (no cash\u2011flows or all cash\u2011flows have the same sign) return NULL.",
+        "fields": [
+          {
+            "table": "CashFlow",
+            "column": "amount"
+          },
+          {
+            "table": "CashFlow",
+            "column": "date"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K4",
+        "text": "Simple return percentage for a holding is `returns_pct = (current_value - cost) / cost * 100` stored in `portfolio_holding.returns_pct`. For the KPI \"average return\" use **equal\u2011weighted** `AVG(returns_pct)` at the per\u2011investor grain (R9). For a portfolio\u2011level or value\u2011weighted return, weight by `cost` or `current_value` as explicitly requested.",
+        "fields": [
+          {
+            "table": "PortfolioHolding",
+            "column": "cost"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules",
+          "ontology"
+        ]
+      },
+      {
+        "id": "K5",
+        "text": "Portfolio health scores (`risk_score`, `liquidity_score`, `diversification_score`, `goal_match_pct`) are on a 0\u2011100 scale. Thresholds: goal_match_pct \u226580% = on\u2011track; 60\u201179% needs attention; <60% at risk. Risk_score 0\u201140 low, 41\u201170 moderate, 71\u2011100 high. Liquidity_score \u226570 adequate. Diversification_score \u226570 well diversified.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain"
+        ]
+      },
+      {
+        "id": "K6",
+        "text": "Goal progress percentage is `achievement_pct = (current_value / target_amount) * 100` (derived from `investment_goal.current_value` and `investment_goal.target_amount`). Flag as high\u2011priority advisory if `achievement_pct < 50%` and the goal's target date is within 2 years. Flag as overdue if target date has passed and `achievement_pct < 100%`.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain",
+          "ontology"
+        ]
+      },
+      {
+        "id": "K7",
+        "text": "Allocation drift for a rebalancing action is `drift = |current_allocation_pct - target_allocation_pct|`. If drift > 10\u202fpercentage points, generate a rebalancing recommendation. For Conservative investors any single sector allocation >30% is a compliance breach; for Aggressive investors the cap is 40% (sector) and 80% (overall equity).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K8",
+        "text": "Allocation concentration for an investor is the **maximum** `allocation_pct` across all rows in `sector_allocation` for that investor. Average allocation concentration for a cohort = AVG( per\u2011investor MAX(allocation_pct) ).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K9",
+        "text": "Composite metric **risk_pressure_score** = `risk_score + (100 - liquidity_score) + (100 - diversification_score)`. All three components must be non\u2011NULL; otherwise the composite is NULL and the investor is excluded from ranking.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K10",
+        "text": "Composite metric **quantitative_burden_index** is a normalized 0\u2011100 index of `{ shortfall , -gain , -net_cash_flow , risk_pressure_score }`. For each component `x` compute `x\u0302 = (x - min_pop) / (max_pop - min_pop)`. Components that reduce burden are transformed as `(1 - x\u0302)`. The final index = `100 * mean(x\u0302 components)`. Excludes investors missing any component.",
+        "fields": [
+          {
+            "table": "InvestmentGoal",
+            "column": "shortfall"
+          },
+          {
+            "table": "PortfolioHolding",
+            "column": "cost"
+          },
+          {
+            "table": "CashFlow",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K11",
+        "text": "Composite metric **combined_gain_and_ncf** = `gain + net_cash_flow` where `gain = SUM(current_value - cost)` over holdings and `net_cash_flow = SUM(amount)` (signed) over cash\u2011flow records for the same period.",
+        "fields": [
+          {
+            "table": "PortfolioHolding",
+            "column": "cost"
+          },
+          {
+            "table": "CashFlow",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K12",
+        "text": "Composite metric **combined_ncf_and_reb** = `net_cash_flow + rebalance_amount` where `rebalance_amount = SUM(amount)` from `rebalancing_action`.",
+        "fields": [
+          {
+            "table": "CashFlow",
+            "column": "amount"
+          },
+          {
+            "table": "RebalancingAction",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K13",
+        "text": "Composite metric **combined_holding_value_and_shortfall** = `portfolio_value + shortfall` where `portfolio_value = SUM(current_value)` over holdings and `shortfall = SUM(shortfall)` from investment goals.",
+        "fields": [
+          {
+            "table": "InvestmentGoal",
+            "column": "shortfall"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K14",
+        "text": "Composite metric **transaction_rebalance_index** = normalized 0\u2011100 index of `{ net_cash_flow , rebalance_amount , scenario_allocation_change }`. `scenario_allocation_change` = `SUM(new_allocation_pct - current_allocation_pct)` from `scenario_rebalancing`. Equal weighting, min\u2011max scaling across the population.",
+        "fields": [
+          {
+            "table": "CashFlow",
+            "column": "amount"
+          },
+          {
+            "table": "RebalancingAction",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K15",
+        "text": "Composite metric **temporal_pressure_index** = normalized 0\u2011100 index of `{ net_cash_flow(period) , rebalance_amount , -avg_shortfall , scenario_allocation_change }`. The `net_cash_flow` component must be limited to the period explicitly stated in the question; if the period is missing the question is considered incomplete.",
+        "fields": [
+          {
+            "table": "CashFlow",
+            "column": "amount"
+          },
+          {
+            "table": "RebalancingAction",
+            "column": "amount"
+          },
+          {
+            "table": "InvestmentGoal",
+            "column": "shortfall"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K16",
+        "text": "All ranking queries must include a deterministic secondary key to break ties: `ORDER BY <score> DESC/ASC, <entity_id> ASC`. Entity IDs are the natural identifiers (`investor_id`, `holding_id`, `goal_id`, etc.).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K17",
+        "text": "When selecting top\u2011/bottom\u2011k rows, exclude NULL scores (`WHERE score IS NOT NULL`). NULLs are not considered lowest or highest values.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K18",
+        "text": "Never aggregate identifier, date, or enum fields. Use `COUNT(DISTINCT investor_id)` for counts, `COUNT(holding_id) GROUP BY investor_id` for holdings per investor, etc. Aggregations on numeric fields must respect the grain: first aggregate per\u2011investor (or per\u2011goal) then compute cohort averages.",
+        "fields": [],
+        "citations": [
+          {
+            "source": "rules",
+            "quote": "R5. Averaging grain must be uniform across metrics"
+          }
+        ],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K19",
+        "text": "Basic data\u2011quality checks (B1\u2011B6) must be applied before any KPI computation: purchase_date not future and \u22651990\u201101\u201101; cost >0; current_value \u22650; referential integrity of investor_id; deduplicate cash\u2011flow rows (investor_id+date+amount+type); enforce cash\u2011flow sign convention (R1).",
+        "fields": [
+          {
+            "table": "PortfolioHolding",
+            "column": "cost"
+          },
+          {
+            "table": "CashFlow",
+            "column": "date"
+          },
+          {
+            "table": "CashFlow",
+            "column": "amount"
+          },
+          {
+            "table": "CashFlow",
+            "column": "type"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K20",
+        "text": "Holding\u2011level sense checks (H1\u2011H8) must be enforced: abnormal return >200% on holdings <1\u202fyr flagged; returns_pct negative while current_value > cost flagged; ELSS lock\u2011in 3\u202fyr, PPF lock\u2011in 15\u202fyr; segment must match category (segment applies only to equity); stale valuation (>30\u202fdays) flagged; zero dividend over >2\u202fyr on income\u2011type holdings flagged; cost below minimum thresholds (\u20b9500 for MF, \u20b91,000 for Stock) flagged.",
+        "fields": [
+          {
+            "table": "PortfolioHolding",
+            "column": "cost"
+          },
+          {
+            "table": "PortfolioHolding",
+            "column": "segment"
+          },
+          {
+            "table": "PortfolioHolding",
+            "column": "category"
+          },
+          {
+            "table": "PortfolioHolding",
+            "column": "dividends"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K21",
+        "text": "Risk\u2011suitability checks (R1\u2011R6): Conservative investors must not hold >40% equity; Aggressive investors must not hold <20% equity; Conservative investors must not hold Small\u2011Cap equity; sector allocation caps per risk tolerance (Conservative sector >30%, any profile sector >40% for Moderate, >50% for Aggressive).",
+        "fields": [
+          {
+            "table": "PortfolioHolding",
+            "column": "segment"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K22",
+        "text": "Goal\u2011progress checks (G1\u2011G6): Overdue goals (`target_date` < today && achievement_pct <100%) flagged; goals with <50% achievement and target date \u22642\u202fyears away flagged as high\u2011priority; Emergency Fund goal must be \u226410% equity; orphaned goals (no cash\u2011flow or holding) flagged; target_amount <\u20b910,000 flagged as likely data error; Retirement Planning goal with time horizon <3\u202fyears flagged for review.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K23",
+        "text": "Cash\u2011flow sense checks (C1\u2011C5): Withdrawal amount exceeding portfolio value flagged; SIP series stopping >3\u202fmonths without redemption flagged; SIP amount variation >50% without plan change flagged; Lump\u2011sum >\u20b95\u202flakh for Mass\u2011segment investors flagged for AML/KYC; Deposit immediately after Redemption of similar amount with no new holding flagged as possible double\u2011entry.",
+        "fields": [
+          {
+            "table": "CashFlow",
+            "column": "type"
+          },
+          {
+            "table": "CashFlow",
+            "column": "amount"
+          },
+          {
+            "table": "Investor",
+            "column": "segment"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K24",
+        "text": "Portfolio\u2011health sense checks (P1\u2011P4): Diversification_score \u226570 but holdings span only 1\u20112 sectors \u2192 stale pre\u2011computed score; risk_score low (<30) for Aggressive investor with >70% equity \u2192 stale score; all health scores =100 across an investor \u2192 suspect default data; liquidity_score \u226570 while majority of holdings are locked\u2011in (ELSS/PPF) \u2192 inconsistent, recompute.",
+        "fields": [
+          {
+            "table": "PortfolioHolding",
+            "column": "sector"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K25",
+        "text": "Rebalancing sense checks (RB1\u2011RB4): Action contradicting risk profile (e.g., Buy Small\u2011Cap for Conservative) flagged; Sell recommendation on locked\u2011in holdings (ELSS/PPF) replaced with Hold and lock\u2011in reason surfaced; drift <2% but action \u2260 Hold flagged as over\u2011triggering; target allocation percentages across all sectors per investor must sum to 100% \u00b11%; otherwise the plan is invalid.",
+        "fields": [
+          {
+            "table": "RebalancingAction",
+            "column": "action"
+          },
+          {
+            "table": "RebalancingAction",
+            "column": "amount"
+          }
+        ],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K26",
+        "text": "Units and sign conventions: Monetary fields (`amount`, `cost`, `current_value`, `shortfall`, `gain`, `portfolio_value`, etc.) are in Indian Rupees (\u20b9). Percentage fields (`returns_pct`, `allocation_pct`, `risk_score`, etc.) are expressed as 0\u2011100\u202f%. Dates are ISO `YYYY\u2011MM\u2011DD`. Signed fields follow storage convention (cash_flow.amount signed, holdings cost positive).",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "ontology",
+          "domain"
+        ]
+      },
+      {
+        "id": "K27",
+        "text": "Null handling: For XIRR, if insufficient data return NULL. For health scores, NULL values are excluded from ranking but included in proportion denominators as non\u2011meeting. For any average that requires numeric input, rows with NULL numeric fields are excluded from the aggregation.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      },
+      {
+        "id": "K28",
+        "text": "Aggregation grain policy (R5): When grouping by an investor attribute (risk_tolerance, time_horizon, segment, category, sector_focus), first compute per\u2011investor aggregates (e.g., SUM(cost) per investor) then compute cohort averages. Do not mix per\u2011investor\u2011first metrics with row\u2011pooled metrics in the same SELECT.",
+        "fields": [],
+        "citations": [
+          {
+            "source": "rules",
+            "quote": "R5. Averaging grain must be uniform across metrics"
+          }
+        ],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K29",
+        "text": "Join policy (R6): Only join tables required by the question. Use LEFT JOIN from the primary investor grain to optional child tables to avoid dropping investors lacking those records. All conditions mentioned in the question must be expressed as explicit filters or joins.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "rules"
+        ]
+      },
+      {
+        "id": "K30",
+        "text": "Resolved rule clashes: (1) Cash\u2011flow sign convention corrected to inflows positive, outflows negative (CLASH\u202f1). (2) PPF lock\u2011in period set to 15\u202fyears (CLASH\u202f2). (3) Returns\u2011pct weighting for \"average return\" set to equal\u2011weight (CLASH\u202f3). All three are ratified and reflected in the rules above.",
+        "fields": [],
+        "citations": [],
+        "sources": [
+          "domain",
+          "rules"
+        ]
+      }
+    ],
+    "conflicts": [],
+    "coverage": {},
+    "source_review": {
+      "domain": "supplied",
+      "rules": "supplied",
+      "ontology": "supplied"
+    },
+    "validation_notes": [
+      "K1: ignored optional citation that does not exactly match a supplied source.",
+      "K2: ignored optional citation that does not exactly match a supplied source.",
+      "K3: ignored optional field reference not present in ontology.",
+      "K3: ignored optional citation that does not exactly match a supplied source.",
+      "K4: ignored optional field reference not present in ontology.",
+      "K4: ignored optional citation that does not exactly match a supplied source.",
+      "K5: ignored optional field reference not present in ontology.",
+      "K5: ignored optional citation that does not exactly match a supplied source.",
+      "K6: ignored optional field reference not present in ontology.",
+      "K6: ignored optional citation that does not exactly match a supplied source.",
+      "K7: ignored optional field reference not present in ontology.",
+      "K7: ignored optional citation that does not exactly match a supplied source.",
+      "K8: ignored optional field reference not present in ontology.",
+      "K8: ignored optional citation that does not exactly match a supplied source.",
+      "K9: ignored optional field reference not present in ontology.",
+      "K9: ignored optional citation that does not exactly match a supplied source.",
+      "K10: ignored optional field reference not present in ontology.",
+      "K10: ignored optional citation that does not exactly match a supplied source.",
+      "K11: ignored optional field reference not present in ontology.",
+      "K11: ignored optional citation that does not exactly match a supplied source.",
+      "K12: ignored optional citation that does not exactly match a supplied source.",
+      "K13: ignored optional field reference not present in ontology.",
+      "K13: ignored optional citation that does not exactly match a supplied source.",
+      "K14: ignored optional field reference not present in ontology.",
+      "K14: ignored optional citation that does not exactly match a supplied source.",
+      "K15: ignored optional field reference not present in ontology.",
+      "K15: ignored optional citation that does not exactly match a supplied source.",
+      "K16: ignored optional citation that does not exactly match a supplied source.",
+      "K17: ignored optional citation that does not exactly match a supplied source.",
+      "K18: ignored optional citation that does not exactly match a supplied source.",
+      "K19: ignored optional field reference not present in ontology.",
+      "K19: ignored optional citation that does not exactly match a supplied source.",
+      "K20: ignored optional field reference not present in ontology.",
+      "K20: ignored optional citation that does not exactly match a supplied source.",
+      "K21: ignored optional field reference not present in ontology.",
+      "K21: ignored optional citation that does not exactly match a supplied source.",
+      "K22: ignored optional field reference not present in ontology.",
+      "K22: ignored optional citation that does not exactly match a supplied source.",
+      "K23: ignored optional field reference not present in ontology.",
+      "K23: ignored optional citation that does not exactly match a supplied source.",
+      "K24: ignored optional field reference not present in ontology.",
+      "K24: ignored optional citation that does not exactly match a supplied source.",
+      "K25: ignored optional field reference not present in ontology.",
+      "K25: ignored optional citation that does not exactly match a supplied source.",
+      "K26: ignored optional citation that does not exactly match a supplied source.",
+      "K27: ignored optional citation that does not exactly match a supplied source.",
+      "K29: ignored optional citation that does not exactly match a supplied source.",
+      "K30: ignored optional citation that does not exactly match a supplied source.",
+      "Completeness review unavailable; usable draft retained. Review error type: RateLimitError."
+    ],
+    "review_status": "unavailable"
+  }
+}

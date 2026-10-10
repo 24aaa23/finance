@@ -1,0 +1,181 @@
+# TABLE_DIM_MF_RETURNS_HISTORY_001 - grounded in NEOWEALTH_DDL.sql / Neowealth_schema.xlsx
+# Provenance tags preserved: [D] = declared in source, [I] = inferred.
+
+identity:
+  id: "TABLE_DIM_MF_RETURNS_HISTORY_001"
+  type: "Table"
+  subtype: "Dimension"
+  name: "dim_mf_returns_history"
+  display_name: "MF Returns History"
+  description: >
+    [I] TIME SERIES, 15 columns. Pre-computed trailing returns - one row per fund
+    per return_date holding the FULL trailing-return vector as of that date. THE
+    MOST STRIKING DEFECT IN THE SCHEMA: the seven return columns are split across
+    two types with no conceivable business reason - return_1m/3m/6m/1y are
+    character varying(256) while return_3y/5y/10y are properly real. Naive fund
+    rankings on the text columns are SILENTLY AND COMPLETELY WRONG (lexicographic
+    sort), and cross-horizon comparison needs a cast on one side of every query.
+    Everything here is derivable from dim_mf_nav_history, and given the type
+    problems, COMPUTING RETURNS FROM THE NAV SERIES YOURSELF IS THE MORE RELIABLE
+    ROUTE - correct types, a known annualisation convention, and arbitrary custom
+    horizons.
+
+layer: "dimension"
+structural_type: "time_series"                      # [I] named dim_ but structurally a time series
+grain: "mstar_id x return_date (or isin x return_date)"   # [I]
+not_null_columns: []                                # [D]
+attribute_type_provenance: "inferred_per_section_11"
+note: "Lacks source_load_ts (append-only). Prefer computing returns from dim_mf_nav_history."
+
+semantics:
+  business_purpose: >
+    Pre-computed trailing returns per fund per as-of date. Four short-horizon
+    columns are mis-typed as text (wrong when ranked naively); three long-horizon
+    columns are properly numeric. Computing from the NAV series is more reliable.
+
+attributes:
+  - name: "fund_id"
+    display_name: "Fund ID"
+    description: "[D] Carried here but NOT in dim_mf_nav_history - a small inconsistency between the two history tables."
+    type: "integer"
+    sql_type: "integer"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "mstar_id"
+    display_name: "Morningstar ID"
+    description: "[I] Part of the grain: (mstar_id, return_date)."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+    join_target: "dim_mf_fund_complete.mstar_id"
+
+  - name: "isin"
+    display_name: "ISIN"
+    description: "[I] Alternative grain key."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "identifier"
+
+  - name: "fund_name"
+    display_name: "Fund Name"
+    description: "[D] Denormalised onto every row."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "category"
+    display_name: "Category"
+    description: "[D] Denormalised onto every row."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+
+  - name: "return_date"
+    display_name: "Return Date"
+    description: "[D] The as-of date. One row holds the FULL trailing-return vector as of this date."
+    type: "date"
+    sql_type: "date"
+    nullable: true
+    filterable: true
+    attribute_type: "time_dimension"
+
+  - name: "return_1m"
+    display_name: "Return 1M"
+    description: "[D] TYPE DEFECT: character varying(256) while return_3y/5y/10y in this same table are proper real. AVG() fails; ORDER BY sorts lexicographically so '9.5' ranks ABOVE '12.3' and any top-performing-funds ranking built naively on it is SILENTLY AND COMPLETELY WRONG. A bare cast will THROW on the first sentinel value. Use the regex-guarded CASE."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    attribute_type_corrected: "fact"
+    type_defect: "numeric return stored as varchar; use regex-guarded cast or compute from NAV series"
+
+  - name: "return_3m"
+    display_name: "Return 3M"
+    description: "[D] TYPE DEFECT: character varying(256). See return_1m."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    attribute_type_corrected: "fact"
+    type_defect: "numeric return stored as varchar; use regex-guarded cast or compute from NAV series"
+
+  - name: "return_6m"
+    display_name: "Return 6M"
+    description: "[D] TYPE DEFECT: character varying(256). See return_1m."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    attribute_type_corrected: "fact"
+    type_defect: "numeric return stored as varchar; use regex-guarded cast or compute from NAV series"
+
+  - name: "return_1y"
+    display_name: "Return 1Y"
+    description: "[D] TYPE DEFECT: character varying(256). See return_1m. [I] Because it is text the UNIT is unverifiable - whether '31.56' means 31.56% or 0.3156 cannot be determined from the schema. The analogous client_holdings.unrealized_gain_pct samples use whole percent, so the same convention is inferred."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: true
+    attribute_type: "dimension"
+    attribute_type_corrected: "fact"
+    type_defect: "numeric return stored as varchar; unit (percent vs decimal) unverifiable; use regex-guarded cast or compute from NAV series"
+
+  - name: "return_3y"
+    display_name: "Return 3Y"
+    description: "[D] Properly typed real. [I] Multi-year horizons are CONVENTIONALLY annualised (CAGR) while sub-1-year figures are absolute - but the workbook does NOT state this, and getting it backwards changes a 3-year number by roughly a factor of three. Confirm with the data vendor before publishing."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "return_5y"
+    display_name: "Return 5Y"
+    description: "[D] Properly typed real. Same annualisation caveat."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "return_10y"
+    display_name: "Return 10Y"
+    description: "[D] Properly typed real. Same annualisation caveat."
+    type: "float"
+    sql_type: "real"
+    nullable: true
+    filterable: true
+    attribute_type: "fact"
+
+  - name: "source_table"
+    display_name: "Source Table"
+    description: "[D] Lineage: name of the ORIGIN object in the SOURCE system, not this table. Proven by dim_client_master rows carrying 'clients'. Present in all 21 tables. NEVER join or filter business logic on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true
+
+  - name: "row_hash"
+    display_name: "Row Hash"
+    description: "[D] 64-bit change-detection fingerprint; samples are 16 lowercase hex chars. Used for change-detecting upsert. Present in all 14 dim_* tables, none of the client_* facts. NEVER join on this."
+    type: "string"
+    sql_type: "varchar(256)"
+    nullable: true
+    filterable: false
+    attribute_type: "dimension"
+    hidden: true

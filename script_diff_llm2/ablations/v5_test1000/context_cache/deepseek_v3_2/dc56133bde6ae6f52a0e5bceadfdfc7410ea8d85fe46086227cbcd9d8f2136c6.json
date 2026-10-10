@@ -1,0 +1,1627 @@
+{
+  "fingerprint": "dc56133bde6ae6f52a0e5bceadfdfc7410ea8d85fe46086227cbcd9d8f2136c6",
+  "entries": [
+    {
+      "id": 1,
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "risk tolerance",
+        "investor risk profile"
+      ],
+      "definition": "Classification of an investor's capital preservation versus growth focus and volatility tolerance.",
+      "quote": "Risk Tolerance\n- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": 2,
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goal",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "investment goal",
+        "financial goal"
+      ],
+      "definition": "A specific financial objective for an investor.",
+      "quote": "Investment Goals\n`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": []
+    },
+    {
+      "id": 3,
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "avg_annual_return_pct"
+      ],
+      "terms": [
+        "XIRR",
+        "annualised return",
+        "extended internal rate of return"
+      ],
+      "definition": "The annualised return of an investment computed from irregular cash flows.",
+      "quote": "**Definition:** XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": []
+    },
+    {
+      "id": 4,
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Returns Percentage",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": [
+        "returns percentage",
+        "simple percentage return"
+      ],
+      "definition": "Simple percentage return calculated as (current_value - cost) / cost × 100.",
+      "quote": "**Definition:** Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": []
+    },
+    {
+      "id": 5,
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Goal Progress",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": [
+        "achievement percent",
+        "goal progress percentage"
+      ],
+      "definition": "Percentage of the target amount that has been achieved.",
+      "quote": "- `achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": []
+    },
+    {
+      "id": 6,
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Portfolio Health Score",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "terms": [
+        "portfolio health score",
+        "goal match percent"
+      ],
+      "definition": "A score on a 0-100 scale reflecting various dimensions of portfolio health.",
+      "quote": "All scores are on a **0–100 scale**.",
+      "conflicts": []
+    },
+    {
+      "id": 7,
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "XIRR Data Quality Warning",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost",
+        "purchase_date"
+      ],
+      "terms": [
+        "XIRR plausibility cap"
+      ],
+      "definition": "XIRR exceeding 25% must trigger a data quality warning.",
+      "quote": "**Guardrails — MANDATORY:**\n| Condition | Action Required |\n|---|---|\n| Computed XIRR > **25%** | **FLAG as suspect.** Do NOT present as a valid result without investigation. |",
+      "conflicts": []
+    },
+    {
+      "id": 8,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Purchase Date Validity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "purchase date must not be in the future"
+      ],
+      "definition": "Purchase date must not be in the future and must not predate 1990-01-01.",
+      "quote": "| B1 | `purchase_date` must not be in the future and must not predate 1990-01-01 | `portfolio_holding.purchase_date` | Flag holding; exclude from XIRR |",
+      "conflicts": []
+    },
+    {
+      "id": 9,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Cost Validity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": [
+        "cost must be positive and not null"
+      ],
+      "definition": "Cost must be > 0 and not NULL.",
+      "quote": "| B2 | `cost` must be > 0 and not NULL | `portfolio_holding.cost` | Exclude from return calculations; flag as incomplete |",
+      "conflicts": []
+    },
+    {
+      "id": 10,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Returns Percentage Guardrail",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct",
+        "cost",
+        "current_value"
+      ],
+      "terms": [
+        "abnormal return for holding age",
+        "returns_pct negative but value higher"
+      ],
+      "definition": "Returns_pct > 200% on a holding < 1 year old should be flagged for verification; returns_pct negative while current_value > cost indicates inconsistency.",
+      "quote": "**Guardrails:**\n\n| Condition | Action |\n|---|---|\n| `returns_pct` > **200%** on a holding < 1 year old | Flag; verify `purchase_date` and `cost`. |\n| `returns_pct` is negative and `current_value` > `cost` | Data inconsistency; flag and skip aggregation. |",
+      "conflicts": []
+    },
+    {
+      "id": 11,
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "ELSS Lock-in Period",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": [
+        "ELSS lock-in violation"
+      ],
+      "definition": "ELSS investments have a 3-year lock-in period; redemption should not be recommended if purchase date is less than 3 years ago.",
+      "quote": "| H3 | **Lock-in violation — ELSS** | `investment_type = 'ELSS'` and `(today - purchase_date) < 3 years` | Do not recommend redemption; surface lock-in warning |",
+      "conflicts": []
+    },
+    {
+      "id": 12,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Suitability - Conservative Investor Equity Cap",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "conservative investor equity overweight"
+      ],
+      "definition": "Conservative investors must not hold more than 40% equity.",
+      "quote": "| R1 | **Conservative investor equity overweight** | `risk_tolerance = 'Conservative'` and total equity allocation > 40% | Flag as suitability breach; require advisory review |",
+      "conflicts": []
+    },
+    {
+      "id": 13,
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "High-Priority Goal Progress Flag",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct",
+        "target_amount"
+      ],
+      "terms": [
+        "near-deadline at-risk goal"
+      ],
+      "definition": "If achievement_pct < 50% and goal target_date is within 2 years, flag as a high-priority advisory case.",
+      "quote": "- If `achievement_pct` < 50% and goal `target_date` is within 2 years → flag as **high-priority advisory case**.\n| G2 | **Near-deadline at-risk goal** | `achievement_pct` < 50% and `target_date` within 2 years | Flag as high-priority advisory case |",
+      "conflicts": []
+    },
+    {
+      "id": 14,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Emergency Fund Asset Suitability",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "Emergency Fund in equity"
+      ],
+      "definition": "Emergency Fund goals must be predominantly in near-liquid assets; equity allocation > 10% should be flagged.",
+      "quote": "| G3 | **Emergency Fund in equity** | `investment_goal = 'Emergency Fund'` and equity allocation > 10% | Flag as unsuitable; Emergency Fund must be near-liquid (Debt/liquid funds) |",
+      "conflicts": []
+    },
+    {
+      "id": 15,
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Rebalancing Allocation Drift Trigger",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+      "fields": [
+        "allocation_pct"
+      ],
+      "terms": [
+        "allocation drift > 10 percentage points"
+      ],
+      "definition": "If the absolute difference between current and target allocation percent exceeds 10 percentage points for any sector, a rebalancing recommendation is triggered.",
+      "quote": "- Drift = `|current_allocation_pct - target_allocation_pct|` in `rebalancing_action`.\n- If drift > **10 percentage points** for any sector → trigger rebalancing recommendation.",
+      "conflicts": []
+    },
+    {
+      "id": 16,
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Single-Sector Concentration - Conservative Investor",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "single-sector concentration for Conservative investor"
+      ],
+      "definition": "For a Conservative investor, any single sector allocation exceeding 30% should be flagged for compliance review.",
+      "quote": "- Conservative investors: any single sector allocation > **30%** → flag for compliance review.",
+      "conflicts": []
+    },
+    {
+      "id": 17,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Investor ID Referential Integrity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investor_id"
+      ],
+      "terms": [
+        "investor_id referential integrity",
+        "orphaned records"
+      ],
+      "definition": "Records in other tables with an investor_id that does not match an investor_profile record are orphaned and should be flagged and excluded.",
+      "quote": "| B4 | `investor_id` referential integrity | All tables | Orphaned records with no matching `investor_profile` must be flagged and excluded |",
+      "conflicts": []
+    },
+    {
+      "id": 18,
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Cash Flow Sign Convention for XIRR",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "type"
+      ],
+      "terms": [
+        "cash flow sign convention"
+      ],
+      "definition": "For XIRR calculation, inflows (SIP, Lump Sum, Deposit) are negative cash flows; redemptions/withdrawals are positive.",
+      "quote": "B6 | Cash flow sign convention | `cash_flow.amount` | Inflows (SIP, Lump Sum, Deposit) → negative for XIRR; Redemption/Withdrawal → positive |",
+      "conflicts": []
+    },
+    {
+      "id": 19,
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "High-Risk Product for Conservative Investor",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "category",
+        "segment"
+      ],
+      "terms": [
+        "high-risk product for Conservative investor"
+      ],
+      "definition": "Small Cap Equity categorized holdings for a Conservative investor should be flagged as unsuitable.",
+      "quote": "| R6 | **High-risk product for Conservative investor** | `category = 'Equity'` and `segment = 'Small Cap'` held by `risk_tolerance = 'Conservative'` investor | Flag as unsuitable product holding |",
+      "conflicts": []
+    },
+    {
+      "id": 20,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Current Value Non-negativity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": [
+        "current value must be non-negative"
+      ],
+      "definition": "Current_value must be ≥ 0.",
+      "quote": "| B3 | `current_value` must be ≥ 0 | `portfolio_holding.current_value` | Flag and exclude from aggregations |",
+      "conflicts": []
+    },
+    {
+      "id": 21,
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Goal Target Amount Plausibility",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "target_amount"
+      ],
+      "terms": [
+        "goal target amount implausibly low"
+      ],
+      "definition": "Target amounts less than ₹10,000 for major goals like Retirement should be flagged as potential data entry errors.",
+      "quote": "| G5 | **Goal target amount implausibly low** | `target_amount` < ₹10,000 for goals like Retirement / Home Purchase | Flag as likely data entry error (e.g., amount entered in lakhs instead of rupees) |",
+      "conflicts": []
+    },
+    {
+      "id": 22,
+      "document": "domain_intro",
+      "kind": "default",
+      "topic": "Portfolio Health Score Interpretation",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct"
+      ],
+      "terms": [
+        "goal match percent interpretation"
+      ],
+      "definition": "Goal match percentage has interpretation thresholds: ≥ 80% is 'On track', 60%-79% is 'Needs attention', and < 60% is 'At risk'.",
+      "quote": "| Score | Range | Interpretation |\n|---|---|---|\n| `goal_match_pct` | ≥ 80% | On track |\n| `goal_match_pct` | 60%–79% | Needs attention |\n| `goal_match_pct` | < 60% | At risk |",
+      "conflicts": []
+    },
+    {
+      "id": 23,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Cash Flow Duplicate Detection",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "investor_id",
+        "date",
+        "amount",
+        "type"
+      ],
+      "terms": [
+        "duplicate cash flow transactions"
+      ],
+      "definition": "Duplicate cash flow transactions should be deduplicated before XIRR calculation.",
+      "quote": "| B5 | Duplicate cash flow transactions | `cash_flow` (investor_id + date + amount + type) | Deduplicate before XIRR; flag duplicates for review |",
+      "conflicts": []
+    },
+    {
+      "id": 24,
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Segment vs Investment Type Mismatch",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "segment",
+        "category"
+      ],
+      "terms": [
+        "segment vs. investment type mismatch"
+      ],
+      "definition": "Market-cap segments (Large Cap, Mid Cap, Small Cap) logically apply only to equity instruments. A segment assignment for a debt category is a likely data classification error.",
+      "quote": "| H5 | **Segment vs. investment type mismatch** | `segment` is 'Large Cap'/'Mid Cap'/'Small Cap' but `category = 'Debt'` | Market cap segments apply only to equity instruments; flag as a data classification error |",
+      "conflicts": []
+    },
+    {
+      "id": 25,
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Aggressive Investor Equity Floor",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "Aggressive investor in near-100% debt"
+      ],
+      "definition": "An Aggressive investor's portfolio with equity allocation less than 20% should be flagged as misaligned with the risk profile.",
+      "quote": "| R2 | **Aggressive investor in near-100% debt** | `risk_tolerance = 'Aggressive'` and equity allocation < 20% | Flag as misalignment between stated profile and portfolio |",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance Categories",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "Conservative",
+        "Moderate",
+        "Aggressive"
+      ],
+      "definition": "Investor's appetite for market volatility and capital risk",
+      "quote": "Conservative — Capital preservation focus; low volatility tolerance; debt-heavy allocation. Moderate — Balanced growth and preservation; mixed allocation. Aggressive — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G2",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Time Horizon Categories",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "time_horizon"
+      ],
+      "terms": [
+        "Long-term",
+        "Medium-term",
+        "Short-term"
+      ],
+      "definition": "Duration for which investor plans to hold investments",
+      "quote": "Very Short Term: < 1 year\n- Short Term: 1–3 years\n- Medium Term: 3–7 years\n- Long Term: 7–15 years\n- Very Long Term: > 15 years",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Asset Categories",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "category"
+      ],
+      "terms": [
+        "Equity",
+        "Debt",
+        "Hybrid",
+        "Alternative"
+      ],
+      "definition": "Broad classification of investment instruments",
+      "quote": "Asset Categories\n`Equity` | `Debt` | `Hybrid` | `Alternative`",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G4",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Customer Segments",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": [
+        "Premium",
+        "Standard",
+        "Mass"
+      ],
+      "definition": "Classification based on investor value and service needs",
+      "quote": "Customer Segments\n- **Premium** — High-value clients with sophisticated advisory needs.\n- **Standard** — Mid-tier clients.\n- **Mass** — Retail clients.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G5",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goals",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "Wealth Preservation",
+        "Growth",
+        "Income Generation",
+        "Retirement Planning",
+        "Child Education",
+        "Emergency Fund"
+      ],
+      "definition": "Financial objectives investors aim to achieve",
+      "quote": "Investment Goals\n`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G6",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Types",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type"
+      ],
+      "terms": [
+        "Mutual Fund",
+        "Stock",
+        "Bond",
+        "ETF",
+        "ELSS",
+        "PPF"
+      ],
+      "definition": "Specific financial instrument types",
+      "quote": "Investment Types\n`Mutual Fund` | `Stock` | `Bond` | `ETF` | `ELSS` | `PPF`",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G7",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Sectors",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "sector"
+      ],
+      "terms": [
+        "Technology",
+        "Financial Services",
+        "Healthcare",
+        "Consumer Goods",
+        "Energy",
+        "Utilities",
+        "Real Estate",
+        "Materials",
+        "Industrials",
+        "Communication Services"
+      ],
+      "definition": "Industry classifications for investments",
+      "quote": "Sectors\nTechnology | Financial Services | Healthcare | Consumer Goods | Energy | Utilities | Real Estate | Materials | Industrials | Communication Services",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G8",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Portfolio Health Scores",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "terms": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "definition": "Scores measuring portfolio performance across dimensions",
+      "quote": "**0–100 scale**",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G9",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Cash Flow Types",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "type"
+      ],
+      "terms": [
+        "SIP",
+        "Lump Sum",
+        "Deposit",
+        "Withdrawal",
+        "Redemption"
+      ],
+      "definition": "Categories of cash movement transactions",
+      "quote": "Cash Flow Management — recording deposits, SIP contributions, withdrawals, and redemptions.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G10",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Rebalancing Actions",
+      "backend": "sql",
+      "source": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "fields": [
+        "action"
+      ],
+      "terms": [
+        "Buy",
+        "Sell",
+        "Hold"
+      ],
+      "definition": "Recommended portfolio adjustment decisions",
+      "quote": "Rebalancing — identifying allocation drift and generating buy/sell/hold recommendations.",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G11",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Market Cap Segments",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": [
+        "Large Cap",
+        "Mid Cap",
+        "Small Cap"
+      ],
+      "definition": "Company size classifications by market capitalization",
+      "quote": "Large Cap > ₹20,000 Cr, Mid Cap ₹5,000–20,000 Cr, Small Cap < ₹5,000 Cr",
+      "conflicts": []
+    },
+    {
+      "id": "glossary:G12",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Portfolio Metrics",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": [
+        "progress_pct"
+      ],
+      "definition": "Percentage of goal progress achieved",
+      "quote": "`achievement_pct` = `(current_value / target_amount) × 100`",
+      "conflicts": []
+    }
+  ],
+  "review": [
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "risk tolerance",
+        "investor risk profile"
+      ],
+      "definition": "Classification of an investor's capital preservation versus growth focus and volatility tolerance.",
+      "quote": "Risk Tolerance\n- **Conservative** — Capital preservation focus; low volatility tolerance; debt-heavy allocation.\n- **Moderate** — Balanced growth and preservation; mixed allocation.\n- **Aggressive** — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "f2bf8ee28d593f83cff18866047676d4c1f98b23711135f4c5ed12ede9f0707f",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goal",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "investment goal",
+        "financial goal"
+      ],
+      "definition": "A specific financial objective for an investor.",
+      "quote": "Investment Goals\n`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "99da0b3500513223ed6f9e026a737d203a1d439a2a7d9ab16c2a657a98afc3d2",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "XIRR",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "avg_annual_return_pct"
+      ],
+      "terms": [
+        "XIRR",
+        "annualised return",
+        "extended internal rate of return"
+      ],
+      "definition": "The annualised return of an investment computed from irregular cash flows.",
+      "quote": "**Definition:** XIRR is the annualised return of an investment computed from irregular cash flows (SIP contributions, lump sum investments, withdrawals, and the current portfolio value as a terminal cash flow).",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "f029680add98e5890790375c8d713a87e7a1fec7f93f7051eeb027e1c01e01d7",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Returns Percentage",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct"
+      ],
+      "terms": [
+        "returns percentage",
+        "simple percentage return"
+      ],
+      "definition": "Simple percentage return calculated as (current_value - cost) / cost × 100.",
+      "quote": "**Definition:** Simple percentage return = `(current_value - cost) / cost × 100` stored in `portfolio_holding.returns_pct`.",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "eea91be0f400bf78484e19237dfd14420dc3f665a78d1906353cf4df2516bbc7",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Goal Progress",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": [
+        "achievement percent",
+        "goal progress percentage"
+      ],
+      "definition": "Percentage of the target amount that has been achieved.",
+      "quote": "- `achievement_pct` = `(current_value / target_amount) × 100` on the `investment_goal` table.",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "2ae299018c2d91fd7789d82599256554ada0cf9d84648c899956f1c1d8b8d4f4",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Portfolio Health Score",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "terms": [
+        "portfolio health score",
+        "goal match percent"
+      ],
+      "definition": "A score on a 0-100 scale reflecting various dimensions of portfolio health.",
+      "quote": "All scores are on a **0–100 scale**.",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "34ff035c1262b5a09ebe43c6216850e169a8d9764edfbde27736f7c3c354d583",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "XIRR Data Quality Warning",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost",
+        "purchase_date"
+      ],
+      "terms": [
+        "XIRR plausibility cap"
+      ],
+      "definition": "XIRR exceeding 25% must trigger a data quality warning.",
+      "quote": "**Guardrails — MANDATORY:**\n| Condition | Action Required |\n|---|---|\n| Computed XIRR > **25%** | **FLAG as suspect.** Do NOT present as a valid result without investigation. |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Quote is not verbatim source evidence",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "9c5c4fd789d286f7d58086c37b05b1deec601d7527636592d04efbfd7a9b6f47",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Purchase Date Validity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "purchase_date"
+      ],
+      "terms": [
+        "purchase date must not be in the future"
+      ],
+      "definition": "Purchase date must not be in the future and must not predate 1990-01-01.",
+      "quote": "| B1 | `purchase_date` must not be in the future and must not predate 1990-01-01 | `portfolio_holding.purchase_date` | Flag holding; exclude from XIRR |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "b827d401b702905e5bb3b82ab6f0deda1834b4f7cd0a3ee2823a04c66fcfd0c4",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Cost Validity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "cost"
+      ],
+      "terms": [
+        "cost must be positive and not null"
+      ],
+      "definition": "Cost must be > 0 and not NULL.",
+      "quote": "| B2 | `cost` must be > 0 and not NULL | `portfolio_holding.cost` | Exclude from return calculations; flag as incomplete |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "03b3a479fb5cd614f2ac4d68c83b08e64f9e5b215ed2812bb463f7b0412295fe",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Returns Percentage Guardrail",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "returns_pct",
+        "cost",
+        "current_value"
+      ],
+      "terms": [
+        "abnormal return for holding age",
+        "returns_pct negative but value higher"
+      ],
+      "definition": "Returns_pct > 200% on a holding < 1 year old should be flagged for verification; returns_pct negative while current_value > cost indicates inconsistency.",
+      "quote": "**Guardrails:**\n\n| Condition | Action |\n|---|---|\n| `returns_pct` > **200%** on a holding < 1 year old | Flag; verify `purchase_date` and `cost`. |\n| `returns_pct` is negative and `current_value` > `cost` | Data inconsistency; flag and skip aggregation. |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "7e5c779200f6a2542d23550c8af2353e2855a2a3546d53c7d0935b637ff4c8ff",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "ELSS Lock-in Period",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type",
+        "purchase_date"
+      ],
+      "terms": [
+        "ELSS lock-in violation"
+      ],
+      "definition": "ELSS investments have a 3-year lock-in period; redemption should not be recommended if purchase date is less than 3 years ago.",
+      "quote": "| H3 | **Lock-in violation — ELSS** | `investment_type = 'ELSS'` and `(today - purchase_date) < 3 years` | Do not recommend redemption; surface lock-in warning |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "cb50c29ee1187f8dee3bb9af69159f96cf2fec81da3b57af26ad6a14c2ba8040",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Suitability - Conservative Investor Equity Cap",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "conservative investor equity overweight"
+      ],
+      "definition": "Conservative investors must not hold more than 40% equity.",
+      "quote": "| R1 | **Conservative investor equity overweight** | `risk_tolerance = 'Conservative'` and total equity allocation > 40% | Flag as suitability breach; require advisory review |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "6d6348dc98622abd8567ed82533ae10768a4c1b15108155e1809e8f561262933",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "High-Priority Goal Progress Flag",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct",
+        "target_amount"
+      ],
+      "terms": [
+        "near-deadline at-risk goal"
+      ],
+      "definition": "If achievement_pct < 50% and goal target_date is within 2 years, flag as a high-priority advisory case.",
+      "quote": "- If `achievement_pct` < 50% and goal `target_date` is within 2 years → flag as **high-priority advisory case**.\n| G2 | **Near-deadline at-risk goal** | `achievement_pct` < 50% and `target_date` within 2 years | Flag as high-priority advisory case |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Quote is not verbatim source evidence",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "baff1717b0a884ffc171940aa197df13b4e8b24316c97e44d85704d538579270",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Emergency Fund Asset Suitability",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "Emergency Fund in equity"
+      ],
+      "definition": "Emergency Fund goals must be predominantly in near-liquid assets; equity allocation > 10% should be flagged.",
+      "quote": "| G3 | **Emergency Fund in equity** | `investment_goal = 'Emergency Fund'` and equity allocation > 10% | Flag as unsuitable; Emergency Fund must be near-liquid (Debt/liquid funds) |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "8944d7a61b891c38360734e85e4575b6e484a322aa32f80670a7ca0e54503886",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Rebalancing Allocation Drift Trigger",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_SECTOR_ALLOCATION_001",
+      "fields": [
+        "allocation_pct"
+      ],
+      "terms": [
+        "allocation drift > 10 percentage points"
+      ],
+      "definition": "If the absolute difference between current and target allocation percent exceeds 10 percentage points for any sector, a rebalancing recommendation is triggered.",
+      "quote": "- Drift = `|current_allocation_pct - target_allocation_pct|` in `rebalancing_action`.\n- If drift > **10 percentage points** for any sector → trigger rebalancing recommendation.",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "c9354c1dcb2b485ce771814f36f9393391c2602819c92de417778e079ba25d2d",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Single-Sector Concentration - Conservative Investor",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "single-sector concentration for Conservative investor"
+      ],
+      "definition": "For a Conservative investor, any single sector allocation exceeding 30% should be flagged for compliance review.",
+      "quote": "- Conservative investors: any single sector allocation > **30%** → flag for compliance review.",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "41f31294bac6d2e539406b5de76dd649a6bef1995b053c145fcbf8820cb9798c",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Investor ID Referential Integrity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "investor_id"
+      ],
+      "terms": [
+        "investor_id referential integrity",
+        "orphaned records"
+      ],
+      "definition": "Records in other tables with an investor_id that does not match an investor_profile record are orphaned and should be flagged and excluded.",
+      "quote": "| B4 | `investor_id` referential integrity | All tables | Orphaned records with no matching `investor_profile` must be flagged and excluded |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "6521574a1ac5e5c6eef8d63f740021db09719d7ff873a9b835357d3540dbfc9a",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Cash Flow Sign Convention for XIRR",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "amount",
+        "type"
+      ],
+      "terms": [
+        "cash flow sign convention"
+      ],
+      "definition": "For XIRR calculation, inflows (SIP, Lump Sum, Deposit) are negative cash flows; redemptions/withdrawals are positive.",
+      "quote": "B6 | Cash flow sign convention | `cash_flow.amount` | Inflows (SIP, Lump Sum, Deposit) → negative for XIRR; Redemption/Withdrawal → positive |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "826b24bcd829c1a6b16d6231c58bd18ad5ae85d4eb525d35da474596aa721a72",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "High-Risk Product for Conservative Investor",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "category",
+        "segment"
+      ],
+      "terms": [
+        "high-risk product for Conservative investor"
+      ],
+      "definition": "Small Cap Equity categorized holdings for a Conservative investor should be flagged as unsuitable.",
+      "quote": "| R6 | **High-risk product for Conservative investor** | `category = 'Equity'` and `segment = 'Small Cap'` held by `risk_tolerance = 'Conservative'` investor | Flag as unsuitable product holding |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "a380d8c81d8fac46571aabf30cfa0c835ac18eae27e3eb9e299a5d6d82fd9d35",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Current Value Non-negativity",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "current_value"
+      ],
+      "terms": [
+        "current value must be non-negative"
+      ],
+      "definition": "Current_value must be ≥ 0.",
+      "quote": "| B3 | `current_value` must be ≥ 0 | `portfolio_holding.current_value` | Flag and exclude from aggregations |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "7e7aac61657440a4b3b82f0cdf2b1b65ccc539ef8559df67a5392c84790527c4",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Goal Target Amount Plausibility",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "target_amount"
+      ],
+      "terms": [
+        "goal target amount implausibly low"
+      ],
+      "definition": "Target amounts less than ₹10,000 for major goals like Retirement should be flagged as potential data entry errors.",
+      "quote": "| G5 | **Goal target amount implausibly low** | `target_amount` < ₹10,000 for goals like Retirement / Home Purchase | Flag as likely data entry error (e.g., amount entered in lakhs instead of rupees) |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "99c73720ad8700140afb42afe73fa16e908dca9c93ce238e04ebcf99ac8b6aab",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "default",
+      "topic": "Portfolio Health Score Interpretation",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct"
+      ],
+      "terms": [
+        "goal match percent interpretation"
+      ],
+      "definition": "Goal match percentage has interpretation thresholds: ≥ 80% is 'On track', 60%-79% is 'Needs attention', and < 60% is 'At risk'.",
+      "quote": "| Score | Range | Interpretation |\n|---|---|---|\n| `goal_match_pct` | ≥ 80% | On track |\n| `goal_match_pct` | 60%–79% | Needs attention |\n| `goal_match_pct` | < 60% | At risk |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "3102130b338500582992687d8b3adab45a76ee55da92eecec78e55e960a96c3f",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Cash Flow Duplicate Detection",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "investor_id",
+        "date",
+        "amount",
+        "type"
+      ],
+      "terms": [
+        "duplicate cash flow transactions"
+      ],
+      "definition": "Duplicate cash flow transactions should be deduplicated before XIRR calculation.",
+      "quote": "| B5 | Duplicate cash flow transactions | `cash_flow` (investor_id + date + amount + type) | Deduplicate before XIRR; flag duplicates for review |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "0708047158f961c4208601b8404d0ba335d2de9a0906a28b749d8396f5959cab",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "advisory",
+      "topic": "Segment vs Investment Type Mismatch",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "segment",
+        "category"
+      ],
+      "terms": [
+        "segment vs. investment type mismatch"
+      ],
+      "definition": "Market-cap segments (Large Cap, Mid Cap, Small Cap) logically apply only to equity instruments. A segment assignment for a debt category is a likely data classification error.",
+      "quote": "| H5 | **Segment vs. investment type mismatch** | `segment` is 'Large Cap'/'Mid Cap'/'Small Cap' but `category = 'Debt'` | Market cap segments apply only to equity instruments; flag as a data classification error |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "a70042b53c1bab5f33cbdf6dec78a3d5fb3e0fe0e5ea35fbc3ff11f2bedeec3d",
+      "active": false
+    },
+    {
+      "id": "",
+      "document": "domain_intro",
+      "kind": "constraint",
+      "topic": "Aggressive Investor Equity Floor",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "Aggressive investor in near-100% debt"
+      ],
+      "definition": "An Aggressive investor's portfolio with equity allocation less than 20% should be flagged as misaligned with the risk profile.",
+      "quote": "| R2 | **Aggressive investor in near-100% debt** | `risk_tolerance = 'Aggressive'` and equity allocation < 20% | Flag as misalignment between stated profile and portfolio |",
+      "conflicts": [],
+      "errors": [
+        "Invalid id",
+        "Duplicate id",
+        "Conflicting topic or duplicate id"
+      ],
+      "evidence_hash": "ba6f7faf7ada4672300d5730a42ad324dfea1590839cfe68661eca9d9dbdeb98",
+      "active": false
+    },
+    {
+      "id": "glossary:G1",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Risk Tolerance Categories",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "risk_tolerance"
+      ],
+      "terms": [
+        "Conservative",
+        "Moderate",
+        "Aggressive"
+      ],
+      "definition": "Investor's appetite for market volatility and capital risk",
+      "quote": "Conservative — Capital preservation focus; low volatility tolerance; debt-heavy allocation. Moderate — Balanced growth and preservation; mixed allocation. Aggressive — Growth-focused; high volatility tolerance; equity-heavy allocation.",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence"
+      ],
+      "evidence_hash": "a731e2e5c060611ce4c019a707247a2a14e5997bbc94dea19c829c911d5fef5a",
+      "active": false
+    },
+    {
+      "id": "glossary:G2",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Time Horizon Categories",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "time_horizon"
+      ],
+      "terms": [
+        "Long-term",
+        "Medium-term",
+        "Short-term"
+      ],
+      "definition": "Duration for which investor plans to hold investments",
+      "quote": "Very Short Term: < 1 year\n- Short Term: 1–3 years\n- Medium Term: 3–7 years\n- Long Term: 7–15 years\n- Very Long Term: > 15 years",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "2425b7856ae05445b886fb458b5be85ca5c8cc9f08ab77617c5a2f589bd8d9bd",
+      "active": false
+    },
+    {
+      "id": "glossary:G3",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Asset Categories",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "category"
+      ],
+      "terms": [
+        "Equity",
+        "Debt",
+        "Hybrid",
+        "Alternative"
+      ],
+      "definition": "Broad classification of investment instruments",
+      "quote": "Asset Categories\n`Equity` | `Debt` | `Hybrid` | `Alternative`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "5386fb8d95e2ee8ece8c356b868d0fd9341f898d329cb56dcbb020182c927b92",
+      "active": true
+    },
+    {
+      "id": "glossary:G4",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Customer Segments",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTOR_PROFILE_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": [
+        "Premium",
+        "Standard",
+        "Mass"
+      ],
+      "definition": "Classification based on investor value and service needs",
+      "quote": "Customer Segments\n- **Premium** — High-value clients with sophisticated advisory needs.\n- **Standard** — Mid-tier clients.\n- **Mass** — Retail clients.",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "a7a09254d6a7500faa79496d48e82df9f627b76192417d5efed044ca30edf6fd",
+      "active": true
+    },
+    {
+      "id": "glossary:G5",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Goals",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "investment_goal"
+      ],
+      "terms": [
+        "Wealth Preservation",
+        "Growth",
+        "Income Generation",
+        "Retirement Planning",
+        "Child Education",
+        "Emergency Fund"
+      ],
+      "definition": "Financial objectives investors aim to achieve",
+      "quote": "Investment Goals\n`Wealth Preservation` | `Growth` | `Income Generation` | `Retirement Planning` | `Child Education` | `Emergency Fund`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "21ba47f1a1af182e4201faa769d38431b2d0a451402ec70fddcee9656aa87981",
+      "active": true
+    },
+    {
+      "id": "glossary:G6",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Investment Types",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "investment_type"
+      ],
+      "terms": [
+        "Mutual Fund",
+        "Stock",
+        "Bond",
+        "ETF",
+        "ELSS",
+        "PPF"
+      ],
+      "definition": "Specific financial instrument types",
+      "quote": "Investment Types\n`Mutual Fund` | `Stock` | `Bond` | `ETF` | `ELSS` | `PPF`",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "86959dd55424bca648833d0f83d85059dacdf21887c5c4a3e98b0bbd02be0746",
+      "active": true
+    },
+    {
+      "id": "glossary:G7",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Sectors",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "sector"
+      ],
+      "terms": [
+        "Technology",
+        "Financial Services",
+        "Healthcare",
+        "Consumer Goods",
+        "Energy",
+        "Utilities",
+        "Real Estate",
+        "Materials",
+        "Industrials",
+        "Communication Services"
+      ],
+      "definition": "Industry classifications for investments",
+      "quote": "Sectors\nTechnology | Financial Services | Healthcare | Consumer Goods | Energy | Utilities | Real Estate | Materials | Industrials | Communication Services",
+      "conflicts": [],
+      "errors": [],
+      "evidence_hash": "3aecc44ef2e83b95070f309b8c4bd684eb2537532e23d75e2569e6bc600e2865",
+      "active": true
+    },
+    {
+      "id": "glossary:G8",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Portfolio Health Scores",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HEALTH_001",
+      "fields": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "terms": [
+        "goal_match_pct",
+        "risk_score",
+        "liquidity_score",
+        "diversification_score"
+      ],
+      "definition": "Scores measuring portfolio performance across dimensions",
+      "quote": "**0–100 scale**",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "895a6649df2d357792f9a9e6e29de0f4ecdf9b110fe39c16b29927e247070687",
+      "active": false
+    },
+    {
+      "id": "glossary:G9",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Cash Flow Types",
+      "backend": "sql",
+      "source": "ATOM_EVENT_CASH_FLOW_001",
+      "fields": [
+        "type"
+      ],
+      "terms": [
+        "SIP",
+        "Lump Sum",
+        "Deposit",
+        "Withdrawal",
+        "Redemption"
+      ],
+      "definition": "Categories of cash movement transactions",
+      "quote": "Cash Flow Management — recording deposits, SIP contributions, withdrawals, and redemptions.",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence"
+      ],
+      "evidence_hash": "98b798e46b0066f864a652562f781aa2957109a09171053eeadaf51bebbda2d1",
+      "active": false
+    },
+    {
+      "id": "glossary:G10",
+      "document": "domain_intro",
+      "kind": "terminology",
+      "topic": "Rebalancing Actions",
+      "backend": "sql",
+      "source": "ATOM_EVENT_REBALANCING_ACTION_001",
+      "fields": [
+        "action"
+      ],
+      "terms": [
+        "Buy",
+        "Sell",
+        "Hold"
+      ],
+      "definition": "Recommended portfolio adjustment decisions",
+      "quote": "Rebalancing — identifying allocation drift and generating buy/sell/hold recommendations.",
+      "conflicts": [],
+      "errors": [
+        "Quote is not verbatim source evidence"
+      ],
+      "evidence_hash": "53a2897a2439be389274c4257a6ba4d2a586a6b8abf368eb8a52f51239db03a4",
+      "active": false
+    },
+    {
+      "id": "glossary:G11",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Market Cap Segments",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_PORTFOLIO_HOLDING_001",
+      "fields": [
+        "segment"
+      ],
+      "terms": [
+        "Large Cap",
+        "Mid Cap",
+        "Small Cap"
+      ],
+      "definition": "Company size classifications by market capitalization",
+      "quote": "Large Cap > ₹20,000 Cr, Mid Cap ₹5,000–20,000 Cr, Small Cap < ₹5,000 Cr",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "db351adeebd54ab6c1b272b8188cf70389aebc5431626fdc3a187da787824ffc",
+      "active": false
+    },
+    {
+      "id": "glossary:G12",
+      "document": "domain_intro",
+      "kind": "definition",
+      "topic": "Portfolio Metrics",
+      "backend": "sql",
+      "source": "ATOM_ENTITY_INVESTMENT_GOAL_001",
+      "fields": [
+        "progress_pct"
+      ],
+      "terms": [
+        "progress_pct"
+      ],
+      "definition": "Percentage of goal progress achieved",
+      "quote": "`achievement_pct` = `(current_value / target_amount) × 100`",
+      "conflicts": [],
+      "classification_note": "Computational, numeric or operational terminology requires independent review",
+      "errors": [],
+      "evidence_hash": "a81bcaa999d82b78db24d19d6f234758afbec8200a9215f113599840a8e5caba",
+      "active": false
+    }
+  ],
+  "quarantined_documents": [
+    {
+      "document": "business_rules",
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/phase0_business_rules.md",
+      "reason": "Evaluation-scoped document excluded from preparation and inference"
+    }
+  ]
+}

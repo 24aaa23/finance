@@ -1,0 +1,103 @@
+# ATOM_CONTEXT_SECTOR_001 - V2 (Optimized for Primitive Selection)
+
+identity:
+  id: "ATOM_CONTEXT_SECTOR_001"
+  type: "Atom"
+  subtype: "Context"
+  name: "sector_context"
+  display_name: "Sector Context"
+  
+
+  description: >
+    Business intelligence for industry sectors including risk characteristics,
+    allocation limits by risk tolerance, volatility profiles, and regulatory
+    considerations. This is NOT just a lookup table - it contains embedded
+    business rules that travel with data.
+
+semantics:
+  business_purpose: >
+    Provides business intelligence for sector-based portfolio analysis including
+    risk characteristics, allocation limits, and suitability rules. Enables
+    automated compliance checking and intelligent recommendations.
+  
+  use_cases:
+    - "allocation_compliance"
+    - "risk_assessment"
+    - "suitability_analysis"
+    - "rebalancing_rules"
+    - "portfolio_enrichment"
+
+
+attributes:
+  - name: "sector_id"
+    display_name: "Sector ID"
+    description: "Unique identifier for sector"
+    type: "string"
+    filterable: true
+
+  - name: "sector"
+    display_name: "Sector"
+    synonyms: ["industry", "sector name"]
+    description: "Sector classification name"
+    type: "string"
+    filterable: true
+    allowed_values:
+      - "Automobile"
+      - "Banking"
+      - "Consumer Goods"
+      - "Corporate"
+      - "Financial Services"
+      - "Government"
+      - "Healthcare"
+      - "Infrastructure"
+      - "Pharma"
+      - "Private Equity"
+      - "Real Estate"
+      - "Technology"
+
+context_values:
+  - value: "Automobile"
+    description: "Automobile and auto-related sector exposure"
+
+  - value: "Banking"
+    description: "Banking and lending sector exposure"
+
+  - value: "Consumer Goods"
+    description: "Consumer goods, FMCG, consumer durables, and retail exposure"
+
+  - value: "Corporate"
+    description: "Corporate sector exposure"
+
+  - value: "Financial Services"
+    description: "Banks, insurance, asset management, fintech, and broader financial services"
+
+  - value: "Government"
+    description: "Government or public-sector related exposure"
+
+  - value: "Healthcare"
+    description: "Healthcare services, medical devices, and healthcare-related exposure"
+
+  - value: "Infrastructure"
+    description: "Infrastructure and infrastructure-linked investment exposure"
+
+  - value: "Pharma"
+    description: "Pharmaceuticals and pharma-related exposure"
+
+  - value: "Private Equity"
+    description: "Private equity sector or private-market exposure"
+
+  - value: "Real Estate"
+    description: "REITs, property development, and real-estate-related exposure"
+
+  - value: "Technology"
+    description: "Information technology, software, hardware, and technology services"
+
+derived_context:
+  - name: "is_suitable_for_conservative"
+    description: "Whether sector is suitable for conservative investors"
+
+  - name: "is_defensive"
+    description: "Whether sector is defensive (non-cyclical)"
+
+  - name: "max_allocation_for_risk_tolerance"
+    description: "Maximum allowed allocation for given risk tolerance"

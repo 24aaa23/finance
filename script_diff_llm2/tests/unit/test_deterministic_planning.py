@@ -133,11 +133,12 @@ class DecompositionCoverageTest(unittest.TestCase):
         result = _ensure_domain_coverage(
             "How many Conservative customers have risk score above 75?", parsed,
         )
-        self.assertEqual(result, {"nodes": []})
+        self.assertEqual(result["nodes"], [])
+        self.assertIn("decomposition_error", result)
 
     def test_malformed_node_falls_back_without_crashing(self):
         question = "How many customers have open accounts?"
-        self.assertEqual(_ensure_domain_coverage(question, {"nodes": ["bad node"]}), {"nodes": []})
+        self.assertEqual(_ensure_domain_coverage(question, {"nodes": ["bad node"]})["nodes"], [])
         dag = build_subquery_dag(question, ["bad node"])
         self.assertEqual(list(dag.nodes), ["Q1"])
         self.assertEqual(dag.nodes["Q1"]["description"], question)
