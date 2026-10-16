@@ -1,0 +1,1862 @@
+{
+  "requested_ids": [
+    "G01",
+    "G10",
+    "G14",
+    "G16",
+    "G11",
+    "G15",
+    "G09"
+  ],
+  "preserve": [
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/graded_pipeline_gpt_5_mini.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/raw_pipeline.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/with_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/with_context/reliability_v6_01/raw_pipeline.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/without_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/without_context/reliability_v6_01/graded_pipeline_grader3_gpt_5_mini.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/without_context/reliability_v6_01/raw_pipeline.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gemma_3_27b_it/without_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gemma_3_27b_it/without_context/reliability_v6_01/raw_pipeline.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gpt_oss_120b/with_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gpt_oss_120b/with_context/reliability_v6_01/raw_pipeline.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gpt_oss_120b/without_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+    "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gpt_oss_120b/without_context/reliability_v6_01/raw_pipeline.csv"
+  ],
+  "runs": [
+    {
+      "id": "G01",
+      "description": "Improvement 10 SQL-only \u2014 DeepSeek V3.2, four-worker run; grader 2 / GPT-5 mini",
+      "graded": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/graded_pipeline_gpt_5_mini.csv",
+      "raw": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/raw_pipeline.csv",
+      "accuracy_percent": "74.4"
+    },
+    {
+      "id": "G10",
+      "description": "Main hybrid \u2014 DeepSeek V3.2, without context, reliability_v6_01; grader 2 / GPT-5 mini",
+      "graded": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/without_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+      "raw": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/without_context/reliability_v6_01/raw_pipeline.csv",
+      "accuracy_percent": "80.6"
+    },
+    {
+      "id": "G14",
+      "description": "Main hybrid \u2014 Gemma 3 27B IT, without context, reliability_v6_01; grader 2 / GPT-5 mini",
+      "graded": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gemma_3_27b_it/without_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+      "raw": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gemma_3_27b_it/without_context/reliability_v6_01/raw_pipeline.csv",
+      "accuracy_percent": "61.3"
+    },
+    {
+      "id": "G16",
+      "description": "Main hybrid \u2014 GPT-OSS 120B, without context, reliability_v6_01; grader 2 / GPT-5 mini",
+      "graded": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gpt_oss_120b/without_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+      "raw": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gpt_oss_120b/without_context/reliability_v6_01/raw_pipeline.csv",
+      "accuracy_percent": "78.9"
+    },
+    {
+      "id": "G11",
+      "description": "Main hybrid \u2014 DeepSeek V3.2, without context, reliability_v6_01; grader 3 / GPT-5 mini",
+      "graded": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/without_context/reliability_v6_01/graded_pipeline_grader3_gpt_5_mini.csv",
+      "raw": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/without_context/reliability_v6_01/raw_pipeline.csv",
+      "accuracy_percent": "81.0"
+    },
+    {
+      "id": "G15",
+      "description": "Main hybrid \u2014 GPT-OSS 120B, with context, reliability_v6_01; grader 2 / GPT-5 mini",
+      "graded": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gpt_oss_120b/with_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+      "raw": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gpt_oss_120b/with_context/reliability_v6_01/raw_pipeline.csv",
+      "accuracy_percent": "79.0"
+    },
+    {
+      "id": "G09",
+      "description": "Main hybrid \u2014 DeepSeek V3.2, with context, reliability_v6_01; grader 2 / GPT-5 mini",
+      "graded": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/with_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+      "raw": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/with_context/reliability_v6_01/raw_pipeline.csv",
+      "accuracy_percent": "78.3"
+    }
+  ],
+  "delete": [
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/azure_gpt_oss_120b/runs/gpt_oss_120b/without_context/connection_smoke_20261008/raw_pipeline.csv",
+      "relative_path": "ablations/azure_gpt_oss_120b/runs/gpt_oss_120b/without_context/connection_smoke_20261008/raw_pipeline.csv",
+      "bytes": 7497,
+      "sha256_at_audit": "2fcd58f8f3dca85d860b5c603865dcfcf0dfd6418f5db929d39b885e9728e327"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/gemini_3_8_flash/runs/gemini_3_8_flash/with_context/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/gemini_3_8_flash/runs/gemini_3_8_flash/with_context/run_01/raw_pipeline.csv",
+      "bytes": 11430854,
+      "sha256_at_audit": "aaa58c5a6da21a7bcc8e11bca03a1f1e90e076b7656f434e2338d5ca3c3cee31"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/gemini_3_8_flash/runs/gemini_3_8_flash/without_context/run_8workers_01/raw_pipeline.csv",
+      "relative_path": "ablations/gemini_3_8_flash/runs/gemini_3_8_flash/without_context/run_8workers_01/raw_pipeline.csv",
+      "bytes": 13059492,
+      "sha256_at_audit": "22931c88baf2940cb093dec23010ed13cb20911007d750f2ae95348c0edca742"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/azure_gpt_oss_120b/without_context/azure_fresh_dag_retry_01/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/azure_gpt_oss_120b/without_context/azure_fresh_dag_retry_01/raw_pipeline.csv",
+      "bytes": 29214456,
+      "sha256_at_audit": "be9fead9307614548b7c3d0f112f2f79ddff913e6da59ab31e4f8d59a252c3a1"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/azure_gpt_oss_120b/without_context/azure_fresh_dag_retry_01/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/azure_gpt_oss_120b/without_context/azure_fresh_dag_retry_01/worker_01/raw_pipeline.csv",
+      "bytes": 6058442,
+      "sha256_at_audit": "9272a26d0bf97d738243db63fdcb79e84f7cfa71d3af6f81831b4a77fe59388e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/azure_gpt_oss_120b/without_context/azure_fresh_dag_retry_01/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/azure_gpt_oss_120b/without_context/azure_fresh_dag_retry_01/worker_02/raw_pipeline.csv",
+      "bytes": 5714785,
+      "sha256_at_audit": "2ba2b38d6d89865bfab9f5776dadf5a03a45c66c04e7b78bae1e3f65cb620fee"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/azure_gpt_oss_120b/without_context/azure_fresh_dag_retry_01/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/azure_gpt_oss_120b/without_context/azure_fresh_dag_retry_01/worker_03/raw_pipeline.csv",
+      "bytes": 8621522,
+      "sha256_at_audit": "d1bf491040bac87fbfe77a64ae88919b676ffb699f1b4d517591e7e3f27b4830"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/azure_gpt_oss_120b/without_context/azure_fresh_dag_retry_01/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/azure_gpt_oss_120b/without_context/azure_fresh_dag_retry_01/worker_04/raw_pipeline.csv",
+      "bytes": 8820684,
+      "sha256_at_audit": "a967af1a4c5860cedf09b466ec1be53a3f853137ed39803be254dcbd74ba91b1"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/deepseek_v3_2/with_context/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/deepseek_v3_2/with_context/run_01/raw_pipeline.csv",
+      "bytes": 21889610,
+      "sha256_at_audit": "61c6effc179180f54153e06890e39665336ca82e391bf7137ba938d1ab7c2b7f"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/deepseek_v3_2/with_context/run_01/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/deepseek_v3_2/with_context/run_01/worker_01/raw_pipeline.csv",
+      "bytes": 9907812,
+      "sha256_at_audit": "c58bf833633a0eb94d6fc80de4789ae8d8d1cdfe065979ffa4b9ab0db7b0c365"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/deepseek_v3_2/with_context/run_01/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/deepseek_v3_2/with_context/run_01/worker_02/raw_pipeline.csv",
+      "bytes": 11982059,
+      "sha256_at_audit": "84b59a7fe0117e3b10a2417c5a57ffc4f4204a5b051734bee7653b985c5d89f8"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/raw_pipeline.csv",
+      "bytes": 16538909,
+      "sha256_at_audit": "d70a5129c06e33f3d3c37ad029574b25b09ff1928dc7b88aa2ddb8dcd7591f95"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_01/backups/20261007_152913_425591/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_01/backups/20261007_152913_425591/raw_pipeline.csv",
+      "bytes": 2424562,
+      "sha256_at_audit": "0a6864067a4ccfcb4e7b13a694dc6773f602be27f0f76b351244d0146375b079"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_01/raw_pipeline.csv",
+      "bytes": 5974375,
+      "sha256_at_audit": "6e0fbfbdcf69df073c018dbfd7703fbab5a80eb7f08ab89c072f4005095ef8ee"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_02/backups/20261007_152913_443517/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_02/backups/20261007_152913_443517/raw_pipeline.csv",
+      "bytes": 2210086,
+      "sha256_at_audit": "2a5e2f8cd5bb94e9e42b182c68555a7ab7cb1045a7f8bd823597a9fa7cbc2c77"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_02/raw_pipeline.csv",
+      "bytes": 5383474,
+      "sha256_at_audit": "6767d6059db89c33f099cb991c91e28459af8e3e834d2391518d6da13c90d165"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_03/backups/20261007_152913_449443/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_03/backups/20261007_152913_449443/raw_pipeline.csv",
+      "bytes": 134395,
+      "sha256_at_audit": "5c2b877ea3f4214798d05d75814c7cecb9c59c0ddbe0c53eb95fa04d565203b7"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_03/raw_pipeline.csv",
+      "bytes": 2163560,
+      "sha256_at_audit": "0c3d344a9ffe9d5d17bdbfebffc8c0bc6eb03410b722cf01a8cbc196c0b2bd2e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_04/backups/20261007_152913_451271/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_04/backups/20261007_152913_451271/raw_pipeline.csv",
+      "bytes": 150753,
+      "sha256_at_audit": "7e4c5151672271d7b8f40803507c7841d60842f387250d75c3a7393d68f18950"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/hybrid_sql_only/runs/gpt_oss_120b/with_context/run_01/worker_04/raw_pipeline.csv",
+      "bytes": 3018377,
+      "sha256_at_audit": "516a44c79e96cdbf2e014ccda49d4223d978b3608d1d862c5bb8dc87949a0d74"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/raw_pipeline.csv",
+      "bytes": 37409,
+      "sha256_at_audit": "d6b481a4585f5f47c19e4f5df2c9235dc57ef077b9935693670f4d24891bfc54"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_01/raw_pipeline.csv",
+      "bytes": 9039,
+      "sha256_at_audit": "a331ce28a2913ef8fbcf9c7939f45711159fc2b14e65a4001c861ec032004efd"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_01/raw_pipeline_debug.csv",
+      "bytes": 364469,
+      "sha256_at_audit": "f5b8a103871c4c8c71b8c09380d71a1450121cf82fbaeb905582dcd954267fb4"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_02/raw_pipeline.csv",
+      "bytes": 10382,
+      "sha256_at_audit": "c5d94820381dc38a85822d2e70567a576d0b726a720060414791ace0262ea5b9"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_02/raw_pipeline_debug.csv",
+      "bytes": 438088,
+      "sha256_at_audit": "7cb242b04a6706c852c479e2fca7dff024d08c82010c0d80545787c014165cbe"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_03/raw_pipeline.csv",
+      "bytes": 9637,
+      "sha256_at_audit": "8a2cbfc73e9a877f2777926d9247e55263a9735c1c9901ccede1350a2128f638"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_03/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_03/raw_pipeline_debug.csv",
+      "bytes": 423771,
+      "sha256_at_audit": "a763e14570dd9f5c8733a40431490001abbd972ae0e9d382c0fc09fb83f5e534"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_04/raw_pipeline.csv",
+      "bytes": 9723,
+      "sha256_at_audit": "1fbd7cb2e378c0ba592520ea7424bddf677ae98828654783038be5fcb782db19"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_04/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/azure_gpt_oss_120b/azure_fresh_01/worker_04/raw_pipeline_debug.csv",
+      "bytes": 422445,
+      "sha256_at_audit": "9adf7de7a554e03c57637aa94fc651c92bdfd37f435a38132edcc1632adb8cb9"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/gpt_oss_120b/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/gpt_oss_120b/run_01/raw_pipeline.csv",
+      "bytes": 2559570,
+      "sha256_at_audit": "7d9010d54757279a95c34e2c63ed16b77070f12288812600973603036da1c3f4"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/gpt_oss_120b/run_01/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/gpt_oss_120b/run_01/worker_01/raw_pipeline.csv",
+      "bytes": 1350398,
+      "sha256_at_audit": "a1eabac287438cb73e1838e85d52d63ad64c2e7ec955316e62731fe12d50faa6"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/gpt_oss_120b/run_01/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/gpt_oss_120b/run_01/worker_01/raw_pipeline_debug.csv",
+      "bytes": 2134220,
+      "sha256_at_audit": "5697901693ca159cff3c05fb1ef9e8d5de1f45cae7907285425f2ccb66d9a794"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/gpt_oss_120b/run_01/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/gpt_oss_120b/run_01/worker_02/raw_pipeline.csv",
+      "bytes": 1209275,
+      "sha256_at_audit": "7fc7c229275619eae3432b7d112a89b4324a3fba447091cc759027841e74baec"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_11_hybrid/runs/gpt_oss_120b/run_01/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_11_hybrid/runs/gpt_oss_120b/run_01/worker_02/raw_pipeline_debug.csv",
+      "bytes": 2599724,
+      "sha256_at_audit": "f39aaa52405b439c703f1a1c3217860f63195501a7b17492872297429038a6a7"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/seed.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/seed.csv",
+      "bytes": 200421,
+      "sha256_at_audit": "3829394999ca2941c36cd2cd13759e201726fb1fec0394110fb68270b59f2827"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "bytes": 3739788,
+      "sha256_at_audit": "1b4cc6943e998acd3691e5a47250c6ef19c7f0b31adeedb8fc0da593c1b20627"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "bytes": 20319038,
+      "sha256_at_audit": "8398bf4a0716877c40165a6066a06b3e7cf238f02ea84a6c8a5e3d6ebd761e49"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "bytes": 3716719,
+      "sha256_at_audit": "f96efd64ce9cfd19dd334f486c1c59e4f87364db41193d67fcb3c943c46fcfa0"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "bytes": 20402313,
+      "sha256_at_audit": "a6f8acb3b90687892909ff49fa690c8435502a85d4a0510b82ca617f4b89184e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "bytes": 3404743,
+      "sha256_at_audit": "d646f91b09f3f46d75826659d440413025fabce2a1ac83e6d815977bb139b620"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "bytes": 21155193,
+      "sha256_at_audit": "dda5db25fccad661ff2511be2064d570560ede826e5d91ad4b100fdc7169682c"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "bytes": 3353653,
+      "sha256_at_audit": "115225b31487632a6125c9d65645d2361462a65deac3309decb34a2869c10637"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "bytes": 20151009,
+      "sha256_at_audit": "9b47c309d1fd7404030e54573ee79549a628d1d3046f019359ea41adfbd5fd9b"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/raw_pipeline.csv",
+      "bytes": 200421,
+      "sha256_at_audit": "3829394999ca2941c36cd2cd13759e201726fb1fec0394110fb68270b59f2827"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/deepseek_v3_2/run_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/deepseek_v3_2/run_01/raw_pipeline_debug.csv",
+      "bytes": 4274558,
+      "sha256_at_audit": "acde968aa980a868be167877b54908f4aba2c92aaf4bbc8453a9823d40e28a55"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/graded_pipeline_gpt_5_mini.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/graded_pipeline_gpt_5_mini.csv",
+      "bytes": 12016507,
+      "sha256_at_audit": "1bcddfeedd3b57e45c3ce9316a0cddf0e700856ce701daec4b97876b793806e2"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/raw_pipeline.csv",
+      "bytes": 10536015,
+      "sha256_at_audit": "2baf7dd96994c54e391cd0c9d37a51de9fb88129fa6dba00963a9165c0c98698"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/seed.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/seed.csv",
+      "bytes": 66075,
+      "sha256_at_audit": "603a7596ae6bb18285ee61a4d300123dc36746a5ff1abd16549b72c6e23f0529"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "bytes": 3014823,
+      "sha256_at_audit": "c70bfadbceb6fb77c964b300a4894d8cf4785ba06967e4989cef3d64536d75ef"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "bytes": 16981658,
+      "sha256_at_audit": "feac60fe1e3c951517d0625f5cb8d1e3ac9f41785dbd56a4b3af37eafd37b052"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "bytes": 2541385,
+      "sha256_at_audit": "8e6d29f15dfe2be4e613ce4d92ce1af60942347d09577070d5adc7d5db2b6530"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "bytes": 16798841,
+      "sha256_at_audit": "17a61f2b18edb9fbf5d4299adcc401db8240dee9731e143f224f2888948dd215"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "bytes": 2583360,
+      "sha256_at_audit": "28574ef8df0c7a9a47c0e5f2071eec5d0a9e78d43a81a122004c9982fd768f06"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "bytes": 17625325,
+      "sha256_at_audit": "7df5b78babb0a56c4ece5e878edd5dea3ab765dc15f94800a285da383fa76e91"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "bytes": 2331271,
+      "sha256_at_audit": "ad7bc87ba08f2c2bf8f01bc16814d8cb1ffc4ee965fd17070b1d6c517a6c6e07"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "bytes": 16820261,
+      "sha256_at_audit": "4dce667a7b531a41719573604cb6fde78543f1894879499e9d73b83a06889ec0"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/raw_pipeline.csv",
+      "bytes": 66075,
+      "sha256_at_audit": "603a7596ae6bb18285ee61a4d300123dc36746a5ff1abd16549b72c6e23f0529"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gemma_3_27b_it/run_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/gemma_3_27b_it/run_01/raw_pipeline_debug.csv",
+      "bytes": 2629392,
+      "sha256_at_audit": "e9ac86ca6f929a101f1a479b43d42533ab22b8c2572a4b0b32218080b6900e1e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/graded_pipeline_gpt_5_mini.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/graded_pipeline_gpt_5_mini.csv",
+      "bytes": 12864240,
+      "sha256_at_audit": "124e5acc301a6ad48b32a03b0ec8213ea8ee69a4f951fd53a51cd3f9dbbf454d"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/raw_pipeline.csv",
+      "bytes": 11578603,
+      "sha256_at_audit": "fea3dbe3270e2cda3438728833d48e056b0e58372911f4c357d420b1bb73fe43"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/seed.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/seed.csv",
+      "bytes": 416789,
+      "sha256_at_audit": "5f7cacc59424d1923d045c2a9c01d016c84d522be78ca098157da666e63db732"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "bytes": 2829490,
+      "sha256_at_audit": "cb35026354a36fd74c668c3ed1f308313dafe715bae60512a6881c69897980f7"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "bytes": 19888466,
+      "sha256_at_audit": "097232b88bc820ccbb40ce225afe7b5c0c58783ef990b5f3bdac6afd3c199150"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "bytes": 2997819,
+      "sha256_at_audit": "d94b2ce81be1f9dcfac3bd6b23d736bc861fc47c11fcc267544455a0682911f4"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "bytes": 18817712,
+      "sha256_at_audit": "ddbc82c82352ac3dae10caaf6867ab686f1d675bfd91821809034bb8f44d0e5f"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "bytes": 2590788,
+      "sha256_at_audit": "c4931baa384f191ad31da649e84d3d08e81cfa64bca7f1570ab25409ce8c6dfc"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "bytes": 18867830,
+      "sha256_at_audit": "d068145f9aa97985c33b7d8111348a9c92682b1fbdfc56c90280339ed883a5c5"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "bytes": 2744616,
+      "sha256_at_audit": "0e35b98a25e6e5d93a2d91b00efd81e89e646b61dcfaba4aaab58f3c64bb03ec"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "bytes": 19408194,
+      "sha256_at_audit": "d228876d7845f31678cb1a792617257fd9ba7c21729cd7f30355e2bf3960552e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/raw_pipeline.csv",
+      "bytes": 416789,
+      "sha256_at_audit": "5f7cacc59424d1923d045c2a9c01d016c84d522be78ca098157da666e63db732"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/gpt_oss_120b/run_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/gpt_oss_120b/run_01/raw_pipeline_debug.csv",
+      "bytes": 4069699,
+      "sha256_at_audit": "9df8b921cf0c3f83a10343b9ac67ea192f302b7906fc0cad52d7497f419c9a18"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/raw_pipeline.csv",
+      "bytes": 6372804,
+      "sha256_at_audit": "b4cbb937386de385989e514279841f2a1ac191de3ea4d03ff5d5f01c22b801ba"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/seed.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/seed.csv",
+      "bytes": 20040,
+      "sha256_at_audit": "80cb9ee48f8df77f620c96ded4f5ea2e4a156df8754a703ca055d863c934ac10"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "bytes": 1747237,
+      "sha256_at_audit": "4a4f7b4821aee9ad4a2cc66f643d8100113ac1605b3866ccb2a5381b1c1032b8"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "bytes": 6813816,
+      "sha256_at_audit": "4eff52b766f63588dea988ea9d29c1f302133906a9747163251b9ae4030ade67"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "bytes": 1997665,
+      "sha256_at_audit": "7d5a7c52da925d8f070d22dd0316d626cb4c76f15b7b632c4373d37ddeb9e3aa"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "bytes": 7481302,
+      "sha256_at_audit": "59050b2d4024ea770e180f5f19f9405f4ae3817923a2efe216d9d814139bd8ac"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "bytes": 1468750,
+      "sha256_at_audit": "b4d3a0060d7bc4b9f1176c0c923fc8e1139f99dfdea37c3a2630a971a08fb5e7"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "bytes": 6114517,
+      "sha256_at_audit": "14760d583e5e117820028eb5f9f98a2d18419db6908c4c585b3791c2ff115d6e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "bytes": 1140666,
+      "sha256_at_audit": "766f7ce9d37627b426e864177b0964b72eac521d7279e09124854fe205874d00"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "bytes": 7656782,
+      "sha256_at_audit": "6089d41bcf2c2cb59222b2fc5bfb54d856d6ee1adedb5fb9a641e2acd7980197"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/raw_pipeline.csv",
+      "bytes": 20040,
+      "sha256_at_audit": "80cb9ee48f8df77f620c96ded4f5ea2e4a156df8754a703ca055d863c934ac10"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/kimi_k2_thinking/run_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/kimi_k2_thinking/run_01/raw_pipeline_debug.csv",
+      "bytes": 597357,
+      "sha256_at_audit": "3d942fb5dd45eda86ac0ea5684a26f887369ac21e39db3ae133bbecdd57cd6f6"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/graded_pipeline_gpt_5_mini.csv",
+      "relative_path": "ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/graded_pipeline_gpt_5_mini.csv",
+      "bytes": 11005609,
+      "sha256_at_audit": "56a6855d0b021132fe1ab29d9d141438ffda6ce88a6453b6a7f9cbefefa123bf"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/raw_pipeline.csv",
+      "bytes": 9725298,
+      "sha256_at_audit": "25af27013a31eba4907e31ced0c2c901470f70918dc1fefd4360995019308a2e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "bytes": 2587738,
+      "sha256_at_audit": "4620809d2f7fc3b89105bb17f0443224a2ee148942fa653f61bc9646271bdd3b"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "bytes": 19178309,
+      "sha256_at_audit": "44fef5fb471c745ccb3a02622ebb1327eb1f877512807296d88d47044327fbed"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "bytes": 2221306,
+      "sha256_at_audit": "7f7ec9da84946301da44e20ebfb5e514bd9dc06050e81c675dff948b23ffa303"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "bytes": 19430241,
+      "sha256_at_audit": "265b076e52046856af7b4a074b0429baf3b5bac5642588029f65b21783cc421c"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "bytes": 2529685,
+      "sha256_at_audit": "300ae45d2046a4447e048e5667d5fe7df8690c72f9cf9a62e5b964751edff563"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "bytes": 19576131,
+      "sha256_at_audit": "81c5a914afb04e9d2ccf29d6150d913629464796104bc1a99ebf3ef8e87703e9"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "bytes": 2386993,
+      "sha256_at_audit": "cb74589a37a150b1360294f08c0bfb59eff3f576d0a78615e5b7018e3d156e7c"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement10_models/runs/qwen3_coder_480b/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "bytes": 19514743,
+      "sha256_at_audit": "548156f21b4f704cbbe48c6d8c014dc8727f6c532c25d05d903cdaf9ac86bcb4"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/graded_pipeline_gpt_5_mini.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/graded_pipeline_gpt_5_mini.csv",
+      "bytes": 11283257,
+      "sha256_at_audit": "1766634e68e7367ca961fde7b384d39b7b6785cb2544dfb4e1376cce87a1bf90"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/raw_pipeline.csv",
+      "bytes": 10956404,
+      "sha256_at_audit": "7ea49dc2d3c24742b1f960760ca48855a5ca7e60d93bfd15dd2c0cd6a6b6e73b"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/seed.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/seed.csv",
+      "bytes": 4487472,
+      "sha256_at_audit": "52b929ddb9d1ace35569e9b99027e5a7168daf57c53ded26568b425cb98e794e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_01/raw_pipeline.csv",
+      "bytes": 446228,
+      "sha256_at_audit": "dcf75ba916f98209a41c75c4708bb70d2b79f7b6177b047c359fc7bda29cb33e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_01/raw_pipeline_debug.csv",
+      "bytes": 5287607,
+      "sha256_at_audit": "4c4ebb413b7dc3e5f7ddb0c95e477fb506edd51efd747f8a11e4c847df43dc50"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_02/raw_pipeline.csv",
+      "bytes": 1308589,
+      "sha256_at_audit": "357af46778b0a47230829862b181ef0c065d5e9d2f1ec07023b4799bac6dc9ee"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_02/raw_pipeline_debug.csv",
+      "bytes": 5198410,
+      "sha256_at_audit": "cf8735d7b863ce6318c2874cef5d52567b6127eb4095c3d3a4f1fd86f27e2556"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_03/raw_pipeline.csv",
+      "bytes": 539761,
+      "sha256_at_audit": "52d5f5ef12d5771159818e08da318119a5d7614821a5b0086074044b7ebcbca5"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_03/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_03/raw_pipeline_debug.csv",
+      "bytes": 5100709,
+      "sha256_at_audit": "0f9615b952b04099adfc697d709a8c5207d6275a1ec420adf2ed4e9e879aeced"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_04/raw_pipeline.csv",
+      "bytes": 817910,
+      "sha256_at_audit": "af3d34b7513d7bc7e481acab7b1b71479998fd0d0d9bee92be1e6581627bd614"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_04/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_04/raw_pipeline_debug.csv",
+      "bytes": 4756000,
+      "sha256_at_audit": "8597a8bd2715190c7735c65abd28986c949e69bd6560f9b3e1bf4ddb3725c7c8"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_05/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_05/raw_pipeline.csv",
+      "bytes": 1121524,
+      "sha256_at_audit": "c9a082155d8e51dd4ef64afa5c62b99d240df7eacff1bdb9acd738f7101d1050"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_05/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_05/raw_pipeline_debug.csv",
+      "bytes": 4825967,
+      "sha256_at_audit": "979b85a01f4bae7661352a44c21e73d7ae5360920712c555b5ba1b188f92bb94"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_06/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_06/raw_pipeline.csv",
+      "bytes": 694483,
+      "sha256_at_audit": "4f8332ac969ed672f8bc6dff9700ee7ed406fe3a76831ac91acab621a8d721be"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_06/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_06/raw_pipeline_debug.csv",
+      "bytes": 5463577,
+      "sha256_at_audit": "8c8fa4c8318a5cc0dfdd0f281d49828651ed638de9038713577459027a799eee"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_07/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_07/raw_pipeline.csv",
+      "bytes": 986825,
+      "sha256_at_audit": "752b395610d7f6abb731349deb6885d900d729983b8dae81a81286c6f6b937ed"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_07/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_07/raw_pipeline_debug.csv",
+      "bytes": 5175155,
+      "sha256_at_audit": "096d20427c1e8898adaf5fc7ca48393e57976971db54dbb8901102a7b8284410"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_08/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_08/raw_pipeline.csv",
+      "bytes": 556713,
+      "sha256_at_audit": "9669ccb25298a2c2b58daefd3ba847c38cc36b9a137c1caf5ef706c7abef08c5"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_08/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_resume8_01/parallel_workers8/worker_08/raw_pipeline_debug.csv",
+      "bytes": 4766231,
+      "sha256_at_audit": "206c99bbc8b87b913d965ae0e99686ff1e18fb7adbde7cacb875d8b99f14728e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/raw_pipeline.csv",
+      "bytes": 4487472,
+      "sha256_at_audit": "52b929ddb9d1ace35569e9b99027e5a7168daf57c53ded26568b425cb98e794e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/seed.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/seed.csv",
+      "bytes": 2923168,
+      "sha256_at_audit": "0fc11277755c44e93730198250491d2255f19dd6d6180c106369bac0f2a46c4a"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "bytes": 723873,
+      "sha256_at_audit": "2429caa951d04a4969d435f0dab63aa363e8a76e2f2d8c29b7e3c68cf65a9607"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "bytes": 2143494,
+      "sha256_at_audit": "8db19542bf03c4a10b88c3c54f82913c6f879439add7b3abf401d89cd69b31bb"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "bytes": 819695,
+      "sha256_at_audit": "97a922930e80795b62ecc30dd1f3779a7b5d9ebd0b12e0ce1b4e90573be6f82d"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "bytes": 2173429,
+      "sha256_at_audit": "c78a52336ee4f2ced40ab27f1f3c9bd5f977b9f6f6c755f735f7a363c83f3fc2"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "bytes": 9697,
+      "sha256_at_audit": "76445104334396872fdd7253ed3d88eabe1752978896e745e6e37bd86a85cbef"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "bytes": 284598,
+      "sha256_at_audit": "9843eebe7a5be1a48d0b34953e1cf7588b36ec296632476aa88656fe440386fe"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "bytes": 12885,
+      "sha256_at_audit": "e50d362f733e16fc8dac7ca1af00068c9ac741f386e83f843499f93afa161923"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "bytes": 393471,
+      "sha256_at_audit": "51e561dea19c611bee3b2c720c16b7a3cdd6b73442c725001ffb2d5b10248867"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/raw_pipeline.csv",
+      "bytes": 76353,
+      "sha256_at_audit": "b72d78ed2d9db19480651c0ed2926b224af31b898585bcf733dc39dc550a777d"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/seed.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/seed.csv",
+      "bytes": 10198,
+      "sha256_at_audit": "4350738a87b29e7f0c8c94aded155d9304f5f2bfb230f8412dd5ec2c5a156de9"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_01/raw_pipeline.csv",
+      "bytes": 2019,
+      "sha256_at_audit": "bde6082e8fb0b15d5fc12b5633471d4ef7846c712454e4046b348f8db0c36668"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_01/raw_pipeline_debug.csv",
+      "bytes": 42534,
+      "sha256_at_audit": "ffc194246e8162bfb0af6309fa2bbacb03d30ea779c3caded4732ca4612aba51"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_02/raw_pipeline.csv",
+      "bytes": 1464,
+      "sha256_at_audit": "35b7f9e22cac08f29cc3c6437e1541241f840b6031a52e6c076eddafe0830dbb"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_02/raw_pipeline_debug.csv",
+      "bytes": 39428,
+      "sha256_at_audit": "6ce29608b3512a3cd96bbab72592a4f180607b6abcf34fef03bd4920157d8c5d"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_03/raw_pipeline.csv",
+      "bytes": 1951,
+      "sha256_at_audit": "942d7d051db7b84ea2fc5ce532597e771c7cae196e0ccfc5a82ad4d082c94d42"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_03/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_03/raw_pipeline_debug.csv",
+      "bytes": 59669,
+      "sha256_at_audit": "27633c6aebc644b66e80cdf864d556dc9fb3186fcb811a88d1e229bebbe64726"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_04/raw_pipeline.csv",
+      "bytes": 1332,
+      "sha256_at_audit": "e084e32b13c2ab4025e99cb57a4a17a9576a045c14b7a9bb41565632867c569e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_04/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_04/raw_pipeline_debug.csv",
+      "bytes": 38921,
+      "sha256_at_audit": "045924e1b513411260ec2f385ca814ec901aafabf142d6b0305a390ed908ea8a"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_05/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_05/raw_pipeline.csv",
+      "bytes": 1161,
+      "sha256_at_audit": "c1d3c5f396c10efc936a1f2a15ad9cc205b2406281860a2ce1ea33b732223548"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_05/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_05/raw_pipeline_debug.csv",
+      "bytes": 23477,
+      "sha256_at_audit": "25a367f9a39530fdc6723fec869dd1d3f76a7b61b0e06957f398690238c1aaac"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_06/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_06/raw_pipeline.csv",
+      "bytes": 60301,
+      "sha256_at_audit": "6fc22715205c6c9ba76afc9cf153d59ff9bff32a725d3b16d501bf9976c32d93"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_06/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_06/raw_pipeline_debug.csv",
+      "bytes": 25132,
+      "sha256_at_audit": "59f34a530266e31e682a85b0a82e973d4c1367b90f582eb6e765ff3366c0d76c"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_07/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_07/raw_pipeline.csv",
+      "bytes": 1235,
+      "sha256_at_audit": "2e66f925bd10d93931d9f2912cf23734aec6cf6852a6137a31f2cca62c957868"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_07/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_07/raw_pipeline_debug.csv",
+      "bytes": 30529,
+      "sha256_at_audit": "56aa3a6483c94e68a80b4b4b3aa577c8a9bc794d5495df61d65aad4444b71e69"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_08/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_08/raw_pipeline.csv",
+      "bytes": 1151,
+      "sha256_at_audit": "2abcd9cf9e65836e931172d3372d552ad91c3032dda20b07d141fd539cf70407"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_08/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/azure_gpt_oss_120b/azure_run_01/parallel_workers8/worker_08/raw_pipeline_debug.csv",
+      "bytes": 22524,
+      "sha256_at_audit": "31f9444a27a033abf6a19462d888de3bf0fa0487eb691438a50aabff52ea2c1e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/raw_pipeline.csv",
+      "bytes": 3024198,
+      "sha256_at_audit": "45423f80d7cb99dc4ba2278fc750269a892dee026d89f7e34d8b24c8336029df"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/seed.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/seed.csv",
+      "bytes": 10184,
+      "sha256_at_audit": "677e126952f8313fd9257b215142636e8d000ad7778fdad20890085b2e406b78"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_01/raw_pipeline.csv",
+      "bytes": 1670164,
+      "sha256_at_audit": "07f2e1c8ed46163ef332166f50cafd601e08fe85caaf57b063553eecc14486a3"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_01/raw_pipeline_debug.csv",
+      "bytes": 8700041,
+      "sha256_at_audit": "860c61ce9d273647648c8ddd4259a58301290a53efe550f0f61c463a87233882"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_02/raw_pipeline.csv",
+      "bytes": 1236340,
+      "sha256_at_audit": "d7a100e7a684f7cdc469373ce0cb4b30d82b5d633cbf51e9b8afff96c860c307"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_02/raw_pipeline_debug.csv",
+      "bytes": 8554093,
+      "sha256_at_audit": "5433281ceb4fd3966dbba68cc1267a515f202a43f5a9b27de7b3d3583bdcda91"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_03/raw_pipeline.csv",
+      "bytes": 57178,
+      "sha256_at_audit": "a94bfae72aa244c06a56c8709c2bd5a9c917843c507c828ba0190c87fc26f385"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_03/raw_pipeline_debug.csv",
+      "bytes": 856543,
+      "sha256_at_audit": "d2d52c506219eba12563e556439ea9b990dad20e5257fbff2e18f00240bc249a"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_04/raw_pipeline.csv",
+      "bytes": 53129,
+      "sha256_at_audit": "cb210f09ca9fbe9b67f2ea3ef585528b1bd081e5ecb10ce47476ac0031d5c48b"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/parallel_workers4/worker_04/raw_pipeline_debug.csv",
+      "bytes": 697294,
+      "sha256_at_audit": "cd81de10a5cba0d8618ebb2084d6011a0851fcec14481ff3b4a50ce2438fc81a"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/raw_pipeline.csv",
+      "bytes": 10184,
+      "sha256_at_audit": "677e126952f8313fd9257b215142636e8d000ad7778fdad20890085b2e406b78"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/raw_pipeline_debug.csv",
+      "relative_path": "ablations/improvement11_gpt_oss_120b/runs/gpt_oss_120b/run_01/raw_pipeline_debug.csv",
+      "bytes": 321641,
+      "sha256_at_audit": "5f75f661cce11df566dc3f0c06daf62b054334ca63944c17db85043eb08a689d"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/neowealth_hybrid/runs/gemini_3_8_flash/merged_context_repairs/run_01/graded_pipeline_gpt_5_mini.csv",
+      "relative_path": "ablations/neowealth_hybrid/runs/gemini_3_8_flash/merged_context_repairs/run_01/graded_pipeline_gpt_5_mini.csv",
+      "bytes": 18607944,
+      "sha256_at_audit": "2f2ad765cc34b64a7c9028d46ef84a9eaf6794861676259c630f7c13bd2f3741"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/neowealth_hybrid/runs/gemini_3_8_flash/merged_context_repairs/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/neowealth_hybrid/runs/gemini_3_8_flash/merged_context_repairs/run_01/raw_pipeline.csv",
+      "bytes": 17731630,
+      "sha256_at_audit": "6be965df3f6dac23a264d14acff36346d0666c07465d0ca73c21a1f11966f1fb"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/neowealth_hybrid/runs/gemini_3_8_flash/merged_full_context_repairs/run_01/graded_pipeline_gpt_5_mini.csv",
+      "relative_path": "ablations/neowealth_hybrid/runs/gemini_3_8_flash/merged_full_context_repairs/run_01/graded_pipeline_gpt_5_mini.csv",
+      "bytes": 19117091,
+      "sha256_at_audit": "6cefa3fa6308d71993c3f788ce927b1e83c0dc7f86b6b58930867a3594be772b"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/neowealth_hybrid/runs/gemini_3_8_flash/with_context/node_errors_context_01/raw_pipeline.csv",
+      "relative_path": "ablations/neowealth_hybrid/runs/gemini_3_8_flash/with_context/node_errors_context_01/raw_pipeline.csv",
+      "bytes": 1377708,
+      "sha256_at_audit": "18bb4278499af24d0d2e3a33b9ab1b49929c66d614d6f306c8e3d6238144e447"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/neowealth_hybrid/runs/gemini_3_8_flash/with_context/partial_mismatch_full_context_01/graded_pipeline_gpt_5_mini.csv",
+      "relative_path": "ablations/neowealth_hybrid/runs/gemini_3_8_flash/with_context/partial_mismatch_full_context_01/graded_pipeline_gpt_5_mini.csv",
+      "bytes": 13123025,
+      "sha256_at_audit": "70d561304f716f4bb557dd5b9e231e1cf80d1a7a0046286b89a030c59bbbea48"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/neowealth_hybrid/runs/gemini_3_8_flash/with_context/partial_mismatch_full_context_01/raw_pipeline.csv",
+      "relative_path": "ablations/neowealth_hybrid/runs/gemini_3_8_flash/with_context/partial_mismatch_full_context_01/raw_pipeline.csv",
+      "bytes": 12739967,
+      "sha256_at_audit": "599466ca8c085ccac1c6fe593bc818094de474a13e1cc032f39718c81cf8b8c3"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/neowealth_hybrid/runs/gemini_3_8_flash/without_context/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/neowealth_hybrid/runs/gemini_3_8_flash/without_context/run_01/raw_pipeline.csv",
+      "bytes": 17556306,
+      "sha256_at_audit": "f975508c83574bf7af0393d20fb2f31784000c38c37da2e09916ea6ae3d74ecb"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/neowealth_hybrid/runs/gemini_3_8_flash/without_context/run_01/raw_pipeline_before_user_skip.csv",
+      "relative_path": "ablations/neowealth_hybrid/runs/gemini_3_8_flash/without_context/run_01/raw_pipeline_before_user_skip.csv",
+      "bytes": 17555102,
+      "sha256_at_audit": "8dd649dd93a3a06d18c88ffa0d8dc9c68988cac4ada50f50e232cb10da808823"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/deepseek_v3_2/with_context/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/measurement/runs/sample40_01/deepseek_v3_2/with_context/raw_pipeline.csv",
+      "bytes": 967611,
+      "sha256_at_audit": "2b3c2b01eb545579f40e00d7ee444ab522ade4d1d082e056ae970754a529bd57"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/deepseek_v3_2/without_context/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/measurement/runs/sample40_01/deepseek_v3_2/without_context/raw_pipeline.csv",
+      "bytes": 1006067,
+      "sha256_at_audit": "212813e314551f37ce739137f973513ab986c0a088ba4b9d75dfe7dff82337ae"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/gemma_3_27b_it/with_context/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/measurement/runs/sample40_01/gemma_3_27b_it/with_context/raw_pipeline.csv",
+      "bytes": 868955,
+      "sha256_at_audit": "7046decd153d2b936525302a173ec5d6642e619ead4e1a4b879101e02e110d8f"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/gemma_3_27b_it/without_context/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/measurement/runs/sample40_01/gemma_3_27b_it/without_context/raw_pipeline.csv",
+      "bytes": 1693539,
+      "sha256_at_audit": "6154a345a48a414600b6dde964714cfa4679d5a69469392ec89f632c691cd17b"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/gpt_oss_120b/with_context/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/measurement/runs/sample40_01/gpt_oss_120b/with_context/raw_pipeline.csv",
+      "bytes": 1717767,
+      "sha256_at_audit": "727d3f0802c443308536520265e97776704008595cc280e26c15f38f184540ef"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/gpt_oss_120b/without_context/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/measurement/runs/sample40_01/gpt_oss_120b/without_context/raw_pipeline.csv",
+      "bytes": 1629190,
+      "sha256_at_audit": "a011fdf17db9a9b60d5a9661051e29cd1a9d1790264e88de2982e9d2bd6f2a34"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/kimi_k2_thinking/with_context/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/measurement/runs/sample40_01/kimi_k2_thinking/with_context/raw_pipeline.csv",
+      "bytes": 16025,
+      "sha256_at_audit": "8d38174a34410eeb6a21055514a37954f3b6d333cefb210bed9ec3331fa8f112"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/measurement/runs/sample40_01/kimi_k2_thinking/without_context/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/measurement/runs/sample40_01/kimi_k2_thinking/without_context/raw_pipeline.csv",
+      "bytes": 879753,
+      "sha256_at_audit": "39298df96f8729568e6419e23c77a77a01597cc149891c7e7eccfbb905e6254c"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/with_context/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/runs/deepseek_v3_2/with_context/run_01/raw_pipeline.csv",
+      "bytes": 60562418,
+      "sha256_at_audit": "fda8d19d14a8d2fbadf1683ff67803c7f3bf88bac595cbace9cc3a3bc795233b"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01/graded_pipeline_gpt_5_mini.csv",
+      "relative_path": "ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01/graded_pipeline_gpt_5_mini.csv",
+      "bytes": 35293866,
+      "sha256_at_audit": "4461e0dacdc4ace08a703ba563eddf1e9347ce0eaa4c88aa852a1b6d00bdff85"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/runs/deepseek_v3_2/without_context/run_01/raw_pipeline.csv",
+      "bytes": 61553674,
+      "sha256_at_audit": "d542aac56e902b16a1740727dfefe0cf02ef13c663f7df7ac0e9c2ad2629b219"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gemma_3_27b_it/with_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+      "relative_path": "ablations/v5_test1000/runs/gemma_3_27b_it/with_context/reliability_v6_01/graded_pipeline_gpt_5_mini.csv",
+      "bytes": 42196770,
+      "sha256_at_audit": "09de959a266c8b928c1caea43743599feabd0f2370d29a44c4495742ea0b3b18"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gemma_3_27b_it/with_context/reliability_v6_01/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/runs/gemma_3_27b_it/with_context/reliability_v6_01/raw_pipeline.csv",
+      "bytes": 40847759,
+      "sha256_at_audit": "34989acc3d7f95e947899fe6e816e539c12c244961048030a13f6dbaeceb1d75"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gemma_3_27b_it/with_context/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/runs/gemma_3_27b_it/with_context/run_01/raw_pipeline.csv",
+      "bytes": 30997506,
+      "sha256_at_audit": "9d6d3554d19c4c96c47ffbad2e3a1258447979a549f90e1f76daefbf0c794780"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/gemma_3_27b_it/without_context/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/runs/gemma_3_27b_it/without_context/run_01/raw_pipeline.csv",
+      "bytes": 30873728,
+      "sha256_at_audit": "359ef470aca03eebae4cee26b0ed0da258339224fa86c68f83511463e23e3af0"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/kimi_k2_thinking/with_context/reliability_v6_01/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/runs/kimi_k2_thinking/with_context/reliability_v6_01/raw_pipeline.csv",
+      "bytes": 28180230,
+      "sha256_at_audit": "10cd8da6b8ed8e83ab09a8874b3c3f3f42603ce9c302c5d0183819d719c48d90"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/kimi_k2_thinking/without_context/reliability_v6_01/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/runs/kimi_k2_thinking/without_context/reliability_v6_01/raw_pipeline.csv",
+      "bytes": 39158938,
+      "sha256_at_audit": "0c9203db6bab4e4cc82c7391d30f0aba0a7ccd7ac5bb8a00dd3e761a9fe65db2"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/kimi_k2_thinking/without_context/run_01/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/runs/kimi_k2_thinking/without_context/run_01/raw_pipeline.csv",
+      "bytes": 16931839,
+      "sha256_at_audit": "1bd0b643f54990a8129ca609aaa312280a9b6f0dbbbe080815dc4adb44380d16"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/qwen3_coder_480b/with_context/reliability_v6_01/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/runs/qwen3_coder_480b/with_context/reliability_v6_01/raw_pipeline.csv",
+      "bytes": 20692992,
+      "sha256_at_audit": "86bd744dfb28ac1fdd90d082b0c0a2b5ded7b1a0f21971fce1b9fe9509fc8dd8"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/ablations/v5_test1000/runs/qwen3_coder_480b/without_context/reliability_v6_01/raw_pipeline.csv",
+      "relative_path": "ablations/v5_test1000/runs/qwen3_coder_480b/without_context/reliability_v6_01/raw_pipeline.csv",
+      "bytes": 21086756,
+      "sha256_at_audit": "3a842b46088ae59a19d7a5fa8c4ca1aa30246c6e6c5de351868f5dfa4a29d20c"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/analysis/output/graded_backend_pattern_openai_gpt_oss_120b_all_train_442_semanticfix_terra.csv",
+      "relative_path": "analysis/output/graded_backend_pattern_openai_gpt_oss_120b_all_train_442_semanticfix_terra.csv",
+      "bytes": 7353533,
+      "sha256_at_audit": "735ad198154c599a790f958c382b41c7bdfde518a1ab22659a5da93dd65264d8"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/analysis/pipeline_audit_2026_10_02/smoke_2026_10_03/raw_grouped_case.csv",
+      "relative_path": "analysis/pipeline_audit_2026_10_02/smoke_2026_10_03/raw_grouped_case.csv",
+      "bytes": 10204,
+      "sha256_at_audit": "f6fe771e22bb44589dd95b03574cbfa2f55ccc1f70cbea971a44a69e4cc690e3"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/analysis/pipeline_audit_2026_10_02/smoke_2026_10_03/raw_one_question.csv",
+      "relative_path": "analysis/pipeline_audit_2026_10_02/smoke_2026_10_03/raw_one_question.csv",
+      "bytes": 5183,
+      "sha256_at_audit": "6d2a4520ab7f133039a15801f454ef5701eb29dfbc38563494f18ee475e14e6e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/analysis/pipeline_audit_2026_10_02/smoke_2026_10_03/raw_one_question_v2.csv",
+      "relative_path": "analysis/pipeline_audit_2026_10_02/smoke_2026_10_03/raw_one_question_v2.csv",
+      "bytes": 1096,
+      "sha256_at_audit": "20f2a0824142dc21f284cc50b42033942fe2d56fdb48fabdbf330727710ca5c7"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/analysis/pipeline_audit_2026_10_02/smoke_2026_10_03/raw_one_question_v3.csv",
+      "relative_path": "analysis/pipeline_audit_2026_10_02/smoke_2026_10_03/raw_one_question_v3.csv",
+      "bytes": 4970,
+      "sha256_at_audit": "d9c67a0ad8d1df51083e01e61d298d4356be3d33637d807a729b3f5590e96241"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/analysis/pipeline_audit_2026_10_02/smoke_2026_10_03/raw_one_question_v4.csv",
+      "relative_path": "analysis/pipeline_audit_2026_10_02/smoke_2026_10_03/raw_one_question_v4.csv",
+      "bytes": 7388,
+      "sha256_at_audit": "ad03a4681dc4fbf474ab6c77af96ac259aa89d410fadc2a8b1df4bcc8bc0abdb"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/deepseek.v3.2-abhinav/all/train/output/graded_deepseek_v3_2_all_train.csv",
+      "relative_path": "historical_models/deepseek.v3.2-abhinav/all/train/output/graded_deepseek_v3_2_all_train.csv",
+      "bytes": 40356616,
+      "sha256_at_audit": "e6782f85624660298e6611f25043746e89fd6e402b69d4cd6893c3d58b57f611"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/deepseek.v3.2-abhinav/all/train/output/graded_deepseek_v3_2_all_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/deepseek.v3.2-abhinav/all/train/output/graded_deepseek_v3_2_all_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 38513525,
+      "sha256_at_audit": "14925b50881aeb4d46786cc41dcf9cc5e5480580858fd3bd04fd11388a14dbc9"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/deepseek.v3.2-abhinav/all/train/output/graded_deepseek_v3_2_all_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/deepseek.v3.2-abhinav/all/train/output/graded_deepseek_v3_2_all_train_gptoss_grader_check.csv",
+      "bytes": 40135896,
+      "sha256_at_audit": "7929d17f3cfe8d84e3b27d7b9065358f75eacbd72f78f786ccd4f0d27529f13d"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/deepseek.v3.2-abhinav/all/train/output/raw_pipeline_deepseek_v3_2_all_train.csv",
+      "relative_path": "historical_models/deepseek.v3.2-abhinav/all/train/output/raw_pipeline_deepseek_v3_2_all_train.csv",
+      "bytes": 38322207,
+      "sha256_at_audit": "80031430fec9e42827d3aec55f30ea14218826e2cd4b7a6cce94752ab434fb33"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/deepseek.v3.2-abhinav/hybrid/train/output/graded_deepseek_v3_2_hybrid_train.csv",
+      "relative_path": "historical_models/deepseek.v3.2-abhinav/hybrid/train/output/graded_deepseek_v3_2_hybrid_train.csv",
+      "bytes": 24473040,
+      "sha256_at_audit": "78c7cb9d023ee912a4acdac604482548df895ba396bd8b567398fe91058afdc3"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/deepseek.v3.2-abhinav/hybrid/train/output/graded_deepseek_v3_2_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/deepseek.v3.2-abhinav/hybrid/train/output/graded_deepseek_v3_2_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 22240911,
+      "sha256_at_audit": "d93df6e2ebd46628103f68e9ae479d51a7fd00971e822c7094698875c72fc85a"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/deepseek.v3.2-abhinav/hybrid/train/output/graded_deepseek_v3_2_hybrid_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/deepseek.v3.2-abhinav/hybrid/train/output/graded_deepseek_v3_2_hybrid_train_gptoss_grader_check.csv",
+      "bytes": 24044165,
+      "sha256_at_audit": "ffb28ba12f0ab80ecac639b16b1e0eb2e2968348cf51464dc29beb4356b95ae3"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/deepseek.v3.2-abhinav/hybrid/train/output/raw_pipeline_deepseek_v3_2_hybrid_train.csv",
+      "relative_path": "historical_models/deepseek.v3.2-abhinav/hybrid/train/output/raw_pipeline_deepseek_v3_2_hybrid_train.csv",
+      "bytes": 22102322,
+      "sha256_at_audit": "3f7d9330cb97d74c9febbeb7509965d10afe2265d7af8406f390b81f30b62cfc"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemini-3.6-flash-aman/all/train/output/graded_google_gemini_3_6_flash_all_train.csv",
+      "relative_path": "historical_models/google.gemini-3.6-flash-aman/all/train/output/graded_google_gemini_3_6_flash_all_train.csv",
+      "bytes": 17994975,
+      "sha256_at_audit": "50a4a962356e45fcdfa7d5cc103fc8588403087b32a5d0026257b15387919a94"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemini-3.6-flash-aman/all/train/output/graded_google_gemini_3_6_flash_all_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/google.gemini-3.6-flash-aman/all/train/output/graded_google_gemini_3_6_flash_all_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 16147815,
+      "sha256_at_audit": "b07f7cea352feb0142b33456cc027828882627b3523fa0d3108b4588f893b908"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemini-3.6-flash-aman/all/train/output/graded_google_gemini_3_6_flash_all_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/google.gemini-3.6-flash-aman/all/train/output/graded_google_gemini_3_6_flash_all_train_gptoss_grader_check.csv",
+      "bytes": 18087180,
+      "sha256_at_audit": "ac369cc382b2886116937c723a59d2782b97377717d17292a2e5b360cf8e7c90"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemini-3.6-flash-aman/all/train/output/raw_pipeline_google_gemini_3_6_flash_all_train.csv",
+      "relative_path": "historical_models/google.gemini-3.6-flash-aman/all/train/output/raw_pipeline_google_gemini_3_6_flash_all_train.csv",
+      "bytes": 16017141,
+      "sha256_at_audit": "331c16144cd98213a9dd0c200cd697d9750922ad4989777fb2f50b170bcf8a37"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemma-3-27b-it-aman/all/test/output/graded_google_gemma_3_27b_it_all_test_gptoss_grader_check.csv",
+      "relative_path": "historical_models/google.gemma-3-27b-it-aman/all/test/output/graded_google_gemma_3_27b_it_all_test_gptoss_grader_check.csv",
+      "bytes": 219936,
+      "sha256_at_audit": "a9e35dff45f8cc7ad6384f5a23aaaba6f0bb231c28d337b055a67d8dcf660a11"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemma-3-27b-it-aman/all/test/output/raw_pipeline_google_gemma_3_27b_it_all_test.csv",
+      "relative_path": "historical_models/google.gemma-3-27b-it-aman/all/test/output/raw_pipeline_google_gemma_3_27b_it_all_test.csv",
+      "bytes": 5100613,
+      "sha256_at_audit": "01fece7ee7ba5f75343e0bb86d786ad132b49c752d4906cdbb2c1ee265aa04f3"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemma-3-27b-it-aman/all/train/output/graded_google_gemma_3_27b_it_all_train.csv",
+      "relative_path": "historical_models/google.gemma-3-27b-it-aman/all/train/output/graded_google_gemma_3_27b_it_all_train.csv",
+      "bytes": 25724151,
+      "sha256_at_audit": "64ccf43f8c088a17c2b60289aa27246851f7d9e561724902aa0ba9c6c089666a"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemma-3-27b-it-aman/all/train/output/graded_google_gemma_3_27b_it_all_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/google.gemma-3-27b-it-aman/all/train/output/graded_google_gemma_3_27b_it_all_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 19255463,
+      "sha256_at_audit": "f17ac479d43ad38ada042ba25c973ae9c19ab7fc6933eb2ce205505180595ddf"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemma-3-27b-it-aman/all/train/output/graded_google_gemma_3_27b_it_all_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/google.gemma-3-27b-it-aman/all/train/output/graded_google_gemma_3_27b_it_all_train_gptoss_grader_check.csv",
+      "bytes": 24095274,
+      "sha256_at_audit": "3ba254620f15a4570bbec0723a96eac867cb04d1c52da2aa9e2bba63d2d204a7"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemma-3-27b-it-aman/all/train/output/raw_pipeline_google_gemma_3_27b_it_all_train.csv",
+      "relative_path": "historical_models/google.gemma-3-27b-it-aman/all/train/output/raw_pipeline_google_gemma_3_27b_it_all_train.csv",
+      "bytes": 19094275,
+      "sha256_at_audit": "37841b9fdfb0a245c6be014c50f2af5a655b2625c5d18cc6b57d937e2a17f65e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemma-3-27b-it-aman/hybrid/train/output/graded_google_gemma_3_27b_it_hybrid_train.csv",
+      "relative_path": "historical_models/google.gemma-3-27b-it-aman/hybrid/train/output/graded_google_gemma_3_27b_it_hybrid_train.csv",
+      "bytes": 23956725,
+      "sha256_at_audit": "078ab76fd1f3d5011851e4f2e39a7c9b8a7c9488ef5a319374786b8af24d82f2"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemma-3-27b-it-aman/hybrid/train/output/graded_google_gemma_3_27b_it_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/google.gemma-3-27b-it-aman/hybrid/train/output/graded_google_gemma_3_27b_it_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 22053507,
+      "sha256_at_audit": "ac1eae809bbffb84ac0bc6366fb3442439896ac57013ab8b6eb115445f24fb51"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemma-3-27b-it-aman/hybrid/train/output/graded_google_gemma_3_27b_it_hybrid_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/google.gemma-3-27b-it-aman/hybrid/train/output/graded_google_gemma_3_27b_it_hybrid_train_gptoss_grader_check.csv",
+      "bytes": 23855382,
+      "sha256_at_audit": "7cf1161a8156989bd0805fbf75e2f9ecc61794aea0b430325809bfd139ff880e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/google.gemma-3-27b-it-aman/hybrid/train/output/raw_pipeline_google_gemma_3_27b_it_hybrid_train.csv",
+      "relative_path": "historical_models/google.gemma-3-27b-it-aman/hybrid/train/output/raw_pipeline_google_gemma_3_27b_it_hybrid_train.csv",
+      "bytes": 21915188,
+      "sha256_at_audit": "7145a3fa7ddd136875e3eef318871d5c6bf5931b2e8ed0510b8fa4fc82e1b324"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/mistral.mistral-large-3-675b-instruct-aman/all/test/output/raw_pipeline_mistral_mistral_large_3_675b_instruct_all_test.csv",
+      "relative_path": "historical_models/mistral.mistral-large-3-675b-instruct-aman/all/test/output/raw_pipeline_mistral_mistral_large_3_675b_instruct_all_test.csv",
+      "bytes": 10473085,
+      "sha256_at_audit": "e9c4712272a52530eac0627f7c8c38fbbf20730a8e0df4908f5b50fddd67891a"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/mistral.mistral-large-3-675b-instruct-aman/all/train/output/graded_mistral_mistral_large_3_675b_instruct_all_train.csv",
+      "relative_path": "historical_models/mistral.mistral-large-3-675b-instruct-aman/all/train/output/graded_mistral_mistral_large_3_675b_instruct_all_train.csv",
+      "bytes": 17730550,
+      "sha256_at_audit": "6628bcaeae3a8841b70b5ef63b0a104659563dc53f7b7d96890769fdb07e46e0"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/mistral.mistral-large-3-675b-instruct-aman/all/train/output/graded_mistral_mistral_large_3_675b_instruct_all_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/mistral.mistral-large-3-675b-instruct-aman/all/train/output/graded_mistral_mistral_large_3_675b_instruct_all_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 15180571,
+      "sha256_at_audit": "0e28df2646870b948e9d6665c0be8dac9a65767e947ddb232c554190e6c5438c"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/mistral.mistral-large-3-675b-instruct-aman/all/train/output/graded_mistral_mistral_large_3_675b_instruct_all_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/mistral.mistral-large-3-675b-instruct-aman/all/train/output/graded_mistral_mistral_large_3_675b_instruct_all_train_gptoss_grader_check.csv",
+      "bytes": 16420861,
+      "sha256_at_audit": "0778a7470db17707718e358f732f7be2502454724fd99116ce74c6c1f75ad877"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/mistral.mistral-large-3-675b-instruct-aman/all/train/output/raw_pipeline_mistral_mistral_large_3_675b_instruct_all_train.csv",
+      "relative_path": "historical_models/mistral.mistral-large-3-675b-instruct-aman/all/train/output/raw_pipeline_mistral_mistral_large_3_675b_instruct_all_train.csv",
+      "bytes": 15023198,
+      "sha256_at_audit": "2ad352f81333687406af56f87277a798fa974a837fd38ceb5ba39bd3f448a8f1"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/mistral.mistral-large-3-675b-instruct-aman/hybrid/train/output/graded_mistral_mistral_large_3_675b_instruct_hybrid_train.csv",
+      "relative_path": "historical_models/mistral.mistral-large-3-675b-instruct-aman/hybrid/train/output/graded_mistral_mistral_large_3_675b_instruct_hybrid_train.csv",
+      "bytes": 24744088,
+      "sha256_at_audit": "51273633617e595f902c94e45c489ef8b97e0995f7ecd572e0a8f400d5212963"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/mistral.mistral-large-3-675b-instruct-aman/hybrid/train/output/graded_mistral_mistral_large_3_675b_instruct_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/mistral.mistral-large-3-675b-instruct-aman/hybrid/train/output/graded_mistral_mistral_large_3_675b_instruct_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 22720031,
+      "sha256_at_audit": "99a7aba2e82f1bb23bd6c03cac45da2772ab244cd70880e3917290140bc59ebf"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/mistral.mistral-large-3-675b-instruct-aman/hybrid/train/output/graded_mistral_mistral_large_3_675b_instruct_hybrid_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/mistral.mistral-large-3-675b-instruct-aman/hybrid/train/output/graded_mistral_mistral_large_3_675b_instruct_hybrid_train_gptoss_grader_check.csv",
+      "bytes": 24239620,
+      "sha256_at_audit": "beda581ea40c75960ac3e52b50dc7c42ee305e475040fb02b62ff2c06f0a842a"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/mistral.mistral-large-3-675b-instruct-aman/hybrid/train/output/raw_pipeline_mistral_mistral_large_3_675b_instruct_hybrid_train.csv",
+      "relative_path": "historical_models/mistral.mistral-large-3-675b-instruct-aman/hybrid/train/output/raw_pipeline_mistral_mistral_large_3_675b_instruct_hybrid_train.csv",
+      "bytes": 22584076,
+      "sha256_at_audit": "6c5d01ee260474e91f33a8f749f445976a9f403b3cee634661a756728d35cfdb"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/moonshotai.kimi-k2-thinking-aditya/all/test/output/smoke_one_row_all_test.csv",
+      "relative_path": "historical_models/moonshotai.kimi-k2-thinking-aditya/all/test/output/smoke_one_row_all_test.csv",
+      "bytes": 4822,
+      "sha256_at_audit": "28e4a0d2a03261ba39c245e4c506cb4e1370c02cc9e833c8901642a9997f3943"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/moonshotai.kimi-k2-thinking-aditya/all/train/output/raw_pipeline_moonshotai_kimi_k2_thinking_all_train.csv",
+      "relative_path": "historical_models/moonshotai.kimi-k2-thinking-aditya/all/train/output/raw_pipeline_moonshotai_kimi_k2_thinking_all_train.csv",
+      "bytes": 10933248,
+      "sha256_at_audit": "1835e7f01d63e9319826692b130664a93a0245b465252b0f662578a1b73a4981"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/moonshotai.kimi-k2-thinking-aditya/hybrid/train/output/raw_pipeline_moonshotai_kimi_k2_thinking_hybrid_train.csv",
+      "relative_path": "historical_models/moonshotai.kimi-k2-thinking-aditya/hybrid/train/output/raw_pipeline_moonshotai_kimi_k2_thinking_hybrid_train.csv",
+      "bytes": 24804454,
+      "sha256_at_audit": "7247f1db54457b124b0806c191b1ebcfcd953c9fd759b65f1cc69bfbb05d5754"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/nvidia.nemotron-super-3-120b-aman/all/test/output/raw_pipeline_nvidia_nemotron_super_3_120b_all_test copy.csv",
+      "relative_path": "historical_models/nvidia.nemotron-super-3-120b-aman/all/test/output/raw_pipeline_nvidia_nemotron_super_3_120b_all_test copy.csv",
+      "bytes": 4921991,
+      "sha256_at_audit": "60898702bb8c186a3c261dcc51f7148bf205f7685903895db1b4cbd026d9aef1"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/nvidia.nemotron-super-3-120b-aman/all/test/output/raw_pipeline_nvidia_nemotron_super_3_120b_all_test.csv",
+      "relative_path": "historical_models/nvidia.nemotron-super-3-120b-aman/all/test/output/raw_pipeline_nvidia_nemotron_super_3_120b_all_test.csv",
+      "bytes": 5025167,
+      "sha256_at_audit": "babe8f11e10ad8637cd8542f7af4b1ece3bd6442f21649bf7f2b817bcf9891b1"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/nvidia.nemotron-super-3-120b-aman/all/train/output/graded_nvidia_nemotron_super_3_120b_all_train.csv",
+      "relative_path": "historical_models/nvidia.nemotron-super-3-120b-aman/all/train/output/graded_nvidia_nemotron_super_3_120b_all_train.csv",
+      "bytes": 13508294,
+      "sha256_at_audit": "31071f8dcda171c1205691961322fda83c769dd96f3a728514195ff5149e01fe"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/nvidia.nemotron-super-3-120b-aman/all/train/output/graded_nvidia_nemotron_super_3_120b_all_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/nvidia.nemotron-super-3-120b-aman/all/train/output/graded_nvidia_nemotron_super_3_120b_all_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 11660728,
+      "sha256_at_audit": "ef683a4e7d061976eed9e8ffa136635487545f010112ea3d591be3a7ef4aea67"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/nvidia.nemotron-super-3-120b-aman/all/train/output/graded_nvidia_nemotron_super_3_120b_all_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/nvidia.nemotron-super-3-120b-aman/all/train/output/graded_nvidia_nemotron_super_3_120b_all_train_gptoss_grader_check.csv",
+      "bytes": 13569629,
+      "sha256_at_audit": "8bce20a349eeb39c6d3d0119822ad9283fca1369267d33ac3ca1469a0ca649d9"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/nvidia.nemotron-super-3-120b-aman/all/train/output/raw_pipeline_nvidia_nemotron_super_3_120b_all_train.csv",
+      "relative_path": "historical_models/nvidia.nemotron-super-3-120b-aman/all/train/output/raw_pipeline_nvidia_nemotron_super_3_120b_all_train.csv",
+      "bytes": 11520532,
+      "sha256_at_audit": "ce96d1a3508f6a65df6fd59b4d6f9c7b49cc5f6cfc62b34e840cb27880db744b"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/nvidia.nemotron-super-3-120b-aman/hybrid/train/output/graded_nvidia_nemotron_super_3_120b_hybrid_train.csv",
+      "relative_path": "historical_models/nvidia.nemotron-super-3-120b-aman/hybrid/train/output/graded_nvidia_nemotron_super_3_120b_hybrid_train.csv",
+      "bytes": 29075207,
+      "sha256_at_audit": "5884b171cc368f49c006e38c57e7f0f11b77ef29bf2a5f720f1eb0886daae975"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/nvidia.nemotron-super-3-120b-aman/hybrid/train/output/graded_nvidia_nemotron_super_3_120b_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/nvidia.nemotron-super-3-120b-aman/hybrid/train/output/graded_nvidia_nemotron_super_3_120b_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 27151330,
+      "sha256_at_audit": "3053085217b9f3e59abe335b58b15c1edf00e22afa4de2188caec5eeb0fbf023"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/nvidia.nemotron-super-3-120b-aman/hybrid/train/output/graded_nvidia_nemotron_super_3_120b_hybrid_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/nvidia.nemotron-super-3-120b-aman/hybrid/train/output/graded_nvidia_nemotron_super_3_120b_hybrid_train_gptoss_grader_check.csv",
+      "bytes": 31841211,
+      "sha256_at_audit": "ad6a9e5466f58ce32bc27b14ea7311d6b1971dad5d47ee725f8b4a4c21d6a9c1"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/nvidia.nemotron-super-3-120b-aman/hybrid/train/output/raw_pipeline_nvidia_nemotron_super_3_120b_hybrid_train.csv",
+      "relative_path": "historical_models/nvidia.nemotron-super-3-120b-aman/hybrid/train/output/raw_pipeline_nvidia_nemotron_super_3_120b_hybrid_train.csv",
+      "bytes": 27015745,
+      "sha256_at_audit": "a9c4810e4c2406070d72c9dd73c5ffe9f1ab0af15cb68605cc1606a5655b3c1e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/test/output/raw_pipeline_openai_gpt_oss_120b_all_test.csv",
+      "relative_path": "historical_models/openai.gpt-oss-120b-aman/all/test/output/raw_pipeline_openai_gpt_oss_120b_all_test.csv",
+      "bytes": 9069441,
+      "sha256_at_audit": "ea4f1f2640f87d1be5047f7ff2776bec1898c3f434cbd040f43e371c47ea891c"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/output/graded_openai_gpt_oss_120b_all_train.csv",
+      "relative_path": "historical_models/openai.gpt-oss-120b-aman/all/train/output/graded_openai_gpt_oss_120b_all_train.csv",
+      "bytes": 48161,
+      "sha256_at_audit": "9cba3619cd38e1577f14707c1b592d5597f5f27e88814217d760e2fd5c23c784"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/output/graded_openai_gpt_oss_120b_all_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/openai.gpt-oss-120b-aman/all/train/output/graded_openai_gpt_oss_120b_all_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 40137987,
+      "sha256_at_audit": "328b24582ee48867a8a8b4486a9a1d14d7701159035b6147c687d51a4df6b396"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/output/graded_openai_gpt_oss_120b_all_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/openai.gpt-oss-120b-aman/all/train/output/graded_openai_gpt_oss_120b_all_train_gptoss_grader_check.csv",
+      "bytes": 46143402,
+      "sha256_at_audit": "63362ad03712799a9cb662c74f731f026df3eb597ac875cc1219759ace84453b"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/output/raw_pipeline_openai_gpt_oss_120b_all_train.csv",
+      "relative_path": "historical_models/openai.gpt-oss-120b-aman/all/train/output/raw_pipeline_openai_gpt_oss_120b_all_train.csv",
+      "bytes": 46755,
+      "sha256_at_audit": "df6716c4b8bfe9df241ae33512d93eeb8c3bb7f81d46b26e1f84d368f4cadf98"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/output/raw_pipeline_openai_gpt_oss_120b_all_train_OLD.csv",
+      "relative_path": "historical_models/openai.gpt-oss-120b-aman/all/train/output/raw_pipeline_openai_gpt_oss_120b_all_train_OLD.csv",
+      "bytes": 39991053,
+      "sha256_at_audit": "97a336f1ca822a8629c223d3efb3417a4513fe1ba6ed676af0257c6af343a590"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/openai.gpt-oss-120b-aman/all/train/output/raw_pipeline_openai_gpt_oss_120b_all_train_for_gptoss_grader_check.csv",
+      "relative_path": "historical_models/openai.gpt-oss-120b-aman/all/train/output/raw_pipeline_openai_gpt_oss_120b_all_train_for_gptoss_grader_check.csv",
+      "bytes": 39953926,
+      "sha256_at_audit": "21bedba6ad4963a992a39c2ec141a2d894af5b8d35a21b06f7a20cff3282aaec"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/all/test/output/smoke_one_row_all_test.csv",
+      "relative_path": "historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/all/test/output/smoke_one_row_all_test.csv",
+      "bytes": 4829,
+      "sha256_at_audit": "9af33d98a32fb5edbae21916b20c88c4a374e475cdf5a1a4f3dcc5b4bba3a5f3"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/all/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_all_train.csv",
+      "relative_path": "historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/all/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_all_train.csv",
+      "bytes": 16536956,
+      "sha256_at_audit": "b361a1dd9ff2d1f7b77ce635dbe7aba01e128f331c9b5f8705c47473fc629828"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/all/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_all_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/all/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_all_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 15378885,
+      "sha256_at_audit": "3121e2d03abc151698392445116b5dd496fd91a53547abeb94cc2df031270a68"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/all/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_all_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/all/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_all_train_gptoss_grader_check.csv",
+      "bytes": 16672319,
+      "sha256_at_audit": "f6b3e163c721e9d168b144057afb0a7bbbfb8de13dc83bbca23fbbcb6103047e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/all/train/output/raw_pipeline_qwen_qwen3_coder_480b_a35b_instruct_all_train.csv",
+      "relative_path": "historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/all/train/output/raw_pipeline_qwen_qwen3_coder_480b_a35b_instruct_all_train.csv",
+      "bytes": 15272268,
+      "sha256_at_audit": "765f4d23e5db88f9011493d978dba946d9bfbe5763bdc389f0d43518b650edb9"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_hybrid_train.csv",
+      "relative_path": "historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_hybrid_train.csv",
+      "bytes": 22698994,
+      "sha256_at_audit": "1c4ad1b752fe82379359d9433a173a2cf53c0f8f5e700744b0d7a5524b156f34"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 20681689,
+      "sha256_at_audit": "95f5310e711bb7e0dd23c83a788255039b082479df941cdb41dfc4c3fb7dd739"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_hybrid_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_coder_480b_a35b_instruct_hybrid_train_gptoss_grader_check.csv",
+      "bytes": 22171239,
+      "sha256_at_audit": "87cc646156f3963fb8b44c8d380136e21646c018c8faea6139077e5c7fd70606"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/hybrid/train/output/raw_pipeline_qwen_qwen3_coder_480b_a35b_instruct_hybrid_train.csv",
+      "relative_path": "historical_models/qwen.qwen3-coder-480b-a35b-instruct-aman/hybrid/train/output/raw_pipeline_qwen_qwen3_coder_480b_a35b_instruct_hybrid_train.csv",
+      "bytes": 20548464,
+      "sha256_at_audit": "1a8342aefd1c6411e6fca37be0709769b40ba0e30f363e135794a22460da4c3e"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/all/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_all_train.csv",
+      "relative_path": "historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/all/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_all_train.csv",
+      "bytes": 16343552,
+      "sha256_at_audit": "c05f427dd5700a99319f0afa772f44d33f5f17e9b8ab233433d6469782fa02cb"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/all/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_all_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/all/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_all_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 14993294,
+      "sha256_at_audit": "28ca821c37462186c087416c2dbc0bc31f6f354443813efe0a6981d383523a6d"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/all/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_all_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/all/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_all_train_gptoss_grader_check.csv",
+      "bytes": 15843932,
+      "sha256_at_audit": "a9f69521a4a24b9d1640d74bf0230988f3fab8e788f84399ae1c4781d6b016a5"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/all/train/output/raw_pipeline_qwen_qwen3_vl_235b_a22b_instruct_all_train.csv",
+      "relative_path": "historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/all/train/output/raw_pipeline_qwen_qwen3_vl_235b_a22b_instruct_all_train.csv",
+      "bytes": 14894301,
+      "sha256_at_audit": "80f4c24bd80e80b3d995d2cd5a06c365b51b0453416a220a13be1cd77010e543"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_hybrid_train.csv",
+      "relative_path": "historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_hybrid_train.csv",
+      "bytes": 20548318,
+      "sha256_at_audit": "eed6a0036d6c02b53ecf8aec8c3dc919e7031e67add4472a5d708cc1791920bf"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "relative_path": "historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_hybrid_train_direct_llm_gpt_5_6_sol.csv",
+      "bytes": 18758005,
+      "sha256_at_audit": "d84a2e1fb19b44b1c6d416f61b79bd1e33f2bdf316635e51cebb336c7c46248f"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_hybrid_train_gptoss_grader_check.csv",
+      "relative_path": "historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/hybrid/train/output/graded_qwen_qwen3_vl_235b_a22b_instruct_hybrid_train_gptoss_grader_check.csv",
+      "bytes": 20530449,
+      "sha256_at_audit": "f9cfd6601a79082b8392be8f510dadae7cebcad50e6f5a7d65041df5c54f947c"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/hybrid/train/output/raw_pipeline_qwen_qwen3_vl_235b_a22b_instruct_hybrid_train.csv",
+      "relative_path": "historical_models/qwen.qwen3-vl-235b-a22b-instruct-aman/hybrid/train/output/raw_pipeline_qwen_qwen3_vl_235b_a22b_instruct_hybrid_train.csv",
+      "bytes": 18625885,
+      "sha256_at_audit": "b703dc7f2d8e520f113cd79ddba30da9bc6f102e408117dc0b33ff8c6ac48903"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai.gpt-oss-120b-aman/all/train/Pipeline_Debug_Report_gpt_oss_120b_difficulty_train_300_v15_grading9_1_full300.csv",
+      "relative_path": "outputs/openai.gpt-oss-120b-aman/all/train/Pipeline_Debug_Report_gpt_oss_120b_difficulty_train_300_v15_grading9_1_full300.csv",
+      "bytes": 968573,
+      "sha256_at_audit": "c87c2a619c95539bc386813207b1def85633b25b89a18d253e33039fd9f37f19"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai.gpt-oss-120b-aman/all/train/openai_gpt_oss_120b_all_train.csv",
+      "relative_path": "outputs/openai.gpt-oss-120b-aman/all/train/openai_gpt_oss_120b_all_train.csv",
+      "bytes": 22047,
+      "sha256_at_audit": "b5dc4ab1e641eadaab435301b16978e4fd304f48b50e47b3d68bffea9b752ff3"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/context_v5_01/graded_pipeline_gpt_5_mini.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/context_v5_01/graded_pipeline_gpt_5_mini.csv",
+      "bytes": 40342250,
+      "sha256_at_audit": "d3b01df77e12d65d96845b67e88f66513a85e94ea20ad9e3006c594acc9f29af"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/context_v5_01/graded_pipeline_tera.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/context_v5_01/graded_pipeline_tera.csv",
+      "bytes": 47701,
+      "sha256_at_audit": "c728c5b373e203750bd750eaabdacaadfc74ee5419637b2eb0e71384bcb978c4"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/context_v5_01/raw_pipeline.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/context_v5_01/raw_pipeline.csv",
+      "bytes": 39094006,
+      "sha256_at_audit": "1b52ac9bed8f7920918150cbd556a02e5958fc7b1d7100d039b58b9cd78f8dd6"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v1_20261003/graded_pipeline_tera.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v1_20261003/graded_pipeline_tera.csv",
+      "bytes": 36523753,
+      "sha256_at_audit": "d7871fa1c100baab1d36ca2099e3c68887f5e3d51ea8b5056420e8b92e4eae1a"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v1_20261003/raw_pipeline.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v1_20261003/raw_pipeline.csv",
+      "bytes": 35661468,
+      "sha256_at_audit": "03f613092fa4a2f75b360597d5e779c57608a39bf4607ec0e23547bbaa83f382"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v2_20261003/graded_pipeline_tera.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v2_20261003/graded_pipeline_tera.csv",
+      "bytes": 38090374,
+      "sha256_at_audit": "77c971b637d666746bd3bc4d024e1ab0856a8c934f16918e1c8c0d45e47028c9"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v2_20261003/raw_pipeline.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v2_20261003/raw_pipeline.csv",
+      "bytes": 37226193,
+      "sha256_at_audit": "3b652e9ddfcc88b9aed9949b3316fe476db41796ec79601b62d6bd8ea0543087"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v4/graded_pipeline_tera.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v4/graded_pipeline_tera.csv",
+      "bytes": 38928886,
+      "sha256_at_audit": "aeec27dc57d1682d056c697d2827ebd01827554f118ee6a35699e98e20137d0f"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v4/raw_pipeline.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v4/raw_pipeline.csv",
+      "bytes": 38080322,
+      "sha256_at_audit": "9b368d26c2d60c68ee279e3b40dfaee2a26b0291c21a22660a251610ae73be13"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v5/graded_pipeline_tera.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v5/graded_pipeline_tera.csv",
+      "bytes": 37645193,
+      "sha256_at_audit": "c1d4981872b7939f36a4b74f3e46eb08965d0171ba74127f75b5ef8e3b05a4b5"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v5/raw_pipeline.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/generic_no_rules_v5/raw_pipeline.csv",
+      "bytes": 36782934,
+      "sha256_at_audit": "778fdcd035eda591f063379fb6d00b35a09524af7592be1e1c06bd2e382e39e4"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/graded_pipeline_1000_test_direct_llm_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/graded_pipeline_1000_test_direct_llm_terra.csv",
+      "bytes": 77197957,
+      "sha256_at_audit": "444a067be8f2ef14ce7486026dd19aaaf3d1898dc9113b4582da4fc5bb61ba4b"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/graded_pipeline_openai_gpt_oss_120b_all_test1000_rerun_grader2.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/graded_pipeline_openai_gpt_oss_120b_all_test1000_rerun_grader2.csv",
+      "bytes": 56551557,
+      "sha256_at_audit": "161af64988bf8ac27f083531d83a7b796655cc87b7b8d879a9c2ecf0f90e6957"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/raw_pipeline_1000_test.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/raw_pipeline_1000_test.csv",
+      "bytes": 76237294,
+      "sha256_at_audit": "57f939cbea104d09dc3064d64d1aa2a6bd7b6b80872219d9007751976179a5b7"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/raw_pipeline_openai_gpt_oss_120b_all_test1000_rerun.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/raw_pipeline_openai_gpt_oss_120b_all_test1000_rerun.csv",
+      "bytes": 55619229,
+      "sha256_at_audit": "1be4286718aad48734802b537f21e772f4299e1f69a4babc873f1e185c29b983"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/rerun_20261003_023143/graded_pipeline_tera.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/rerun_20261003_023143/graded_pipeline_tera.csv",
+      "bytes": 27364711,
+      "sha256_at_audit": "e84d137ab221cb2a6f69480bfe0cac664ac243c9d67ebeb427fe9f17cfd8dfa3"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/test1000/rerun_20261003_023143/raw_pipeline.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/test1000/rerun_20261003_023143/raw_pipeline.csv",
+      "bytes": 28085716,
+      "sha256_at_audit": "cf1b9a5ffcb0e8e8df9f5683ef204f4336bfec53a661818e644d3b47fd6cb0d0"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_final605_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_final605_terra.csv",
+      "bytes": 42636737,
+      "sha256_at_audit": "d5a8b875b139041f895ec283ad86af28fe49c687a2b472b8f399db4a9f0d315f"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_ab2_regraded.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_ab2_regraded.csv",
+      "bytes": 128481228,
+      "sha256_at_audit": "23305172a099620649256e1698fd616a992229588c3d3282c80cbbed240b91db"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_ab2_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_ab2_terra.csv",
+      "bytes": 129266597,
+      "sha256_at_audit": "dbd1d1e6a0e55d60c4f2328de671cecc8b185fe95632189e0707f28158fd52b4"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_semantic_ab_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_semantic_ab_terra.csv",
+      "bytes": 1564648,
+      "sha256_at_audit": "74955c080be065be73b7b1e2773d8dc1cd3a344aa532fe1e32e41c59b139e420"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_semanticfix_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_semanticfix_terra.csv",
+      "bytes": 40229492,
+      "sha256_at_audit": "f5c86eddef854ff84330d3ccfdbb8234354886d8956d49556aff3bc7dcc81748"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_semanticfix_v2_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_semanticfix_v2_terra.csv",
+      "bytes": 28975686,
+      "sha256_at_audit": "1fb853a4fa8cba400b5901eada61981593ef6b4359899ed08a7e6e97f3e7cb84"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_terra.csv",
+      "bytes": 89977125,
+      "sha256_at_audit": "b8d5a1a891b848634e8d42a46952ac213b5a379e49f870064c299e51a50dd183"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_terra_ab1.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_terra_ab1.csv",
+      "bytes": 11859328,
+      "sha256_at_audit": "18f5a3c4af39c1f5abb1473b504c4fa905ca36dd9d48fb71e5ca8b73ecba7b35"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_terra_ab14.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_openai_gpt_oss_120b_all_train_442_terra_ab14.csv",
+      "bytes": 89991968,
+      "sha256_at_audit": "e0719fe5b03f33ad414c8285068c9a72c6feb51fb06bee0be9a8e07af1739065"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_pipeline_605_fast_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_pipeline_605_fast_terra.csv",
+      "bytes": 59264606,
+      "sha256_at_audit": "7d7508644985e952d7de5978005a6ec59d39d073ddd617440fab78a6f9500c9f"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_pipeline_605_final_direct_llm_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_pipeline_605_final_direct_llm_terra.csv",
+      "bytes": 58152781,
+      "sha256_at_audit": "8a21b9523aecf13975fed42e03ac4369cbcfd4f9d46db126d1b44f67691f7666"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_pipeline_605_final_semantic_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_pipeline_605_final_semantic_terra.csv",
+      "bytes": 60588775,
+      "sha256_at_audit": "3df7b03c2b5bcbfb50ad94d633aca01d853f200f89c2c6ef9a400d96f30e154d"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/graded_pipeline_605_final_terra.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/graded_pipeline_605_final_terra.csv",
+      "bytes": 58679826,
+      "sha256_at_audit": "bcf13edb70367417947a44a6799e4c53309c9da0e850c814d7a9c6417b79ba61"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/openai_gpt_oss_120b_all_train.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/openai_gpt_oss_120b_all_train.csv",
+      "bytes": 29723401,
+      "sha256_at_audit": "94982306f3f0fce7baedffb04dbce47e132d8c5da680acd826f2f351c3a841f7"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/raw_pipeline_605_fast.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/raw_pipeline_605_fast.csv",
+      "bytes": 58113809,
+      "sha256_at_audit": "ab6f7a6121c4c02b7564551e371a0583277d84f74b36e377026d07c08a801700"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/raw_pipeline_605_final.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/raw_pipeline_605_final.csv",
+      "bytes": 57498272,
+      "sha256_at_audit": "dac005df21534413d6ce0ca00efb1860a0cc5fd6ec12887cd370c56474dbdeca"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/raw_pipeline_605_final_semantic.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/raw_pipeline_605_final_semantic.csv",
+      "bytes": 59387104,
+      "sha256_at_audit": "8c76e4f6da82776c1869def945001a78baf981938f4caf5270134c2c756ea2be"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_final605.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_final605.csv",
+      "bytes": 41250135,
+      "sha256_at_audit": "f2136311a6b25dad4f7327787f51cbe58a21713d8bd2091caeba984badaa9554"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_final605_semanticfix_v2.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_final605_semanticfix_v2.csv",
+      "bytes": 23952064,
+      "sha256_at_audit": "281484a3e91d14362ea9049e5f2857beda11c4616a9bed7a433cc697e36968dc"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_train_442.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_train_442.csv",
+      "bytes": 88249801,
+      "sha256_at_audit": "2690edeb59f0ec36a6022375c89bbf273c55a89d98e68c3d505b52a6bb0a2230"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_train_442_ab2.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_train_442_ab2.csv",
+      "bytes": 126361100,
+      "sha256_at_audit": "05a471e7b77c598aa050bb86c16eb2ba57d7823d73428becc1c11d1ec8bd2fd8"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_train_442_semantic_ab.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_train_442_semantic_ab.csv",
+      "bytes": 1490819,
+      "sha256_at_audit": "3e97f0eb4fd032ccd8430d647e897ca1da7225a86ce71b6fc049e6392c808893"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_train_442_semanticfix.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_train_442_semanticfix.csv",
+      "bytes": 39161139,
+      "sha256_at_audit": "090e6144b2be50b84473fd9a551a95a1828e7e6a166341002541faa9e8d894c5"
+    },
+    {
+      "path": "/home/kritik/Desktop/neosapiens/finance/script_diff_llm2/outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_train_442_semanticfix_v2.csv",
+      "relative_path": "outputs/openai_gpt_oss_120b/all/train/raw_pipeline_openai_gpt_oss_120b_all_train_442_semanticfix_v2.csv",
+      "bytes": 27992575,
+      "sha256_at_audit": "e17ba6a92b903f507b617c7823a0769df387ec46ec0ee034620cc4d1a9a0752b"
+    }
+  ],
+  "scope": "Only raw/graded reports recorded by the 2026-10-16 inventory; inputs/code/config/log/context files excluded."
+}

@@ -1,147 +1,72 @@
-# script_diff_llm
+# SQL/KG hybrid query pipeline
 
-For four-model raw-only ablations on the 1,000-query dataset, see [ablations/v5_test1000/README.md](ablations/v5_test1000/README.md).
+The main pipeline decomposes a question into a subquery DAG, routes each subquery to SQL or an RDF graph, executes dependencies, and combines results. SQL supports SQLite and DuckDB; KG execution uses Apache Jena Fuseki.
 
-Research/engineering repository for an agentic SQL/KG query pipeline over a wealth-management dataset.
+Start with [the folder map](docs/PROJECT_STRUCTURE.md), [run commands](docs/guides/v5_run_guide.md), or [your retained results](results/README.md).
 
-For combined v5 run commands, optional database context, resume behavior, and changing datasets/databases, see [README_V5_RUN_GUIDE.md](README_V5_RUN_GUIDE.md).
+## Where things live
 
-The important architecture is subquery-level routing:
+| Folder | Purpose |
+|---|---|
+| `src/script_diff_llm/` | Shared pipeline, decomposition, contracts, SQL/KG backends and model clients |
+| `runners/` | Main pipeline, benchmark preparation and grading entry points |
+| `configs/` | Main experiment, model and SQL/KG asset configuration |
+| `data/` | Question datasets, databases, RDF assets and domain context |
+| `ablations/` | Provider/experiment launchers, source snapshots and retained run directories |
+| `results/retained/` | Links to the selected raw/graded reports, grouped by G ID |
+| `docs/` | Methodology, prompts, architecture, run guides and prior analyses |
+| `tests/` | Unit, backend integration and DAG regression checks |
+| `analysis/` | Audits, inventories, cleanup records and organization manifest |
+| `archive/` | Unretained run metadata/logs and old launcher logs |
+| `runtime/` | Local Fuseki state; not pipeline source code |
+| `outputs/` | Generated output and legacy grader logs |
+| `historical_models/`, `base_templates/` | Older implementation snapshots and compatibility material |
+| `tools/` | Local Fuseki distribution |
 
-```text
-Query -> Decompose -> Subquery DAG -> classify each subquery as SQL or KG
-      -> execute independent nodes in parallel
-      -> bind dependency outputs
-      -> deterministic set operations
-      -> final answer and explanation
-```
+## Retained experiments
 
-The system does not classify the whole user query as SQL or KG. Hybrid queries are decomposed so different atomic subqueries can run against SQLite or Apache Jena Fuseki, then combine through deterministic operators such as `Set_Intersect`, `Set_Union`, and `Set_Difference`.
+Your selected IDs are **G01, G09, G10, G11, G14, G15 and G16**. They comprise **7 graded files and 6 unique raw files**; G10 and G11 share their raw report. See [results/README.md](results/README.md) for direct links and match accuracy.
 
-## Canonical Entry Path
+The original run paths remain the source of these files. The `results/retained/Gxx/raw.csv` and `graded.csv` entries are symlinks, so there are no extra copies of large reports. Earlier CSV inventories describe the state before cleanup; they are historical records, not a list of currently available reports.
 
-The shared pipeline is now organized around three explicit surfaces:
+## Datasets and context
 
-- `configs/models/*.yaml`
-  - provider/model endpoint settings
-- `configs/experiments/*.yaml`
-  - which model config, benchmark file, KG assets, SQL asset, and output directory to use
-- `src/script_diff_llm/pipeline/core_pipeline.py`
-  - canonical model-agnostic orchestration entry point
+- **WM-Investor / WMI:** [1,000-question workbook](data/benchmarks/wmi/questions_1000.xlsx), [605 development questions](data/benchmarks/wmi/questions_development_605.csv), [full reference overrides](data/benchmarks/wmi/full_answers_216.json), [SQL asset](data/sql/wealth_management_diverse/asset.yaml), and RDF assets in `data/kg/`.
+- **WM-Firm / NeoWealth:** [question workbook](data/benchmarks/neowealth/questions.xlsx), [prepared evaluation CSV](data/benchmarks/neowealth_test.csv), DuckDB at `data/sql/neowealth/neowealth.duckdb`, and RDF assets in `data/kg/neowealth/`.
+- **Domain context:** `data/context/wmi/` and `data/context/neowealth/`; Neowealth primitive YAMLs live in `data/context/neowealth/primitives/`.
 
-The preferred runner is:
+Older root asset names remain compatibility symlinks. Context documents retain their original physical paths, with links under `data/context/`, to preserve hash-bound cache identities. This keeps existing launchers and manifests working without changing model prompts or the pipeline workflow. See [data/README.md](data/README.md).
 
-```bash
-python3 runners/train/run_pipeline.py configs/experiments/openai_gpt_oss_120b_all_train.yaml
-```
+## Run and grade
 
-You can also run by experiment name instead of full path:
-
-```bash
-python3 runners/experiments/run_experiment.py openai_gpt_oss_120b_all_train
-python3 runners/experiments/run_experiment.py --list
-```
-
-The existing GPT-OSS named runner still works, but it is now just a thin wrapper around the shared pipeline.
-
-## Layout
-
-- `src/script_diff_llm/`: shared source for the current SQL/KG DAG pipeline.
-- `src/script_diff_llm/backends/sql.py`: SQLite SQL generation, validation, execution, and normalization.
-- `src/script_diff_llm/backends/kg.py`: KG metadata loading, Fuseki execution, and SPARQL term validation.
-- `src/script_diff_llm/pipeline/core_pipeline.py`: canonical shared SQL/KG DAG orchestration.
-- `src/script_diff_llm/pipeline/gpt_oss_pipeline.py`: legacy compatibility shim that re-exports the shared pipeline.
-- `src/script_diff_llm/pipeline/operators.py`: deterministic set and math operators.
-- `src/script_diff_llm/config/paths.py` and `src/script_diff_llm/config/runtime.py`: repo-relative path defaults and runtime configuration loading.
-- `src/script_diff_llm/llm/clients.py`: Bedrock/OpenAI-compatible client construction.
-- `runners/train/`: canonical runner entry points.
-- `tests/unit/`, `tests/integration/`, `tests/regression/`: canonical automated tests.
-- `data/benchmarks/`: canonical benchmark splits and metadata.
-- `data/sql/`: canonical SQL asset manifests and schema notes for the shared pipeline.
-- `data/kg/`: KG schema, graph TTL, summary, and RDF alias map.
-- `base_templates/`: historical templates and compatibility wrappers.
-- `historical_models/`: archived provider/model-specific experiment snapshots and outputs.
-- `analysis/`: comparison/review artifacts and moved model smoke/manifests.
-- `tools/apache-jena-fuseki-6.1.0/`: local Fuseki distribution.
-- `outputs/`: new generated runtime outputs.
-- `docs/architecture.md`: detailed architecture and operational notes.
-- `docs/historical_models.md`: how the archived model snapshot directories are grouped and kept compatible.
-- `docs/legacy.md`: what is still legacy/reference material versus canonical development surface.
-
-## SQL and KG
-
-SQL uses the physical SQLite schema in `wealth_management_diverse.db`. The expected tables are the real `ATOM_*` tables, including `ATOM_ENTITY_INVESTOR_PROFILE_001`, `ATOM_ENTITY_PORTFOLIO_HOLDING_001`, and `ATOM_EVENT_CASH_FLOW_001`. SQL code refers to this as `sql_schema`.
-
-The canonical SQL asset manifest lives at:
-
-```text
-data/sql/wealth_management_diverse/asset.yaml
-```
-
-This gives new developers a visible SQL home analogous to `kg/`, even though the physical `.db` file still remains in the historical GPT-OSS experiment directory for compatibility.
-
-KG execution uses Apache Jena Fuseki at `http://127.0.0.1:3030/wealth/query`. KG code uses ontology/class/property metadata from `data/kg/wealth_management_diverse_schema.ttl` and Fuseki metadata queries. KG code refers to this as `kg_metadata`.
-
-The canonical benchmark and KG asset locations are now:
-
-```text
-data/benchmarks/
-data/kg/
-```
-
-## Run
-
-Preferred shared runner:
+Use the existing experiment-specific launchers; moving data did not change their arguments:
 
 ```bash
-TEST_QUERY_LIMIT=1 python3 runners/train/run_pipeline.py configs/experiments/openai_gpt_oss_120b_all_train.yaml
+# List the main configured experiments; no model inference.
+/usr/bin/python3 -B runners/experiments/run_experiment.py --list
+
+# Inspect a main hybrid model/context configuration; no model inference.
+/usr/bin/python3 -B ablations/v5_test1000/run_raw.py deepseek_v3_2 without_context --dry-run
 ```
 
-Convenience wrapper for the current GPT-OSS experiment:
+For execution commands and resume behavior, use:
+
+- [Main v5 run guide](docs/guides/v5_run_guide.md)
+- [Reliability v6 guide](docs/guides/reliability_v6.md)
+- [Main model/context ablations](ablations/v5_test1000/README.md)
+- [Improvement 10 experiments](ablations/improvement10_models/README.md)
+- [NeoWealth experiments](ablations/neowealth_hybrid/README.md)
+
+Grader 2 remains in `grade_openai_gpt_oss_120b_all_train_direct_llm_gpt_5_6_TERA.py`; its GPT-5 mini runner is `runners/grade_gpt_5_mini.py`. Grader 3 remains `grader_3.py`. Their code and scoring were not changed by organization.
+
+## Credentials
+
+Keep keys in local environment files, such as `ablations/gemini_3_8_flash/gemini.env` or `ablations/azure_gpt_oss_120b/azure.env`. Existing credential files were left in place and unchanged. Never commit keys. `.env.example` is the public template.
+
+## Local verification
 
 ```bash
-TEST_QUERY_LIMIT=1 python3 runners/train/openai_gpt_oss_120b_all_train.py
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src /usr/bin/python3 -B -m pytest -q tests
 ```
 
-Legacy compatibility runner:
-
-```bash
-TEST_QUERY_LIMIT=1 python3 historical_models/openai.gpt-oss-120b-aman/all/train/run_pipeline_openai_gpt_oss_120b_all_train.py
-```
-
-Use `TEST_QUERY_LIMIT=3` and `TEST_QUERY_LIMIT=10` for larger smoke windows.
-
-## Configuration
-
-Configuration is now split into:
-
-- model YAML:
-  - `configs/models/openai_gpt_oss_120b.yaml`
-- experiment YAML:
-  - `configs/experiments/openai_gpt_oss_120b_all_train.yaml`
-- SQL asset YAML:
-  - `data/sql/wealth_management_diverse/asset.yaml`
-
-Common environment variables still override YAML defaults:
-
-- `SQLITE_DB_PATH`: SQLite DB path. Defaults to `historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db`.
-- `FUSEKI_ENDPOINT`: defaults to `http://127.0.0.1:3030/wealth/query`.
-- `SCHEMA_FILE`: defaults to `data/kg/wealth_management_diverse_schema.ttl`.
-- `INSTANCE_FILE`: defaults to `data/kg/wealth_management_diverse_kg.ttl`.
-- `INPUT_SAMPLE_FILE`: defaults to `data/benchmarks/verification_results_v2_sql_correct_train_300.xlsx`.
-- `PIPELINE_OUTPUT_DIR`: defaults to `outputs/openai.gpt-oss-120b-aman/all/train`.
-- `EXPERIMENT_CONFIG`: choose a different experiment YAML without editing code.
-- `TEST_QUERY_LIMIT`, `TEST_QUERY_OFFSET`, `TEST_MAX_WORKERS`: benchmark window controls.
-
-Model credentials are read from local `.env` files when present. Do not commit secrets.
-
-## Verification
-
-```bash
-python3 -m compileall src runners tests
-python3 -c "import sys; sys.path.insert(0, 'src'); from script_diff_llm.pipeline import core_pipeline"
-sqlite3 historical_models/openai.gpt-oss-120b-aman/all/train/wealth_management_diverse.db ".tables"
-PYTHONPATH=src python3 -m unittest tests.unit.test_paths tests.integration.test_sqlite_backend tests.regression.test_subquery_dag -v
-```
-
-Full validation requires Fuseki and model API access, then the 1/3/10-query runs above.
+Most checks are offline. Real model execution requires valid credentials and the correct Fuseki dataset. Cleanup/organization details are recorded in [the organization manifest](analysis/organization_20261016/organization_manifest.json).

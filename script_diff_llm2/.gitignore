@@ -15,3 +15,12 @@ api_usage_log_*.json
 
 # Local Fuseki runtime state.
 tools/apache-jena-fuseki-6.1.0/run/logs/
+
+# Private provider configuration (public *.env.example files remain visible).
+*.env
+
+# Local persistent state, archived generated runs, and test caches.
+/runtime/
+/archive/experiments/
+/archive/launcher_logs/
+.pytest_cache/
